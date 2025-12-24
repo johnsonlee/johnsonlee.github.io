@@ -1,0 +1,150 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="Johnson's personal blog"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,架构设计,滴滴,快手,性能优化,我在滴滴做架构,johnsonlee,johnson,lijingsen,jingsen,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><title>Kotlin 填坑记之 Metadata | Johnson Lee</title><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 6.3.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Kotlin 填坑记之 Metadata</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Kotlin 填坑记之 Metadata</h1><div class="post-meta">Oct 29, 2021<span> | </span><span class="category"><a href="/categories/computer-science/">Computer Science</a><a href="/categories/computer-science/kotlin/"> / Kotlin</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 1.4k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 6</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>最近用 <strong>KAPT</strong> 来生成 <strong>Kotlin</strong> 代码，遇到了一个头疼的问题，生成的 <strong>Kotlin</strong> 代码需要调用源 <strong>Kotlin</strong> 代码中被 <code>Annotation</code> 标注的属性，理论上讲，直接用 <code>.</code> 操作符来调用属性不就行了吗？然而，事情并没有想象的那么简单。</p>
+<h2 id="Kotlin-Property"><a href="#Kotlin-Property" class="headerlink" title="Kotlin Property"></a>Kotlin Property</h2><p>在 <strong>Kotlin</strong> 中，<strong>Property</strong> 在 <strong>JVM</strong> 层面既有可能是一个字段，也有可能是一个方法，取决于在属性上有没有其它 <strong>JVM</strong> 相关的注解，例如在下面的例子中：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">object</span> Data &#123;</span><br><span class="line">  <span class="meta">@MyAnnotation</span></span><br><span class="line">  <span class="keyword">val</span> value = <span class="string">&quot;Hello, world!&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>value</code> 作为 __Property__，在 <strong>JVM</strong> 层面对外公开的 <strong>API</strong> 其实是 <code>getValue(): String</code>，但是，在下面的例子中：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">object</span> Data &#123;</span><br><span class="line">  <span class="meta">@JvmField</span></span><br><span class="line">  <span class="meta">@MyAnnotation</span></span><br><span class="line">  <span class="keyword">val</span> value = <span class="string">&quot;Hello, world!&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>value</code> 在 <strong>JVM</strong> 层面对外公开的 <strong>API</strong> 其实是一个 <code>static</code> 字段，对于生成的 <strong>Kotlin</strong> 代码中，如果要调用这个 <code>value</code> 属性，到底应该是调用 <code>value</code> 这个字段还是调用 <code>getValue()</code> 这个方法？</p>
+<h2 id="Kotlin-Metadata"><a href="#Kotlin-Metadata" class="headerlink" title="Kotlin Metadata"></a>Kotlin Metadata</h2><p>用过 <strong>KAPT</strong> 的同学或多或少地知道，<strong>KAPT</strong> 其实是基于 <strong>APT</strong> 来实现的，只不过会在编译期为 <strong>Kotlin</strong> 代码生成对的 <strong>Java</strong> 存根，这样 <strong>APT</strong> 才有机会发挥作用，那对于 <strong>Kotlin</strong> 编译器而言，它是如何解决 <strong>Kotlin Property</strong> 的调用问题的呢？这得从 <strong>KAPT</strong> 为 <strong>Kotlin</strong> 代码生成的 <strong>Java</strong> 存根说起。</p>
+<p>在 <strong>Java</strong> 存根中，每个 <strong>Class</strong> 上都被标注了一个 <code>kotlin.Metadata</code> 的 __Annotation__，如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">@kotlin</span>.Metadata(</span><br><span class="line">  mv=&#123;<span class="number">1</span>,<span class="number">5</span>,<span class="number">1</span>&#125;,</span><br><span class="line">  k=<span class="number">1</span>,</span><br><span class="line">  xi=<span class="number">48</span>,</span><br><span class="line">  d1=&#123;<span class="string">&quot;\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\bÆ\u0002\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u0010\u0010\u0003\u001a\u00020\u00048\u0006X\u0087D¢\u0006\u0002\n\u0000¨\u0006\u0005&quot;</span>],</span><br><span class="line">  d2=&#123;<span class="string">&quot;Lio/johnsonlee/Data;&quot;</span>,<span class="string">&quot;&quot;</span>,<span class="string">&quot;()V&quot;</span>,<span class="string">&quot;value&quot;</span>,<span class="string">&quot;&quot;</span>,<span class="string">&quot;dsl_debug&quot;</span>&#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>相信看到这堆字符的同学会一脸懵逼，一堆字符到底是啥意思，<code>d1</code> 是个啥？<code>d2</code> 是个啥？我第一次看到它也一脸懵，如何破解这一堆被编码的符号呢？我的第一反应是 —— 从 <code>Kotlin</code> 官方渠道找设计文档，结果找了一圈，并没有找到相关的文档说明，那还是老老实实研究一下 <strong>Kotlin</strong> 源代码吧，结果发现了一个有意思的类 —— <a target="_blank" rel="noopener" href="https://github.com/JetBrains/kotlin/blob/master/core/metadata.jvm/src/org/jetbrains/kotlin/metadata/jvm/deserialization/JvmProtoBufUtil.kt">JvmProtobufUtil.kt</a>，不难发现有这样一个方法：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@JvmStatic</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">readClassDataFrom</span><span class="params">(<span class="keyword">data</span>: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;, strings: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span>: Pair&lt;JvmNameResolver, ProtoBuf.Class&gt; =</span><br><span class="line">    readClassDataFrom(BitEncoding.decodeBytes(<span class="keyword">data</span>), strings)</span><br></pre></td></tr></table></figure>
+<p>通过 <strong>Annotation</strong> 标注的 <code>Element</code>，我们可以很方便的获取到 <code>Metadata</code>：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> metadata = ele.getAnnotation(Metadata::<span class="keyword">class</span>.java)</span><br></pre></td></tr></table></figure>
+
+<p>结合上面的 <code>@kotlin.Metadata</code> 中的内容，如果把 <code>Metadata</code> 的 <code>data1</code> 和 <code>data2</code> 作为参数传进去会怎么样呢？</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">parseMetadata</span><span class="params">(ele: <span class="type">Element</span>)</span></span> &#123;</span><br><span class="line">  <span class="keyword">val</span> metadata = ele.getAnnotation(Metadata::<span class="keyword">class</span>.java)</span><br><span class="line">  <span class="keyword">val</span> (resolver, klass) = JvmProtoBufUtil.readClassDataFrom(metadata.data1, metadata.data2)</span><br><span class="line">  println(<span class="string">&quot;<span class="subst">$&#123;resolver&#125;</span> -&gt; <span class="subst">$&#123;klass&#125;</span>&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>试了一下，居然能解析成功！<code>Metadata</code> 里的内容到底是啥呢？根据 <a target="_blank" rel="noopener" href="https://github.com/JetBrains/kotlin/blob/master/libraries/stdlib/jvm/runtime/kotlin/Metadata.kt">Metadata.kt</a> 中的注释，其字段的定义如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">字段</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">k</td>
+<td>本注解编码的类型：<ul><li><code>1</code>: <strong>Class</strong></li><li><code>2</code>: <strong>File</strong></li><li><code>3</code>: <strong>Synthetic class</strong></li><li><code>4</code>: <strong>Multi-file class facade</strong></li><li><code>5</code>: <strong>Multi-file class part</strong></li></td>
+</tr>
+<tr>
+<td align="center">mv</td>
+<td><strong>Metadata</strong> 的版本</td>
+</tr>
+<tr>
+<td align="center">xi</td>
+<td>标志位</td>
+</tr>
+<tr>
+<td align="center">d1</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/JetBrains/kotlin/blob/master/core/metadata/src/metadata.proto">metadata.proto</a></td>
+</tr>
+<tr>
+<td align="center">d2</td>
+<td>字符串常量池</td>
+</tr>
+</tbody></table>
+<p>通过 <code>JvmProtoBufUtil.readClassDataFrom</code> 返回的 <code>JvmNameResolver</code> 和 <code>ProtoBuf.Class</code>，便可以解析出 <code>Metadata</code> 中的编码的所有内容，对于 __Kotlin Property__，便可以通过 <code>ProtoBuf.Class</code> 的 <code>getPropertyList()</code> 来获取到所有的属性：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">klass.propertyList.forEach &#123;</span><br><span class="line">  <span class="keyword">val</span> name = resolver.getString(it.name)</span><br><span class="line">  <span class="keyword">val</span> type = resolver.getQualifiedClassName(it.returnType.className)</span><br><span class="line">  <span class="keyword">val</span> flags = <span class="keyword">if</span> (it.hasGetterFlags()) <span class="string">&quot;(getter)&quot;</span> <span class="keyword">else</span> <span class="string">&quot;&quot;</span></span><br><span class="line">  println(<span class="string">&quot;<span class="subst">$&#123;name&#125;</span>: <span class="subst">$&#123;type&#125;</span> <span class="subst">$&#123;flags&#125;</span>&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Interoperability"><a href="#Interoperability" class="headerlink" title="Interoperability"></a>Interoperability</h2><p>如果我们用 <strong>KAPT</strong> 生成代码的时候要根据 <strong>Annotation</strong> 标注的元素的类型来生成相应的 <strong>Kotlin</strong> 代码，就会发现 <strong>Kotlin</strong> 中的 <code>String</code> 不能用 <strong>Java</strong> 中的 <code>String</code> 来代替，因为从类型上来讲，它们确实是两种不同的类型，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">object Data &#123;</span><br><span class="line">  @MyAnnotation</span><br><span class="line">  val value = &quot;Hello, World!&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果要对 <code>value</code> 生成一个包装类的话，大概长这样：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ValueWrapper</span> : <span class="type">Wrapper</span>&lt;<span class="type">java.lang.String</span>&gt; &#123;</span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">get</span><span class="params">()</span></span>: java.lang.String = Data.value</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是，在 <code>ValueWrapper.get()</code> 返回 <code>Data.value</code> 会报错：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Type mismatch.</span><br><span class="line"> Required: java.lang.String</span><br><span class="line"> Found:    kotlin.String</span><br></pre></td></tr></table></figure>
+
+<p>WTF！！！怎么会这样？？？</p>
+<p>用 <strong>Kotlin</strong> 的时候，对于标准库提供的类型，例如：<code>String</code>，其定义是 <code>kotlin.String</code>，那为什么在存根文件中和字节码层面却是 <code>java.lang.String</code> 呢？要一窥究竟，还得去扒 <strong>Kotlin</strong> 源代码 —— <a target="_blank" rel="noopener" href="https://github.com/JetBrains/kotlin/blob/master/core/metadata.jvm/src/org/jetbrains/kotlin/metadata/jvm/deserialization/ClassMapperLite.kt">ClassMapperLite.kt</a>，原来是 <strong>Kotlin</strong> 的编译器会将 <strong>Kotlin</strong> 的标准类型自动转换为 <strong>Java</strong> 的标准类型，所以，在存根文件中，我们会发现原来定义的 <code>kotlin.String</code> 类型都已经被转换为 <code>java.lang.String</code> 类型了。</p>
+<p>因此，如果想要将生成的代码中的 <strong>Java</strong> 标准类型变成 <strong>Kotlin</strong> 标准类型，那就需要逆映射，也就是将 <a target="_blank" rel="noopener" href="https://github.com/JetBrains/kotlin/blob/master/core/metadata.jvm/src/org/jetbrains/kotlin/metadata/jvm/deserialization/ClassMapperLite.kt">ClassMapperLite.kt</a> 中的是映射关系反过来，这样，就可以生成漂亮的 <strong>Kotlin</strong> 代码了，如下所示：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ValueWrapper</span> : <span class="type">Wrapper</span>&lt;<span class="type">kotlin.String</span>&gt; &#123;</span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">get</span><span class="params">()</span></span>: kotlin.String = Data.value</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Incompatible-Kotlin-Version"><a href="#Incompatible-Kotlin-Version" class="headerlink" title="Incompatible Kotlin Version"></a>Incompatible Kotlin Version</h2><p>还在使用 <strong>Kotlin 1.5.0</strong> 以下的版本的同学在引入第三方 <strong>Kotlin</strong> 库的时候，有可能会遇到这样的问题：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;Module was compiled with an incompatible version of Kotlin. The binary version of its metadata is 1.5.x, expected version is 1.x.y&quot;</span><br></pre></td></tr></table></figure>
+
+<p>根据我们对 <strong>Kotlin Metadata</strong> 的了解，便可以推断出 —— <strong>Kotlin</strong> 在 <strong>1.5.0</strong> 对 <code>Metadata</code> 进行的修改不能向后兼容，如果遇到这种情况，那就只有两个选择：</p>
+<ol>
+<li>升级工程中使用的 <strong>Kotlin</strong> 的版本</li>
+<li>使用三方库的低版本（前提是三方库有提供用 <strong>Kotlin 1.5.0</strong> 之前的版本编译的版本）</li>
+</ol>
+<p>看到这里，大家是不是觉得 —— 原来 <strong>Kotlin</strong> 还有这种坑！！！没错，<strong>Kotlin</strong> 的版本兼容性问题多着呢 😿</p>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>johnsonlee</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="/2021/10/29/do-you-really-know-kotlin-1/">https://johnsonlee.io/2021/10/29/do-you-really-know-kotlin-1/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"></div><div class="post-nav"><a class="pre" href="/2021/10/31/two-philosophies-two-worlds/">两种哲学，两个世界</a><a class="next" href="/2021/10/17/do-you-really-know-java-2/">你真的会 Java 吗？（二）</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (102)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (6)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (11)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investment/">Investment (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (8)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/%E7%8B%AC%E7%AB%8B%E6%80%9D%E8%80%83/" style="font-size: 15px;">独立思考</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" style="font-size: 15px;">性能优化</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/%E8%81%8C%E5%9C%BA/" style="font-size: 15px;">职场</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/%E6%95%99%E8%82%B2/" style="font-size: 15px;">教育</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a> <a href="/tags/Maven/" style="font-size: 15px;">Maven</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/%E9%9F%B3%E4%B9%90/" style="font-size: 15px;">音乐</a> <a href="/tags/HTML/" style="font-size: 15px;">HTML</a> <a href="/tags/Programming/" style="font-size: 15px;">Programming</a> <a href="/tags/Economics/" style="font-size: 15px;">Economics</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/Thinking/" style="font-size: 15px;">Thinking</a> <a href="/tags/Android-Studio/" style="font-size: 15px;">Android Studio</a> <a href="/tags/SPI/" style="font-size: 15px;">SPI</a> <a href="/tags/MVVM/" style="font-size: 15px;">MVVM</a> <a href="/tags/JetPack/" style="font-size: 15px;">JetPack</a> <a href="/tags/%E9%A2%84%E5%8A%A0%E8%BD%BD/" style="font-size: 15px;">预加载</a> <a href="/tags/%E8%B5%9A%E9%92%B1/" style="font-size: 15px;">赚钱</a> <a href="/tags/Java-8/" style="font-size: 15px;">Java 8</a> <a href="/tags/%E7%A4%BE%E4%BC%9A/" style="font-size: 15px;">社会</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/DeepMind/" style="font-size: 15px;">DeepMind</a> <a href="/tags/AlphaFold2/" style="font-size: 15px;">AlphaFold2</a> <a href="/tags/CASP/" style="font-size: 15px;">CASP</a> <a href="/tags/Housing/" style="font-size: 15px;">Housing</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2025/12/24/what-supports-korean-housing-prices/">2年涨30%，是什么支撑韩国的房价？</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/20/positional-numeral-system-and-radix-shift/">为什么乘除10的幂几乎不用思考?</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/19/why-computers-represent-text-and-numbers-differently/">为什么计算机要区分文本和数字?</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/12/06/education-in-the-age-of-ai/">AI 时代的教育</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/06/23/circle-the-fed-on-chain/">Circle - 链上的美联储</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/06/22/why-i-went-all-in-on-circle/">为什么 All in CRCL?</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/06/21/no-time-to-think-from-bottom-fishing-google-tesla-to-going-all-in-on-circle/">无暇思考：从抄底 Google/Tesla 到 All in Circle</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/07/21/booster-v5-0-0-released/">Booster 5.0.0 版本发布</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/04/27/living-in-seoul-1/">Living in Seoul (1)</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/04/20/recommended-reading-thinking/">推荐阅读（思维篇）</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2025 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>
