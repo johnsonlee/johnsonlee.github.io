@@ -1,0 +1,139 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="以前总有人问我：“森哥，我怎么才能成为像你一样的大牛？”，我一般就一句话“多折腾”搪塞过去，主要是懒得大费口舌，后来想想，这样也不太好，毕竟有些人还是很有诚意，真的渴望自己能够快速成长的，从我个人的经历来看，「多折腾」其实是包含了很多方面： 经历不同的企业文化 尝试做不同技术栈的项目 做一些自己喜欢的或者好玩儿的东西 创业 … 靠谱的导师很多人有成长的诉求，但是条件不允许，比如：团队氛围不好、业务"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,架构设计,滴滴,快手,性能优化,我在滴滴做架构,johnsonlee,johnson,lijingsen,jingsen,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2020/08/09/engineer-growth/"><meta property="og:title" content="工程师如何成长"><meta property="og:description" content="以前总有人问我：“森哥，我怎么才能成为像你一样的大牛？”，我一般就一句话“多折腾”搪塞过去，主要是懒得大费口舌，后来想想，这样也不太好，毕竟有些人还是很有诚意，真的渴望自己能够快速成长的，从我个人的经历来看，「多折腾」其实是包含了很多方面： 经历不同的企业文化 尝试做不同技术栈的项目 做一些自己喜欢的或者好玩儿的东西 创业 … 靠谱的导师很多人有成长的诉求，但是条件不允许，比如：团队氛围不好、业务"><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2020/08/09/engineer-growth/"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2020-08-09T02:00:00.000Z"><meta property="article:author" content="Johnson Lee"><meta property="article:tag" content="Career"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="工程师如何成长"><meta name="twitter:description" content="以前总有人问我：“森哥，我怎么才能成为像你一样的大牛？”，我一般就一句话“多折腾”搪塞过去，主要是懒得大费口舌，后来想想，这样也不太好，毕竟有些人还是很有诚意，真的渴望自己能够快速成长的，从我个人的经历来看，「多折腾」其实是包含了很多方面： 经历不同的企业文化 尝试做不同技术栈的项目 做一些自己喜欢的或者好玩儿的东西 创业 … 靠谱的导师很多人有成长的诉求，但是条件不允许，比如：团队氛围不好、业务"><title>工程师如何成长 | Johnson Lee</title><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 6.3.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">工程师如何成长</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">工程师如何成长</h1><div class="post-meta">Aug 9, 2020<span> | </span><span class="category"><a href="/categories/career/">Career</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 2.5k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 8</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>以前总有人问我：“森哥，我怎么才能成为像你一样的大牛？”，我一般就一句话“多折腾”搪塞过去，主要是懒得大费口舌，后来想想，这样也不太好，毕竟有些人还是很有诚意，真的渴望自己能够快速成长的，从我个人的经历来看，「多折腾」其实是包含了很多方面：</p>
+<ol>
+<li>经历不同的企业文化</li>
+<li>尝试做不同技术栈的项目</li>
+<li>做一些自己喜欢的或者好玩儿的东西</li>
+<li>创业</li>
+<li>…</li>
+</ol>
+<h2 id="靠谱的导师"><a href="#靠谱的导师" class="headerlink" title="靠谱的导师"></a>靠谱的导师</h2><p>很多人有成长的诉求，但是条件不允许，比如：团队氛围不好、业务没什么挑战（规模太小或者技术复杂度低）等等，对于刚踏出校园的学生来说，初入职场，对于个人成长，最最重要的一点，是要有一个靠谱的导师，在工作中指出你的问题，并告诉你正确的思路和方向，一个靠谱的导师能让你少走不少弯路，并让你养成良好的习惯，为以后的发展打下坚实的基础。</p>
+<p>回想我自己的成长历程，最令我印象深刻的是在科泰的那些日子，对于一个非科班出身的工程师而言，要对操作系统、虚拟机、编译器等底层知识有一个完整和形象的认知，是要花费大量的时间和精力去消化和理解的，而科泰在这方面有着得天独厚的优势，在 <em>Android</em> 未发布之前，科泰就自研了一款手机，从 <em>bootloader</em> 到整个操作系统 <em>Elastos</em> ，2009 年金融危机，芯片厂倒闭，这款手机未能上市销售，后来 <em>Google</em> 推出了 <em>Android</em> 操作系统，让 <em>Elastos</em> 一度迷失了方向，而我所在的 <em>Team</em> 主要是负责 <em>IDE</em> 工具 —— <em>Eclipse</em> 插件，像文本代码编辑器、可视化设计器，这对于一个刚毕业不久，而且是非科班出身的我来说，着实是有些难度的，比较有意思的是，我们组有一大半是非科班出身的，有电子专业的、有模具专业的，我的 <em>Leader</em> 就是其中之一，记得模具专业的哥们儿学软件的动机最初是在学校的时候为了帮心仪已久的妹子从老师那儿偷试卷而开始研究木马程序。</p>
+<p>做文本代码编辑器最难的地方是 <em>Parser</em> 部分，不仅仅是解析出 <em>AST</em> ，还要根据光标的位置构建上下文，如：自动提示，模板代码自动生成等等，像 <em>Java</em> 这种强类型的语言还比较好处理，而对于 <em>JavaScript</em> 这种弱类型、语法非常灵活的语言来说，要做出一个好用的编辑器是很有挑战的。对于可视化设计器来说，主要的核心在图形渲染引擎，在没做过之前，一直觉得可视化设计很高深莫测，其实在 <em>IDE</em> 看到的效果是贴的一张图而已（ <em>SDK</em> 在本地运行的图形引擎的渲染结果）。</p>
+<p>当时的工作氛围是很不错的，我的导师和 <em>Leader</em> 给予了我很多的帮助，从那时候，我便掌握了手写 <em>Parser</em> 。还记得第一次做 <em>Android</em> 应用的时候（业余项目），实现一个照片滤镜功能，我手上只有一个 <em>HTC</em> ，我的 <em>Leader</em> 通过他的人脉关系，给我借来了两部手机让我测试，还帮助我对滤镜做性能调优。记得他当时展示了他的一个 <em>demo</em> —— <em>CPU</em> 绘制的 <em>3x3</em> 魔方（支持拖拽旋转）让我参考，也是让我对图形系统有了更深刻的认识。</p>
+<p>有人说：“我没有遇到像你说的靠谱的导师那怎么办呢？” 话外之意是 —— 团队中没有大牛或者有大牛但是不愿意为自己指点迷津，这个其实有几个思路可供参考：</p>
+<ol>
+<li><p>在有大牛的情况下，虚心主动请教，诚意到了，自然而然愿意教你</p>
+</li>
+<li><p>如果实在没有大牛</p>
+<ol>
+<li>转岗到别的团队</li>
+<li>换个公司，进大厂</li>
+</ol>
+</li>
+</ol>
+<h2 id="参与开源项目"><a href="#参与开源项目" class="headerlink" title="参与开源项目"></a>参与开源项目</h2><p>对于刚毕业不久的工程师来说，参与开源项目会有一定的难度，本身开源项目涉及到的技术相对比较有深度，而且，作为开源贡献者本身就是一项输出大于输入的工作，而自己如果正处于成长的初级阶段，自身还需要大量的输入来提升能力，如何能胜任这份工作？</p>
+<p>对于有了一定基础，渴望提升影响力的同学来说，倒是一个不错的选择，通过开源项目，有机会结识各种级别的工程师，可能对项目提出各种问题，你必须积极的响应别人的提问和建议，而在你跟其他人的交流或者处理 <em>issues</em> 的过程中，就会不自觉得对自己的知识体系进行丰富和完善。</p>
+<h2 id="主导一个商业项目"><a href="#主导一个商业项目" class="headerlink" title="主导一个商业项目"></a>主导一个商业项目</h2><p>开源项目对于技术深度和影响力的提升是非常有帮助的，但是，工程师的成长不能仅限于技术领域，很多科技公司的 <em>VP</em> 或者 <em>CEO</em> 都是工程师出身，没准有一天，你也有机会成为 <em>VP</em> 或者 <em>CEO</em> ，即使再不济，达到 <em>GM</em> 的级别还是大有可能的，当作为 <em>Manager</em> 负责一个业务部门的时候，考验你的就不仅仅是技术能力了，还需要对业务做到如数家珍，不仅仅是现在的业务，还有未来的业务发展方向。而作为工程师来说，主导商业项目意味着，你的角色不仅仅是技术的实现者，而且要对从立项、成本预算、研发进度到最终的盈利情况整个过程负责任。</p>
+<p>在主导商业项目的过程中，技术只占了整个生命周期的的很小部分，而大部分的工作主要是沟通协调、流程梳理、风险把控等等，这些对于工程师来说，其难度是远大于技术实现的，一旦经历过这些，就对整个项目背后的逻辑有了一个全面的认识，也就不会说出像这样的话来：</p>
+<blockquote>
+<p>我不知道你说的那些 OKR 跟我有什么关系，你告诉我做啥就得了</p>
+</blockquote>
+<p>对于普通的员工来说，主导一个商业项目并不用太关心公司的财务状况，做好了可能会拿个项目奖金或者激励什么的，做砸了也正常，无非绩效考核会差一些，至于项目的收益是好是坏都有公司来兜着。如果是 <em>To C</em> 的项目，延期也没有多大风险，最多写个报告，或者复盘什么的，而 <em>To B</em> 项目意味着合同违约，如果甲方较真这可是要赔钱的，项目负责人可能会罚掉奖金，但是，对于创业项目来说，收益的好坏直接决定了整个团队的生与死。</p>
+<p>据我一做过 ERP 的朋友说，那些 <em>ERP</em> 顾问都是按小时收费，出差路上收费，午休时间同样收费，超过 8 小时加班收费，而且收费还不便宜，甲方还不得不掏这个钱，为什么 <em>ERP</em> 顾问值这么多钱？—— 因为他们丰富的实施经验。</p>
+<p>失败的经验很多，而成功的经验凤毛鳞角，如果有幸能成功的主导一个商业项目并且有不错的盈利，这种经验就会拉开工程师之间的差距，这就是高阶工程师的核心价值所在，这也就解释了为什么大厂的工程师自带光环加持，因为大厂的经验更值钱。</p>
+<h2 id="持续学习"><a href="#持续学习" class="headerlink" title="持续学习"></a>持续学习</h2><p>在我刚工作的前几年，我很不理解在面试的过程中被问道：</p>
+<blockquote>
+<p><em>Java</em> 最新的版本是多少？</p>
+</blockquote>
+<p>我心想：“这种问题有意义么？直接上网查一下不就知道了？”，后来，自己当了面试官后，终于理解了为什么会问这种看似“无意义”的问题。</p>
+<p>其实，作为面试官来说，无非是想考查一下你对技术的关注度，有没有跟进最新的技术，有没有研究新技术的细节，或者你的性格是保守派还是激进派等等。</p>
+<p>有人可能会问：</p>
+<blockquote>
+<p>就算知道了最新版本，又有什么用呢？难就比别人牛？</p>
+</blockquote>
+<p>这样理解是有失偏颇的，得从长远的角度来看，如果一个人从工作以来持续不断的学习新技术，当时间以年来计时，最终会发生量到质的转变，这才是这个问题的更深层次的涵义。</p>
+<p>当你从一线工程师转变为 <em>Leader</em> 或者 <em>Manager</em> 后，需要学习的东西会更多，因为你是团队的主心骨，是团队的灯塔，是大家坚实的后盾，所以，你需要学习的知识会更多，不仅仅要时刻关注技术和业务，更要关注到团队的每一位成员的精神面貌、工作状态、生活状态等等。</p>
+<p>有人问我：</p>
+<blockquote>
+<p>森哥，你是如何持续学习的？</p>
+</blockquote>
+<p>其实我的方法很简单，仅供大家参考：</p>
+<ol>
+<li><p>坚持阅读（书），给自己定个目标，不用太激进，重要在坚持，而不是追求速度</p>
+</li>
+<li><p>订阅 <em>RSS</em> ，像 <em>GitHub</em> ，<em>Twitter</em> 等一些社交媒体都有 <em>RSS</em> 接口，最好的办法就是关注业内大牛的动态，或者根据 <em>Twitter</em> 话题生成 <em>RSS</em> ，每天花 1-2 小时在上面</p>
+<ul>
+<li>我的 <a target="_blank" rel="noopener" href="http://github.com/johnsonlee.atom">GitHub RSS</a></li>
+<li>我的 <a href="http://johnsonlee.io/atom.xml">博客 RSS</a></li>
+</ul>
+</li>
+<li><p>动手实践，比如新出了一个工具或者一门语言，动手写个好玩儿的 <em>demo</em> （不是 <em>helloworld</em> 那种）</p>
+</li>
+<li><p>养成定期总结的习惯</p>
+</li>
+</ol>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>johnsonlee</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="/2020/08/09/engineer-growth/">https://johnsonlee.io/2020/08/09/engineer-growth/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"><a href="/tags/Career/">Career</a></div><div class="post-nav"><a class="pre" href="/2020/09/20/memory-of-arch-team/">架构 Team 往事</a><a class="next" href="/2020/07/20/booster-v2-2-0-released/">Booster 2.3.0 正式发布</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"工程师如何成长","datePublished":"2020-08-09T02:00:00.000Z","dateModified":"2020-08-09T02:00:00.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2020/08/09/engineer-growth/"},"description":"以前总有人问我：“森哥，我怎么才能成为像你一样的大牛？”，我一般就一句话“多折腾”搪塞过去，主要是懒得大费口舌，后来想想，这样也不太好，毕竟有些人还是很有诚意，真的渴望自己能够快速成长的，从我个人的经历来看，「多折腾」其实是包含了很多方面： 经历不同的企业文化 尝试做不同技术栈的项目 做一些自己喜欢的或者好玩儿的东西 创业 … 靠谱的导师很多人有成长的诉求，但是条件不允许，比如：团队氛围不好、业务"}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (104)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (27)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investing/">Investing (3)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investment/">Investment (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (9)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Maven/" style="font-size: 15px;">Maven</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a> <a href="/tags/Music/" style="font-size: 15px;">Music</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/Transformer/" style="font-size: 15px;">Transformer</a> <a href="/tags/Deep-Learning/" style="font-size: 15px;">Deep Learning</a> <a href="/tags/HTML/" style="font-size: 15px;">HTML</a> <a href="/tags/Programming/" style="font-size: 15px;">Programming</a> <a href="/tags/Economics/" style="font-size: 15px;">Economics</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/SPI/" style="font-size: 15px;">SPI</a> <a href="/tags/MVVM/" style="font-size: 15px;">MVVM</a> <a href="/tags/JetPack/" style="font-size: 15px;">JetPack</a> <a href="/tags/Preloading/" style="font-size: 15px;">Preloading</a> <a href="/tags/Mental-Health/" style="font-size: 15px;">Mental Health</a> <a href="/tags/Finance/" style="font-size: 15px;">Finance</a> <a href="/tags/Society/" style="font-size: 15px;">Society</a> <a href="/tags/Wall-Street/" style="font-size: 15px;">Wall Street</a> <a href="/tags/Contrarian/" style="font-size: 15px;">Contrarian</a> <a href="/tags/Alpha/" style="font-size: 15px;">Alpha</a> <a href="/tags/Risk-Management/" style="font-size: 15px;">Risk Management</a> <a href="/tags/Hiring/" style="font-size: 15px;">Hiring</a> <a href="/tags/Interview/" style="font-size: 15px;">Interview</a> <a href="/tags/Engineering-Leadership/" style="font-size: 15px;">Engineering Leadership</a> <a href="/tags/Housing/" style="font-size: 15px;">Housing</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/DeepMind/" style="font-size: 15px;">DeepMind</a> <a href="/tags/AlphaFold2/" style="font-size: 15px;">AlphaFold2</a> <a href="/tags/CASP/" style="font-size: 15px;">CASP</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/02/26/from-llm-to-effective-communication/">从 LLM 到高效沟通</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/from-compiler-to-llm/">从编译器到 LLM：软件分层的轮回</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/llm-is-a-function/">LLM 的本质——函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/tetris-effect-of-ai-conversations/">植入潜意识——AI 版的盗梦空间</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/15/ai-as-thinking-partner/">当 AI 成为你的“思考伙伴”</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/14/agora-technical-journey/">Agora 的技术选型与踩坑实录</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/13/confirmation-bias/">别让你的认知偏差限制了 AI 的发挥</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/what-should-engineering-hiring-evaluate-in-ai-era/">都 2026 了，还在考算法？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/ai-debate-what-i-learned/">一场 AI 辩论暴露了 LLM 性格的本质</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/11/ai-investment-roi-reality-check/">一年烧 $700B，谁会是下一个摩托罗拉？</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>

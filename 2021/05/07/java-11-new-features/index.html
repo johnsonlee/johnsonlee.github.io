@@ -1,0 +1,206 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="Java 11 于 2018 年 9 月 25 日发布，该版本目前已开放以进行错误修复。它提供 LTS 或长期支持，这也是为什么新版本的 IntelliJ IDEA 及 Android Studio 都将内置的 JDK 版本升级到了 Java 11 的原因。 Local-Variable Syntax for Lambda Parameters早在 Java 10 中就引入了本地变量类型推断，但仅"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,架构设计,滴滴,快手,性能优化,我在滴滴做架构,johnsonlee,johnson,lijingsen,jingsen,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2021/05/07/java-11-new-features/"><meta property="og:title" content="Java 11 新特性"><meta property="og:description" content="Java 11 于 2018 年 9 月 25 日发布，该版本目前已开放以进行错误修复。它提供 LTS 或长期支持，这也是为什么新版本的 IntelliJ IDEA 及 Android Studio 都将内置的 JDK 版本升级到了 Java 11 的原因。 Local-Variable Syntax for Lambda Parameters早在 Java 10 中就引入了本地变量类型推断，但仅"><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2021/05/07/java-11-new-features/"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2021-05-07T11:00:00.000Z"><meta property="article:author" content="Johnson Lee"><meta property="article:tag" content="Java"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Java 11 新特性"><meta name="twitter:description" content="Java 11 于 2018 年 9 月 25 日发布，该版本目前已开放以进行错误修复。它提供 LTS 或长期支持，这也是为什么新版本的 IntelliJ IDEA 及 Android Studio 都将内置的 JDK 版本升级到了 Java 11 的原因。 Local-Variable Syntax for Lambda Parameters早在 Java 10 中就引入了本地变量类型推断，但仅"><title>Java 11 新特性 | Johnson Lee</title><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 6.3.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Java 11 新特性</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Java 11 新特性</h1><div class="post-meta">May 7, 2021<span> | </span><span class="category"><a href="/categories/computer-science/">Computer Science</a><a href="/categories/computer-science/java/"> / Java</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 2.4k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 10</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>Java 11 于 2018 年 9 月 25 日发布，该版本目前已开放以进行错误修复。它提供 LTS 或长期支持，这也是为什么新版本的 <em>IntelliJ IDEA</em> 及 <em>Android Studio</em> 都将内置的 JDK 版本升级到了 Java 11 的原因。</p>
+<h2 id="Local-Variable-Syntax-for-Lambda-Parameters"><a href="#Local-Variable-Syntax-for-Lambda-Parameters" class="headerlink" title="Local-Variable Syntax for Lambda Parameters"></a>Local-Variable Syntax for Lambda Parameters</h2><p>早在 Java 10 中就引入了本地变量类型推断，但仅支持普通的变量声明，而在 Java 11 中引入了更强大的类型推断，支持 <em>Lambda</em> 参数，如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">var</span> x, <span class="keyword">var</span> y) -&gt; x.process(y);</span><br></pre></td></tr></table></figure>
+
+<p>等同于：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(x, y) -&gt; x.process(y);</span><br></pre></td></tr></table></figure>
+
+<p>⚠️ 值得注意的是，在使用 <code>var</code> 声明参数类型的时候，必须所有参数同时都用 <code>var</code> 声明，以下是错误的例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">var</span> x, y) -&gt; x.process(y);</span><br><span class="line">(<span class="keyword">var</span> x, <span class="type">int</span> y) -&gt; x.process(y);</span><br></pre></td></tr></table></figure>
+
+<h2 id="Launch-Single-File-Source-Code-Programs"><a href="#Launch-Single-File-Source-Code-Programs" class="headerlink" title="Launch Single-File Source-Code Programs"></a>Launch Single-File Source-Code Programs</h2><p>自从 Java 9 引入了 <em>jshell</em> ，Java 语言开始朝着脚本语言的方向演化，在 Java 11 中，我们可以在类 Unix 系统上使用 <em>shebang</em> 标识符直接运行单个 <em>java</em> 文件，例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/java --source <span class="number">11</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Hello</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Hello, Java 11!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后在命令行中直接执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod +x hello</span><br><span class="line">./hello</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：<em>shebang</em> 文件的后缀不能以 <em>.java</em> 结尾，否则会被 Java Launcher 认为是普通的 Java 源文件而报错 <code>error: illegal character: &#39;#&#39;</code></p>
+</blockquote>
+<h2 id="Unicode-10"><a href="#Unicode-10" class="headerlink" title="Unicode 10"></a>Unicode 10</h2><p>Java 11 开始支持 <a target="_blank" rel="noopener" href="http://www.unicode.org/standard/standard.html">Unicode Standard</a> <a target="_blank" rel="noopener" href="http://unicode.org/versions/Unicode10.0.0/">Version 10.0</a>，主要包含以下的类：</p>
+<ul>
+<li><em>java.lang</em> : <code>Character</code> and <code>String</code></li>
+<li><em>java.awt.font</em> : <code>NumericShaper</code></li>
+<li><em>java.text</em> : <code>Bidi</code>, <code>BreakIterator</code>, and <code>Normalizer</code></li>
+</ul>
+<h2 id="HTTP-Client-Standard"><a href="#HTTP-Client-Standard" class="headerlink" title="HTTP Client (Standard)"></a>HTTP Client (Standard)</h2><p>从 Java 9 开始引入的 <em>HTTP Client</em> 在 Java 11 中被标准化，在 Java 11 中，<em>HTTP Client</em> 的实现几乎全部重写，由原来 HTTP&#x2F;1.1 阻塞式的实现改为完全异步。在新的实现中，数据流能够更好的被追踪，大大的降低了概念的数量和代码的复杂度，并使得在 HTTP&#x2F;1.1 和 HTTP&#x2F;2 之间的重用性最大化</p>
+<h2 id="Lazy-Allocation-of-Compiler-Threads"><a href="#Lazy-Allocation-of-Compiler-Threads" class="headerlink" title="Lazy Allocation of Compiler Threads"></a>Lazy Allocation of Compiler Threads</h2><p>在 Java 11 中增加了一个新的命令行标志：*-XX:+UseDynamicNumberOfCompilerThreads* 用于动态地控制编译器线程。在默认开启的分层编译模式中，无论可用内存和编译请求的数量如何，虚拟机都会在多 CPU 系统上启动了大量的编译线程。 因为即使是空闲时，线程也会消耗内存（几乎所有时间都是如此），这会导致资源的低效使用。</p>
+<p>为了解决这个问题，Java 11 已经更改了实现方式，在启动期间只为每种编译类型（参见：<a target="_blank" rel="noopener" href="https://www.oracle.com/technical-resources/articles/java/architect-evans-pt1.html">Understanding Java JIT Compilation with JITWatch, Part 1</a>）启动一个编译器线程，并动态处理后续线程的启动和关闭。 它由新的命令行标志 <em>-XX:+UseDynamicNumberOfCompilerThreads</em> 控制，默认开启。</p>
+<h2 id="ZGC-A-Scalable-Low-Latency-Garbage-Collector"><a href="#ZGC-A-Scalable-Low-Latency-Garbage-Collector" class="headerlink" title="ZGC - A Scalable Low-Latency Garbage Collector"></a>ZGC - A Scalable Low-Latency Garbage Collector</h2><p>ZGC 是一个可伸缩的低延迟垃圾收集器， 它旨在实现以下目标：</p>
+<ul>
+<li>暂停时间不得超过 10 毫秒</li>
+<li>暂停时间不会随着堆或实时设置大小而增加</li>
+<li>处理大小从几百兆到多兆字节不等的信息</li>
+</ul>
+<p>ZGC 是一个并发的垃圾收集器，这意味着所有繁重的工作（标记、压缩、参考处理、字符串表清理等）都是在 Java 线程继续执行的时候完成的。 这极大地限制了垃圾收集对应用程序响应时间的负面影响。</p>
+<p>从 ZGC 与 G1 的 benchmark 对比来看，简直令人惊叹，仅用了不到 2 毫秒：</p>
+<table>
+<thead>
+<tr>
+<th align="right"></th>
+<th align="center">ZGC</th>
+<th align="center">G1</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">avg</td>
+<td align="center">1.091ms (+&#x2F;-0.215ms)</td>
+<td align="center">156.806ms (+&#x2F;-71.126ms)</td>
+</tr>
+<tr>
+<td align="right">95th percentile</td>
+<td align="center">1.380ms</td>
+<td align="center">316.672ms</td>
+</tr>
+<tr>
+<td align="right">99th percentile</td>
+<td align="center">1.512ms</td>
+<td align="center">428.095ms</td>
+</tr>
+<tr>
+<td align="right">99.9th percentile</td>
+<td align="center">1.663ms</td>
+<td align="center">543.846ms</td>
+</tr>
+<tr>
+<td align="right">99.99th percentile</td>
+<td align="center">1.681ms</td>
+<td align="center">543.846ms</td>
+</tr>
+<tr>
+<td align="right">max</td>
+<td align="center">1.681ms</td>
+<td align="center">543.846ms</td>
+</tr>
+</tbody></table>
+<p>作为 Java 11 的一个实验特征，开启 ZGC 需要通过 <em>-XX:+UnlockExperimentalVMOptions</em> 选项与 <em>-XX:+UseZGC</em> 选项结合使用，不过它有如下限制：</p>
+<ul>
+<li>只能在 linux &#x2F; x64上使用。</li>
+<li>不支持 <em>Compressed Oops</em>[^2] 和 <em>Compressed Class Pointers</em>[^3]，<em>XX:+UseCompressedOops</em> 和 <em>-XX:+UseCompressedClassPointers</em> 选项默认禁用</li>
+<li>不支持类卸载，*XX:+<em>ClassUnloading</em> 和 <em>-XX:+ClassUnloadingWithConcurrentMark</em> 选项默认禁用</li>
+<li>不支持使用 ZGC 与 Graal 一起使用</li>
+</ul>
+<h2 id="Epsilon-A-No-Op-Garbage-Collector"><a href="#Epsilon-A-No-Op-Garbage-Collector" class="headerlink" title="Epsilon - A No-Op Garbage Collector"></a>Epsilon - A No-Op Garbage Collector</h2><p><em>Epsilon GC</em> 是 Java 11 引入的一个新的实验性无操作垃圾收集器。 <em>Epsilon GC</em> 仅处理内存分配，并且不实现任何内存回收机制。 它对性能测试非常有用，可以与其他 GC 的成本&#x2F;收益进行对比。 它可用于在测试中方便地断言内存占用和内存压力。 在极端情况下，它可能对非常短暂的任务很有用，其中内存回收将在 JVM 终止时发生，或者在低垃圾应用程序中获得最后一次延迟改进。</p>
+<h2 id="Low-Overhead-Heap-Profiling"><a href="#Low-Overhead-Heap-Profiling" class="headerlink" title="Low-Overhead Heap Profiling"></a>Low-Overhead Heap Profiling</h2><p>Java 11 中提供一种低开销的 Java 堆分配方式，旨在实现：</p>
+<ul>
+<li>低开销足以在默认情况下持续启用</li>
+<li>可以通过一个定义明确的程序接口（JVMTI）访问</li>
+<li>可以对所有分配进行采样（不限于在一个特定堆区域或特定方式的分配）</li>
+<li>可以以一种独立于实现的方式定义（不依赖任何特定的 GC 算法或 VM 实现）</li>
+<li>可以提供关于活的和死的 Java 对象的信息</li>
+</ul>
+<h2 id="Nest-Based-Access-Control"><a href="#Nest-Based-Access-Control" class="headerlink" title="Nest-Based Access Control"></a>Nest-Based Access Control</h2><p>在Java SE 11中，Java 虚拟机支持将类和接口放到新的访问控制上下文中，称为嵌套。嵌套允许类和接口在逻辑上属于同一代码实体，但是被编译为不同的类文件，以访问彼此的私有成员，而无需编译器插入可访问性扩展桥接方法。嵌套是 Java SE 平台的低级机制；Java 编程语言的访问控制规则没有变化。通过生成新的类文件属性（将顶级类（或接口）及其所有嵌套类和接口放在同一个嵌套中），<em>javac</em> 编译器在编译 Java 源代码中的嵌套类和接口时使用嵌套。在检查私有构造函数，方法或字段的可访问性时，Java 虚拟机则使用这些属性，包括通过核心反射和 <code>java.lang.invoke.MethodHandles.Lookup</code> API。嵌套中的成员通过 <code>java.lang.Class</code> 的 <code>getNestHost</code> 和 <code>getNestMembers</code> 方法暴露出来。</p>
+<p>由于嵌套成员记录在顶级类或接口（嵌套宿主）的类文件中，因此该类文件必须在运行时存在，以允许执行访问控制检查。 一般情况下都不会有问题，因为通常都是直接使用顶级类或接口。 在某些顶级类或接口仅作为嵌套类或接口的持有者并且未使用的代码中，打包工具可能已经从库或应用程序的分发中删除了该类文件。 使用基于嵌套的访问控制，如果任何嵌套类或接口需要访问彼此的私有成员，将抛出 <code>NoClassDefFoundError</code> 或 <code>ClassNotFoundException</code>。</p>
+<h2 id="Key-Agreement-with-Curve25519-and-Curve448"><a href="#Key-Agreement-with-Curve25519-and-Curve448" class="headerlink" title="Key Agreement with Curve25519 and Curve448"></a>Key Agreement with Curve25519 and Curve448</h2><p>在 Java 10 中新增了一个使用 <em>Curve25519</em> 和 <em>Curve448</em> 的密钥协商方案的实现，如 <a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc7748">RFC 7748 - Elliptic Curves for Security</a> 所述。 此实现可以作为一个 Java 加密体系结构服务，但尚未纳入 TLS 1.3 实现。</p>
+<h2 id="ChaCha20-and-Poly1305-Cryptographic-Algorithms"><a href="#ChaCha20-and-Poly1305-Cryptographic-Algorithms" class="headerlink" title="ChaCha20 and Poly1305 Cryptographic Algorithms"></a>ChaCha20 and Poly1305 Cryptographic Algorithms</h2><p>Java 10 实现了 <a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc7539">RFC 7539 - ChaCha20 and Poly1305 for IETF Protocols</a> 中指定的 <em>ChaCha20</em> 和 <em>ChaCha20-poly1305</em> 密码。 <em>ChaCha20</em> 是一种更新的流密码，可以替代旧的、不安全的 <em>RC4</em> 流密码，示例如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Cipher</span> <span class="variable">chaCha20</span> <span class="operator">=</span> Cipher.getInstance(<span class="string">&quot;ChaCha20&quot;</span>);</span><br><span class="line"><span class="type">Cipher</span> <span class="variable">chaCha20Poly1305</span> <span class="operator">=</span> Cipher.getInstance(<span class="string">&quot;ChaCha20-Poly1305&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="Transport-Layer-Security-TLS-1-3"><a href="#Transport-Layer-Security-TLS-1-3" class="headerlink" title="Transport Layer Security (TLS) 1.3"></a>Transport Layer Security (TLS) 1.3</h2><p>Java 11 中包含了 <a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc8446">RFC 8446 - The Transport Layer Security (TLS) Protocol Version 1.3</a> 的实现，对于 TLS 1.3，新的标准算法名称定义如下：</p>
+<ul>
+<li>TLS protocol version name: <em>TLSv1.3</em></li>
+<li><code>SSLContext</code> algorithm name: <em>TLSv1.3</em></li>
+<li>TLS cipher suite names for TLS 1.3: <em>TLS_AES_128_GCM_SHA256</em>, <em>TLS_AES_256_GCM_SHA384</em></li>
+<li><em>keyType</em> for <code>X509KeyManager</code>: <em>RSASSA-PSS</em></li>
+<li><em>authType</em> for <code>X509TrustManager</code>: <em>RSASSA-PSS</em></li>
+</ul>
+<p>⚠️ 请注意 TLS 1.3 与之前的版本并不直接兼容。 虽然 TLS 1.3 可以以向后兼容模式实现，但在升级到 TLS 1.3 时仍然需要考虑到几个兼容性风险：</p>
+<ol>
+<li>TLS 1.3 uses a half-close policy, while TLS 1.2 and prior versions use a duplex-close policy. For applications that depend on the duplex-close policy, there may be compatibility issues when upgrading to TLS 1.3.</li>
+<li>The signature_algorithms_cert extension requires that pre-defined signature algorithms are used for certificate authentication. In practice, however, an application may use unsupported signature algorithms.</li>
+<li>The DSA signature algorithm is not supported in TLS 1.3. If a server is configured to only use DSA certificates, it cannot upgrade to TLS 1.3.</li>
+<li>The supported cipher suites for TLS 1.3 are not the same as TLS 1.2 and prior versions. If an application hard-codes cipher suites which are no longer supported, it may not be able to use TLS 1.3 without modifying the application code.</li>
+<li>The TLS 1.3 session resumption and key update behaviors are different from TLS 1.2 and prior versions. The compatibility impact should be minimal, but it could be a risk if an application depends on the handshake details of the TLS protocols.</li>
+</ol>
+<h2 id="Removal-of-Thread-destroy-and-Thread-stop-Throwable"><a href="#Removal-of-Thread-destroy-and-Thread-stop-Throwable" class="headerlink" title="Removal of Thread.destroy() and Thread.stop(Throwable)"></a>Removal of Thread.destroy() and Thread.stop(Throwable)</h2><p><code>Thread.destroy()</code> 和 <code>Thread.stop(Throwable)</code> 在很早之前就被废弃了，在 Java 11 中终于被移除</p>
+<h2 id="Removal-of-JMC-from-the-Oracle-JDK"><a href="#Removal-of-JMC-from-the-Oracle-JDK" class="headerlink" title="Removal of JMC from the Oracle JDK"></a>Removal of JMC from the Oracle JDK</h2><p>在 Java 11 中，Java Mission Control (JMC) 被移除，作为一个独立的软件包单独发布</p>
+<h2 id="Removal-of-JavaFX-from-the-Oracle-JDK"><a href="#Removal-of-JavaFX-from-the-Oracle-JDK" class="headerlink" title="Removal of JavaFX from the Oracle JDK"></a>Removal of JavaFX from the Oracle JDK</h2><p>JavaFX 也被移除，作为一个独立的软件包单独发布，下载地址：<a target="_blank" rel="noopener" href="https://openjfx.io/">openjfx.io</a></p>
+<h2 id="Removal-of-Java-EE-and-CORBA-Modules"><a href="#Removal-of-Java-EE-and-CORBA-Modules" class="headerlink" title="Removal of Java EE and CORBA Modules"></a>Removal of Java EE and CORBA Modules</h2><p>在 Java 9 中被废弃的 Java EE 和 CORBA 在 Java 11 中被移除</p>
+<h2 id="Deprecation-of-Nashorn-JavaScript-Engine"><a href="#Deprecation-of-Nashorn-JavaScript-Engine" class="headerlink" title="Deprecation of Nashorn JavaScript Engine"></a>Deprecation of Nashorn JavaScript Engine</h2><p>在 Java 8 中此入的 <em>Nashorn JavaScript Engine</em> 在 Java 11 中被废弃了，预计在将来的某个版本中移除</p>
+<h2 id="Deprecation-of-Pack200-Tools-and-API"><a href="#Deprecation-of-Pack200-Tools-and-API" class="headerlink" title="Deprecation of Pack200 Tools and API"></a>Deprecation of Pack200 Tools and API</h2><p><em>Pack200</em> 工具及其 API 被废弃</p>
+<h2 id="Readonly-System-Properties"><a href="#Readonly-System-Properties" class="headerlink" title="Readonly System Properties"></a>Readonly System Properties</h2><p>在 Java 11 中，这些系统属性会在虚拟机启动时被缓存：</p>
+<ul>
+<li><em>java.home</em></li>
+<li><em>user.home</em></li>
+<li><em>user.dir</em></li>
+<li><em>user.name</em></li>
+</ul>
+<p>在启动后通过 <code>System::setProperty</code> 修改这些属性并不会生效</p>
+<h2 id="java-lang-ref-Reference-Does-Not-Support-Cloning"><a href="#java-lang-ref-Reference-Does-Not-Support-Cloning" class="headerlink" title="java.lang.ref.Reference Does Not Support Cloning"></a><code>java.lang.ref.Reference</code> Does Not Support Cloning</h2><p>在 Java 11 中，调用 <code>java.lang.ref.References::clone</code> 方法会抛出 <code>CloneNotSupportedException</code></p>
+<blockquote>
+<p>更多详情，请参考：<a target="_blank" rel="noopener" href="https://www.oracle.com/java/technologies/javase/11-relnote-issues.html#NewFeature">https://www.oracle.com/java/technologies/javase/11-relnote-issues.html#NewFeature</a></p>
+</blockquote>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>johnsonlee</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="/2021/05/07/java-11-new-features/">https://johnsonlee.io/2021/05/07/java-11-new-features/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"><a href="/tags/Java/">Java</a></div><div class="post-nav"><a class="pre" href="/2021/05/10/booster-v3-3-0-released/">Booster 3.3.0 正式发布</a><a class="next" href="/2021/05/07/java-10-new-features/">Java 10 新特性</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Java 11 新特性","datePublished":"2021-05-07T11:00:00.000Z","dateModified":"2021-05-07T11:00:00.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2021/05/07/java-11-new-features/"},"description":"Java 11 于 2018 年 9 月 25 日发布，该版本目前已开放以进行错误修复。它提供 LTS 或长期支持，这也是为什么新版本的 IntelliJ IDEA 及 Android Studio 都将内置的 JDK 版本升级到了 Java 11 的原因。 Local-Variable Syntax for Lambda Parameters早在 Java 10 中就引入了本地变量类型推断，但仅"}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (104)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (27)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investing/">Investing (3)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investment/">Investment (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (9)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Maven/" style="font-size: 15px;">Maven</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a> <a href="/tags/Music/" style="font-size: 15px;">Music</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/Transformer/" style="font-size: 15px;">Transformer</a> <a href="/tags/Deep-Learning/" style="font-size: 15px;">Deep Learning</a> <a href="/tags/HTML/" style="font-size: 15px;">HTML</a> <a href="/tags/Programming/" style="font-size: 15px;">Programming</a> <a href="/tags/Economics/" style="font-size: 15px;">Economics</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/SPI/" style="font-size: 15px;">SPI</a> <a href="/tags/MVVM/" style="font-size: 15px;">MVVM</a> <a href="/tags/JetPack/" style="font-size: 15px;">JetPack</a> <a href="/tags/Preloading/" style="font-size: 15px;">Preloading</a> <a href="/tags/Mental-Health/" style="font-size: 15px;">Mental Health</a> <a href="/tags/Finance/" style="font-size: 15px;">Finance</a> <a href="/tags/Society/" style="font-size: 15px;">Society</a> <a href="/tags/Wall-Street/" style="font-size: 15px;">Wall Street</a> <a href="/tags/Contrarian/" style="font-size: 15px;">Contrarian</a> <a href="/tags/Alpha/" style="font-size: 15px;">Alpha</a> <a href="/tags/Risk-Management/" style="font-size: 15px;">Risk Management</a> <a href="/tags/Hiring/" style="font-size: 15px;">Hiring</a> <a href="/tags/Interview/" style="font-size: 15px;">Interview</a> <a href="/tags/Engineering-Leadership/" style="font-size: 15px;">Engineering Leadership</a> <a href="/tags/Housing/" style="font-size: 15px;">Housing</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/DeepMind/" style="font-size: 15px;">DeepMind</a> <a href="/tags/AlphaFold2/" style="font-size: 15px;">AlphaFold2</a> <a href="/tags/CASP/" style="font-size: 15px;">CASP</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/02/26/from-llm-to-effective-communication/">从 LLM 到高效沟通</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/from-compiler-to-llm/">从编译器到 LLM：软件分层的轮回</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/llm-is-a-function/">LLM 的本质——函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/tetris-effect-of-ai-conversations/">植入潜意识——AI 版的盗梦空间</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/15/ai-as-thinking-partner/">当 AI 成为你的“思考伙伴”</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/14/agora-technical-journey/">Agora 的技术选型与踩坑实录</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/13/confirmation-bias/">别让你的认知偏差限制了 AI 的发挥</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/what-should-engineering-hiring-evaluate-in-ai-era/">都 2026 了，还在考算法？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/ai-debate-what-i-learned/">一场 AI 辩论暴露了 LLM 性格的本质</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/11/ai-investment-roi-reality-check/">一年烧 $700B，谁会是下一个摩托罗拉？</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>

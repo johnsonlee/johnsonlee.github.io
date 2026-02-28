@@ -1,0 +1,206 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="在前一篇 Kotlin 填坑记之 FunctionReference 中有提到关于如何解决 Kotlin 从 1.3 升级到 1.5 时由 FunctionReference 引发的兼容性问题，其实，Kotlin 的兼容性问题远不只这一个，如何系统性的解决 Kotlin 的兼容性问题呢？ 什么是兼容性问题软件的兼容性问题大致可以分为两类：API 兼容性和 ABI 兼容性。 API (Applica"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,架构设计,滴滴,快手,性能优化,我在滴滴做架构,johnsonlee,johnson,lijingsen,jingsen,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2022/12/07/do-you-really-know-kotlin-compatibility/"><meta property="og:title" content="Kotlin 填坑记之 Compatibility"><meta property="og:description" content="在前一篇 Kotlin 填坑记之 FunctionReference 中有提到关于如何解决 Kotlin 从 1.3 升级到 1.5 时由 FunctionReference 引发的兼容性问题，其实，Kotlin 的兼容性问题远不只这一个，如何系统性的解决 Kotlin 的兼容性问题呢？ 什么是兼容性问题软件的兼容性问题大致可以分为两类：API 兼容性和 ABI 兼容性。 API (Applica"><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2022/12/07/do-you-really-know-kotlin-compatibility/"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2022-12-07T00:00:00.000Z"><meta property="article:author" content="Johnson Lee"><meta property="article:tag" content="Kotlin"><meta property="article:tag" content="Compatibility"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Kotlin 填坑记之 Compatibility"><meta name="twitter:description" content="在前一篇 Kotlin 填坑记之 FunctionReference 中有提到关于如何解决 Kotlin 从 1.3 升级到 1.5 时由 FunctionReference 引发的兼容性问题，其实，Kotlin 的兼容性问题远不只这一个，如何系统性的解决 Kotlin 的兼容性问题呢？ 什么是兼容性问题软件的兼容性问题大致可以分为两类：API 兼容性和 ABI 兼容性。 API (Applica"><title>Kotlin 填坑记之 Compatibility | Johnson Lee</title><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 6.3.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Kotlin 填坑记之 Compatibility</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Kotlin 填坑记之 Compatibility</h1><div class="post-meta">Dec 7, 2022<span> | </span><span class="category"><a href="/categories/computer-science/">Computer Science</a><a href="/categories/computer-science/kotlin/"> / Kotlin</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 1.7k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 7</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>在前一篇 <a href="/2022/12/03/do-you-really-know-kotlin-function/">Kotlin 填坑记之 FunctionReference</a> 中有提到关于如何解决 Kotlin 从 1.3 升级到 1.5 时由 <a target="_blank" rel="noopener" href="https://github.com/JetBrains/kotlin/blob/master/libraries/stdlib/jvm/runtime/kotlin/jvm/internal/FunctionReference.java">FunctionReference</a> 引发的兼容性问题，其实，Kotlin 的兼容性问题远不只这一个，如何系统性的解决 Kotlin 的兼容性问题呢？</p>
+<h2 id="什么是兼容性问题"><a href="#什么是兼容性问题" class="headerlink" title="什么是兼容性问题"></a>什么是兼容性问题</h2><p>软件的兼容性问题大致可以分为两类：API 兼容性和 ABI 兼容性。</p>
+<h3 id="API-Application-Programming-Interface-兼容性"><a href="#API-Application-Programming-Interface-兼容性" class="headerlink" title="API (Application Programming Interface) 兼容性"></a>API (Application Programming Interface) 兼容性</h3><p>简而言之，就是接口的兼容性，大致也分为两类：</p>
+<h4 id="API-废弃-Deprecation"><a href="#API-废弃-Deprecation" class="headerlink" title="API 废弃 (Deprecation)"></a>API 废弃 (Deprecation)</h4><p>比如：Kotlin 1.5 废弃了 <code>String.toUpperCase()</code> API，由 <code>String.uppercase()</code> 替代。尽管 API 废弃了，要用还是可以继续用的，只不过编译器会有警告，但不会中断编译过程。</p>
+<h4 id="API-删除-Removal"><a href="#API-删除-Removal" class="headerlink" title="API 删除 (Removal)"></a>API 删除 (Removal)</h4><p>比如：JDK 11 删除了 <code>Thread.destroy()</code> 和 <code>Thread.stop(Throwable)</code> API，如果工程里用了 <code>Thread.destroy()</code> API 的话，升级到 JDK 11 就编译不过了，要么选择替代方案，要么换其他的实现方式。</p>
+<h3 id="ABI-Application-Binary-Interface-兼容性"><a href="#ABI-Application-Binary-Interface-兼容性" class="headerlink" title="ABI (Application Binary Interface) 兼容性"></a>ABI (Application Binary Interface) 兼容性</h3><p>简而言之，就是二进制的兼容性。对于运行在 JVM 上的语言而言，二进制的兼容性主要是字节码的兼容性，这里也可以分为两类：</p>
+<h4 id="JVM-字节码的版本兼容性"><a href="#JVM-字节码的版本兼容性" class="headerlink" title="JVM 字节码的版本兼容性"></a>JVM 字节码的版本兼容性</h4><p>比较典型的例子是 class 文件的 major version</p>
+<h4 id="语言本身的-Runtime-版本兼容性"><a href="#语言本身的-Runtime-版本兼容性" class="headerlink" title="语言本身的 Runtime 版本兼容性"></a>语言本身的 Runtime 版本兼容性</h4><p>Kotlin 的一些语言特性是在编译器层面实现的，不同版本的 Kotlin 编译器的实现方式可能有些不一样，虽然对于使用 Kotlin 进行开发的工程师而言，都是调用 Kotlin 标准库，但是 Kotlin 编译器会生成一些字节码甚至 class 来实现让工程师看起来很酷的语法糖，比如：随处可见的 <code>Function</code></p>
+<h2 id="真正头疼的问题"><a href="#真正头疼的问题" class="headerlink" title="真正头疼的问题"></a>真正头疼的问题</h2><h3 id="不兼容的字节码"><a href="#不兼容的字节码" class="headerlink" title="不兼容的字节码"></a>不兼容的字节码</h3><p>还记得 <a href="/2022/12/03/do-you-really-know-kotlin-function/">Kotlin 填坑记之 FunctionReference</a> 中遇到的问题吗？</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">f</span><span class="params">(fn: (<span class="type">Any</span>) -&gt; <span class="type">Unit</span>)</span></span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">ff</span><span class="params">()</span></span> &#123;</span><br><span class="line">    f(::println)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果我们用 <code>org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31</code> 来编译以上代码，就会得到下面的字节码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">final synthetic class io/johnsonlee/kotlin/TestKt$ff$1 extends kotlin/jvm/internal/FunctionReferenceImpl implements kotlin/jvm/functions/Function1 &#123;</span><br><span class="line"></span><br><span class="line">  // access flags 0x0</span><br><span class="line">  &lt;init&gt;()V</span><br><span class="line">    ALOAD 0</span><br><span class="line">    ICONST_1</span><br><span class="line">    LDC Lkotlin/io/ConsoleKt;.class</span><br><span class="line">    LDC &quot;println&quot;</span><br><span class="line">    LDC &quot;println(Ljava/lang/Object;)V&quot;</span><br><span class="line">    LDC 1</span><br><span class="line">    INVOKESPECIAL kotlin/jvm/internal/FunctionReferenceImpl.&lt;init&gt; (ILjava/lang/Class;Ljava/lang/String;Ljava/lang/String;I)V</span><br><span class="line">    RETURN</span><br><span class="line">    MAXSTACK = 6</span><br><span class="line">    MAXLOCALS = 1</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>也就是说，Kotlin 编译器生成的字节码中包含了低版本中不存在的内容，从而导致其它的 Kotlin 低于 1.4 的工程在使用了该字节码后，运行时报错 <code>NoSuchMethodError</code>。</p>
+<h3 id="不兼容的元数据"><a href="#不兼容的元数据" class="headerlink" title="不兼容的元数据"></a>不兼容的元数据</h3><p>Kotlin 除了生成 class 字节码，还会生成其它的二进制内容：</p>
+<ol>
+<li>Metadata (<code>@Metadata</code>)</li>
+<li>Module mapping (<code>*.kotlin_module</code>)</li>
+<li>……</li>
+</ol>
+<p>以上这些二进制内容都包含有版本信息以及版本兼容性约束信息。</p>
+<p>以 <code>@Metadata</code> 为例，默认的兼容策略是 <code>x.y</code> 兼容 <code>x.&#123;y + 1&#125;</code>，除非版本有严格的语义。</p>
+<p>那这些二进制内容的版本信息是如何确定的呢？</p>
+<h4 id="Metadata-Version"><a href="#Metadata-Version" class="headerlink" title="Metadata Version"></a>Metadata Version</h4><p><code>@Metadata</code> 的版本信息默认是由 Kotlin Compiler 的版本决定的，对于 Gradle 工程来说，其实就是由 <em>kotlin-gradle-plugin</em> 的版本决定。修改 <em>kotlin-gradle-plugin</em> 的版本就会影响到 <code>@Metadata</code> 的版本。</p>
+<h4 id="Module-Mapping-Version"><a href="#Module-Mapping-Version" class="headerlink" title="Module Mapping Version"></a>Module Mapping Version</h4><p><code>*.kotlin_module</code> 的版本同样也是由 Kotlin Compiler 的版本决定，而且跟 <code>@Metadata</code> 的版本是一致，如果出现版本不兼容的情况，编译就会报：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Module was compiled with an incompatible version of Kotlin. The binary version of its metadata is a.b.c, expected version is x.y.z.</span><br></pre></td></tr></table></figure>
+
+<h2 id="Java-的解决方案"><a href="#Java-的解决方案" class="headerlink" title="Java 的解决方案"></a>Java 的解决方案</h2><p>针对兼容性问题，Java 是有系统性的解决方案的，用过 Gradle 的同学应该都记得，Java 编译任务可以配置这两个参数：</p>
+<ol>
+<li><code>sourceCompatibility</code></li>
+<li><code>targetCompatibility</code></li>
+</ol>
+<p>示例如下：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">java &#123;</span><br><span class="line">    sourceCompatibility = JavaVersion.VERSION_1_8</span><br><span class="line">    targetComaptibility = JavaVersion.VERSION_1_8</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正是前面提到的 <em>API</em> 与 <em>ABI</em> 两个层面来进行兼容性管理：</p>
+<table>
+<thead>
+<tr>
+<th align="center">#</th>
+<th align="center">Java Compiler Options</th>
+<th align="center">Gradle Compiler Task Options</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">API</td>
+<td align="center"><code>-source</code></td>
+<td align="center"><code>sourceCompatibility</code></td>
+</tr>
+<tr>
+<td align="center">ABI</td>
+<td align="center"><code>-target</code></td>
+<td align="center"><code>targetCompatibility</code></td>
+</tr>
+</tbody></table>
+<h2 id="Kotlin-的解决方案"><a href="#Kotlin-的解决方案" class="headerlink" title="Kotlin 的解决方案"></a>Kotlin 的解决方案</h2><p>Kotlin 也提供编译选项来指定版本：</p>
+<table>
+<thead>
+<tr>
+<th align="center">#</th>
+<th align="center">Kotlin Compiler Options</th>
+<th align="center">Gradle Compiler Task Options</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">API</td>
+<td align="center"><code>-api-version</code></td>
+<td align="center"><code>apiVersion</code></td>
+</tr>
+<tr>
+<td align="center">ABI</td>
+<td align="center"><code>-language-version</code></td>
+<td align="center"><code>languageVersion</code></td>
+</tr>
+</tbody></table>
+<p>如下所示：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tasks.withType&lt;KotlinCompile&gt; &#123;</span><br><span class="line">    kotlinOptions &#123;</span><br><span class="line">        apiVersion = <span class="string">&quot;1.5&quot;</span></span><br><span class="line">        languageVersion = <span class="string">&quot;1.5&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>值得注意的是：</p>
+<ol>
+<li><code>-api-version</code> 不能大于 <code>-language-version</code></li>
+<li>限制 <code>-language-version</code> 就等于同时限制了 <code>-api-version</code></li>
+</ol>
+<p>Kotlin 与 Java 编译选项的对应关系如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">#</th>
+<th align="center">Kotlin Compiler Options</th>
+<th align="center">Java Compiler Options</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">API</td>
+<td align="center"><code>-api-version</code></td>
+<td align="center"><code>-source</code></td>
+</tr>
+<tr>
+<td align="center">ABI</td>
+<td align="center"><code>-language-version</code></td>
+<td align="center"><code>-target</code></td>
+</tr>
+</tbody></table>
+<p>啊哈，原来 Kotlin 的兼容性管理跟 Java 一样如此简单，那么到底怎么使用这两个编译选项呢？</p>
+<h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><h3 id="统一-Kotlin-版本"><a href="#统一-Kotlin-版本" class="headerlink" title="统一 Kotlin 版本"></a>统一 Kotlin 版本</h3><p>工程中的 Kotlin 版本最好是使用 <code>embeddedKotlinVersion</code> (Gradle 内嵌的 Kotlin 版本)，例如：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">buildscript &#123;</span><br><span class="line">    repositories &#123;</span><br><span class="line">        mavenCentral()</span><br><span class="line">        gradlePluginPortal()</span><br><span class="line">    &#125;</span><br><span class="line">    dependencies &#123;</span><br><span class="line">        classpath(<span class="string">&quot;org.jetbrains.kotlin:kotlin-gradle-plugin:<span class="subst">$&#123;embeddedKotlinVersion&#125;</span>&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>或者：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">plugins &#123;</span><br><span class="line">    kotlin(<span class="string">&quot;jvm&quot;</span>) version embeddedKotlinVersion</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="指定-language-version-或-api-version"><a href="#指定-language-version-或-api-version" class="headerlink" title="指定 -language-version 或 -api-version"></a>指定 <code>-language-version</code> 或 <code>-api-version</code></h3><p>以前面 <a target="_blank" rel="noopener" href="https://github.com/JetBrains/kotlin/blob/master/libraries/stdlib/jvm/runtime/kotlin/jvm/internal/FunctionReference.java">FunctionReference</a> 的问题为例，我们的目标是要在字节码层面向下兼容，也就是 <em>ABI</em> 层面，如果要让生成的字节码不包含 1.4 的内容（向下兼容 Kotlin 1.3），则指定 <code>-language-version</code> 或者 <code>-api-version</code> 都可以：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tasks.withType&lt;KotlinCompile&gt; &#123;</span><br><span class="line">    kotlinOptions &#123;</span><br><span class="line">        languageVersion = <span class="string">&quot;1.3&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>或者：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tasks.withType&lt;KotlinCompile&gt; &#123;</span><br><span class="line">    kotlinOptions &#123;</span><br><span class="line">        apiVersion = <span class="string">&quot;1.3&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>无论是 <code>-api-version</code> 还是 <code>-language-version</code> 编译后的字节码都是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">io.johnsonlee.kotlin.TestKt$ff$1();</span><br><span class="line">    descriptor: ()V</span><br><span class="line">    flags: (0x0000)</span><br><span class="line">    Code:</span><br><span class="line">      stack=2, locals=1, args_size=1</span><br><span class="line">         0: aload_0</span><br><span class="line">         1: iconst_1</span><br><span class="line">         2: invokespecial #57 // Method kotlin/jvm/internal/FunctionReference.&quot;&lt;init&gt;&quot;:(I)V</span><br><span class="line">         5: return</span><br></pre></td></tr></table></figure>
+
+<p>不难发现，<code>FunctionReference</code> 的字节码表示方式变了。</p>
+<p>既然都可以，那用 <code>-language-version</code> 和用<code>-api-version</code> 到底有什么区别呢？</p>
+<p>区别在于：</p>
+<blockquote>
+<p>用 <code>-language-version</code> 编译出的字节码的 <code>@Metadata</code> 版本则为 <code>1.1.18</code> 而用 <code>-api-version</code> 编译出的字节码的 <code>@Metadata</code> 版本还是 <code>1.5.1</code></p>
+</blockquote>
+<p>这说明，<code>-api-version</code> 并不能在 <em>ABI</em> 层面做到完全的兼容性，而 <code>-language-version</code> 的影响范围更大，不仅限制了不同版本的语言特性，同时还限制了包括 metadata 在内的二进制的版本。</p>
+<p>尽管 <code>-language-version</code> 和 <code>-api-version</code> 会影响编译出的字节码的内容，但是，它们并不能改变工程依赖的 Kotlin <code>stdlib</code> 的版本，即使使用了 1.5 的 <em>kotlin-gradle-plugin</em>，如果将 <code>-language-version</code> 或者 <code>-api-version</code> 设置为 1.3，工程的依赖也不会发生变化，这也是为什么 Kotlin 能做向下兼兼容的原因，即使有些 API 在高版本不让用了，比如 <code>toLowerCase()</code> 在 1.5 以上就不让用了，并不是这个 API 真的删除了，而只是编译器不让用了：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@DeprecatedSinceKotlin(</span></span><br><span class="line"><span class="meta">    warningSince = <span class="string">&quot;1.3&quot;</span>,</span></span><br><span class="line"><span class="meta">    errorSince = <span class="string">&quot;1.5&quot;</span></span></span><br><span class="line"><span class="meta">)</span></span><br></pre></td></tr></table></figure>
+
+<p>如果对于已经用 <code>-language-version=&quot;1.3&quot;</code> 编译好的 class，用 1.5 的 <code>stdlib</code> 也是没有问题的。</p>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>johnsonlee</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="/2022/12/07/do-you-really-know-kotlin-compatibility/">https://johnsonlee.io/2022/12/07/do-you-really-know-kotlin-compatibility/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"><a href="/tags/Kotlin/">Kotlin</a><a href="/tags/Compatibility/">Compatibility</a></div><div class="post-nav"><a class="pre" href="/2023/03/31/design-system-mobile-engineering-perspective/">Design System: 移动应用开发新视角</a><a class="next" href="/2022/12/03/do-you-really-know-kotlin-function/">Kotlin 填坑记之 FunctionReference</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Kotlin 填坑记之 Compatibility","datePublished":"2022-12-07T00:00:00.000Z","dateModified":"2022-12-07T00:00:00.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2022/12/07/do-you-really-know-kotlin-compatibility/"},"description":"在前一篇 Kotlin 填坑记之 FunctionReference 中有提到关于如何解决 Kotlin 从 1.3 升级到 1.5 时由 FunctionReference 引发的兼容性问题，其实，Kotlin 的兼容性问题远不只这一个，如何系统性的解决 Kotlin 的兼容性问题呢？ 什么是兼容性问题软件的兼容性问题大致可以分为两类：API 兼容性和 ABI 兼容性。 API (Applica"}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (104)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (27)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investing/">Investing (3)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investment/">Investment (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (9)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Maven/" style="font-size: 15px;">Maven</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a> <a href="/tags/Music/" style="font-size: 15px;">Music</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/Transformer/" style="font-size: 15px;">Transformer</a> <a href="/tags/Deep-Learning/" style="font-size: 15px;">Deep Learning</a> <a href="/tags/HTML/" style="font-size: 15px;">HTML</a> <a href="/tags/Programming/" style="font-size: 15px;">Programming</a> <a href="/tags/Economics/" style="font-size: 15px;">Economics</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/SPI/" style="font-size: 15px;">SPI</a> <a href="/tags/MVVM/" style="font-size: 15px;">MVVM</a> <a href="/tags/JetPack/" style="font-size: 15px;">JetPack</a> <a href="/tags/Preloading/" style="font-size: 15px;">Preloading</a> <a href="/tags/Mental-Health/" style="font-size: 15px;">Mental Health</a> <a href="/tags/Finance/" style="font-size: 15px;">Finance</a> <a href="/tags/Society/" style="font-size: 15px;">Society</a> <a href="/tags/Wall-Street/" style="font-size: 15px;">Wall Street</a> <a href="/tags/Contrarian/" style="font-size: 15px;">Contrarian</a> <a href="/tags/Alpha/" style="font-size: 15px;">Alpha</a> <a href="/tags/Risk-Management/" style="font-size: 15px;">Risk Management</a> <a href="/tags/Hiring/" style="font-size: 15px;">Hiring</a> <a href="/tags/Interview/" style="font-size: 15px;">Interview</a> <a href="/tags/Engineering-Leadership/" style="font-size: 15px;">Engineering Leadership</a> <a href="/tags/Housing/" style="font-size: 15px;">Housing</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/DeepMind/" style="font-size: 15px;">DeepMind</a> <a href="/tags/AlphaFold2/" style="font-size: 15px;">AlphaFold2</a> <a href="/tags/CASP/" style="font-size: 15px;">CASP</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/02/26/from-llm-to-effective-communication/">从 LLM 到高效沟通</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/from-compiler-to-llm/">从编译器到 LLM：软件分层的轮回</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/llm-is-a-function/">LLM 的本质——函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/tetris-effect-of-ai-conversations/">植入潜意识——AI 版的盗梦空间</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/15/ai-as-thinking-partner/">当 AI 成为你的“思考伙伴”</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/14/agora-technical-journey/">Agora 的技术选型与踩坑实录</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/13/confirmation-bias/">别让你的认知偏差限制了 AI 的发挥</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/what-should-engineering-hiring-evaluate-in-ai-era/">都 2026 了，还在考算法？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/ai-debate-what-i-learned/">一场 AI 辩论暴露了 LLM 性格的本质</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/11/ai-investment-roi-reality-check/">一年烧 $700B，谁会是下一个摩托罗拉？</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>

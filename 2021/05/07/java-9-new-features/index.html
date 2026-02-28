@@ -1,0 +1,267 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="在 2011 年的 JavaOne 中，Oracle 讨论了一些他们希望在 2016 年于 Java 9 中发布的功能。Java 9 应当对千兆级堆拥有更好的支持，同时能够更好地集成本机代码，且拥有新的垃圾收集器 G1 和能够自我调节的 JVM。2016 年初，Java 9 的发布被重新定为 2017 年 3 月；2017 年 3 月时，发布日期又被拖延至 2017 年 7 月；后来又因 Java"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,架构设计,滴滴,快手,性能优化,我在滴滴做架构,johnsonlee,johnson,lijingsen,jingsen,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2021/05/07/java-9-new-features/"><meta property="og:title" content="Java 9 新特性"><meta property="og:description" content="在 2011 年的 JavaOne 中，Oracle 讨论了一些他们希望在 2016 年于 Java 9 中发布的功能。Java 9 应当对千兆级堆拥有更好的支持，同时能够更好地集成本机代码，且拥有新的垃圾收集器 G1 和能够自我调节的 JVM。2016 年初，Java 9 的发布被重新定为 2017 年 3 月；2017 年 3 月时，发布日期又被拖延至 2017 年 7 月；后来又因 Java"><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2021/05/07/java-9-new-features/"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2021-05-07T09:00:00.000Z"><meta property="article:author" content="Johnson Lee"><meta property="article:tag" content="Java"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Java 9 新特性"><meta name="twitter:description" content="在 2011 年的 JavaOne 中，Oracle 讨论了一些他们希望在 2016 年于 Java 9 中发布的功能。Java 9 应当对千兆级堆拥有更好的支持，同时能够更好地集成本机代码，且拥有新的垃圾收集器 G1 和能够自我调节的 JVM。2016 年初，Java 9 的发布被重新定为 2017 年 3 月；2017 年 3 月时，发布日期又被拖延至 2017 年 7 月；后来又因 Java"><title>Java 9 新特性 | Johnson Lee</title><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 6.3.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Java 9 新特性</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Java 9 新特性</h1><div class="post-meta">May 7, 2021<span> | </span><span class="category"><a href="/categories/computer-science/">Computer Science</a><a href="/categories/computer-science/java/"> / Java</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 3.6k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 14</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>在 2011 年的 <em>JavaOne</em> 中，Oracle 讨论了一些他们希望在 2016 年于 Java 9 中发布的功能。<em>Java 9</em> 应当对千兆级堆拥有更好的支持，同时能够更好地集成本机代码，且拥有新的垃圾收集器 <em>G1</em> 和能够自我调节的 JVM。2016 年初，Java 9 的发布被重新定为 2017 年 3 月；2017 年 3 月时，发布日期又被拖延至 2017 年 7 月；后来又因 Java 执行委员会对 <em>Jigsaw</em> 项目实现的分歧而最终定为 2017 年 9 月 21 日，在此期间 Oracle 回应了部分疑问，并对一些重要的技术问题进行了修正。在 2017 年 6 月的最后几天，JCP 对拟议的模块系统方案达成了共识。Java 9 的首个发布候选版于 2017 年 8 月 9 日发布，首个稳定版于 2017 年 9 月 21 日发布。</p>
+<h2 id="Java-Platform-Module-System"><a href="#Java-Platform-Module-System" class="headerlink" title="Java Platform Module System"></a>Java Platform Module System</h2><p>模块化算是 Java 9 的重量级特性了，它提供了类似 OSGi 框架的功能，模块有依赖的概念，可以导出公共 API 并隐藏实现细节。其主要的目的是提供模块化的 JVM，使之能在低端设备上运行，JVM 只能运行应用所需的那些模块和 API，关于模块的详细描述，参见：<a target="_blank" rel="noopener" href="http://cr.openjdk.java.net/~mr/jigsaw/ea/module-summary.html">Module Summary</a>。从 Java 9 开始，像 <em>com.sun.*</em> 这些 JVM 内部的 API 在应用程序中不再可访问了。</p>
+<p>类似于 <em>package-info.java</em>，模块的描述是在 <em>module-info.java</em> 中，如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> com.example.modules.car &#123;</span><br><span class="line">    <span class="keyword">requires</span> com.example.modules.engines;</span><br><span class="line">    <span class="keyword">exports</span> com.example.modules.car.handling;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>想要深入了解 Java 9 的模块化，参见：<a target="_blank" rel="noopener" href="http://openjdk.java.net/projects/jigsaw/quick-start">Project Jigsaw: Module System Quick-Start Guide</a></p>
+<h2 id="New-HTTP-Client"><a href="#New-HTTP-Client" class="headerlink" title="New HTTP Client"></a>New HTTP Client</h2><p>在 Java 9 中引入了期待已久的 <code>HttpURLConnection</code> 的替代方案，新的 API 位于 <code>java.net.http</code> 包中，支持 <em>HTTP&#x2F;2</em>  协议和 <em>Web Socket</em> 握手，其性能与 <em>Apache Http Client</em> 、<em>Netty</em> 以及 <em>Jetty</em> 相当。</p>
+<p>通过新的 <em>HTTP Client API</em> ，可以快速创建 <code>GET</code> 请求：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">HttpRequest</span> <span class="variable">request</span> <span class="operator">=</span> HttpRequest.newBuilder()</span><br><span class="line">  .uri(<span class="keyword">new</span> <span class="title class_">URI</span>(<span class="string">&quot;https://postman-echo.com/get&quot;</span>))</span><br><span class="line">  .GET()</span><br><span class="line">  .build();</span><br><span class="line"></span><br><span class="line">HttpResponse&lt;String&gt; response = HttpClient.newHttpClient()</span><br><span class="line">  .send(request, HttpResponse.BodyHandler.asString());</span><br></pre></td></tr></table></figure>
+
+<h2 id="Process-API"><a href="#Process-API" class="headerlink" title="Process API"></a>Process API</h2><p>Java 9 中对访问和管理系统进程进行了增强，通过  <code>java.lang.ProcessHandle</code> 可以访问更多进程相关的信息：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ProcessHandle</span> <span class="variable">self</span> <span class="operator">=</span> ProcessHandle.current();</span><br><span class="line"><span class="type">long</span> <span class="variable">PID</span> <span class="operator">=</span> self.getPid();</span><br><span class="line">ProcessHandle.<span class="type">Info</span> <span class="variable">procInfo</span> <span class="operator">=</span> self.info();</span><br><span class="line"></span><br><span class="line">Optional&lt;String[]&gt; args = procInfo.arguments();</span><br><span class="line">Optional&lt;String&gt; cmd =  procInfo.commandLine();</span><br><span class="line">Optional&lt;Instant&gt; startTime = procInfo.startInstant();</span><br><span class="line">Optional&lt;Duration&gt; cpuUsage = procInfo.totalCpuDuration();</span><br></pre></td></tr></table></figure>
+
+<p>通过 <code>destroy()</code> 停止运行的子线程：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">childProc = ProcessHandle.current().children();</span><br><span class="line">childProc.forEach(procHandle -&gt; &#123;</span><br><span class="line">    assertTrue(<span class="string">&quot;Could not kill process &quot;</span> + procHandle.getPid(), procHandle.destroy());</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="The-Java-Shell"><a href="#The-Java-Shell" class="headerlink" title="The Java Shell"></a>The Java Shell</h2><p>Java 9 引入 了 <em>jshell</em> 命令行工具，允许在命令行中直接运行代码片段，而无需将代码放在类里面，类似于其它基于 JVM 的语言，如 Groovy，Scala。之所以推出 <em>jshell</em>，其主要原因在 Java 语言相对于其它语言来说，上手的门槛略高，像 <em>python</em> 直接在命令行下就能完成 <em>hello world</em>，而 Java 还需要打开编辑器，再声明一个类，然后编译完才能运行，实在是太烦琐了，完全不利于 Java 向教学语言的转化。</p>
+<p>除了命令行之外，<em>jshell</em> 还提供了 API，允许其它工具集成 <em>jshell</em> 的功能。</p>
+<h2 id="Multi-Release-JAR-Files"><a href="#Multi-Release-JAR-Files" class="headerlink" title="Multi-Release JAR Files"></a>Multi-Release JAR Files</h2><p>在 Java 9 中引入了一个比较有趣的特性是支持同一个 jar 针对多个不同的 Java 版本进行发布，通过在 <em>MANIFEST.MF</em> 文件中设置 <code>Multi-Release: true</code>，该 jar 文件就变成了 *Multi-Release JAR (MRJAR)*，Java 运行时将根据当前的主版本选择合适的 jar 版本。该文件的结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">jar root</span><br><span class="line">  - A.class</span><br><span class="line">  - B.class</span><br><span class="line">  - C.class</span><br><span class="line">  - D.class</span><br><span class="line">  - META-INF</span><br><span class="line">    - versions</span><br><span class="line">      - 9</span><br><span class="line">        - A.class</span><br><span class="line">        - B.class</span><br><span class="line">      - 10</span><br><span class="line">        - A.class</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>当 JDK &lt; 9 时，只有根目录中的类对 Java 运行时是可见的</li>
+<li>在 JDK 9 上，<em>A.class</em> 和 <em>B.class</em> 将从 <em>root&#x2F;META-INF&#x2F;versions&#x2F;9&#x2F;</em> 中加载</li>
+<li>在 JDK 10 上， <em>A.class</em> 将从 <em>root&#x2F;META-INF&#x2F;versions&#x2F;10&#x2F;</em> 中加载</li>
+</ul>
+<p><em>Multi-Release Jar</em> 使得项目可以维护针对不同 Java 平台的不同版本的代码，而且分发代码只需要一个 jar，一个版本（Maven artifact 版本）就够了。为了实现这个特性，自然免不了修改处理 JAR 的 API，比如：<code>JarFile</code> 和 <code>URLClassLoader</code>。此外，许多 JDK 工具为了适应新的格式也被改造过，如：<em>java</em>，<em>javac</em>，<em>jar</em>。</p>
+<h2 id="Multi-Resolution-Images"><a href="#Multi-Resolution-Images" class="headerlink" title="Multi-Resolution Images"></a>Multi-Resolution Images</h2><p>JDK 9 中新增了一个新的接口 <a target="_blank" rel="noopener" href="http://download.java.net/java/jdk9/docs/api/java/awt/image/MultiResolutionImage.html">MultiResolutionImage</a> 及其基础实现类 <a target="_blank" rel="noopener" href="http://download.java.net/java/jdk9/docs/api/java/awt/image/BaseMultiResolutionImage.html">BaseMultiResolutionImage</a>，它可以封装几种不同尺寸的图像变体，当给定了宽高，它可以用于选择最好的图像变体。</p>
+<h2 id="Reactive-Stream-Flow-API"><a href="#Reactive-Stream-Flow-API" class="headerlink" title="Reactive Stream Flow API"></a>Reactive Stream Flow API</h2><p>在 JDK 9 中引入了 <a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/9/docs/api/java/util/concurrent/Flow.html">java.util.concurrent.Flow</a> 类，它提供了一套 <em>Reactive Stream</em> 相关的标准的接口集，这些接口通过发布-订阅机制让数据流的生产者与消费者之前进行异步通信，类似于 <a target="_blank" rel="noopener" href="https://github.com/ReactiveX/RxJava">RxJava</a>。</p>
+<h2 id="Make-G1-the-Default-Garbage-Collector"><a href="#Make-G1-the-Default-Garbage-Collector" class="headerlink" title="Make G1 the Default Garbage Collector"></a>Make G1 the Default Garbage Collector</h2><p>在 Java 9 之前，服务器上的默认垃圾回收器是并行 GC，客户端的默认垃圾回收器是串行 GC，在 Java 9 中，服务器的默认 的 GC 改为从 Java 7 开始引入的 G1 垃圾回收器。</p>
+<p>G1 是一个并行的、低暂停的垃圾回收器，对于具有较大堆空间的多核机器特别适用。关于 G1 垃圾回收器的概述，参见：<a target="_blank" rel="noopener" href="http://www.oracle.com/technetwork/tutorials/tutorials-1876574.html">Getting Started with the G1 Garbage Collector</a>。除此之外，并发标记清除（CMS）回收器已经被废弃。</p>
+<h2 id="Compact-Strings"><a href="#Compact-Strings" class="headerlink" title="Compact Strings"></a>Compact Strings</h2><p>Java 9 对 <code>String</code> 类作了内部优化，以减少内存消耗。因为大多数字符串并不需要 2 个字节表示的字符。实现的原理是在将字符数组改为字节数组，并在字节数组中增个一个字节用于表示字节数组的编码：</p>
+<ul>
+<li>Latin-1 占用 1 个字节</li>
+<li>UTF-16 占用 2 个字节</li>
+</ul>
+<p>字符串根据要存储的内容确定字节数组的编码。</p>
+<p>这个更改是内部的，不影响 <code>String</code> 对外的 API 以及其相关的类，如 <code>StringBuilder</code>、<code>StringBuffer</code> 等。若要禁用字符串压缩，可以使用 <em>-XX:-CompactStrings</em>  选项。</p>
+<h2 id="Stack-Walking-API"><a href="#Stack-Walking-API" class="headerlink" title="Stack-Walking API"></a>Stack-Walking API</h2><p>在 Java 9 之前，只能通过 <code>sun.reflect.Reflection</code> 遍历线程栈帧，特别是 <code>sun.reflect.Reflection::getCallerClass()</code>。有一些库依赖于这个方法，但是已经被废弃掉了，取而代之的是 JDK 9 提供的标准的 API – <a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/9/docs/api/java/lang/StackWalker.html">StackWalker</a>，它通过延迟访问栈帧来提高性能。应用程序可以通过这个 API 来遍历调用栈，并在类中过滤。这个类中，有两个方法值得注意：</p>
+<ul>
+<li><code>public &amp;lt;T&amp;gt; T walk(Function&amp;lt;Stream&amp;lt;StackFrame&amp;gt;, T&amp;gt; function)</code> - 从顶部帧开始对当前线程栈帧进行遍历，并对栈帧应用指定的 <em>Function</em>。</li>
+<li><code>public Class&lt;?&gt; getCallerClass()</code> - 返回调用此方法的类</li>
+</ul>
+<p><code>StackWalker</code> 是线程安全的，它可以在多线程环境中使用同一实例遍历线程栈帧。</p>
+<h2 id="Compiler-Control"><a href="#Compiler-Control" class="headerlink" title="Compiler Control"></a>Compiler Control</h2><p>Java 9 提供了一种通过编译器指令选项来控制 Java 虚拟机编译的途径，控制的级别包括：</p>
+<ul>
+<li>运行时可管理的</li>
+<li>特定的方法</li>
+</ul>
+<p>编译器指令用于告诉 JVM 如何编译，它能精确的控制到方法上下文。指令可以用于编写 JVM 测试程序，而且测试过程中不需要重新启动整个 JVM，对于绕过一些 JVM 的 bug 也是非常的实用。</p>
+<p>在程序启动时，通过在命令行可以指定指令文件，如下所示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -XX:+UnlockDiagnosticVMOptions -XX:CompilerDirectivesFile=File_A.json TestProgram</span><br></pre></td></tr></table></figure>
+
+<p>还可以通过诊断命令从正在运行的程序中添加或删除指令，也可以在程序启时开启自动打印指令栈[^1]，如下所示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -XX:+UnlockDiagnosticVMOptions -XX:+CompilerDirectivesPrint -XX:CompilerDirectivesFile=File_A.json TestProgram </span><br></pre></td></tr></table></figure>
+
+<p>想要深入了解，请参见：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/9/vm/compiler-control1.htm">Oracle JDK 9: Compiler Control</a>。</p>
+<h2 id="Segmented-Code-Cache"><a href="#Segmented-Code-Cache" class="headerlink" title="Segmented Code Cache"></a>Segmented Code Cache</h2><p>在 Java 9 中，代码缓存由原来的一个堆分成了多个堆，每个堆都包含一个特定类型的编译代码，这样做的好处是能够分离出不同属性的代码，编译代码有 3 种不同的顶级类型：</p>
+<ul>
+<li><p>JVM internal(non-method) code</p>
+<p>主要包含非方法的代码，如编译器缓冲区和字节码解释器，此代码类型会一直驻存在代码缓存中</p>
+</li>
+<li><p>Profiled-Code</p>
+<p>包含了一些经过简单优化的、生命周期很短的方法</p>
+</li>
+<li><p>Non-profiled Code</p>
+<p>包含完全优化的，<em>non-profiled</em> 方法，可能有很长的生命周期</p>
+</li>
+</ul>
+<p>非方法代码堆的大小固定为 3MB，用于 JVM 内部和编译器缓冲区，编译器缓冲区的大小根据编译器线程 C1&#x2F;C2 的数量调整，剩下的代码缓存空间则均分给 <em>profiled</em> 和 <em>non-profiled</em> 代码堆。代码堆的大小也可以通过命令行开关来控制：</p>
+<ul>
+<li><p>-XX:NonMethodCodeHeapSize</p>
+<p>设置包含非方法代码的代码堆大小</p>
+</li>
+<li><p>-XX:ProfiledCodeHeapSize</p>
+<p>设置包含 <em>profiled</em> 代码的代码堆大小</p>
+</li>
+<li><p>-XX:NonProfiledCodeHeapSize</p>
+<p>设置包含 <em>non-profiled</em> 代码的代码堆大小</p>
+</li>
+</ul>
+<h2 id="Dynamic-Linking-of-Language-Defined-Object-Models"><a href="#Dynamic-Linking-of-Language-Defined-Object-Models" class="headerlink" title="Dynamic Linking of Language-Defined Object Models"></a>Dynamic Linking of Language-Defined Object Models</h2><p>Java 9 推出动态链接这一特性主要是为 JVM 进程中的多种编程语言提供一种在运行时进行互操作的能力，这样对象可以在不同的 runtime 之间进行传递，由一种语言的编译器发出 <code>invokedynamic</code> 调用站点，由其它的语言的链接器来链接，比如，Java 8 推出的 <a href="../java-se-8/#nashorn-javascript-engine">Nashorn</a>，但 <em>Nashorn</em> 的局限性在于它是专门为 <em>JavaScript</em> 语言提供的 JVM 引擎，而不能广泛地应用于其它语言，但 <em>Nashorn</em> 证明了通过 <code>invokedynamic</code> 实现跨语言的互调是可行的。</p>
+<p>在 JDK 8 中 <em>jdk.internal.dynalink.*</em> 包下的代码作为 <em>Nashorn</em> 的内部依赖在 JDK 9 中作为 <a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/9/docs/api/jdk.dynalink-summary.html">jdk.dynalink</a> 模块被公开。</p>
+<h2 id="JVM-Compiler-Interface"><a href="#JVM-Compiler-Interface" class="headerlink" title="JVM Compiler Interface"></a>JVM Compiler Interface</h2><p>对于做编译器优化的开发者来说，<em>JVM CI</em> 无疑是一个很值得期待的特性，它允许 Java 写的编译器能被 JVM 用来进行动态编译。在 Java 9 中，它被当作一个实验性的特性引入。</p>
+<h2 id="Version-String-Scheme"><a href="#Version-String-Scheme" class="headerlink" title="Version-String Scheme"></a>Version-String Scheme</h2><p>在过去的 20 多年里，Java 的版本管理一直比较混乱。 前两个主要版本是 JDK 1.0 和 JDK 1.1。 从 1.2 到 1.5，平台被称为 J2SE (标准版本)。 从 1.5 开始，版本控制变成了 Java 5，然后是 Java 6，等等。 然而，当你使用已安装的 Java 8 运行 Java 版本时，输出仍然是 1.8 而不是 8。 甲骨文收购 Sun 后推出的当前版本版本版本方案如下：</p>
+<ul>
+<li>对于 <em>Limited Updates Release</em>（没有重要的安全修复），版本号是 20 的倍数</li>
+<li>对于重要补丁更新（修复安全漏洞），版本号的计算方法是在先前的 <em>Limited Updates Release</em> 基础上以 5 的倍数递增，当版本号不为奇数的话，再加 1 凑成奇数</li>
+</ul>
+<h3 id="Version-Numbers"><a href="#Version-Numbers" class="headerlink" title="Version Numbers"></a>Version Numbers</h3><p>从 Java 9 开始，版本号的格式改为：<em>$MAJOR.$MINOR.$SECURITY.$PATCH</em></p>
+<ul>
+<li><em>MAJOR</em> - 主版本号，对于 JDK 9 来说， <em>MAJOR &#x3D; 9</em></li>
+<li><em>MINOR</em> - 次版本号，随着 bug 修复及标准 API 的增强的发布而递增</li>
+<li><em>SECURITY</em> - 安全级别，随着重要安全修复的发布而递增，当 <em>MINOR</em> 递增时，<em>SECURITY</em> 会重置为 <code>0</code></li>
+<li><em>PATCH</em> - 非安全性修复的补丁版本</li>
+</ul>
+<h3 id="Version-Strings"><a href="#Version-Strings" class="headerlink" title="Version Strings"></a>Version Strings</h3><p> 版本字符串是由 <em>Version Number</em>  加上一些其它信息（如：early-access release identifier 或 build number）组成：</p>
+<ul>
+<li><em>$VNUM(-$PRE)?\+$BUILD(-$OPT)?</em></li>
+<li><em>$VNUM-$PRE(-$OPT)?</em></li>
+<li><em>$VNUM(+-$OPT)?</em></li>
+</ul>
+<p>其中：</p>
+<ul>
+<li><em>PRE</em> - 预发布标识</li>
+<li><em>BUILD</em> - build number</li>
+<li><em>OPT</em> - 其它可选信息，如：时间戳</li>
+</ul>
+<p>下面是现有和即将推出的对 JDK 9 进行版本控制的方案对比：</p>
+<table>
+<thead>
+<tr>
+<th>Release Type</th>
+<th>long (Existing)</th>
+<th>short (Existing)</th>
+<th>long (New)</th>
+<th>short (New)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Early Access</td>
+<td>1.9.0-ea-b19</td>
+<td>9-ea</td>
+<td>9-ea+19</td>
+<td>9-ea</td>
+</tr>
+<tr>
+<td>Major</td>
+<td>1.9.0-b100</td>
+<td>9</td>
+<td>9+100</td>
+<td>9</td>
+</tr>
+<tr>
+<td>Security #1</td>
+<td>1.9.0_5-b20</td>
+<td>9u5</td>
+<td>9.0.1+20</td>
+<td>9.0.1</td>
+</tr>
+<tr>
+<td>Security #2</td>
+<td>1.9.0_11-b12</td>
+<td>9u11</td>
+<td>9.0.2+12</td>
+<td>9.0.2</td>
+</tr>
+<tr>
+<td>Minor #1</td>
+<td>1.9.0_20-b62</td>
+<td>9u20</td>
+<td>9.1.2+62</td>
+<td>9.1.2</td>
+</tr>
+<tr>
+<td>Security #3</td>
+<td>1.9.0_25-b15</td>
+<td>9u25</td>
+<td>9.1.3+15</td>
+<td>9.1.3</td>
+</tr>
+<tr>
+<td>Security #4</td>
+<td>1.9.0_31-b08</td>
+<td>9u31</td>
+<td>9.1.4+8</td>
+<td>9.1.4</td>
+</tr>
+<tr>
+<td>Minor #2</td>
+<td>1.9.0_40-b45</td>
+<td>9u40</td>
+<td>9.2.4+45</td>
+<td>9.2.4</td>
+</tr>
+</tbody></table>
+<h2 id="Remove-the-JVM-TI-hprof-Agent"><a href="#Remove-the-JVM-TI-hprof-Agent" class="headerlink" title="Remove the JVM TI hprof Agent"></a>Remove the JVM TI hprof Agent</h2><p>在 Java 9 之前，prof JVM native agent 被用来转储堆、追踪 CPU，之所以移除它是因为有了更好的替代方案 – <a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/7/docs/technotes/tools/share/jmap.html">jmap</a> 和 <a target="_blank" rel="noopener" href="https://visualvm.github.io/">Java VisualVM</a>。</p>
+<h2 id="Remove-the-jhat-Tool"><a href="#Remove-the-jhat-Tool" class="headerlink" title="Remove the jhat Tool"></a>Remove the jhat Tool</h2><p><em>jhat</em> 工具是用来在浏览器中查看堆的 dump 信息，之所以被移除也是因为有了更好的替代方案。</p>
+<h2 id="Compile-for-Older-Platform-Versions"><a href="#Compile-for-Older-Platform-Versions" class="headerlink" title="Compile for Older Platform Versions"></a>Compile for Older Platform Versions</h2><p>在 Java 9 之前是使用 <em>-source</em> 选项设置语言规范，用 <em>-target</em> 选项生成特定版本的字节码，尽管如此，由于编译器会把已编译的类链接到当前 JDK 版本的平台 API，这会导致运行时的问题（除非重载 bootclasspath）。在 Java 9 中，为能能够编译成旧的版本，这些选项由 <em>–release</em> 替代。</p>
+<p><em>–release</em> 等价于 <em>-source N -target N -bootclasspath &lt;bootclasspath-from-N&gt;</em></p>
+<p>JDK 9 通过维护旧版本的 API 签名数据来实现这一特性，这些签名数据位于：*$JDK_HOME&#x2F;lib&#x2F;ct.sym*</p>
+<h2 id="Applet-API-deprecated"><a href="#Applet-API-deprecated" class="headerlink" title="Applet API deprecated"></a>Applet API deprecated</h2><p>由于 web 浏览器对 Java 插件的支持越来越少，Applet API 在 Java 9 中被废弃，但不确定将来是否会被删除。</p>
+<h2 id="Java-语言的一些小变化"><a href="#Java-语言的一些小变化" class="headerlink" title="Java 语言的一些小变化"></a>Java 语言的一些小变化</h2><ul>
+<li>允许在私有实例方法上使用 <code>@SafeVargs</code>。 <code>@SafeVarargs</code> 注释只能应用于不能重写的方法，包括静态方法和最终实例方法。 私有实例方法是 <code>@SafeVargs</code> 可以容纳的另一个用例。</li>
+<li>Java SE 7 中的 <em>try-with-resources</em> 语句要求对语句管理的每个资源声明一个新的变量，而在 Java SE 9 中 允许有效的 <code>final</code> 变量作为资源在 <em>try-with-resources</em> 语句中使用。</li>
+<li>如果参数类型的推导类型是可表示的，则允许带有匿名类的 <code>&lt;&gt;</code> 操作符。 由于推导类型使用了具有 <code>&lt;&gt;</code> 操作符的匿名类构造函数可能不属于由签名属性支持的一组类型，所以  Java SE 7 中禁止使用带匿名类的 <code>&lt;&gt;</code> 操作符。</li>
+<li>禁止 <code>_</code> 作为标识符</li>
+<li>接口支持 <code>private</code> 方法，从而使接口的非抽象方法能够在它们之间共享代码。</li>
+</ul>
+<blockquote>
+<p>更多详情，请参考：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/9/whatsnew/toc.htm">https://docs.oracle.com/javase/9/whatsnew/toc.htm</a></p>
+</blockquote>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>johnsonlee</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="/2021/05/07/java-9-new-features/">https://johnsonlee.io/2021/05/07/java-9-new-features/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"><a href="/tags/Java/">Java</a></div><div class="post-nav"><a class="pre" href="/2021/05/07/java-10-new-features/">Java 10 新特性</a><a class="next" href="/2021/05/07/java-8-new-features/">Java 8 新特性</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Java 9 新特性","datePublished":"2021-05-07T09:00:00.000Z","dateModified":"2021-05-07T09:00:00.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2021/05/07/java-9-new-features/"},"description":"在 2011 年的 JavaOne 中，Oracle 讨论了一些他们希望在 2016 年于 Java 9 中发布的功能。Java 9 应当对千兆级堆拥有更好的支持，同时能够更好地集成本机代码，且拥有新的垃圾收集器 G1 和能够自我调节的 JVM。2016 年初，Java 9 的发布被重新定为 2017 年 3 月；2017 年 3 月时，发布日期又被拖延至 2017 年 7 月；后来又因 Java"}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (104)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (27)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investing/">Investing (3)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investment/">Investment (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (9)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Maven/" style="font-size: 15px;">Maven</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a> <a href="/tags/Music/" style="font-size: 15px;">Music</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/Transformer/" style="font-size: 15px;">Transformer</a> <a href="/tags/Deep-Learning/" style="font-size: 15px;">Deep Learning</a> <a href="/tags/HTML/" style="font-size: 15px;">HTML</a> <a href="/tags/Programming/" style="font-size: 15px;">Programming</a> <a href="/tags/Economics/" style="font-size: 15px;">Economics</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/SPI/" style="font-size: 15px;">SPI</a> <a href="/tags/MVVM/" style="font-size: 15px;">MVVM</a> <a href="/tags/JetPack/" style="font-size: 15px;">JetPack</a> <a href="/tags/Preloading/" style="font-size: 15px;">Preloading</a> <a href="/tags/Mental-Health/" style="font-size: 15px;">Mental Health</a> <a href="/tags/Finance/" style="font-size: 15px;">Finance</a> <a href="/tags/Society/" style="font-size: 15px;">Society</a> <a href="/tags/Wall-Street/" style="font-size: 15px;">Wall Street</a> <a href="/tags/Contrarian/" style="font-size: 15px;">Contrarian</a> <a href="/tags/Alpha/" style="font-size: 15px;">Alpha</a> <a href="/tags/Risk-Management/" style="font-size: 15px;">Risk Management</a> <a href="/tags/Hiring/" style="font-size: 15px;">Hiring</a> <a href="/tags/Interview/" style="font-size: 15px;">Interview</a> <a href="/tags/Engineering-Leadership/" style="font-size: 15px;">Engineering Leadership</a> <a href="/tags/Housing/" style="font-size: 15px;">Housing</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/DeepMind/" style="font-size: 15px;">DeepMind</a> <a href="/tags/AlphaFold2/" style="font-size: 15px;">AlphaFold2</a> <a href="/tags/CASP/" style="font-size: 15px;">CASP</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/02/26/from-llm-to-effective-communication/">从 LLM 到高效沟通</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/from-compiler-to-llm/">从编译器到 LLM：软件分层的轮回</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/llm-is-a-function/">LLM 的本质——函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/tetris-effect-of-ai-conversations/">植入潜意识——AI 版的盗梦空间</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/15/ai-as-thinking-partner/">当 AI 成为你的“思考伙伴”</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/14/agora-technical-journey/">Agora 的技术选型与踩坑实录</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/13/confirmation-bias/">别让你的认知偏差限制了 AI 的发挥</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/what-should-engineering-hiring-evaluate-in-ai-era/">都 2026 了，还在考算法？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/ai-debate-what-i-learned/">一场 AI 辩论暴露了 LLM 性格的本质</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/11/ai-investment-roi-reality-check/">一年烧 $700B，谁会是下一个摩托罗拉？</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>

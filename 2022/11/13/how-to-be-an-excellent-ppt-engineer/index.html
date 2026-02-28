@@ -1,0 +1,217 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="最近看了很多工程师写的文档，发现工程师们普通存在的问题，要么通篇都是文字一个图也没有，要么技术规划全是一堆的 task，根本看不清楚这些 task 跟整体的目标是什么关系，等等，即便是高级工程师，有类似问题的也大有人在。 专业的态度我大学刚毕业那会儿，正值金融危机，那会儿找工作是出奇的难，简历发出去之后一周才有回应，当时第一个回复我的是一家规模不大的公司，很快就约了面试，到了办公室才发现，整个团队"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,架构设计,滴滴,快手,性能优化,我在滴滴做架构,johnsonlee,johnson,lijingsen,jingsen,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2022/11/13/how-to-be-an-excellent-ppt-engineer/"><meta property="og:title" content="如何成为优秀的 PPT 工程师"><meta property="og:description" content="最近看了很多工程师写的文档，发现工程师们普通存在的问题，要么通篇都是文字一个图也没有，要么技术规划全是一堆的 task，根本看不清楚这些 task 跟整体的目标是什么关系，等等，即便是高级工程师，有类似问题的也大有人在。 专业的态度我大学刚毕业那会儿，正值金融危机，那会儿找工作是出奇的难，简历发出去之后一周才有回应，当时第一个回复我的是一家规模不大的公司，很快就约了面试，到了办公室才发现，整个团队"><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2022/11/13/how-to-be-an-excellent-ppt-engineer/"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2022-11-13T00:00:00.000Z"><meta property="article:author" content="Johnson Lee"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="如何成为优秀的 PPT 工程师"><meta name="twitter:description" content="最近看了很多工程师写的文档，发现工程师们普通存在的问题，要么通篇都是文字一个图也没有，要么技术规划全是一堆的 task，根本看不清楚这些 task 跟整体的目标是什么关系，等等，即便是高级工程师，有类似问题的也大有人在。 专业的态度我大学刚毕业那会儿，正值金融危机，那会儿找工作是出奇的难，简历发出去之后一周才有回应，当时第一个回复我的是一家规模不大的公司，很快就约了面试，到了办公室才发现，整个团队"><title>如何成为优秀的 PPT 工程师 | Johnson Lee</title><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 6.3.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">如何成为优秀的 PPT 工程师</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">如何成为优秀的 PPT 工程师</h1><div class="post-meta">Nov 13, 2022<span> | </span><span class="category"><a href="/categories/career/">Career</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 3.7k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 12</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>最近看了很多工程师写的文档，发现工程师们普通存在的问题，要么通篇都是文字一个图也没有，要么技术规划全是一堆的 task，根本看不清楚这些 task 跟整体的目标是什么关系，等等，即便是高级工程师，有类似问题的也大有人在。</p>
+<h2 id="专业的态度"><a href="#专业的态度" class="headerlink" title="专业的态度"></a>专业的态度</h2><p>我大学刚毕业那会儿，正值金融危机，那会儿找工作是出奇的难，简历发出去之后一周才有回应，当时第一个回复我的是一家规模不大的公司，很快就约了面试，到了办公室才发现，整个团队才3个人，还都是新招的，除了我是应届生，其他都是工作好几年的，面试很顺利，刚面完，就收到第二家公司的面试邀请，看规模比第一家公司更大，但当天下午，就收到了第一家公司的 offer，考虑到金融危机的影响，直接接受了第一家公司的 offer，第二天就去上班了。</p>
+<p>上班第一周，熟悉完流程，就收到了老板的需求，给 XX 银行做一个 XX 系统，我一看，卧槽，居然指定了只能用 JDK 1.4，做完需求评审，就准备出方案了，然后，我自告奋勇写设计文档，几天下来，文档写得差不多了，然后邮件发给了团队 review，中午下楼吃饭的时候，团队里一个看起来很资深的工程师凑到我身边，问道：</p>
+<blockquote>
+<p>“景森，你工作几年了？”</p>
+</blockquote>
+<p>他这么一问，把我搞得有点不知所措。</p>
+<blockquote>
+<p>“咋啦？”</p>
+</blockquote>
+<blockquote>
+<p>“我看了你写的文档，感觉很专业啊！”</p>
+</blockquote>
+<p>我心想：“不会吧？你一个工作了 3 年的跟我一个应届生说我写的文档很专业，are you kidding me? are you serious?”</p>
+<blockquote>
+<p>“哦，是嘛？这是我的第一份工作”</p>
+</blockquote>
+<p>也不知道听到我这话，那哥们儿是怎么想的，我只是略有感觉，后面好一阵，那哥们儿没有之前那么活跃了。</p>
+<p>要说我写的文档有多么专业，引用郭德纲的一句话——「全靠同行的衬托」，一个应届生写的文档能专业到哪儿去呢？但为什么会让一个工作 3 年的工程师感觉很专业呢？我也有想过这个问题，可能是因为在大学期间受到我的导师的影响。虽然都是做学术研究，但我的导师是一个很注重细节的人，无论是研究方面，还是生活方面，给人的第一印象就是——专业，当然，对我们的实验报告也不例外，从那时候起，我就养成了把尽可能把文档写得很工整的习惯：</p>
+<ol>
+<li>统一字体</li>
+<li>不同级别的标题使用不同的字号</li>
+<li>正文统一字号和颜色</li>
+<li>为篇幅较长的内容生成目录和索引</li>
+<li>不要用一个段落长篇大论，适当的分段落会让内容有节奏感和层次感</li>
+<li>不要错别字连篇</li>
+</ol>
+<p>时至今日，我还记得有一次老师在我作业底下留的评语：“看你的作业简直就是一种享受”。</p>
+<p>不光是写文档，连写代码也是一样，还没参加工作的时候，写代码很少用 IDE，基本上都是文本编辑器，也就很少用自动格式化的功能，全靠一边写一边手工完成格式化，所以，每次有人找我 review 代码，我第一眼扫过去先是看格式：</p>
+<ol>
+<li>缩进是否正确，有没有对齐</li>
+<li>该空格的地方有没有空格</li>
+<li>该空行的地方有没有空行</li>
+</ol>
+<p>一般格式不整洁的代码，我是拒绝 review 的。</p>
+<h2 id="一图胜千言"><a href="#一图胜千言" class="headerlink" title="一图胜千言"></a>一图胜千言</h2><p>在写文档之前，我一般是先画图，等图画好后，文档的思路和轮廓也就出来了，可能很多人认为，画图是一个艺术活儿，但我不这么认为，这个也是可以通过勤学苦练习得的。</p>
+<h3 id="图的结构"><a href="#图的结构" class="headerlink" title="图的结构"></a>图的结构</h3><p>这里的图主要是架构图，配图不在此展开，架构层有很多种表现形式，也有很多成熟的框架和模型可以运用，像常用的有：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://www.uml.org/">UML</a></li>
+<li><a target="_blank" rel="noopener" href="https://c4model.com/">C4</a></li>
+</ul>
+<p>相较于 <a target="_blank" rel="noopener" href="http://www.uml.org/">UML</a>，<a target="_blank" rel="noopener" href="https://c4model.com/">C4</a> 上手更容易，无论是哪种模型，架构图的结构都是从 high-level 到 low-level 的，就像地图的鸟瞰图分不同的级别，不同的级别呈现的内容不一样，越往 low-level ，细节呈现得越多，架构图也一样，也是一个从模糊到清晰的过程，请记住：</p>
+<blockquote>
+<p>不必在一个图里体现架构的所有内容！！！<br>不必在一个图里体现架构的所有内容！！！<br>不必在一个图里体现架构的所有内容！！！</p>
+</blockquote>
+<p>可以采用循序渐近的方式，先从最模糊、最 high-level 的图开始，这也符合人的视觉和思维的处理方式，人的大脑对于信息的处理，也是从先轮廓开始的，然后才是细节，如果一开始就暴露太多的细节，大脑就搞不清楚哪个是重点，循序渐进也是为了体现主次之分。</p>
+<h3 id="PS-技术"><a href="#PS-技术" class="headerlink" title="PS 技术"></a>PS 技术</h3><p>说到画图，还得追溯到上学那会儿，我表妹是做平面设计的，经常会问我一些软件方面的问题，所以，我很早就接触到了 Photoshop 和 CorelDraw 之类的绘图软件，加上那会儿 Web 2.0 的热潮，自己做 Web 应用就免不了要会切图，虽然有网页三剑客，但我更亲睐 Photoshop，大学无聊的时光有一小部分就被用来苦练 Phohtoshop 抠图，说不上炉火纯青，但也算得上是轻车熟路，经常帮老师和同学处理照片，记得当时一室友失恋了，相机里存了好多他女友的照片，他想要整理那些照片，就让我教他 PS 技术，一个暑假下来，他也轻车熟路了。毕业多年后，一次聚会，这哥们儿还在感慨：“当年幸亏跟你学了一门手艺，现在能在单位大显身手”。</p>
+<p>写文档一般都是画架构图，并不太需要用到太多的 PS 技术，但做 PPT 不一样，想要做出漂亮的 PPT，就需要好的素材，但有些素材可能因为背景、色调问题，不能直接使用，就需要先处理一遍，这时候就要靠 PS 技术了，一般常用的 PS 技术有：</p>
+<ol>
+<li>抠图，去背景</li>
+<li>拼图，如：多张图叠加、拼接等</li>
+<li>调色彩、色调</li>
+<li>调大小、切图、做圆角等</li>
+<li>局部模糊、马赛克</li>
+<li>头像美颜</li>
+<li>……</li>
+</ol>
+<p>关于 PS 的教程，网上一搜一大把，以上一些常用的 PS 技术，照着视频来操作，一周就能学会，在我上学的那个年代，那些教程都是图文版的，视频教程相对来说还比较少，在那样的环境下，我也很快就掌握了一些常用的操作。</p>
+<p>使用 Photoshop 有一个问题——太贵，作为业余的使用者，为了做一个 PPT 而花几百买一个 License 着实不划算，一年也用不上几次，好在有人实现了一个<a target="_blank" rel="noopener" href="https://www.photopea.com/">网页版的 PS</a>，而且还能免费使用，当然，代价就是有广告，相比于几百的花费，广告还是可以忍忍的。我也经常用这个工具来做图，以上常用的功能基本上都支持了，而且跟 Photoshop 的使用习惯几乎一模一样，体验上也相差无几。</p>
+<h3 id="素材"><a href="#素材" class="headerlink" title="素材"></a>素材</h3><p>得益于现在强大的搜索引擎，Google 一般能解决 80%-90% 的问题，除非对一些行业或者特定的场景有高质量的需求，或者要归避版权问题，可以直接去购买高质量的素材，也可以去找可以免费下载的素材，例如：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://fonts.google.com/icons">https://fonts.google.com/icons</a></li>
+<li><a target="_blank" rel="noopener" href="https://icons.getbootstrap.com/">https://icons.getbootstrap.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.svgrepo.com/">https://www.svgrepo.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.pngrepo.com/">https://www.pngrepo.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.uiuxrepo.com/">https://www.uiuxrepo.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.iconsrepo.com/">https://www.iconsrepo.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://fontawesome.com/">https://fontawesome.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://freeicons.io/">https://freeicons.io/</a></li>
+<li><a target="_blank" rel="noopener" href="https://icons8.com/">https://icons8.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://uxwing.com/">https://uxwing.com/</a></li>
+</ul>
+<h3 id="色彩"><a href="#色彩" class="headerlink" title="色彩"></a>色彩</h3><p>无论是 PPT 素材，还是文档配图，都免不了要配色，色彩的拿捏倒真的是一个艺术活儿，好在现在有很多的配色工具可以用，网上一搜一大把，如果实在找不到合适的，那就看技术社区或者大厂出的图的配色，然后用拾色工具来取色套用到自己的图里，以下是我常用的调色板生成器：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://htmlcolorcodes.com/resources/best-color-palette-generators/">https://htmlcolorcodes.com/resources/best-color-palette-generators/</a></li>
+<li><a target="_blank" rel="noopener" href="https://color.adobe.com/zh/create/color-wheel">https://color.adobe.com/zh/create/color-wheel</a></li>
+</ul>
+<h4 id="背景色"><a href="#背景色" class="headerlink" title="背景色"></a>背景色</h4><p>貌似从乔帮主开始，科技行业的 PPT 的背景色都是以黑色或者灰黑色为主，显得更高大上，更有神秘感，虽然我也很喜欢这个调调，但是，对于做 PPT 的人来说，黑色的背景非常挑素材，大部分的素材在白色背景下都很好看，一放到黑色背景下，就显得不那么搭调，尤其是对抠图技术提出更高的要求，因为抠得不好就会出现白边，塑料感直接拉满。如果对自己的 PS 抠图技术不过关的话，最好还是首选白或者浅色作为背景色。</p>
+<h4 id="主色"><a href="#主色" class="headerlink" title="主色"></a>主色</h4><p>除了背景色，另一个非常关键的就是主色了，也就是 PPT 中最抢眼的颜色，如果不会拿捏，直接从 PPT 或者 Keynote 自带的模板中挑一个合适的颜色作为主色。</p>
+<h4 id="辅色"><a href="#辅色" class="headerlink" title="辅色"></a>辅色</h4><p>一般一页 PPT 中有 2-3 种颜色是比例中适宜的，太多或太少都没有主次之分，建议：</p>
+<ol>
+<li>标题为主色</li>
+<li>副标题或者正文内容为辅色</li>
+<li>如果有注释或者解释说明，用更淡的颜色</li>
+</ol>
+<p>如果实在不知道如何配色的时候，又比较懒的话，可以尝试经典的配色：黑-白-灰，灰色也可以选择不同的灰阶</p>
+<h3 id="线条"><a href="#线条" class="headerlink" title="线条"></a>线条</h3><p>以我多年的实践经验来看，大部分的情况下圆润的曲线更能提升美感和格调，在一些很有科技感的地方适当的使用生硬的直线、棱角或多边形（尤其是六边形）更能提升科技感。对于画架构设计图，以下是我的一些经验，仅供参考。</p>
+<h4 id="角"><a href="#角" class="headerlink" title="角"></a>角</h4><p>单调的方块用圆角矩形，如果方块中包含了其他的元素，比如 UML 中的组件图，有对外暴露端口的话，端口比较小不适合用圆角，如果端口用直角，整个组件图用直角会更谐调，像类图、时序图也一样，总结下来：</p>
+<ul>
+<li>表示细节的块状图用直角</li>
+<li>表示抽象的块状图用圆角</li>
+</ul>
+<h4 id="连接线"><a href="#连接线" class="headerlink" title="连接线"></a>连接线</h4><ul>
+<li>短距离用直线</li>
+<li>长距离用曲线</li>
+<li>至于折线，我很少用到</li>
+</ul>
+<h4 id="边框"><a href="#边框" class="headerlink" title="边框"></a>边框</h4><p>背景和边框一般不同时使用，总结下来：</p>
+<ul>
+<li>有背景则无边框</li>
+<li>有边框则无背景</li>
+<li>如果都要有，推荐背景用半透明或低透明</li>
+</ul>
+<h4 id="粗细与间距"><a href="#粗细与间距" class="headerlink" title="粗细与间距"></a>粗细与间距</h4><p>线条的粗细也很关键，使用得当，颜值拉满，以下是我的一些经验，仅供参考：</p>
+<ul>
+<li>优先考虑用细线条，细线条给人一种轻盈感</li>
+<li>可以适当用粗线条，粗线条给人一种厚重感</li>
+</ul>
+<p>像线段或箭头，两端有连接到别的图形上的话，可以考虑为两端适当的留出一点间距，当然也得看绘图工具是否支持，如果能支持更好，不能支持请忽略。</p>
+<h3 id="篇幅"><a href="#篇幅" class="headerlink" title="篇幅"></a>篇幅</h3><p>对于 PPT 而言，控制篇幅的最佳实践就是——多图少字，请记住：</p>
+<blockquote>
+<p>作为演讲者，不是为了让观众把视线放在你的 PPT 上，而是让观众把视线放在你身上！<br>作为演讲者，不是为了让观众把视线放在你的 PPT 上，而是让观众把视线放在你身上！<br>作为演讲者，不是为了让观众把视线放在你的 PPT 上，而是让观众把视线放在你身上！</p>
+</blockquote>
+<p>那如何才能既能让观众知道你下一页要讲什么，又要让观众的视线不离开你呢？答案就是——po 图！</p>
+<p>人的大脑接收图像信息的能力超乎你的想象，但是处理文字的能力相对于图像的处理能力简单就是人工智障，与其让观众看着冰冷的文字逐行理解，不如让观众欣赏你声情并茂的演讲。</p>
+<h2 id="专业的工具"><a href="#专业的工具" class="headerlink" title="专业的工具"></a>专业的工具</h2><h3 id="PPT-工具"><a href="#PPT-工具" class="headerlink" title="PPT 工具"></a>PPT 工具</h3><p>作为专业的 PPT 工程师，用得比较顺手的无非就是这三种：</p>
+<ul>
+<li>Microsoft PowerPoint</li>
+<li>Google Slides</li>
+<li>Keynote</li>
+</ul>
+<p>我用得最多的还是 Keynote，当然其它两个也非常方便，主要还是因为用的 Apple 的操作系统自带了，加上原生的 App 体验会更好。</p>
+<h3 id="架构图工具"><a href="#架构图工具" class="headerlink" title="架构图工具"></a>架构图工具</h3><p>我用过的画架构图的工具不少，大概有：</p>
+<ul>
+<li>IBM Rational Rose</li>
+<li>Micrsoft Viso</li>
+<li><a target="_blank" rel="noopener" href="http://www.sparxsystems.com/">Enterprise Architect</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.lucidchart.com/">Lucidchart</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.omnigroup.com/">OmniGraffle</a></li>
+<li><a target="_blank" rel="noopener" href="https://plantuml.com/">PlantUML</a></li>
+<li><a target="_blank" rel="noopener" href="https://app.diagrams.net/">Draw.io (Diagrams.net)</a></li>
+</ul>
+<p>但要说用得最爽的，还是 <a target="_blank" rel="noopener" href="https://www.lucidchart.com/">Lucidchart</a> 果然还是贵有他贵的道理，像我的博客中的图，一般都是用 <a target="_blank" rel="noopener" href="https://plantuml.com/">PlantUML</a> 渲染出来的，不是直接手绘的。</p>
+<h2 id="讲好故事"><a href="#讲好故事" class="headerlink" title="讲好故事"></a>讲好故事</h2><p>我经常自嘲道：“开局一张图，后面全靠编”，这里说的「编」其实就讲故事，故事里的虚虚实实，只有讲的人知道，为了提升观众或者读者的体验，总是或多或少的加入一些虚构的内容，如果全是真实的内容，就不是故事了，而是纪实了。</p>
+<p>记得有一次要对外做宣讲，准备了 PPT 发给 VP 审稿，结果 VP 扔了一句：</p>
+<blockquote>
+<p>Johnson, your PPT needs an overhaul.</p>
+</blockquote>
+<p>后来，让他的助理（总监级别）帮我一起改 PPT，开篇引入一个小故事，用故事吸引住观众，然后通过故事引出演讲的主题，而不至于太突兀，整个演讲其实就是讲一个大的故事，在故事的结构一般由两部分组成：引子和主题，二者可以都有自己的时间线和逻辑链，关键是要引子的时间线和逻辑链与主题的时间线和逻辑链对应上，就成开了一个大的故事。</p>
+<p>还记得有一次我老板要去给 CTO 汇报工作，让我给他提供点素材，正好瞅了一眼他的 PPT，标题是：</p>
+<p><em>The Past, Present and Future of Xxx</em></p>
+<p>不愧是我的老板，用大道至简来形容再贴切不过了！光看标题就知道他要怎么讲了。</p>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>johnsonlee</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="/2022/11/13/how-to-be-an-excellent-ppt-engineer/">https://johnsonlee.io/2022/11/13/how-to-be-an-excellent-ppt-engineer/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"></div><div class="post-nav"><a class="pre" href="/2022/11/28/education-for-independent-thought/">培养独立思考的教育</a><a class="next" href="/2022/11/12/recommended-reading-economics/">推荐阅读（经济篇）</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"如何成为优秀的 PPT 工程师","datePublished":"2022-11-13T00:00:00.000Z","dateModified":"2022-11-13T00:00:00.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2022/11/13/how-to-be-an-excellent-ppt-engineer/"},"description":"最近看了很多工程师写的文档，发现工程师们普通存在的问题，要么通篇都是文字一个图也没有，要么技术规划全是一堆的 task，根本看不清楚这些 task 跟整体的目标是什么关系，等等，即便是高级工程师，有类似问题的也大有人在。 专业的态度我大学刚毕业那会儿，正值金融危机，那会儿找工作是出奇的难，简历发出去之后一周才有回应，当时第一个回复我的是一家规模不大的公司，很快就约了面试，到了办公室才发现，整个团队"}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (104)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (27)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investing/">Investing (3)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investment/">Investment (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (9)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Maven/" style="font-size: 15px;">Maven</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a> <a href="/tags/Music/" style="font-size: 15px;">Music</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/Transformer/" style="font-size: 15px;">Transformer</a> <a href="/tags/Deep-Learning/" style="font-size: 15px;">Deep Learning</a> <a href="/tags/HTML/" style="font-size: 15px;">HTML</a> <a href="/tags/Programming/" style="font-size: 15px;">Programming</a> <a href="/tags/Economics/" style="font-size: 15px;">Economics</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/SPI/" style="font-size: 15px;">SPI</a> <a href="/tags/MVVM/" style="font-size: 15px;">MVVM</a> <a href="/tags/JetPack/" style="font-size: 15px;">JetPack</a> <a href="/tags/Preloading/" style="font-size: 15px;">Preloading</a> <a href="/tags/Mental-Health/" style="font-size: 15px;">Mental Health</a> <a href="/tags/Finance/" style="font-size: 15px;">Finance</a> <a href="/tags/Society/" style="font-size: 15px;">Society</a> <a href="/tags/Wall-Street/" style="font-size: 15px;">Wall Street</a> <a href="/tags/Contrarian/" style="font-size: 15px;">Contrarian</a> <a href="/tags/Alpha/" style="font-size: 15px;">Alpha</a> <a href="/tags/Risk-Management/" style="font-size: 15px;">Risk Management</a> <a href="/tags/Hiring/" style="font-size: 15px;">Hiring</a> <a href="/tags/Interview/" style="font-size: 15px;">Interview</a> <a href="/tags/Engineering-Leadership/" style="font-size: 15px;">Engineering Leadership</a> <a href="/tags/Housing/" style="font-size: 15px;">Housing</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/DeepMind/" style="font-size: 15px;">DeepMind</a> <a href="/tags/AlphaFold2/" style="font-size: 15px;">AlphaFold2</a> <a href="/tags/CASP/" style="font-size: 15px;">CASP</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/02/26/from-llm-to-effective-communication/">从 LLM 到高效沟通</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/from-compiler-to-llm/">从编译器到 LLM：软件分层的轮回</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/llm-is-a-function/">LLM 的本质——函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/tetris-effect-of-ai-conversations/">植入潜意识——AI 版的盗梦空间</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/15/ai-as-thinking-partner/">当 AI 成为你的“思考伙伴”</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/14/agora-technical-journey/">Agora 的技术选型与踩坑实录</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/13/confirmation-bias/">别让你的认知偏差限制了 AI 的发挥</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/what-should-engineering-hiring-evaluate-in-ai-era/">都 2026 了，还在考算法？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/ai-debate-what-i-learned/">一场 AI 辩论暴露了 LLM 性格的本质</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/11/ai-investment-roi-reality-check/">一年烧 $700B，谁会是下一个摩托罗拉？</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>

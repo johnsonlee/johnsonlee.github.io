@@ -1,0 +1,265 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="中国的数字人民币项目最早可以追溯到 2014 年，正式落地试点是在 2020 年。从北京、深圳到成都、苏州，各地政务场景、电商补贴、甚至红灯志愿者奖励系统，都开始接入“数币钱包”。 这是一次国家主导、央行推动的支付系统数字化尝试。但时至今日，数字人民币的普及程度依然有限：用户增长趋缓，线下覆盖不均，支付习惯难以改变，老百姓用微信支付宝惯了，基本还是“扫个码”的层面，而且对于普通人，根本分不清“数币"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,架构设计,滴滴,快手,性能优化,我在滴滴做架构,johnsonlee,johnson,lijingsen,jingsen,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2025/06/23/circle-the-fed-on-chain/"><meta property="og:title" content="Circle - 链上的美联储"><meta property="og:description" content="中国的数字人民币项目最早可以追溯到 2014 年，正式落地试点是在 2020 年。从北京、深圳到成都、苏州，各地政务场景、电商补贴、甚至红灯志愿者奖励系统，都开始接入“数币钱包”。 这是一次国家主导、央行推动的支付系统数字化尝试。但时至今日，数字人民币的普及程度依然有限：用户增长趋缓，线下覆盖不均，支付习惯难以改变，老百姓用微信支付宝惯了，基本还是“扫个码”的层面，而且对于普通人，根本分不清“数币"><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2025/06/23/circle-the-fed-on-chain/"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2025-06-23T22:00:00.000Z"><meta property="article:author" content="Johnson Lee"><meta property="article:tag" content="Stock"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Circle - 链上的美联储"><meta name="twitter:description" content="中国的数字人民币项目最早可以追溯到 2014 年，正式落地试点是在 2020 年。从北京、深圳到成都、苏州，各地政务场景、电商补贴、甚至红灯志愿者奖励系统，都开始接入“数币钱包”。 这是一次国家主导、央行推动的支付系统数字化尝试。但时至今日，数字人民币的普及程度依然有限：用户增长趋缓，线下覆盖不均，支付习惯难以改变，老百姓用微信支付宝惯了，基本还是“扫个码”的层面，而且对于普通人，根本分不清“数币"><title>Circle - 链上的美联储 | Johnson Lee</title><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 6.3.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Circle - 链上的美联储</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Circle - 链上的美联储</h1><div class="post-meta">Jun 23, 2025<span> | </span><span class="category"><a href="/categories/Investing/">Investing</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 2.5k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 8</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>中国的数字人民币项目最早可以追溯到 2014 年，正式落地试点是在 2020 年。从北京、深圳到成都、苏州，各地政务场景、电商补贴、甚至红灯志愿者奖励系统，都开始接入“数币钱包”。</p>
+<p>这是一次国家主导、央行推动的支付系统数字化尝试。但时至今日，数字人民币的普及程度依然有限：用户增长趋缓，线下覆盖不均，支付习惯难以改变，老百姓用微信支付宝惯了，基本还是“扫个码”的层面，而且对于普通人，根本分不清“数币”到底和微信钱包有啥不一样。</p>
+<p>对比之下，美国的央行数字货币（CBDC）项目连试点都没走通。2023 年，美联储发布研究报告称“尚需观望”，而在 2024 年大选年，Trump 直接公开表态反对：“我支持自由货币（Freedom Money），不会允许联邦政府发行监控人民的钱。”</p>
+<p>于是，令人意外的一幕发生了：</p>
+<p><strong>一个非政府机构、一个私人公司 Circle，在没有央行支持、没有国家背书的前提下，靠 USDC 把“美元”搬上了链。</strong></p>
+<p>它不靠印钞，不通过银行，而是收用户的钱，买国债，生成数字稳定币，再让这些“链上美元”在全球流通、转账、结算。</p>
+<p>而它背后的商业模式，甚至可以用一句话概括：</p>
+<blockquote>
+<p>Circle 做了央行想做但做不了的事：发行一种真正能跑在链上的美元。</p>
+</blockquote>
+<p>CRCL 的上市，让这个曾经边缘的项目站到了聚光灯下。我才意识到，USDC 不仅是稳定币，还是美元的链上分身；Circle 也不是科技公司，它更像一个私营的数字铸币厂。</p>
+<h2 id="USDC：美元的链上分身"><a href="#USDC：美元的链上分身" class="headerlink" title="USDC：美元的链上分身"></a>USDC：美元的链上分身</h2><p>很多人第一次接触 USDC，只是当它是一个“1:1 锚定美元”的稳定币——拿来买币、做 DeFi、或者规避交易波动。但 Circle 做的不止是稳定币，它做的是链上美元的再造工程。</p>
+<p>它的基本逻辑是这样的：</p>
+<ul>
+<li>用户用法币兑换 USDC</li>
+<li>Circle 把这些资金存入托管银行或购买短期美债</li>
+<li>Circle 铸造等额 USDC，在链上发行</li>
+<li>用户随时可以 1:1 赎回，Circle 再销毁 USDC</li>
+</ul>
+<p>从金融模型上看，它不靠币价波动赚钱，也不是 Ponzi，而是靠储备资产的利息差盈利——在 2023 年的高息环境下，USDC 储备的短期国债年化利率一度超过 5%，Circle 与 Coinbase 对半分成。</p>
+<h2 id="Circle：不只是铸币"><a href="#Circle：不只是铸币" class="headerlink" title="Circle：不只是铸币"></a>Circle：不只是铸币</h2><p>Circle 绝不仅仅是“铸币”，它还干了央行体系里的好几件关键事。如果说“铸币”只是表面，那它背后真正构建的，是一个链上美元的完整运行系统，包括：</p>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>对应传统机构</th>
+<th>Circle 的表现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>💰 铸币者</td>
+<td>国家财政部 &#x2F; 央行造币厂</td>
+<td>负责发行和销毁 USDC</td>
+</tr>
+<tr>
+<td>🏦 托管人</td>
+<td>中央银行 or 商业银行</td>
+<td>托管储备金、持有美债、管理货币基金</td>
+</tr>
+<tr>
+<td>📉 货币管理者</td>
+<td>美联储（调节货币供给）</td>
+<td>铸币随需求浮动，间接影响链上流动性</td>
+</tr>
+<tr>
+<td>🌐 支付清算网络</td>
+<td>SWIFT &#x2F; Visa &#x2F; 银联</td>
+<td>提供链上即时到账、跨境支付的基础设施</td>
+</tr>
+<tr>
+<td>📊 市场参与者</td>
+<td>华尔街基金、券商、清算所</td>
+<td>参与美债收益管理、与 Coinbase 分润、接入各类协议</td>
+</tr>
+</tbody></table>
+<p>当我们理解了 Circle 真正的角色之后，有没有发现：</p>
+<blockquote>
+<p>Circle 不是在替政府印钱，而是在悄悄重构一个“平行美元系统”。</p>
+</blockquote>
+<h2 id="链上-x2F-链下美元系统"><a href="#链上-x2F-链下美元系统" class="headerlink" title="链上&#x2F;链下美元系统"></a>链上&#x2F;链下美元系统</h2><p>我们可以通过对比链下传统的美元系统来更加深入的理解 Circle 作为新一代在这个新的系统里的发挥的作用：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>链下（传统体系）</th>
+<th>链上（新兴体系）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>货币发行</td>
+<td>美联储造数字美元（Fedwire 结算）</td>
+<td>Circle 铸 USDC</td>
+</tr>
+<tr>
+<td>储备管理</td>
+<td>美联储持有国债，控制基准利率</td>
+<td>Circle 买国债，赚利差</td>
+</tr>
+<tr>
+<td>货币调控</td>
+<td>利率 + QE &#x2F; QT +逆回购</td>
+<td>无主动调控，靠用户需求自动铸销</td>
+</tr>
+<tr>
+<td>分发路径</td>
+<td>商业银行系统 + SWIFT</td>
+<td>钱包 + DEX + Coinbase + 链上合约</td>
+</tr>
+<tr>
+<td>清算系统</td>
+<td>Fedwire &#x2F; CHIPS &#x2F; 银行内网</td>
+<td>区块链本身（如 Ethereum、Solana）</td>
+</tr>
+</tbody></table>
+<p>所以，我们可以说：</p>
+<blockquote>
+<p>Circle 是链上的“影子美联储”——不掌握法定货币权，但执行了部分联储的功能。</p>
+</blockquote>
+<p>它不能调节利率，但它创造了美元的替代供应通道；<br>它没有货币政策工具，但它的铸币行为影响了链上的美元流动性；<br>它不设通胀目标，但它的资产负债表规模已经是部分国家货币当局的量级。</p>
+<p>美联储用 QE 来控制链下美元流动性；<br>Circle 用 USDC 来构造链上美元流动性。<br>两者都绑定美国国债、都在“制造信用”，但使用的是不同的渠道、逻辑、节奏。</p>
+<h2 id="新货币秩序的试验场"><a href="#新货币秩序的试验场" class="headerlink" title="新货币秩序的试验场"></a>新货币秩序的试验场</h2><p>很多人第一次看到 USDC 的运行模式，直觉反应是：“这不就是一个合规的稳定币嘛？”</p>
+<p>但当你把它放进美元体系的更大背景下看，就会发现：它其实是整个美元货币机制的一次“模块化重构”。它不是取代央行，但它确实在把央行原本一体化的系统，拆解成了更小、更灵活的功能组件，并交由市场来执行。</p>
+<p>其中最深刻的变化之一是：</p>
+<blockquote>
+<p>美元信用从“央行背书”转向了“国债+代码托管”的组合模式。</p>
+</blockquote>
+<h3 id="央行信用-vs-国债信用：一次制度级的分离实验"><a href="#央行信用-vs-国债信用：一次制度级的分离实验" class="headerlink" title="央行信用 vs 国债信用：一次制度级的分离实验"></a>央行信用 vs 国债信用：一次制度级的分离实验</h3><p>传统美元体系中，央行（美联储）和财政部（国债）之间虽然机构独立，但在运作上高度捆绑：</p>
+<ul>
+<li>美联储通过 QE (Quantitative Easing) &#x2F; QT (Quantitative Tightening) 控制流动性；</li>
+<li>国债是财政支出的工具，央行用买债的方式间接支持财政赤字；</li>
+<li>最终形成一个“信用闭环”：国家印钱、国家发债、国家流通、国家兑付。</li>
+</ul>
+<p>而 USDC 的模式，则是彻底“拆分”了这个闭环：</p>
+<ul>
+<li>只锚定国债，不靠央行信用；</li>
+<li>由 Circle 管理资产，由代码执行兑付，由用户决定需求；</li>
+<li>美联储缺席，财政部也没有授权，但美元依然诞生了，而且跑得比链下还快。</li>
+</ul>
+<p>这就像是用市场化方式，复制了一套“简化版美联储”出来，而且效果还不差。</p>
+<h3 id="信用分离模型的优势"><a href="#信用分离模型的优势" class="headerlink" title="信用分离模型的优势"></a>信用分离模型的优势</h3><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>传统央行体系</th>
+<th>Circle&#x2F;USDC 模型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>信用锚定</td>
+<td>美联储的政策信用</td>
+<td>美国国债的主权信用</td>
+</tr>
+<tr>
+<td>铸币机制</td>
+<td>由央行主导，通过利率影响银行放贷</td>
+<td>市场驱动，用户存入法币 → 自动铸币</td>
+</tr>
+<tr>
+<td>发行效率</td>
+<td>依赖银行系统、清算网络、监管通道</td>
+<td>无中介，链上实时到账，全球可用</td>
+</tr>
+<tr>
+<td>风险结构</td>
+<td>中央化，央行错误政策即系统性风险</td>
+<td>分散式结构，可替代、可审计、抗风险更强</td>
+</tr>
+<tr>
+<td>透明程度</td>
+<td>黑箱式政策，央行账本难以实时披露</td>
+<td>每月披露储备结构，第三方审计</td>
+</tr>
+<tr>
+<td>政策中立性</td>
+<td>为经济目标服务（就业、通胀、财政）</td>
+<td>仅承担清算和铸币职能，更接近货币本源</td>
+</tr>
+</tbody></table>
+<p>换句话说：</p>
+<blockquote>
+<p>Circle 和 USDC 所做的，是把「货币」从一个政策工具，重新拉回成一个结算资产，把央行拆成了国债 + 代码 + API 三个模块。</p>
+</blockquote>
+<p>从某种意义上，这不仅是美元的一次底层协议重构，更是整个全球货币体系向“金融 SaaS 化”的过渡试验。</p>
+<p>你不再依赖一个主权政府的背书去发币，而是拿一份美国国债，接上一个智能合约，生成一个“美元副本”，然后发送到任何一条链、任何一个国家、任何一个钱包。</p>
+<p>这就是 USDC，背后也是 <a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/CRCL">$CRCL</a> 的真正逻辑。</p>
+<h2 id="铸币权的证券化"><a href="#铸币权的证券化" class="headerlink" title="铸币权的证券化"></a>铸币权的证券化</h2><p>如果说 Circle 是链上美元系统的“发行行”，那 <a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/CRCL">$CRCL</a> 本质上就是这套“影子美联储”系统的利润凭证。</p>
+<p>但这张凭证，不是来自传统意义上的科技增长，不是 DAU、不是 GMV、也不是产品订阅用户增长曲线，而是来自一种制度结构的变革红利：</p>
+<p>美联储不做数字美元，但市场需要；</p>
+<ul>
+<li>政府不发行全球美元 API，但资本已经先行；</li>
+<li>Coinbase、Visa、BlackRock 等传统金融巨头都在下注 Circle 的新秩序；</li>
+<li>Circle 的收入与国债利率挂钩，而国债，是全球最深、最稳的资产池。</li>
+</ul>
+<p>所以，买 <a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/CRCL">$CRCL</a>，不只是买一个 Web3 公司，也不只是押注稳定币需求增长，而是：</p>
+<blockquote>
+<p>参与美元信用外包进程的证券化分红。</p>
+</blockquote>
+<p>这是一种制度套利，也可能是一种范式切换：<strong>如果未来美元的增量，越来越多是通过链上发行完成的，那 CRCL 就不仅是代理者，而是变成了一个半制度型角色——数字铸币权的持有者之一。</strong></p>
+<p>我们还不知道这种模式能否长成真正的新秩序，也不知道监管是否最终会容许它“做大做强”，但我们知道一件事：</p>
+<p>它已经跑在前面了，而且还在盈利。</p>
+<h2 id="下篇预告：USDC-与比特币的矛盾统一"><a href="#下篇预告：USDC-与比特币的矛盾统一" class="headerlink" title="下篇预告：USDC 与比特币的矛盾统一"></a>下篇预告：USDC 与比特币的矛盾统一</h2><p>从某种意义上讲，<a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/CRCL">$CRCL</a> 和比特币代表了两种完全对立的金融哲学：</p>
+<ul>
+<li>比特币去中心、无国家、反监管；</li>
+<li>USDC 中心化、可监管、绑定美国财政。</li>
+</ul>
+<p>但也正因为如此，它们在结构上并不排斥，反而可能互为补充：</p>
+<ul>
+<li>比特币是数字黄金，是链上“价值锚定”的硬资产；</li>
+<li>USDC 是数字美元，是链上流动性的桥梁和燃料；</li>
+</ul>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>johnsonlee</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="/2025/06/23/circle-the-fed-on-chain/">https://johnsonlee.io/2025/06/23/circle-the-fed-on-chain/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"><a href="/tags/Stock/">Stock</a></div><div class="post-nav"><a class="pre" href="/2025/12/06/education-in-the-age-of-ai/">AI 时代的教育</a><a class="next" href="/2025/06/22/why-i-went-all-in-on-circle/">为什么 All in CRCL?</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Circle - 链上的美联储","datePublished":"2025-06-23T22:00:00.000Z","dateModified":"2025-06-23T22:00:00.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2025/06/23/circle-the-fed-on-chain/"},"description":"中国的数字人民币项目最早可以追溯到 2014 年，正式落地试点是在 2020 年。从北京、深圳到成都、苏州，各地政务场景、电商补贴、甚至红灯志愿者奖励系统，都开始接入“数币钱包”。 这是一次国家主导、央行推动的支付系统数字化尝试。但时至今日，数字人民币的普及程度依然有限：用户增长趋缓，线下覆盖不均，支付习惯难以改变，老百姓用微信支付宝惯了，基本还是“扫个码”的层面，而且对于普通人，根本分不清“数币"}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (104)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (27)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investing/">Investing (3)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investment/">Investment (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (9)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Maven/" style="font-size: 15px;">Maven</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a> <a href="/tags/Music/" style="font-size: 15px;">Music</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/Transformer/" style="font-size: 15px;">Transformer</a> <a href="/tags/Deep-Learning/" style="font-size: 15px;">Deep Learning</a> <a href="/tags/HTML/" style="font-size: 15px;">HTML</a> <a href="/tags/Programming/" style="font-size: 15px;">Programming</a> <a href="/tags/Economics/" style="font-size: 15px;">Economics</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/SPI/" style="font-size: 15px;">SPI</a> <a href="/tags/MVVM/" style="font-size: 15px;">MVVM</a> <a href="/tags/JetPack/" style="font-size: 15px;">JetPack</a> <a href="/tags/Preloading/" style="font-size: 15px;">Preloading</a> <a href="/tags/Mental-Health/" style="font-size: 15px;">Mental Health</a> <a href="/tags/Finance/" style="font-size: 15px;">Finance</a> <a href="/tags/Society/" style="font-size: 15px;">Society</a> <a href="/tags/Wall-Street/" style="font-size: 15px;">Wall Street</a> <a href="/tags/Contrarian/" style="font-size: 15px;">Contrarian</a> <a href="/tags/Alpha/" style="font-size: 15px;">Alpha</a> <a href="/tags/Risk-Management/" style="font-size: 15px;">Risk Management</a> <a href="/tags/Hiring/" style="font-size: 15px;">Hiring</a> <a href="/tags/Interview/" style="font-size: 15px;">Interview</a> <a href="/tags/Engineering-Leadership/" style="font-size: 15px;">Engineering Leadership</a> <a href="/tags/Housing/" style="font-size: 15px;">Housing</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/DeepMind/" style="font-size: 15px;">DeepMind</a> <a href="/tags/AlphaFold2/" style="font-size: 15px;">AlphaFold2</a> <a href="/tags/CASP/" style="font-size: 15px;">CASP</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/02/26/from-llm-to-effective-communication/">从 LLM 到高效沟通</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/from-compiler-to-llm/">从编译器到 LLM：软件分层的轮回</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/llm-is-a-function/">LLM 的本质——函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/tetris-effect-of-ai-conversations/">植入潜意识——AI 版的盗梦空间</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/15/ai-as-thinking-partner/">当 AI 成为你的“思考伙伴”</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/14/agora-technical-journey/">Agora 的技术选型与踩坑实录</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/13/confirmation-bias/">别让你的认知偏差限制了 AI 的发挥</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/what-should-engineering-hiring-evaluate-in-ai-era/">都 2026 了，还在考算法？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/ai-debate-what-i-learned/">一场 AI 辩论暴露了 LLM 性格的本质</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/11/ai-investment-roi-reality-check/">一年烧 $700B，谁会是下一个摩托罗拉？</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>

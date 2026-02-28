@@ -1,0 +1,172 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="大家吐槽 Android 构建慢已经不是一天两天了，尽管都已经换成了最新款的 MBP，打个包依然要等一根烟的时间，不是 RD 小哥偷懒不干活儿，本地打包的时候机器卡得一批，实在是啥也干不了呀。 升级 Android Gradle Plugin为了提升构建的速度，Gradle 团队和 Android 团队也是操碎了心，各种增量编译都支持得越来越好，所以，有什么理由不升级到最新的 Android Gr"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,架构设计,滴滴,快手,性能优化,我在滴滴做架构,johnsonlee,johnson,lijingsen,jingsen,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2020/11/25/android-app-build-optimization-guide/"><meta property="og:title" content="Android 应用构建优化指南"><meta property="og:description" content="大家吐槽 Android 构建慢已经不是一天两天了，尽管都已经换成了最新款的 MBP，打个包依然要等一根烟的时间，不是 RD 小哥偷懒不干活儿，本地打包的时候机器卡得一批，实在是啥也干不了呀。 升级 Android Gradle Plugin为了提升构建的速度，Gradle 团队和 Android 团队也是操碎了心，各种增量编译都支持得越来越好，所以，有什么理由不升级到最新的 Android Gr"><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2020/11/25/android-app-build-optimization-guide/"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2020-11-25T00:00:00.000Z"><meta property="article:author" content="Johnson Lee"><meta property="article:tag" content="Android"><meta property="article:tag" content="Build"><meta property="article:tag" content="Compiler"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Android 应用构建优化指南"><meta name="twitter:description" content="大家吐槽 Android 构建慢已经不是一天两天了，尽管都已经换成了最新款的 MBP，打个包依然要等一根烟的时间，不是 RD 小哥偷懒不干活儿，本地打包的时候机器卡得一批，实在是啥也干不了呀。 升级 Android Gradle Plugin为了提升构建的速度，Gradle 团队和 Android 团队也是操碎了心，各种增量编译都支持得越来越好，所以，有什么理由不升级到最新的 Android Gr"><title>Android 应用构建优化指南 | Johnson Lee</title><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 6.3.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Android 应用构建优化指南</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Android 应用构建优化指南</h1><div class="post-meta">Nov 25, 2020<span> | </span><span class="category"><a href="/categories/computer-science/">Computer Science</a><a href="/categories/computer-science/mobile/"> / Mobile</a><a href="/categories/computer-science/mobile/android/"> / Android</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 1.7k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 6</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>大家吐槽 Android 构建慢已经不是一天两天了，尽管都已经换成了最新款的 MBP，打个包依然要等一根烟的时间，不是 RD 小哥偷懒不干活儿，本地打包的时候机器卡得一批，实在是啥也干不了呀。</p>
+<h2 id="升级-Android-Gradle-Plugin"><a href="#升级-Android-Gradle-Plugin" class="headerlink" title="升级 Android Gradle Plugin"></a>升级 Android Gradle Plugin</h2><p>为了提升构建的速度，<em>Gradle</em> 团队和 <em>Android</em> 团队也是操碎了心，各种增量编译都支持得越来越好，所以，有什么理由不升级到最新的 <em>Android Gradle Plugin</em> 版本呢？</p>
+<p>有人说：我们魔改了 <em>Android Gradle Plugin</em> ，一升级所有 <em>Gradle</em> 插件全跪，更有甚者，魔改 <em>Kotlin</em> 编译器，然后，天天查各种莫名其妙的问题，说得好听点儿叫「魔改」，说得不好听，就是「瞎JB乱改」，在乱改的时候，难道就没想过后续要升级的么？</p>
+<h2 id="升级-Gradle"><a href="#升级-Gradle" class="headerlink" title="升级 Gradle"></a>升级 Gradle</h2><p><em>Android Gradle Plugin</em> 对 <em>Gradle</em> 的版本有最低版本要求，在满足最低版本的情况，可以考虑升级 <em>Gradle</em> 版本，以下是最近各个版本在构建性能方面的优化：</p>
+<ol>
+<li>Gradle 6.7<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.gradle.org/6.5/userguide/gradle_daemon.html#sec:daemon_watch_fs">文件系统监视 （File-system watching）</a>正式发布</li>
+<li>针对 <em>Configuration</em> 缓存的持续优化</li>
+</ul>
+</li>
+<li>Gradle 6.6<ul>
+<li>针对 <em>Configuration</em> 缓存的优化</li>
+<li>针对 <em>runtime classpath</em> 的缓存优化</li>
+<li>依赖管理优化</li>
+<li><a target="_blank" rel="noopener" href="https://docs.gradle.org/6.5/userguide/gradle_daemon.html#sec:daemon_watch_fs">文件系统监视 （File-system watching）</a>功能稳定性优化</li>
+</ul>
+</li>
+<li>Gradle 6.5<ul>
+<li>新增加了<a target="_blank" rel="noopener" href="https://docs.gradle.org/6.5/userguide/gradle_daemon.html#sec:daemon_watch_fs">文件系统监视 （File-system watching）</a>功能（还在实验中），从官方提供的性能报告来看，开启后，性能提升将近 20%</li>
+</ul>
+</li>
+<li>Gradle 6.4<ul>
+<li>优化了依赖文件锁</li>
+</ul>
+</li>
+<li>Gradle 6.3<ul>
+<li>(没啥优化)</li>
+</ul>
+</li>
+<li>Gradle 6.2<ul>
+<li>新增了<a target="_blank" rel="noopener" href="https://docs.gradle.org/6.2/release-notes.html#shared-dependency-cache">依赖缓存共享</a>功能</li>
+</ul>
+</li>
+<li>Gradle 6.1 <ul>
+<li>新增了<a target="_blank" rel="noopener" href="https://docs.gradle.org/6.1/release-notes.html#gradle's-dependency-cache-can-be-relocated">依赖缓存重定位</a>功能</li>
+</ul>
+</li>
+<li>Gradle 6.0<ul>
+<li>针对 <em>Java</em> 和 <em>Groovy</em> 的增量编译优化</li>
+</ul>
+</li>
+</ol>
+<h2 id="使用-G1-GC"><a href="#使用-G1-GC" class="headerlink" title="使用 G1 GC"></a>使用 G1 GC</h2><p>基本上 <em>Android</em> 开发都是用的 <em>Java 8</em> ，但 <em>Java 8</em> 的默认 <em>GC</em> 是 <em>Parallel GC</em> ，相对于 <em>G1 GC</em> ，性能上还是有些差距，可以通过升级 <em>JDK</em> 版本，或者设置 <em>JVM</em> 参数 <code>-XX:+UseG1GC</code> 来启用 <em>G1 GC</em> ，如果 <em>heap size</em> 小于 <em>4GB</em> 则不推荐使用。</p>
+<h2 id="使用多进程编译"><a href="#使用多进程编译" class="headerlink" title="使用多进程编译"></a>使用多进程编译</h2><p><em>Gradle</em> 提供了 <code>forkOptions</code>，可以让 <code>JavaCompile</code> 任务分进程进行编译，这样做的好处是可以有效的降低内存的占用，不过，分进程的方式不一定适合所有工程，在正式使用前，还需要用 <em>Profiling</em> 工具对工程进行分析。</p>
+<h2 id="使用-Build-Cache"><a href="#使用-Build-Cache" class="headerlink" title="使用 Build Cache"></a>使用 Build Cache</h2><p>开启 <em>Build Cache</em> 有两种方式：</p>
+<ol>
+<li>命令行参数 <code>--build-cache</code></li>
+<li>在 <code>gradle.properties</code> 中配置 <code>org.gradle.caching=true</code></li>
+</ol>
+<p>作为 <em>Gradle Plugin</em> ，尽可能的使用 <em>Cacheable API</em> 来创建 <em>Task</em> ，这样才能更好的支持增量编译。</p>
+<h2 id="使用-build-features-选项"><a href="#使用-build-features-选项" class="headerlink" title="使用 build features 选项"></a>使用 build features 选项</h2><p><em>Android Gradle Plugin</em> 从  <code>4.0.0</code> 开始提供了一系列 <a target="_blank" rel="noopener" href="https://developer.android.com/reference/tools/gradle-api/4.1/com/android/build/api/dsl/BuildFeatures">BuildFeatures</a> 选项：</p>
+<ol>
+<li><code>aidl</code></li>
+<li><code>buildConfig</code></li>
+<li><code>compose</code></li>
+<li><code>prefab</code></li>
+<li><code>renderScript</code></li>
+<li><code>resValues</code></li>
+<li><code>databinding</code></li>
+<li><code>shaders</code></li>
+<li><code>viewBinding</code></li>
+<li><code>...</code></li>
+</ol>
+<p>可以通过 <a target="_blank" rel="noopener" href="https://developer.android.com/reference/tools/gradle-api/4.1/com/android/build/api/dsl/BuildFeatures">BuildFeatures</a> <em>DSL</em> 或者 <em>properties</em> 选项来关闭一些影响构建性能的特性，如： <code>buildConfig</code>。</p>
+<p>为什么 <em>BuildConfig</em> 会影响构建性能呢？因为 <em>BuildConfig</em> 会生成 <em>Java</em> 文件，一旦 <em>BuildConfig.java</em> 这个文件需要重新编译，那么所有依赖 <em>BuildConfig</em> 的缓存将会失效，所以，尽可能的避免生成的代码的变化，一般情况下，切分支，切 <em>BuildVariant</em> 是最容易导致缓存失效的，如果磁盘空间足够的情况下，可以考虑每个分支单独弄个目录。</p>
+<h2 id="使用-android-cache-fix-gradle-plugin"><a href="#使用-android-cache-fix-gradle-plugin" class="headerlink" title="使用 android-cache-fix-gradle-plugin"></a>使用 android-cache-fix-gradle-plugin</h2><p><em>Android Gradle Plugin</em> 各个版本在使用 <em>build cache</em> 的时候，会存在各种奇葩的 <em>bug</em> ，这个插件就是为了解决 <em>build cache</em> 失效的问题，目前已知的可以通过这个插件进行修复的问题有：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://issuetracker.google.com/issues/155218379"><code>CompileLibraryResourcesTask</code> 的 <code>mergedLibraryResourcesDir</code> 属性导致的缓存失效问题</a></li>
+<li><a target="_blank" rel="noopener" href="https://issuetracker.google.com/160138798"><code>DexFileDependenciesTask</code> 导致的缓存失效的问题</a></li>
+<li><a target="_blank" rel="noopener" href="https://issuetracker.google.com/issues/140602655"><code>MergeJavaResourcesTask</code> 的 <code>projectJavaRes</code> 属性导致的缓存失效的问题</a></li>
+<li><a target="_blank" rel="noopener" href="https://issuetracker.google.com/issues/140602655"><code>MergeNativeLibsTask</code> 的 <code>projectNativeLibs</code> 属性导致的缓存失效的问题</a></li>
+<li><a target="_blank" rel="noopener" href="https://issuetracker.google.com/issues/141301405"><code>MergeResources</code> 的 <code>rawLocalResources</code> 属性导致的缓存失效的问题</a></li>
+<li><a target="_blank" rel="noopener" href="https://issuetracker.google.com/issues/132245929">通过 <code>annotationProcessorOptions</code> 设置 <code>room.schemaLocation</code> 导致缓存失效的问题</a></li>
+</ol>
+<p>但依然还有一些问题未能修复：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://issuetracker.google.com/issues/155218379"><code>CompileLibraryResourcesTask</code> 不能重定位的问题</a></li>
+<li><a target="_blank" rel="noopener" href="https://issuetracker.google.com/160138798"><code>DexFileDependenciesTask</code> 不能缓存的问题</a></li>
+<li><a target="_blank" rel="noopener" href="https://issuetracker.google.com/issues/141301405"><code>MergeResources</code> 不能重定位的问题</a></li>
+<li><a target="_blank" rel="noopener" href="https://issuetracker.google.com/issues/132245929"><code>Room</code> 注解处理器导致缓存失效的问题</a></li>
+</ol>
+<h2 id="使用-Booster-兼容库"><a href="#使用-Booster-兼容库" class="headerlink" title="使用 Booster 兼容库"></a>使用 Booster 兼容库</h2><p>如果不幸用到了 <em>Android Gradle Plugin</em> 的非公开 <em>API</em> ，也不必担心，<a target="_blank" rel="noopener" href="https://github.com/didi/booster/tree/master/booster-android-gradle-api">booster-android-gradle-api</a> 提供了一些针对 <em>Android Gradle Plugin</em> 常用的 <em>API</em> 的兼容 <em>API</em> ，完全采用 <em>Kotlin Extension</em> 来定义，迁移成本相当低，像 <a target="_blank" rel="noopener" href="https://github.com/didi/DoraemonKit">didi&#x2F;DoraemonKit</a>, <a target="_blank" rel="noopener" href="https://github.com/bytedance/ByteX">bytedance&#x2F;ByteX</a> 等很多插件都在使用，目前支持最新的 <em>Android Gradle Plugin</em> 稳定版本 <code>4.1.0</code>，为了保证兼容性和稳定性，<a target="_blank" rel="noopener" href="https://github.com/didi/booster">Booster</a> 在兼容性测试方面也投入了大量精力，从 <code>3.0.0</code> 到 <code>4.1.0</code> 逐个版本跑测试用例，如果 <a target="_blank" rel="noopener" href="https://github.com/didi/booster/tree/master/booster-android-gradle-api">booster-android-gradle-api</a> 有未覆盖到的 <em>API</em> ，可以直接在 <em>GitHub</em> 上<a target="_blank" rel="noopener" href="https://github.com/didi/booster/issues/new">提 Issue</a>。</p>
+<h2 id="使用-dagger-reflect"><a href="#使用-dagger-reflect" class="headerlink" title="使用 dagger-reflect"></a>使用 dagger-reflect</h2><p>如果项目中有使用 <code>dagger</code> 实现依赖注入，无可避免的在每个模块中引入 <em>APT</em> ，这会大大降低构建的速度，为了避免 <em>APT</em> 带来的构建性能损耗，可以在开发阶段使用 <a target="_blank" rel="noopener" href="https://github.com/JakeWharton/dagger-reflect">dagger-reflect</a> 来完成消除 <em>APT</em> 带来的影响。</p>
+<p>如果项目中使用的是别的依赖注入框架，如果还没有对 <em>debug</em> 构建进行优化，可以参考 <a target="_blank" rel="noopener" href="https://github.com/JakeWharton/dagger-reflect">dagger-reflect</a> 的全反射消除 <em>APT</em> 的方案。</p>
+<p>关于 <em>APT</em> 是如何影响构建速度，以及 <em>Gradle</em> 是如何改进它的，可以参考 <a target="_blank" rel="noopener" href="https://github.com/gradle/gradle/issues/1320">gradle#1320</a> 以及 <a target="_blank" rel="noopener" href="https://github.com/gradle/gradle/files/1659294/Incremental.Annotation.Processing.-.Public.Copy.pdf">Incremental Annotation Processing</a>。</p>
+<h2 id="使用-gralde-profiler"><a href="#使用-gralde-profiler" class="headerlink" title="使用 gralde-profiler"></a>使用 gralde-profiler</h2><p><a target="_blank" rel="noopener" href="https://github.com/gradle/gradle-profiler">Gradle Profiler</a> 是 <em>Gradle</em> 团队提供的用于自动收集 <em>Gradle</em> 构建的性能分析和基准测试信息的工具，可以通过它来生成各种 <em>Profiling</em> 工程支持的格式的文件，例如：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://gradle.com/">Gradle build scans</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/jvm-profiling-tools/async-profiler">Async Profiler</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.ej-technologies.com/products/jprofiler/overview.html">JProfiler</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.yourkit.com/">YourKit</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.oracle.com/javacomponents/jmc-5-4/jfr-runtime-guide/about.htm#JFRUH170">Java flight recorder</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.chromium.org/developers/how-tos/trace-event-profiling-tool">Chrome trace</a></li>
+</ul>
+<p>不过说实话，这些工具中，数 <a target="_blank" rel="noopener" href="https://www.chromium.org/developers/how-tos/trace-event-profiling-tool">Chrome trace</a> 最方便，主要还是因为免费（穷），加上 <em>Android</em> 的 <a target="_blank" rel="noopener" href="https://developer.android.com/studio/profile/systrace">systrace</a> 也是用它，使用起来已经非常顺手了，通过 <a target="_blank" rel="noopener" href="https://www.chromium.org/developers/how-tos/trace-event-profiling-tool">Chrome trace</a> 生成火陷图，就可以很方便的找出性能瓶颈。</p>
+<h2 id="升级硬件"><a href="#升级硬件" class="headerlink" title="升级硬件"></a>升级硬件</h2><p>把 MBP 升级到顶配是最直接的，这对于企业来说是最经济的方式，这笔账其实很好算，不要只看到眼前，为了所谓的节省开支，让一帮中高级工程师在那儿吭哧吭哧魔改(瞎JB乱改)一个不能升级的版本，到头来会影响整个团队的开发效率。</p>
+<h2 id="Android-Studio-on-Cloud"><a href="#Android-Studio-on-Cloud" class="headerlink" title="Android Studio on Cloud"></a>Android Studio on Cloud</h2><p>这个就不啰嗦了，参考 <a target="_blank" rel="noopener" href="https://github.com/johnsonlee/ascloud">johnsonlee&#x2F;ascloud</a> 这个项目，直接在云端跑 <em>Android Studio</em> ，MBP 性能不够就拿服务器硬件凑吧。</p>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>johnsonlee</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="/2020/11/25/android-app-build-optimization-guide/">https://johnsonlee.io/2020/11/25/android-app-build-optimization-guide/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"><a href="/tags/Android/">Android</a><a href="/tags/Build/">Build</a><a href="/tags/Compiler/">Compiler</a></div><div class="post-nav"><a class="pre" href="/2020/12/01/what-blocks-human-evolution/">是什么阻碍了人类的进化</a><a class="next" href="/2020/11/20/running-android-studio-on-cloud/">Android Studio 在云端</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Android 应用构建优化指南","datePublished":"2020-11-25T00:00:00.000Z","dateModified":"2020-11-25T00:00:00.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2020/11/25/android-app-build-optimization-guide/"},"description":"大家吐槽 Android 构建慢已经不是一天两天了，尽管都已经换成了最新款的 MBP，打个包依然要等一根烟的时间，不是 RD 小哥偷懒不干活儿，本地打包的时候机器卡得一批，实在是啥也干不了呀。 升级 Android Gradle Plugin为了提升构建的速度，Gradle 团队和 Android 团队也是操碎了心，各种增量编译都支持得越来越好，所以，有什么理由不升级到最新的 Android Gr"}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (104)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (27)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investing/">Investing (3)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investment/">Investment (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (9)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Maven/" style="font-size: 15px;">Maven</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a> <a href="/tags/Music/" style="font-size: 15px;">Music</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/Transformer/" style="font-size: 15px;">Transformer</a> <a href="/tags/Deep-Learning/" style="font-size: 15px;">Deep Learning</a> <a href="/tags/HTML/" style="font-size: 15px;">HTML</a> <a href="/tags/Programming/" style="font-size: 15px;">Programming</a> <a href="/tags/Economics/" style="font-size: 15px;">Economics</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/SPI/" style="font-size: 15px;">SPI</a> <a href="/tags/MVVM/" style="font-size: 15px;">MVVM</a> <a href="/tags/JetPack/" style="font-size: 15px;">JetPack</a> <a href="/tags/Preloading/" style="font-size: 15px;">Preloading</a> <a href="/tags/Mental-Health/" style="font-size: 15px;">Mental Health</a> <a href="/tags/Finance/" style="font-size: 15px;">Finance</a> <a href="/tags/Society/" style="font-size: 15px;">Society</a> <a href="/tags/Wall-Street/" style="font-size: 15px;">Wall Street</a> <a href="/tags/Contrarian/" style="font-size: 15px;">Contrarian</a> <a href="/tags/Alpha/" style="font-size: 15px;">Alpha</a> <a href="/tags/Risk-Management/" style="font-size: 15px;">Risk Management</a> <a href="/tags/Hiring/" style="font-size: 15px;">Hiring</a> <a href="/tags/Interview/" style="font-size: 15px;">Interview</a> <a href="/tags/Engineering-Leadership/" style="font-size: 15px;">Engineering Leadership</a> <a href="/tags/Housing/" style="font-size: 15px;">Housing</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/DeepMind/" style="font-size: 15px;">DeepMind</a> <a href="/tags/AlphaFold2/" style="font-size: 15px;">AlphaFold2</a> <a href="/tags/CASP/" style="font-size: 15px;">CASP</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/02/26/from-llm-to-effective-communication/">从 LLM 到高效沟通</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/from-compiler-to-llm/">从编译器到 LLM：软件分层的轮回</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/llm-is-a-function/">LLM 的本质——函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/tetris-effect-of-ai-conversations/">植入潜意识——AI 版的盗梦空间</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/15/ai-as-thinking-partner/">当 AI 成为你的“思考伙伴”</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/14/agora-technical-journey/">Agora 的技术选型与踩坑实录</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/13/confirmation-bias/">别让你的认知偏差限制了 AI 的发挥</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/what-should-engineering-hiring-evaluate-in-ai-era/">都 2026 了，还在考算法？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/ai-debate-what-i-learned/">一场 AI 辩论暴露了 LLM 性格的本质</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/11/ai-investment-roi-reality-check/">一年烧 $700B，谁会是下一个摩托罗拉？</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>

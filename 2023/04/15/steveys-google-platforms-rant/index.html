@@ -1,0 +1,390 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="I was at Amazon for about six and a half years, and now I’ve been at Google for that long. One thing that struck me immediately about the two companies – an impression that has been reinforced almost "><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,架构设计,滴滴,快手,性能优化,我在滴滴做架构,johnsonlee,johnson,lijingsen,jingsen,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2023/04/15/steveys-google-platforms-rant/"><meta property="og:title" content="[译] Stevey's Google Platforms Rant"><meta property="og:description" content="I was at Amazon for about six and a half years, and now I’ve been at Google for that long. One thing that struck me immediately about the two companies – an impression that has been reinforced almost "><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2023/04/15/steveys-google-platforms-rant/"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2023-04-15T00:00:00.000Z"><meta property="article:author" content="Johnson Lee"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="[译] Stevey's Google Platforms Rant"><meta name="twitter:description" content="I was at Amazon for about six and a half years, and now I’ve been at Google for that long. One thing that struck me immediately about the two companies – an impression that has been reinforced almost "><title>[译] Stevey's Google Platforms Rant | Johnson Lee</title><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 6.3.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">[译] Stevey's Google Platforms Rant</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">[译] Stevey's Google Platforms Rant</h1><div class="post-meta">Apr 15, 2023<span> | </span><span class="category"><a href="/categories/Independent-Thinking/">Independent Thinking</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 12.3k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 55</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>I was at Amazon for about six and a half years, and now I’ve been at Google for that long. One thing that struck me immediately about the two companies – an impression that has been reinforced almost daily – is that Amazon does everything wrong, and Google does everything right. Sure, it’s a sweeping generalization, but a surprisingly accurate one. It’s pretty crazy. There are probably a hundred or even two hundred different ways you can compare the two companies, and Google is superior in all but three of them, if I recall correctly. I actually did a spreadsheet at one point but Legal wouldn’t let me show it to anyone, even though recruiting loved it.</p>
+<blockquote>
+<p>我在亚马逊待了大约六年半的时间，现在已经在谷歌待了同样长的时间。有一点让我立刻注意到这两家公司的差异——这种印象几乎每天都在被强化——那就是亚马逊在所有方面都做得不好，而谷歌则是做得非常好。当然，这是一个很笼统的概括，但却出奇地准确。这真的很疯狂。你可能可以用一百种甚至两百种不同的方式比较这两家公司，而谷歌在其中的绝大多数方面都比亚马逊优秀，如果我没记错的话，只有三个方面例外。实际上，我曾经做过一个电子表格，但法务部门不允许我向任何人展示，尽管招聘部门非常喜欢它。</p>
+</blockquote>
+<p>I mean, just to give you a very brief taste: Amazon’s recruiting process is fundamentally flawed by having teams hire for themselves, so their hiring bar is incredibly inconsistent across teams, despite various efforts they’ve made to level it out. And their operations are a mess; they don’t really have SREs and they make engineers pretty much do everything, which leaves almost no time for coding - though again this varies by group, so it’s luck of the draw. They don’t give a single shit about charity or helping the needy or community contributions or anything like that. Never comes up there, except maybe to laugh about it. Their facilities are dirt-smeared cube farms without a dime spent on decor or common meeting areas. Their pay and benefits suck, although much less so lately due to local competition from Google and Facebook. But they don’t have any of our perks or extras – they just try to match the offer-letter numbers, and that’s the end of it. Their code base is a disaster, with no engineering standards whatsoever except what individual teams choose to put in place.</p>
+<blockquote>
+<p>我的意思是，给你一个简短的例子：亚马逊的招聘流程存在根本性的缺陷，因为团队为自己招聘人员，所以他们的招聘标准在不同团队之间非常不一致，尽管他们为了平衡这一现象做了各种努力。而且他们的运营一团糟；他们真的没有SREs，他们让工程师几乎做所有事情，这导致几乎没有时间去写代码——尽管这也因团队而异，所以这取决于运气。他们对慈善事业、帮助贫困人士、社区贡献等事情毫不关心。在那里，这些话题从来没有出现过，除非是为了嘲笑它们。他们的设施是脏兮兮的方格农场，没有花一分钱在装饰或共用会议区域上。他们的薪酬和福利很差，尽管由于谷歌和Facebook当地竞争的原因，近来情况有所改善。但他们没有我们的任何福利或额外待遇——他们只是试图匹配我们的入职信上的数字，仅此而已。他们的代码库是个灾难，没有任何工程标准，除了个别团队选择实施的标准。</p>
+</blockquote>
+<p>To be fair, they do have a nice versioned-library system that we really ought to emulate, and a nice publish-subscribe system that we also have no equivalent for. But for the most part they just have a bunch of crappy tools that read and write state machine information into relational databases. We wouldn’t take most of it even if it were free.</p>
+<blockquote>
+<p>公平地说，他们确实拥有一个很好的版本控制库系统，我们真的应该效仿，还有一个很好的发布-订阅系统，我们也没有类似的东西。但大部分情况下，他们只是拥有一堆糟糕的工具，用来将状态机信息读写到关系数据库中。即使这些工具是免费的，我们也不会要大部分。</p>
+</blockquote>
+<p>I think the pubsub system and their library-shelf system were two out of the grand total of three things Amazon does better than google.</p>
+<blockquote>
+<p>我认为发布订阅系统和他们的库架系统是亚马逊比谷歌做得更好的三个方面之二。</p>
+</blockquote>
+<p>I guess you could make an argument that their bias for launching early and iterating like mad is also something they do well, but you can argue it either way. They prioritize launching early over everything else, including retention and engineering discipline and a bunch of other stuff that turns out to matter in the long run. So even though it’s given them some competitive advantages in the marketplace, it’s created enough other problems to make it something less than a slam-dunk.</p>
+<blockquote>
+<p>我想你可以说他们对尽早发布和疯狂迭代的偏好也是他们做得好的地方，但这可以从两个方面争论。他们将尽早发布的优先级置于一切之上，包括员工保留、工程纪律以及其他在长期内非常重要的事物。所以，尽管这给他们在市场上带来了一定的竞争优势，但也带来了足够多的其他问题，使得它并非完全成功。</p>
+</blockquote>
+<p>But there’s one thing they do really really well that pretty much makes up for ALL of their political, philosophical and technical screw-ups.</p>
+<blockquote>
+<p>但是有一件事他们做得非常非常好，几乎弥补了他们在政治、哲学和技术上的所有失误。</p>
+</blockquote>
+<p>Jeff Bezos is an infamous micro-manager. He micro-manages every single pixel of Amazon’s retail site. He hired Larry Tesler, Apple’s Chief Scientist and probably the very most famous and respected human-computer interaction expert in the entire world, and then ignored every goddamn thing Larry said for three years until Larry finally – wisely – left the company. Larry would do these big usability studies and demonstrate beyond any shred of doubt that nobody can understand that frigging website, but Bezos just couldn’t let go of those pixels, all those millions of semantics-packed pixels on the landing page. They were like millions of his own precious children. So they’re all still there, and Larry is not.</p>
+<blockquote>
+<p>杰夫·贝索斯是一个臭名昭著的微管理者。他对亚马逊零售网站的每一个像素都进行微管理。他聘请了苹果公司的首席科学家、也许是全世界最著名、最受尊敬的人机交互专家拉里·特斯勒，然后在拉里终于——明智地——离开公司的三年里，完全无视了拉里说的每一句话。拉里会进行大型可用性研究，毫无疑问地证明没有人能理解那个该死的网站，但贝索斯就是舍不得那些像素，登陆页面上那几百万个充满语义的像素。它们就像是他几百万个自己珍贵的孩子。所以它们都还在那里，而拉里则离开了。</p>
+</blockquote>
+<p>Micro-managing isn’t that third thing that Amazon does better than us, by the way. I mean, yeah, they micro-manage really well, but I wouldn’t list it as a strength or anything. I’m just trying to set the context here, to help you understand what happened. We’re talking about a guy who in all seriousness has said on many public occasions that people should be paying him to work at Amazon. He hands out little yellow stickies with his name on them, reminding people “who runs the company” when they disagree with him. The guy is a regular… well, Steve Jobs, I guess. Except without the fashion or design sense. Bezos is super smart; don’t get me wrong. He just makes ordinary control freaks look like stoned hippies.</p>
+<blockquote>
+<p>顺便说一下，微管理并不是亚马逊比我们做得更好的第三件事。我的意思是，是的，他们的微管理做得很好，但我不会把它列为一项优势或其他什么。我只是想在这里设定背景，帮助你了解发生了什么。我们在谈论一个认真地在许多公开场合说过人们应该付钱给他来在亚马逊工作的家伙。当人们与他意见不合时，他会分发带有他名字的小黄色便利贴，提醒人们“谁在管理公司”。这家伙就是一个普通的……好吧，我猜是史蒂夫·乔布斯。只是没有时尚或设计感。别误会，贝索斯非常聪明。他只是让普通的控制狂看起来像是大麻嬉皮士。</p>
+</blockquote>
+<p>So one day Jeff Bezos issued a mandate. He’s doing that all the time, of course, and people scramble like ants being pounded with a rubber mallet whenever it happens. But on one occasion – back around 2002 I think, plus or minus a year – he issued a mandate that was so out there, so huge and eye-bulgingly ponderous, that it made all of his other mandates look like unsolicited peer bonuses.</p>
+<blockquote>
+<p>于是有一天，杰夫·贝索斯发布了一项指令。当然，他一直在这么做，每当这种情况发生时，人们都会像被橡胶锤砸到的蚂蚁一样手忙脚乱。但在一个时候——大约在2002年前后，可能有一年的误差——他发布了一项如此疯狂、如此庞大且令人瞠目结舌的指令，以至于让他所有其他的指令看起来就像是不请自来的同行奖金。</p>
+</blockquote>
+<p>His Big Mandate went something along these lines:</p>
+<blockquote>
+<p>他的大指令大致是这样的：</p>
+</blockquote>
+<ol>
+<li>All teams will henceforth expose their data and functionality through service interfaces.</li>
+</ol>
+<blockquote>
+<p>从现在起，所有团队都要通过服务接口公开他们的数据和功能。</p>
+</blockquote>
+<ol start="2">
+<li>Teams must communicate with each other through these interfaces.</li>
+</ol>
+<blockquote>
+<p>团队之间必须通过这些接口进行沟通。</p>
+</blockquote>
+<ol start="3">
+<li>There will be no other form of interprocess communication allowed: no direct linking, no direct reads of another team’s data store, no shared-memory model, no back-doors whatsoever. The only communication allowed is via service interface calls over the network.</li>
+</ol>
+<blockquote>
+<p>不允许有其他形式的进程间通信：没有直接链接，没有直接读取另一个团队的数据存储，没有共享内存模型，完全没有后门。唯一允许的通信是通过网络上的服务接口调用。</p>
+</blockquote>
+<ol start="4">
+<li>It doesn’t matter what technology they use. HTTP, Corba, Pubsub, custom protocols – doesn’t matter. Bezos doesn’t care.</li>
+</ol>
+<blockquote>
+<p>他们使用什么技术都无所谓。HTTP、Corba、Pubsub、自定义协议——都无所谓。贝索斯不在乎。</p>
+</blockquote>
+<ol start="5">
+<li>All service interfaces, without exception, must be designed from the ground up to be externalizable. That is to say, the team must plan and design to be able to expose the interface to developers in the outside world. No exceptions.</li>
+</ol>
+<blockquote>
+<p>毫无例外，所有服务接口都必须从一开始就设计成可外部化的。也就是说，团队必须计划和设计，以便能够向外部世界的开发人员公开接口。没有例外。</p>
+</blockquote>
+<ol start="6">
+<li>Anyone who doesn’t do this will be fired.</li>
+</ol>
+<blockquote>
+<p>任何不这么做的人都会被解雇。</p>
+</blockquote>
+<ol start="7">
+<li>Thank you; have a nice day!</li>
+</ol>
+<blockquote>
+<p>谢谢；祝你今天愉快！</p>
+</blockquote>
+<p>Ha, ha! You 150-odd ex-Amazon folks here will of course realize immediately that #7 was a little joke I threw in, because Bezos most definitely does not give a shit about your day.</p>
+<blockquote>
+<p>哈哈！在座的150位前亚马逊员工们肯定会立刻意识到，第7点其实是我开的一个小玩笑，因为贝索斯绝对不关心你的一天。</p>
+</blockquote>
+<p>#6, however, was quite real, so people went to work. Bezos assigned a couple of Chief Bulldogs to oversee the effort and ensure forward progress, headed up by Uber-Chief Bear Bulldog Rick Dalzell. Rick is an ex-Armgy Ranger, West Point Academy graduate, ex-boxer, ex-Chief Torturer slash CIO at Wal*Mart, and is a big genial scary man who used the word “hardened interface” a lot. Rick was a walking, talking hardened interface himself, so needless to say, everyone made LOTS of forward progress and made sure Rick knew about it.</p>
+<blockquote>
+<p>然而，第6点是相当真实的，所以人们开始投入工作。贝索斯任命了几位首席看门狗来监督这项工作，确保取得进展，由Uber首席熊看门狗Rick Dalzell领导。Rick是一位前陆军游骑兵、西点军校毕业生、前拳击手、沃尔玛前首席拷问官兼CIO，是一个善良且令人生畏的大个子，他经常使用“硬化接口”这个词。Rick本人就是一个行走的、说话的硬化接口，所以不用说，每个人都取得了很多进展，并确保Rick知道这一点。</p>
+</blockquote>
+<p>Over the next couple of years, Amazon transformed internally into a service-oriented architecture. They learned a tremendous amount while effecting this transformation. There was lots of existing documentation and lore about SOAs, but at Amazon’s vast scale it was about as useful as telling Indiana Jones to look both ways before crossing the street. Amazon’s dev staff made a lot of discoveries along the way. A teeny tiny sampling of these discoveries included:</p>
+<blockquote>
+<p>在接下来的几年里，亚马逊在内部转型为面向服务的架构。在实施这一转型的过程中，他们学到了很多东西。关于SOA有很多现有的文档和传统知识，但对于亚马逊如此庞大的规模来说，它们的用处就像告诉印第安纳·琼斯过马路时要左右看一样。亚马逊的开发人员在这个过程中取得了很多发现。这些发现中的极小部分包括：</p>
+</blockquote>
+<ul>
+<li>pager escalation gets way harder, because a ticket might bounce through 20 service calls before the real owner is identified. If each bounce goes through a team with a 15-minute response time, it can be hours before the right team finally finds out, unless you build a lot of scaffolding and metrics and reporting.</li>
+</ul>
+<blockquote>
+<p>呼叫器升级变得更加困难，因为一个工单可能在确定真正的所有者之前，需要经过20个服务调用。如果每次跳转都经过一个响应时间为15分钟的团队，那么在正确的团队最终发现之前可能需要好几个小时，除非你建立了很多支架、指标和报告。</p>
+</blockquote>
+<ul>
+<li>every single one of your peer teams suddenly becomes a potential DOS attacker. Nobody can make any real forward progress until very serious quotas and throttling are put in place in every single service.</li>
+</ul>
+<blockquote>
+<p>你的每一个同级团队都突然成为潜在的DOS攻击者。在每个服务中都实施了非常严格的配额和限流之前，没有人能取得任何实质性的进展。</p>
+</blockquote>
+<ul>
+<li>monitoring and QA are the same thing. You’d never think so until you try doing a big SOA. But when your service says “oh yes, I’m fine”, it may well be the case that the only thing still functioning in the server is the little component that knows how to say “I’m fine, roger roger, over and out” in a cheery droid voice. In order to tell whether the service is actually responding, you have to make individual calls. The problem continues recursively until your monitoring is doing comprehensive semantics checking of your entire range of services and data, at which point it’s indistinguishable from automated QA. So they’re a continuum.</li>
+</ul>
+<blockquote>
+<p>监控和QA是一回事。在尝试进行大型SOA之前，你永远不会这么想。但当你的服务说“哦，是的，我很好”的时候，服务器中唯一仍在运行的部分可能就是那个能用愉快的机器人声音说“我很好，罗杰·罗杰，结束”的小组件。为了判断服务是否真的在响应，你必须进行单独的调用。问题会递归地持续下去，直到你的监控对整个服务和数据范围进行全面的语义检查，这时它就和自动化QA无法区分了。所以它们是一个连续体。</p>
+</blockquote>
+<ul>
+<li>if you have hundreds of services, and your code MUST communicate with other groups’ code via these services, then you won’t be able to find any of them without a service-discovery mechanism. And you can’t have that without a service registration mechanism, which itself is another service. So Amazon has a universal service registry where you can find out reflectively (programmatically) about every service, what its APIs are, and also whether it is currently up, and where.</li>
+</ul>
+<blockquote>
+<p>如果你有几百个服务，而且你的代码必须通过这些服务与其他团队的代码进行通信，那么如果没有服务发现机制，你将无法找到它们。而没有服务注册机制，你就无法实现这一点，而这本身又是另一个服务。因此，亚马逊有一个通用服务注册表，你可以在其中反射性地（以编程方式）了解每个服务，了解其API是什么，以及它当前是否可用，以及在哪里。</p>
+</blockquote>
+<ul>
+<li>debugging problems with someone else’s code gets a LOT harder, and is basically impossible unless there is a universal standard way to run every service in a debuggable sandbox.</li>
+</ul>
+<blockquote>
+<p>调试别人的代码问题变得更加困难，除非有一种通用的标准方法可以在可调试的沙箱中运行每个服务，否则基本上是不可能的。</p>
+</blockquote>
+<p>That’s just a very small sample. There are dozens, maybe hundreds of individual learnings like these that Amazon had to discover organically. There were a lot of wacky ones around externalizing services, but not as many as you might think. Organizing into services taught teams not to trust each other in most of the same ways they’re not supposed to trust external developers.</p>
+<blockquote>
+<p>这只是一个非常小的样本。有几十个，也许是几百个像这样的个别经验教训，亚马逊不得不自发地去发现。关于外部化服务的问题有很多古怪的东西，但没有你想象的那么多。组织成服务的团队在大多数相同的方式中不信任彼此，就像他们不应该信任外部开发人员一样。</p>
+</blockquote>
+<p>This effort was still underway when I left to join Google in mid-2005, but it was pretty far advanced. From the time Bezos issued his edict through the time I left, Amazon had transformed culturally into a company that thinks about everything in a services-first fashion. It is now fundamental to how they approach all designs, including internal designs for stuff that might never see the light of day externally.</p>
+<blockquote>
+<p>在我于2005年中加入谷歌之前，这项工作仍在进行中，但已取得相当大的进展。从贝索斯发布他的法令到我离开时，亚马逊已经在文化上转变为一个以服务为中心的公司。这现在是他们处理所有设计的基础，包括那些可能永远不会在外部亮相的内部设计。</p>
+</blockquote>
+<p>At this point they don’t even do it out of fear of being fired. I mean, they’re still afraid of that; it’s pretty much part of daily life there, working for the Dread Pirate Bezos and all. But they do services because they’ve come to understand that it’s the Right Thing. There are without question pros and cons to the SOA approach, and some of the cons are pretty long. But overall it’s the right thing because SOA-driven design enables Platforms.</p>
+<blockquote>
+<p>此时，他们甚至不再因为害怕被解雇而这么做。我的意思是，他们仍然对此感到害怕；在那里，为可怕的海盗贝索斯工作基本上是日常生活的一部分。但是，他们之所以提供服务，是因为他们已经意识到这是正确的事情。毫无疑问，面向服务的架构方法有利有弊，其中一些弊端相当严重。但总的来说，这是正确的事情，因为基于SOA的设计可以实现平台。</p>
+</blockquote>
+<p>That’s what Bezos was up to with his edict, of course. He didn’t (and doesn’t) care even a tiny bit about the well-being of the teams, nor about what technologies they use, nor in fact any detail whatsoever about how they go about their business unless they happen to be screwing up. But Bezos realized long before the vast majority of Amazonians that Amazon needs to be a platform.</p>
+<blockquote>
+<p>当然，这就是贝索斯发布他的法令所要达到的目的。他对团队的福祉、他们使用的技术，甚至对他们如何进行业务的任何细节都不关心，除非他们碰巧搞砸了。但贝索斯早在绝大多数亚马逊员工之前就意识到，亚马逊需要成为一个平台。</p>
+</blockquote>
+<p>You wouldn’t really think that an online bookstore needs to be an extensible, programmable platform. Would you?</p>
+<blockquote>
+<p>你可能真的不会认为一个在线书店需要成为一个可扩展的、可编程的平台。对吗？</p>
+</blockquote>
+<p>Well, the first big thing Bezos realized is that the infrastructure they’d built for selling and shipping books and sundry could be transformed an excellent repurposable computing platform. So now they have the Amazon Elastic Compute Cloud, and the Amazon Elastic MapReduce, and the Amazon Relational Database Service, and a whole passel’ o’ other services browsable at aws.amazon.com. These services host the backends for some pretty successful companies, reddit being my personal favorite of the bunch.</p>
+<blockquote>
+<p>好吧，贝索斯的第一个重要认识是，他们为销售和运输图书及杂货所建立的基础设施可以转化为一个极好的可重复使用的计算平台。所以现在他们拥有亚马逊弹性计算云，亚马逊弹性 MapReduce，亚马逊关系数据库服务，以及在 aws.amazon.com 上可浏览的一整套其他服务。这些服务为一些非常成功的公司托管后端，reddit 是我个人最喜欢的一个。</p>
+</blockquote>
+<p>The other big realization he had was that he can’t always build the right thing. I think Larry Tesler might have struck some kind of chord in Bezos when he said his mom couldn’t use the goddamn website. It’s not even super clear whose mom he was talking about, and doesn’t really matter, because nobody’s mom can use the goddamn website. In fact I myself find the website disturbingly daunting, and I worked there for over half a decade. I’ve just learned to kinda defocus my eyes and concentrate on the million or so pixels near the center of the page above the fold.</p>
+<blockquote>
+<p>他的另一个重要认识是，他不能总是构建正确的东西。我认为拉里·特斯勒可能在贝索斯身上引起了某种共鸣，当他说他妈妈无法使用该该死的网站。甚至不是很清楚他到底在谈论谁的妈妈，也不重要，因为没有人的妈妈能使用这个该死的网站。事实上，即使我在那里工作了五年多，我仍然觉得这个网站令人望而生畏。我只是学会了稍微让眼睛失焦，专注于页面中央上方的那一百万像素左右的区域。</p>
+</blockquote>
+<p>I’m not really sure how Bezos came to this realization – the insight that he can’t build one product and have it be right for everyone. But it doesn’t matter, because he gets it. There’s actually a formal name for this phenomenon. It’s called Accessibility, and it’s the most important thing in the computing world.</p>
+<blockquote>
+<p>我不太确定贝索斯是如何得出这个认识的——他无法为每个人构建一个合适的产品的洞察力。但这并不重要，因为他明白了。这种现象实际上有一个正式的名字。它被称为可访问性，这是计算领域中最重要的事情。</p>
+</blockquote>
+<p>The. Most. Important. Thing.</p>
+<blockquote>
+<p>最.重.要.的.事。</p>
+</blockquote>
+<p>If you’re sorta thinking, “huh? You mean like, blind and deaf people Accessibility?” then you’re not alone, because I’ve come to understand that there are lots and LOTS of people just like you: people for whom this idea does not have the right Accessibility, so it hasn’t been able to get through to you yet. It’s not your fault for not understanding, any more than it would be your fault for being blind or deaf or motion-restricted or living with any other disability. When software – or idea-ware for that matter – fails to be accessible to anyone for any reason, it is the fault of the software or of the messaging of the idea. It is an Accessibility failure.</p>
+<blockquote>
+<p>如果你有点疑惑，心想：“啊？你是说像盲人和聋人那样的无障碍吗？”那么你并不孤单，因为我已经意识到有很多很多像你一样的人：对这个想法无法理解的人。这个想法对你来说并没有正确的无障碍性，所以它还无法传达给你。不理解这个观点并不是你的错，就像你并不能因为失明、失聪或活动受限或者生活在其他任何残疾中而受到责备。当软件——或者说是观念本身——无法因为任何原因被任何人理解时，这是软件或观念传达的失败。这是无障碍性的失败。</p>
+</blockquote>
+<p>Like anything else big and important in life, Accessibility has an evil twin who, jilted by the unbalanced affection displayed by their parents in their youth, has grown into an equally powerful Arch-Nemesis (yes, there’s more than one nemesis to accessibility) named Security. And boy howdy are the two ever at odds.</p>
+<blockquote>
+<p>就像生活中其他重要的事情一样，无障碍性有一个邪恶的孪生兄弟，他因为在年少时被父母不公正的宠爱而心生嫉妒，最终成长为一个同样强大的死对头（没错，无障碍性不止一个敌人）——安全性。哎呀，它们俩可真是水火不容。</p>
+</blockquote>
+<p>But I’ll argue that Accessibility is actually more important than Security because dialing Accessibility to zero means you have no product at all, whereas dialing Security to zero can still get you a reasonably successful product such as the Playstation Network.</p>
+<blockquote>
+<p>但是，我认为无障碍性实际上比安全性更重要，因为将无障碍性降至零意味着你根本没有产品，而将安全性降至零仍然可以让你获得一个相当成功的产品，比如：Playstation Network。</p>
+</blockquote>
+<p>So yeah. In case you hadn’t noticed, I could actually write a book on this topic. A fat one, filled with amusing anecdotes about ants and rubber mallets at companies I’ve worked at. But I will never get this little rant published, and you’ll never get it read, unless I start to wrap up.</p>
+<blockquote>
+<p>所以，你可能没有注意到，我其实可以写一本关于这个话题的书。一本很厚的书，里面充满了我在曾经工作过的公司里关于蚂蚁和橡皮槌的有趣轶事。但是，除非我开始收尾，否则我永远不会把这个小小的抱怨发表出去，你也永远不会读到它。</p>
+</blockquote>
+<p>That one last thing that Google doesn’t do well is Platforms. We don’t understand platforms. We don’t “get” platforms. Some of you do, but you are the minority. This has become painfully clear to me over the past six years. I was kind of hoping that competitive pressure from Microsoft and Amazon and more recently Facebook would make us wake up collectively and start doing universal services. Not in some sort of ad-hoc, half-assed way, but in more or less the same way Amazon did it: all at once, for real, no cheating, and treating it as our top priority from now on.</p>
+<blockquote>
+<p>谷歌做不好的那最后一件事就是平台。我们不懂平台。我们不理解平台。你们中的一些人可能懂，但你们是少数。这一点在过去的六年里已经让我痛苦地意识到了。我曾希望来自微软、亚马逊以及最近的 Facebook 的竞争压力会让我们集体觉醒，开始提供通用服务。不是以某种临时、马虎的方式，而是基本上和亚马逊所做的那样：一次性地、真正地、毫不偷懒地，从现在开始把它当作为我们的头等大事。</p>
+</blockquote>
+<p>But no. No, it’s like our tenth or eleventh priority. Or fifteenth, I don’t know. It’s pretty low. There are a few teams who treat the idea very seriously, but most teams either don’t think about it all, ever, or only a small percentage of them think about it in a very small way.</p>
+<blockquote>
+<p>但不，事实并非如此。这在我们的优先事项中大概排在第十或第十一位。或者第十五位，我不知道。总之排名很低。有一些团队非常重视这个想法，但大多数团队要么从来不考虑这个问题，要么只有很少一部分人以非常有限的方式考虑这个问题。</p>
+</blockquote>
+<p>It’s a big stretch even to get most teams to offer a stubby service to get programmatic access to their data and computations. Most of them think they’re building products. And a stubby service is a pretty pathetic service. Go back and look at that partial list of learnings from Amazon, and tell me which ones Stubby gives you out of the box. As far as I’m concerned, it’s none of them. Stubby’s great, but it’s like parts when you need a car.</p>
+<blockquote>
+<p>让大多数团队提供一个简单的服务，以便以编程方式访问他们的数据和计算，这本身就是一个很大的挑战。他们中的大多数人认为自己在开发产品。而一个简单的服务实际上是相当可怜的服务。回去看看亚马逊的部分学习列表，告诉我 Stubby 能让你从一开始就获得哪些功能。就我而言，一个也没有。Stubby 很棒，但当你需要一辆车时，它只是零部件。</p>
+</blockquote>
+<p>A product is useless without a platform, or more precisely and accurately, a platform-less product will always be replaced by an equivalent platform-ized product.</p>
+<blockquote>
+<p>一个没有平台的产品是没有用的，或者更准确地说，一个没有平台化的产品总是会被等效的平台化产品所取代。</p>
+</blockquote>
+<p>Google+ is a prime example of our complete failure to understand platforms from the very highest levels of executive leadership (hi Larry, Sergey, Eric, Vic, howdy howdy) down to the very lowest leaf workers (hey yo). We all don’t get it. The Golden Rule of platforms is that you Eat Your Own Dogfood. The Google+ platform is a pathetic afterthought. We had no API at all at launch, and last I checked, we had one measly API call. One of the team members marched in and told me about it when they launched, and I asked: “So is it the Stalker API?” She got all glum and said “Yeah.” I mean, I was joking, but no… the only API call we offer is to get someone’s stream. So I guess the joke was on me.</p>
+<blockquote>
+<p>Google+ 是一个典型的例子，从最高层的管理领导到最底层的员工，我们都没有理解平台。平台的黄金法则是“吃自己的狗粮”。Google+ 平台是一个可悲的事后诸葛亮。我们在发布时没有任何API，据我所知，我们只有一个微不足道的 API 调用。有个团队成员发布时告诉我这个 API 调用，我问：“这是跟踪API吗？”她沮丧地说，“是的。”我的意思是，我开玩笑说，唯一提供的 API 调用是获取某人的信息流。所以我猜笑话是在我身上。</p>
+</blockquote>
+<p>Microsoft has known about the Dogfood rule for at least twenty years. It’s been part of their culture for a whole generation now. You don’t eat People Food and give your developers Dog Food. Doing that is simply robbing your long-term platform value for short-term successes. Platforms are all about long-term thinking.</p>
+<blockquote>
+<p>微软至少已经知道“吃自己的狗粮”的规则有二十年了。这已经成为他们文化的一部分。你不能自己吃人类的食物，而给开发者提供狗粮。那样做只是为了短期成功而剥夺长期平台价值。平台是关于长期思考的。</p>
+</blockquote>
+<p>Google+ is a knee-jerk reaction, a study in short-term thinking, predicated on the incorrect notion that Facebook is successful because they built a great product. But that’s not why they are successful. Facebook is successful because they built an entire constellation of products by allowing other people to do the work. So Facebook is different for everyone. Some people spend all their time on Mafia Wars. Some spend all their time on Farmville. There are hundreds or maybe thousands of different high-quality time sinks available, so there’s something there for everyone.</p>
+<blockquote>
+<p>Google+ 是一个下意识的反应，短期思维的研究，基于错误的观念，即 Facebook 的成功是因为他们构建了一个伟大的产品。但这并不是他们成功的原因。Facebook 之所以成功，是因为他们通过允许其他人完成工作构建了一个整体的产品系列。所以 Facebook 对每个人来说都是不同的。有些人花所有时间在黑帮战争上，有些人花所有时间在 Farmville 上。有数百甚至数千个不同的高质量时间消磨工具，所以每个人都能找到合适的。</p>
+</blockquote>
+<p>Our Google+ team took a look at the aftermarket and said: “Gosh, it looks like we need some games. Let’s go contract someone to, um, write some games for us.” Do you begin to see how incredibly wrong that thinking is now? The problem is that we are trying to predict what people want and deliver it for them.</p>
+<blockquote>
+<p>我们的 Google+ 团队看了二手市场，说：“天哪，看起来我们需要一些游戏。让我们找人来写一些游戏。”你现在开始明白这种思维有多么错误了吗？问题是我们试图预测人们想要什么，然后为他们提供。</p>
+</blockquote>
+<p>You can’t do that. Not really. Not reliably. There have been precious few people in the world, over the entire history of computing, who have been able to do it reliably. Steve Jobs was one of them. We don’t have a Steve Jobs here. I’m sorry, but we don’t.</p>
+<blockquote>
+<p>你不能这么做。不是真的。不是可靠的。在计算机历史上，能够可靠地做到这一点的人非常少。史蒂夫·乔布斯就是其中之一。我们这里没有史蒂夫·乔布斯。抱歉，但我们没有。</p>
+</blockquote>
+<p>Larry Tesler may have convinced Bezos that he was no Steve Jobs, but Bezos realized that he didn’t need to be a Steve Jobs in order to provide everyone with the right products: interfaces and workflows that they liked and felt at ease with. He just needed to enable third-party developers to do it, and it would happen automatically.</p>
+<blockquote>
+<p>拉里·特斯勒可能已经让贝索斯相信他不是史蒂夫·乔布斯，但贝索斯意识到，他不需要成为史蒂夫·乔布斯就能为每个人提供合适的产品：让他们喜欢并感到自在的界面和工作流程。他只需要让第三方开发者来实现这一目标，一切就会自动发生。</p>
+</blockquote>
+<p>I apologize to those (many) of you for whom all this stuff I’m saying is incredibly obvious, because yeah. It’s incredibly frigging obvious. Except we’re not doing it. We don’t get Platforms, and we don’t get Accessibility. The two are basically the same thing, because platforms solve accessibility. A platform is accessibility.</p>
+<blockquote>
+<p>我为此向那些觉得我说的这些东西非常明显的人（有很多人）道歉，因为是的。这确实非常明显。但问题是我们没有去做。我们不懂平台，也不懂无障碍。这两者基本上是一回事，因为平台解决了无障碍问题。平台就是无障碍。</p>
+</blockquote>
+<p>So yeah, Microsoft gets it. And you know as well as I do how surprising that is, because they don’t “get” much of anything, really. But they understand platforms as a purely accidental outgrowth of having started life in the business of providing platforms. So they have thirty-plus years of learning in this space. And if you go to msdn.com, and spend some time browsing, and you’ve never seen it before, prepare to be amazed. Because it’s staggeringly huge. They have thousands, and thousands, and THOUSANDS of API calls. They have a HUGE platform. Too big in fact, because they can’t design for squat, but at least they’re doing it.</p>
+<blockquote>
+<p>所以是的，微软明白这一点。你和我一样知道这有多令人惊讶，因为他们真的没有“理解”很多东西。但是，他们理解平台作为一个纯粹意外的结果，因为他们一开始就从事提供平台的业务。因此，他们在这个领域有三十多年的学习经验。如果你去 msdn.com，花些时间浏览，而且你以前从未见过它，那么准备惊叹吧。因为它是惊人的巨大。他们有成千上万，成千上万，成千上万的API调用。他们有一个巨大的平台。事实上，太大了，以至于他们无法为之设计，但至少他们在做。</p>
+</blockquote>
+<p>Amazon gets it. Amazon’s AWS (aws.amazon.com) is incredible. Just go look at it. Click around. It’s embarrassing. We don’t have any of that stuff.</p>
+<blockquote>
+<p>亚马逊明白这一点。亚马逊的AWS（aws.amazon.com）简直令人难以置信。去看看吧，到处点击一下。这真是令人尴尬。我们没有那些东西。</p>
+</blockquote>
+<p>Apple gets it, obviously. They’ve made some fundamentally non-open choices, particularly around their mobile platform. But they understand accessibility and they understand the power of third-party development and they eat their dogfood. And you know what? They make pretty good dogfood. Their APIs are a hell of a lot cleaner than Microsoft’s, and have been since time immemorial.</p>
+<blockquote>
+<p>显然，苹果公司也明白这一点。他们在一些基本问题上选择了非开放性，尤其是在移动平台方面。但是他们理解可访问性，理解第三方开发的力量，并且品尝自家的狗粮。你知道吗？他们制作的狗粮相当不错。他们的 API 比微软的干净得多，自古以来就是如此。</p>
+</blockquote>
+<p>Facebook gets it. That’s what really worries me. That’s what got me off my lazy butt to write this thing. I hate blogging. I hate… plussing, or whatever it’s called when you do a massive rant in Google+ even though it’s a terrible venue for it but you do it anyway because in the end you really do want Google to be successful. And I do! I mean, Facebook wants me there, and it’d be pretty easy to just go. But Google is home, so I’m insisting that we have this little family intervention, uncomfortable as it might be.</p>
+<blockquote>
+<p>Facebook 明白这一点。这真的让我担忧。这是让我从懒惰中振作起来写下这篇文章的原因。我讨厌博客。我讨厌……在 Google+ 上发表大篇幅的抱怨，尽管这是一个糟糕的场合，但你还是会这么做，因为最后你真的希望 Google 能够成功。而且我确实希望如此！我的意思是，Facebook 希望我加入他们，过去似乎很容易。但是 Google 就像家一样，所以我坚持要进行这场小小的家庭干预，尽管这可能会让人不舒服。</p>
+</blockquote>
+<p>After you’ve marveled at the platform offerings of Microsoft and Amazon, and Facebook I guess (I didn’t look because I didn’t want to get too depressed), head over to developers.google.com and browse a little. Pretty big difference, eh? It’s like what your fifth-grade nephew might mock up if he were doing an assignment to demonstrate what a big powerful platform company might be building if all they had, resource-wise, was one fifth grader.</p>
+<blockquote>
+<p>在你惊叹于微软、亚马逊和 Facebook（我猜是这样，因为我没去看，我不想让自己太沮丧）的平台产品之后，浏览一下 developers.google.com。很大的区别，对吧？这就像你五年级侄子可能会嘲笑的样子，如果他要完成一个任务，用来展示一个拥有强大平台的大公司可能会建立什么，而他们所拥有的资源只有一个五年级的学生。</p>
+</blockquote>
+<p>Please don’t get me wrong here – I know for a fact that the dev-rel team has had to FIGHT to get even this much available externally. They’re kicking ass as far as I’m concerned, because they DO get platforms, and they are struggling heroically to try to create one in an environment that is at best platform-apathetic, and at worst often openly hostile to the idea.</p>
+<blockquote>
+<p>请不要误解我的意思——我确实知道，dev-rel 团队已经为了让这些资源在外部可用而努力奋斗。就我而言，他们表现得非常出色，因为他们确实理解平台，而且他们正在英勇地努力在一个充其量对平台漠不关心，甚至很多时候对这个想法公开敌对的环境中创建一个平台。</p>
+</blockquote>
+<p>I’m just frankly describing what developers.google.com looks like to an outsider. It looks childish. Where’s the Maps APIs in there for Christ’s sake? Some of the things in there are labs projects. And the APIs for everything I clicked were… they were paltry. They were obviously dog food. Not even good organic stuff. Compared to our internal APIs it’s all snouts and horse hooves.</p>
+<blockquote>
+<p>我坦率地描述了开发者从外部看到的 developers.google.com 的样子。它看起来很幼稚。看在上帝的份上，地图 API 在哪里？有些东西在那里居然是实验室项目。我点击的每个 API 都很少。它们显然是狗粮。甚至不是好的有机食品。与我们的内部 API 相比，这些都是猪鼻子和马蹄。</p>
+</blockquote>
+<p>And also don’t get me wrong about Google+. They’re far from the only offenders. This is a cultural thing. What we have going on internally is basically a war, with the underdog minority Platformers fighting a more or less losing battle against the Mighty Funded Confident Producters.</p>
+<blockquote>
+<p>同时，请不要误解我的意思，谈到 Google+。他们远非唯一的罪魁祸首。这是一种文化现象。我们内部发生的事情基本上是一场战争，处于劣势的少数派平台制作者与强大的资金雄厚的产品制作者进行了一场或多或少的失败之战。</p>
+</blockquote>
+<p>Any teams that have successfully internalized the notion that they should be externally programmable platforms from the ground up are underdogs – Maps and Docs come to mind, and I know GMail is making overtures in that direction. But it’s hard for them to get funding for it because it’s not part of our culture. Maestro’s funding is a feeble thing compared to the gargantuan Microsoft Office programming platform: it’s a fluffy rabbit versus a T-Rex. The Docs team knows they’ll never be competitive with Office until they can match its scripting facilities, but they’re not getting any resource love. I mean, I assume they’re not, given that Apps Script only works in Spreadsheet right now, and it doesn’t even have keyboard shortcuts as part of its API. That team looks pretty unloved to me.</p>
+<blockquote>
+<p>任何成功地将自己从一开始就变成一个对外可编程平台的团队都处于劣势——我想到了地图和文档，我知道 GMail 也朝着那个方向努力。但是他们很难为此获得资金支持，因为这不是我们的文化。Maestro 的资金与微软 Office 编程平台相比是微不足道的：它是一只绒毛兔子对抗霸王龙。文档团队知道，除非他们能够与 Office 的脚本功能相匹敌，否则他们永远无法与 Office 竞争，但他们没有得到任何资源支持。我的意思是，我猜他们没有，因为现在 Apps Script 只在电子表格中工作，而且它甚至没有将键盘快捷方式作为其API的一部分。那个团队对我来说看起来很可怜。</p>
+</blockquote>
+<p>Ironically enough, Wave was a great platform, may they rest in peace. But making something a platform is not going to make you an instant success. A platform needs a killer app. Facebook – that is, the stock service they offer with walls and friends and such – is the killer app for the Facebook Platform. And it is a very serious mistake to conclude that the Facebook App could have been anywhere near as successful without the Facebook Platform.</p>
+<blockquote>
+<p>具有讽刺意味的是，Wave 曾是一个很好的平台，愿它们安息。但是，将某物变成一个平台并不能让你立即成功。一个平台需要一个杀手级应用。Facebook —— 也就是他们提供的具有墙壁、朋友等功能的股票服务——是 Facebook 平台的杀手级应用。得出 Facebook 应用在没有 Facebook 平台的情况下也能取得如此成功的结论是一个非常严重的错误。</p>
+</blockquote>
+<p>You know how people are always saying Google is arrogant? I’m a Googler, so I get as irritated as you do when people say that. We’re not arrogant, by and large. We’re, like, 99% Arrogance-Free. I did start this post – if you’ll reach back into distant memory – by describing Google as “doing everything right”. We do mean well, and for the most part when people say we’re arrogant it’s because we didn’t hire them, or they’re unhappy with our policies, or something along those lines. They’re inferring arrogance because it makes them feel better.</p>
+<blockquote>
+<p>你知道人们总是说谷歌很傲慢吗？我是谷歌员工，所以当人们这样说时，我和你一样感到恼火。总的来说，我们并不傲慢。我们大约有 99% 是无傲慢的。我确实是以描述谷歌为“做得一切都对”的方式开始这篇文章的——如果你回到遥远的记忆。我们确实是善意的，而且大部分时候，当人们说我们傲慢时，是因为我们没有雇佣他们，或者他们对我们的政策不满，或者类似的原因。他们推断出傲慢是因为这让他们感觉更好。</p>
+</blockquote>
+<p>But when we take the stance that we know how to design the perfect product for everyone, and believe you me, I hear that a lot, then we’re being fools. You can attribute it to arrogance, or naivete, or whatever – it doesn’t matter in the end, because it’s foolishness. There IS no perfect product for everyone.</p>
+<blockquote>
+<p>但是，当我们坚持认为我们知道如何为每个人设计完美的产品时，相信我，我经常听到这种说法，我们就是傻瓜。你可以把它归因于傲慢、天真或其他什么——最后这都不重要，因为这是愚蠢的。没有一个产品能适合所有人。</p>
+</blockquote>
+<p>And so we wind up with a browser that doesn’t let you set the default font size. Talk about an affront to Accessibility. I mean, as I get older I’m actually going blind. For real. I’ve been nearsighted all my life, and once you hit 40 years old you stop being able to see things up close. So font selection becomes this life-or-death thing: it can lock you out of the product completely. But the Chrome team is flat-out arrogant here: they want to build a zero-configuration product, and they’re quite brazen about it, and Fuck You if you’re blind or deaf or whatever. Hit Ctrl-+ on every single page visit for the rest of your life.</p>
+<blockquote>
+<p>所以我们最后得到了一个不能让你设置默认字体大小的浏览器。谈论对可访问性的侮辱。我的意思是，随着年龄的增长，我真的快要失明了。真的。我一辈子都近视，一旦到了40岁，你就看不清近处的东西了。所以字体选择变成了生死攸关的事情：它可以让你完全无法使用产品。但 Chrome 团队在这里非常傲慢：他们想要构建一个零配置的产品，他们对此非常厚颜无耻，如果你是盲人或聋人或其他什么人，那就去你的。在你余生的每次浏览页面时都按 Ctrl-+。</p>
+</blockquote>
+<p>It’s not just them. It’s everyone. The problem is that we’re a Product Company through and through. We built a successful product with broad appeal – our search, that is – and that wild success has biased us.</p>
+<blockquote>
+<p>不仅仅是他们。是所有人。问题是我们完全是一个产品公司。我们用广泛的吸引力打造了一个成功的产品——也就是我们的搜索引擎——而这种疯狂的成功让我们产生了偏见。</p>
+</blockquote>
+<p>Amazon was a product company too, so it took an out-of-band force to make Bezos understand the need for a platform. That force was their evaporating margins; he was cornered and had to think of a way out. But all he had was a bunch of engineers and all these computers… if only they could be monetized somehow… you can see how he arrived at AWS, in hindsight.</p>
+<blockquote>
+<p>亚马逊也是一个产品公司，所以需要一个超出正常范围的力量让贝索斯理解平台的必要性。那个力量是他们逐渐消失的利润空间；他被逼入绝境，不得不想出一条出路。但他手头只有一群工程师和所有这些电脑……如果它们能以某种方式变现就好了……事后看来，你可以看出他是如何想到 AWS 的。</p>
+</blockquote>
+<p>Microsoft started out as a platform, so they’ve just had lots of practice at it.</p>
+<blockquote>
+<p>微软最初是一个平台，所以他们在这方面有很多实践经验。</p>
+</blockquote>
+<p>Facebook, though: they worry me. I’m no expert, but I’m pretty sure they started off as a Product and they rode that success pretty far. So I’m not sure exactly how they made the transition to a platform. It was a relatively long time ago, since they had to be a platform before (now very old) things like Mafia Wars could come along.</p>
+<blockquote>
+<p>然而，Facebook 让我担忧。我不是专家，但我敢肯定他们一开始就是一个产品，并且依靠这个成功走得相当远。所以我不太确定他们是如何过渡到平台的。这是很久以前的事了，因为在像 Mafia Wars 这样的（现在已经很老的）东西出现之前，他们就必须成为一个平台。</p>
+</blockquote>
+<p>Maybe they just looked at us and asked: “How can we beat Google? What are they missing?”</p>
+<blockquote>
+<p>也许他们只是看着我们，问：“我们如何击败谷歌？他们缺少什么？”</p>
+</blockquote>
+<p>The problem we face is pretty huge, because it will take a dramatic cultural change in order for us to start catching up. We don’t do internal service-oriented platforms, and we just as equally don’t do external ones. This means that the “not getting it” is endemic across the company: the PMs don’t get it, the engineers don’t get it, the product teams don’t get it, nobody gets it. Even if individuals do, even if YOU do, it doesn’t matter one bit unless we’re treating it as an all-hands-on-deck emergency. We can’t keep launching products and pretending we’ll turn them into magical beautiful extensible platforms later. We’ve tried that and it’s not working.</p>
+<blockquote>
+<p>我们面临的问题相当巨大，因为要迎头赶上，我们需要一个巨大的文化变革。我们不做面向内部服务的平台，同样也不做面向外部的平台。这意味着整个公司都存在“不理解”的问题：项目经理不懂，工程师不懂，产品团队不懂，没有人懂。即使有些人懂，即使你懂，除非我们把它当作一个全力以赴的紧急情况，否则这一切都没有意义。我们不能一直推出产品，假装以后会把它们变成神奇美丽可扩展的平台。我们已经尝试过了，这行不通。</p>
+</blockquote>
+<p>The Golden Rule of Platforms, “Eat Your Own Dogfood”, can be rephrased as “Start with a Platform, and Then Use it for Everything.” You can’t just bolt it on later. Certainly not easily at any rate – ask anyone who worked on platformizing MS Office. Or anyone who worked on platformizing Amazon. If you delay it, it’ll be ten times as much work as just doing it correctly up front. You can’t cheat. You can’t have secret back doors for internal apps to get special priority access, not for ANY reason. You need to solve the hard problems up front.</p>
+<blockquote>
+<p>平台的黄金法则，“自己尝尝自己的狗粮”，可以改为“从平台开始，然后用它做所有事情。”你不能事后再加上去。当然，这不会轻松——问问那些将微软 Office 平台化的人。或者那些将亚马逊平台化的人。如果你拖延，那么要做的工作将是一开始就正确做法的十倍。你不能作弊。你不能为内部应用设置秘密后门，以获得特殊优先级访问，没有任何理由。你需要从一开始就解决难题。</p>
+</blockquote>
+<p>I’m not saying it’s too late for us, but the longer we wait, the closer we get to being Too Late.</p>
+<blockquote>
+<p>我并不是说对我们来说已经太晚了，但我们等待的时间越长，我们就越接近太迟的时候。</p>
+</blockquote>
+<p>I honestly don’t know how to wrap this up. I’ve said pretty much everything I came here to say today. This post has been six years in the making. I’m sorry if I wasn’t gentle enough, or if I misrepresented some product or team or person, or if we’re actually doing LOTS of platform stuff and it just so happens that I and everyone I ever talk to has just never heard about it. I’m sorry.</p>
+<blockquote>
+<p>老实说，我不知道如何收尾。我今天来这里要说的话基本上都说完了。这篇文章酝酿了六年。如果我说得不够委婉，或者误解了某个产品、团队或人，或者我们实际上正在做大量的平台工作，只是恰巧我和我曾经交谈过的每个人都没有听说过，我很抱歉。</p>
+</blockquote>
+<p>But we’ve gotta start doing this right.</p>
+<blockquote>
+<p>但我们必须开始正确地去做这件事。</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://plus.google.com/110981030061712822816/posts/WugKtXSp7We">Original URL</a></p>
+<p><a target="_blank" rel="noopener" href="https://plus.google.com/110981030061712822816/posts/bwJ7kAELRnf">Follow-up URL</a></p>
+<p><a target="_blank" rel="noopener" href="http://news.ycombinator.com/item?id=3101876">Hacker News URL</a></p>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>johnsonlee</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="/2023/04/15/steveys-google-platforms-rant/">https://johnsonlee.io/2023/04/15/steveys-google-platforms-rant/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"></div><div class="post-nav"><a class="pre" href="/2023/05/13/thoughts-on-strategic-architecture-framework/">关于战略架构框架的思考</a><a class="next" href="/2023/03/31/design-system-mobile-engineering-perspective/">Design System: 移动应用开发新视角</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"[译] Stevey's Google Platforms Rant","datePublished":"2023-04-15T00:00:00.000Z","dateModified":"2023-04-15T00:00:00.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2023/04/15/steveys-google-platforms-rant/"},"description":"I was at Amazon for about six and a half years, and now I’ve been at Google for that long. One thing that struck me immediately about the two companies – an impression that has been reinforced almost "}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (104)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (27)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investing/">Investing (3)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investment/">Investment (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (9)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Maven/" style="font-size: 15px;">Maven</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a> <a href="/tags/Music/" style="font-size: 15px;">Music</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/Transformer/" style="font-size: 15px;">Transformer</a> <a href="/tags/Deep-Learning/" style="font-size: 15px;">Deep Learning</a> <a href="/tags/HTML/" style="font-size: 15px;">HTML</a> <a href="/tags/Programming/" style="font-size: 15px;">Programming</a> <a href="/tags/Economics/" style="font-size: 15px;">Economics</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/SPI/" style="font-size: 15px;">SPI</a> <a href="/tags/MVVM/" style="font-size: 15px;">MVVM</a> <a href="/tags/JetPack/" style="font-size: 15px;">JetPack</a> <a href="/tags/Preloading/" style="font-size: 15px;">Preloading</a> <a href="/tags/Mental-Health/" style="font-size: 15px;">Mental Health</a> <a href="/tags/Finance/" style="font-size: 15px;">Finance</a> <a href="/tags/Society/" style="font-size: 15px;">Society</a> <a href="/tags/Wall-Street/" style="font-size: 15px;">Wall Street</a> <a href="/tags/Contrarian/" style="font-size: 15px;">Contrarian</a> <a href="/tags/Alpha/" style="font-size: 15px;">Alpha</a> <a href="/tags/Risk-Management/" style="font-size: 15px;">Risk Management</a> <a href="/tags/Hiring/" style="font-size: 15px;">Hiring</a> <a href="/tags/Interview/" style="font-size: 15px;">Interview</a> <a href="/tags/Engineering-Leadership/" style="font-size: 15px;">Engineering Leadership</a> <a href="/tags/Housing/" style="font-size: 15px;">Housing</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/DeepMind/" style="font-size: 15px;">DeepMind</a> <a href="/tags/AlphaFold2/" style="font-size: 15px;">AlphaFold2</a> <a href="/tags/CASP/" style="font-size: 15px;">CASP</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/02/26/from-llm-to-effective-communication/">从 LLM 到高效沟通</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/from-compiler-to-llm/">从编译器到 LLM：软件分层的轮回</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/llm-is-a-function/">LLM 的本质——函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/tetris-effect-of-ai-conversations/">植入潜意识——AI 版的盗梦空间</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/15/ai-as-thinking-partner/">当 AI 成为你的“思考伙伴”</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/14/agora-technical-journey/">Agora 的技术选型与踩坑实录</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/13/confirmation-bias/">别让你的认知偏差限制了 AI 的发挥</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/what-should-engineering-hiring-evaluate-in-ai-era/">都 2026 了，还在考算法？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/ai-debate-what-i-learned/">一场 AI 辩论暴露了 LLM 性格的本质</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/11/ai-investment-roi-reality-check/">一年烧 $700B，谁会是下一个摩托罗拉？</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="前段时间写完《亲眼见证程序员职业的终结》后，收到不少私信。有人问技术细节，有人讨论 Claude Code 的用法，但问得最多的是一个更根本的问题： 如果 AI 真能做到 Staff Engineer 的水平，那我们还能做什么？ 这个问题我自己也在想。 职业危机先说让人焦虑的部分。 Graphite 那个项目，一小时被 Claude 写完。两天的活，一小时搞定，代码质量不输我自己写的。这还只是开始"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,架构设计,滴滴,快手,性能优化,我在滴滴做架构,johnsonlee,johnson,lijingsen,jingsen,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2026/02/08/ai-era-what-we-can-do/"><meta property="og:title" content="AI 时代，我们还能做什么？"><meta property="og:description" content="前段时间写完《亲眼见证程序员职业的终结》后，收到不少私信。有人问技术细节，有人讨论 Claude Code 的用法，但问得最多的是一个更根本的问题： 如果 AI 真能做到 Staff Engineer 的水平，那我们还能做什么？ 这个问题我自己也在想。 职业危机先说让人焦虑的部分。 Graphite 那个项目，一小时被 Claude 写完。两天的活，一小时搞定，代码质量不输我自己写的。这还只是开始"><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2026/02/08/ai-era-what-we-can-do/"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2026-02-08T09:00:00.000Z"><meta property="article:author" content="Johnson Lee"><meta property="article:tag" content="AI"><meta property="article:tag" content="Claude"><meta property="article:tag" content="Career"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="AI 时代，我们还能做什么？"><meta name="twitter:description" content="前段时间写完《亲眼见证程序员职业的终结》后，收到不少私信。有人问技术细节，有人讨论 Claude Code 的用法，但问得最多的是一个更根本的问题： 如果 AI 真能做到 Staff Engineer 的水平，那我们还能做什么？ 这个问题我自己也在想。 职业危机先说让人焦虑的部分。 Graphite 那个项目，一小时被 Claude 写完。两天的活，一小时搞定，代码质量不输我自己写的。这还只是开始"><title>AI 时代，我们还能做什么？ | Johnson Lee</title><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 6.3.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">AI 时代，我们还能做什么？</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">AI 时代，我们还能做什么？</h1><div class="post-meta">Feb 8, 2026<span> | </span><span class="category"><a href="/categories/Independent-Thinking/">Independent Thinking</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 1.5k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 5</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>前段时间写完《亲眼见证程序员职业的终结》后，收到不少私信。有人问技术细节，有人讨论 Claude Code 的用法，但问得最多的是一个更根本的问题：</p>
+<blockquote>
+<p>如果 AI 真能做到 Staff Engineer 的水平，那我们还能做什么？</p>
+</blockquote>
+<p>这个问题我自己也在想。</p>
+<h2 id="职业危机"><a href="#职业危机" class="headerlink" title="职业危机"></a>职业危机</h2><p>先说让人焦虑的部分。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/johnsonlee/graphite">Graphite</a> 那个项目，一小时被 Claude 写完。两天的活，一小时搞定，代码质量不输我自己写的。这还只是开始。</p>
+<p>前几天试了另一个场景：让 Claude 写一份 PPT，提示词大概是:</p>
+<blockquote>
+<p>以华尔街投行的风格，写一份关于 XXX 的 PPT 给投资人演示</p>
+</blockquote>
+<p>出来的东西，从结构到措辞到图表建议，像是一个经验极其丰富的分析师写的。</p>
+<p>这两个例子，一个是技术活，一个是商业沟通。一个靠硬技能，一个靠软技能。但 AI 都能做到八九十分。</p>
+<p>这意味着什么？</p>
+<p>意味着大量“可学习的技能”正在贬值。写代码是可学习的，写 PPT 是可学习的，做数据分析是可学习的，写报告是可学习的。这些技能之所以值钱，是因为学习成本高、熟练周期长。但当 AI 能在几秒钟内输出一个“五年经验”水平的结果时，这些技能的护城河就塌了。</p>
+<p>不只是程序员，投行分析师、咨询顾问、产品经理、市场营销——几乎所有白领岗位都会被波及。</p>
+<h2 id="新的机会"><a href="#新的机会" class="headerlink" title="新的机会"></a>新的机会</h2><p>但硬币有另一面。</p>
+<p>以前不敢想的事情，现在可以想了。</p>
+<p>我一直想做一个基于字节码的静态分析框架，能追踪数据流，能自动清理代理。这个想法在脑子里躺了好几年，因为工程量太大——设计数据结构、实现 dataflow analysis、处理各种 edge case、写 CLI、写测试——一个人根本做不完。</p>
+<p>现在呢？一小时。</p>
+<p>以前需要一个团队花几个月才能做的事，现在一个人指挥一个 agent team 就能搞定。我说需求，Claude 写代码、跑测试、修 bug，我只需要 review 和纠偏。</p>
+<p>这不是效率提升，这是<strong>能力边界的扩展</strong>。</p>
+<p>我儿子十岁，用 Claude Code 捣鼓了一小时，做出一个多人在线对战游戏——三种角色、物理弹道、P2P 联机。一个十岁的孩子，一小时，一个完整的游戏。</p>
+<p>这让我意识到一件事：<strong>我们可以 Dream Bigger。</strong></p>
+<p>那些看似大胆的想法——以前觉得“算了吧，太复杂了，做不了”的想法——现在可以重新拿出来看看了。不是因为你变强了，而是因为你有了一支随叫随到的团队。</p>
+<h2 id="那我们还能做什么？"><a href="#那我们还能做什么？" class="headerlink" title="那我们还能做什么？"></a>那我们还能做什么？</h2><p>AI 能做大部分“可学习的事”。那人还剩下什么？</p>
+<p>我的答案是：<strong>去做那些“学不来的事”。</strong></p>
+<p>但问题马上来了：什么是学不来的？怎么知道自己擅长什么学不来的事？</p>
+<p>我想到一个线索——<strong>直觉</strong>。</p>
+<p>直觉这东西很微妙。你看一段代码，直觉告诉你“这里会出问题”。你看一个商业计划，直觉告诉你“这个方向不对”。你说不清具体哪里不对，但就是有感觉。</p>
+<p>表面上看，直觉是经验的产物——见得多了，大脑把判断逻辑压缩成了瞬时反应。但问题是：同样的经验暴露量，为什么有人形成了直觉，有人没有？</p>
+<p>我见过干了十年的工程师，看代码还是一行一行读，读完说不出哪里有问题。也见过干了三年的人，扫一眼就能指出架构的软肋。</p>
+<p>差别在哪？在天赋。</p>
+<p>天赋不是让你“做得好”，而是让你“学得快”。更准确地说，天赋决定了三件事：</p>
+<ol>
+<li><strong>感知的敏感度：</strong>同样的信息摆在面前，有些人天然更容易注意到某些信号。就像有人对颜色敏感，有人对节奏敏感，有人对结构敏感。</li>
+<li><strong>压缩的效率：</strong>把经验转化成可复用的直觉，这个过程的速度差异很大。有人需要踩十次坑才能记住，有人踩一次就刻进骨子里了。</li>
+<li><strong>方向：</strong>你的大脑更容易对什么类型的模式形成直觉？有人对人际关系敏锐，有人对数字敏锐，有人对时机敏锐，有人对结构敏锐。这不是选择的结果，更像是出厂设置。</li>
+</ol>
+<p>所以，直觉其实是天赋和经验的交汇点。天赋决定了方向和效率，经验填充了内容。<strong>直觉是天赋的显影剂</strong>——它把那些藏在底层的倾向，通过具体的场景显现出来。你对什么有敏锐直觉，那里可能就是你天赋所在的地方。</p>
+<h2 id="一个务实的策略"><a href="#一个务实的策略" class="headerlink" title="一个务实的策略"></a>一个务实的策略</h2><p>回到开头的问题：AI 时代，我们还能做什么？</p>
+<p>两件事。</p>
+<ol>
+<li><strong>Dream Bigger：</strong>那些以前觉得“做不了”的想法，重新拿出来。你现在有了一支 agent 团队，执行力不再是瓶颈。瓶颈是你的想象力。</li>
+<li><strong>找到你的直觉所在：</strong> 观察自己：对什么事情的判断不需要思考就能准？什么场景下能看到别人看不到的东西？那个方向，可能就是你最不可被替代的地方。</li>
+</ol>
+<p>AI 可以学习任何可以被形式化的东西。它有无限的算力、无限的记忆、无限的耐心。但它没有的是方向——它不知道该往哪走、该对什么形成直觉。</p>
+<p>而你知道。</p>
+<p>与其焦虑被替代，不如认真观察自己的直觉，然后把时间砸进去。让你的直觉变得更准、更深、更不可替代。</p>
+<p>这可能是 AI 时代，普通人最务实的应对方式。</p>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>johnsonlee</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="/2026/02/08/ai-era-what-we-can-do/">https://johnsonlee.io/2026/02/08/ai-era-what-we-can-do/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"><a href="/tags/AI/">AI</a><a href="/tags/Claude/">Claude</a><a href="/tags/Career/">Career</a></div><div class="post-nav"><a class="pre" href="/2026/02/10/agent-oriented-engineering/">软件工程的最后一次范式革命</a><a class="next" href="/2026/01/31/exploring-claude-boundaries/">探索 Claude 的能力边界</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"AI 时代，我们还能做什么？","datePublished":"2026-02-08T09:00:00.000Z","dateModified":"2026-02-08T09:00:00.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2026/02/08/ai-era-what-we-can-do/"},"description":"前段时间写完《亲眼见证程序员职业的终结》后，收到不少私信。有人问技术细节，有人讨论 Claude Code 的用法，但问得最多的是一个更根本的问题： 如果 AI 真能做到 Staff Engineer 的水平，那我们还能做什么？ 这个问题我自己也在想。 职业危机先说让人焦虑的部分。 Graphite 那个项目，一小时被 Claude 写完。两天的活，一小时搞定，代码质量不输我自己写的。这还只是开始"}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (104)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (27)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investing/">Investing (3)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investment/">Investment (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (9)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Maven/" style="font-size: 15px;">Maven</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a> <a href="/tags/Music/" style="font-size: 15px;">Music</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/Transformer/" style="font-size: 15px;">Transformer</a> <a href="/tags/Deep-Learning/" style="font-size: 15px;">Deep Learning</a> <a href="/tags/HTML/" style="font-size: 15px;">HTML</a> <a href="/tags/Programming/" style="font-size: 15px;">Programming</a> <a href="/tags/Economics/" style="font-size: 15px;">Economics</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/SPI/" style="font-size: 15px;">SPI</a> <a href="/tags/MVVM/" style="font-size: 15px;">MVVM</a> <a href="/tags/JetPack/" style="font-size: 15px;">JetPack</a> <a href="/tags/Preloading/" style="font-size: 15px;">Preloading</a> <a href="/tags/Mental-Health/" style="font-size: 15px;">Mental Health</a> <a href="/tags/Finance/" style="font-size: 15px;">Finance</a> <a href="/tags/Society/" style="font-size: 15px;">Society</a> <a href="/tags/Wall-Street/" style="font-size: 15px;">Wall Street</a> <a href="/tags/Contrarian/" style="font-size: 15px;">Contrarian</a> <a href="/tags/Alpha/" style="font-size: 15px;">Alpha</a> <a href="/tags/Risk-Management/" style="font-size: 15px;">Risk Management</a> <a href="/tags/Hiring/" style="font-size: 15px;">Hiring</a> <a href="/tags/Interview/" style="font-size: 15px;">Interview</a> <a href="/tags/Engineering-Leadership/" style="font-size: 15px;">Engineering Leadership</a> <a href="/tags/Housing/" style="font-size: 15px;">Housing</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/DeepMind/" style="font-size: 15px;">DeepMind</a> <a href="/tags/AlphaFold2/" style="font-size: 15px;">AlphaFold2</a> <a href="/tags/CASP/" style="font-size: 15px;">CASP</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/02/26/from-llm-to-effective-communication/">从 LLM 到高效沟通</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/from-compiler-to-llm/">从编译器到 LLM：软件分层的轮回</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/llm-is-a-function/">LLM 的本质——函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/tetris-effect-of-ai-conversations/">植入潜意识——AI 版的盗梦空间</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/15/ai-as-thinking-partner/">当 AI 成为你的“思考伙伴”</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/14/agora-technical-journey/">Agora 的技术选型与踩坑实录</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/13/confirmation-bias/">别让你的认知偏差限制了 AI 的发挥</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/what-should-engineering-hiring-evaluate-in-ai-era/">都 2026 了，还在考算法？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/ai-debate-what-i-learned/">一场 AI 辩论暴露了 LLM 性格的本质</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/11/ai-investment-roi-reality-check/">一年烧 $700B，谁会是下一个摩托罗拉？</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="上周有个朋友看完我的博客，发消息问我：“你哪来这么多时间写这些长文？” 我回了三个字：没时间。 然后他更困惑了。 事实是，这些文章确实是我“写”的——但不是我一个字一个字敲出来的。它们是我跟 AI 对话的产物。我负责想法和判断，AI 负责把它们变成完整的文章。 整个过程，5 分钟。 我知道你在想什么：AI 写的文章不就是那种“随着技术的不断发展”开头、“让我们拭目以待”结尾的八股文吗？ 还真不是。"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,架构设计,滴滴,快手,性能优化,我在滴滴做架构,johnsonlee,johnson,lijingsen,jingsen,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2026/02/11/ai-writes-my-blog/"><meta property="og:title" content="不装了，文章都是AI写的"><meta property="og:description" content="上周有个朋友看完我的博客，发消息问我：“你哪来这么多时间写这些长文？” 我回了三个字：没时间。 然后他更困惑了。 事实是，这些文章确实是我“写”的——但不是我一个字一个字敲出来的。它们是我跟 AI 对话的产物。我负责想法和判断，AI 负责把它们变成完整的文章。 整个过程，5 分钟。 我知道你在想什么：AI 写的文章不就是那种“随着技术的不断发展”开头、“让我们拭目以待”结尾的八股文吗？ 还真不是。"><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2026/02/11/ai-writes-my-blog/"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2026-02-11T10:00:00.000Z"><meta property="article:author" content="Johnson Lee"><meta property="article:tag" content="AI"><meta property="article:tag" content="Claude"><meta property="article:tag" content="Blog"><meta property="article:tag" content="Productivity"><meta property="article:tag" content="Workflow"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="不装了，文章都是AI写的"><meta name="twitter:description" content="上周有个朋友看完我的博客，发消息问我：“你哪来这么多时间写这些长文？” 我回了三个字：没时间。 然后他更困惑了。 事实是，这些文章确实是我“写”的——但不是我一个字一个字敲出来的。它们是我跟 AI 对话的产物。我负责想法和判断，AI 负责把它们变成完整的文章。 整个过程，5 分钟。 我知道你在想什么：AI 写的文章不就是那种“随着技术的不断发展”开头、“让我们拭目以待”结尾的八股文吗？ 还真不是。"><title>不装了，文章都是AI写的 | Johnson Lee</title><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 6.3.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">不装了，文章都是AI写的</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">不装了，文章都是AI写的</h1><div class="post-meta">Feb 11, 2026<span> | </span><span class="category"><a href="/categories/Independent-Thinking/">Independent Thinking</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 1.8k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 6</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>上周有个朋友看完我的博客，发消息问我：“你哪来这么多时间写这些长文？”</p>
+<p>我回了三个字：没时间。</p>
+<p>然后他更困惑了。</p>
+<p>事实是，这些文章确实是我“写”的——但不是我一个字一个字敲出来的。它们是我跟 AI 对话的产物。我负责想法和判断，AI 负责把它们变成完整的文章。</p>
+<p>整个过程，5 分钟。</p>
+<p>我知道你在想什么：AI 写的文章不就是那种“随着技术的不断发展”开头、“让我们拭目以待”结尾的八股文吗？</p>
+<p>还真不是。关键在于你怎么让 AI 写。</p>
+<h2 id="工欲善其事，必先利其器"><a href="#工欲善其事，必先利其器" class="headerlink" title="工欲善其事，必先利其器"></a>工欲善其事，必先利其器</h2><p>直接让 AI “帮我写一篇关于 XXX 的博客”，出来的东西大概率是废话连篇的通稿。AI 不知道你的写作风格、不知道你的博客用什么技术栈、不知道你的 front matter 格式是什么样的。每次都要从头教一遍，那还不如自己写。</p>
+<p>所以我做的第一件事，是给 Claude 造了一个专属的 “Blog Writer Skill”。</p>
+<p>你可以把 Skill 理解为给 AI 的一套工作手册。它告诉 AI：你的博客是什么格式、你的写作风格是什么样的、文章该怎么组织、最后怎么发布。<strong>一次配置，永久生效。</strong></p>
+<p>最妙的地方在于：build 这个 Skill 的过程本身，就是跟 Claude 聊天。</p>
+<p>我说“我想做一个写博客的 Skill”，Claude 就开始问我问题：技术栈是什么？Hexo。front matter 什么格式？贴一篇现有的文章给它看。写作语言？中文为主。推送到哪？GitHub Pages，repo 是 <code>johnsonlee/blog</code>，<code>master</code> 分支。</p>
+<p>就这样一问一答，几分钟后，Claude 就帮我生成了一个完整的 Skill，包含两个文件：</p>
+<p><strong>SKILL.md</strong> — 核心指令文件，长这样（节选）：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">blog-writer</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">&gt;</span></span><br><span class="line"><span class="string">  写技术博客并发布到 johnsonlee.io (Hexo + GitHub Pages)。</span></span><br><span class="line"><span class="string">  当用户提到&quot;写博客&quot;、&quot;写一篇文章&quot;、&quot;发一篇 post&quot;、&quot;blog&quot;、</span></span><br><span class="line"><span class="string">  &quot;写个技术分享&quot;、或者讨论完一个话题后说&quot;把这个整理成博客&quot;时，</span></span><br><span class="line"><span class="string">  使用这个 skill。</span></span><br><span class="line"><span class="string"></span><span class="meta">---</span></span><br></pre></td></tr></table></figure>
+
+<p>里面定义了文章的 front matter 格式、文件命名规则、写作风格（包括该用什么语气、怎么组织结构、什么该避免），甚至连推送到 GitHub 的流程都写好了。</p>
+<p><strong>push_to_github.sh</strong> — 推送脚本，通过 GitHub API 把生成的 Markdown 文件直接 commit 到我的博客 repo。不用 clone，不用本地操作，一个 API 调用搞定。</p>
+<h2 id="写作风格这件事"><a href="#写作风格这件事" class="headerlink" title="写作风格这件事"></a>写作风格这件事</h2><p>Skill 里最花心思的部分，是写作风格的定义。</p>
+<p>我贴了几篇自己之前写的文章给 Claude，让它分析我的写作特征。它提炼出来的东西还挺准的：</p>
+<ul>
+<li>中文为主，但技术术语保留英文，偶尔自然地中英混用</li>
+<li>口语化但有深度，像跟同行聊天</li>
+<li>喜欢用反问推进论点</li>
+<li>用场景想象让抽象概念落地</li>
+<li>加粗用来突出核心判断，不是拿来装饰的</li>
+</ul>
+<p>然后它还总结了我不会做的事情：不说“众所周知”、不用“首先其次最后”的教科书结构、不自称“笔者”、不写公关稿语气。</p>
+<p><strong>这些规则一旦写进 Skill，以后每次写文章都会自动遵守。</strong> 我不需要每次都提醒 AI “别写得太官方”。</p>
+<h2 id="5-分钟写一篇博客的真实流程"><a href="#5-分钟写一篇博客的真实流程" class="headerlink" title="5 分钟写一篇博客的真实流程"></a>5 分钟写一篇博客的真实流程</h2><p>有了 Skill 之后，写博客的流程变成了这样：</p>
+<p><strong>第 1 分钟：抛出话题。</strong></p>
+<blockquote>
+<p>“以’当 Agent 成为入口，App 何去何从’为话题写个博客”</p>
+</blockquote>
+<p>就一句话。Claude 会根据 Skill 里定义的风格和结构，生成一篇完整的文章。</p>
+<p><strong>第 2-3 分钟：审阅和调整。</strong></p>
+<p>AI 生成的初稿通常结构没问题，但某些观点可能不够锐利，或者某个例子不太贴切。我会给反馈：</p>
+<blockquote>
+<p>“第三节的论证太温和了，再激进一点”<br>“把那个电商的例子换成外卖场景”</p>
+</blockquote>
+<p>Claude 改完，再看一遍。</p>
+<p><strong>第 4 分钟：确认发布。</strong></p>
+<p>Claude 会展示最终版本，确认文件名，告诉我将要 push 到哪个 repo 的哪个分支。我说“推吧”，它就通过 GitHub API 把文章推上去了。</p>
+<p><strong>第 5 分钟：GitHub Pages 自动构建，文章上线。</strong></p>
+<p>全程不需要打开编辑器，不需要 <code>git clone</code>，不需要 <code>hexo new post</code>。</p>
+<h2 id="这算作弊吗？"><a href="#这算作弊吗？" class="headerlink" title="这算作弊吗？"></a>这算作弊吗？</h2><p>我猜有人会说：这不就是让 AI 代写吗？有什么好炫耀的？</p>
+<p>我的看法是：<strong>写作的核心从来不是打字，而是思考。</strong></p>
+<p>一篇好文章的价值在于它的观点、它的洞察、它的思维框架。这些东西 AI 编不出来——它只是帮我把已经想清楚的东西变成了读者能消费的格式。</p>
+<p>就像没有人会觉得用打字机写作是“作弊”，也没有人会觉得用 Word 的拼写检查是“作弊”。AI 写作只是把效率又提升了一个数量级而已。</p>
+<p>而且说实话，跟 AI 对话的过程本身也是在思考。我得想清楚我要表达什么、我的核心论点是什么、我希望读者看完之后带走什么。这些东西如果我自己都说不清楚，AI 也写不出来。</p>
+<p><strong>AI 是放大器，不是替代品。它放大的是你的思考能力，不是你的打字速度。</strong></p>
+<h2 id="你也可以-5-分钟搞定"><a href="#你也可以-5-分钟搞定" class="headerlink" title="你也可以 5 分钟搞定"></a>你也可以 5 分钟搞定</h2><p>如果你也有自己的技术博客，想要这套工作流，步骤很简单：</p>
+<ol>
+<li><strong>跟 Claude 聊天，build 你的 Blog Writer Skill</strong> — 告诉它你的博客技术栈、写作风格、发布流程，它会帮你生成 SKILL.md 和推送脚本</li>
+<li><strong>在 GitHub 上生成一个 Personal Access Token</strong> — 去 <a target="_blank" rel="noopener" href="https://github.com/settings/tokens">https://github.com/settings/tokens</a> ，勾上 <code>repo</code> 权限，专门用来推送博客</li>
+<li><strong>写博客</strong> — 打开 Claude，说“以 XXX 为话题写个博客”，审阅、调整、推送，收工</li>
+</ol>
+<p>整个 setup 过程不超过 10 分钟。之后每篇文章 5 分钟。</p>
+<p>当然，这套流程的前提是你得有东西可写。AI 能帮你组织语言，但帮不了你产生洞察。如果你脑子里没有观点，AI 只会帮你更高效地生产废话。</p>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>这篇文章本身就是用这套流程写的。</p>
+<p>从我对 Claude 说“以’不装了，文章都是 AI 写的’为题写个博客”到你现在看到的这篇文章，中间经历了什么？一次对话，几轮调整，一个 API 调用。</p>
+<p>有人可能会觉得这样写文章少了点什么——少了那种字斟句酌的仪式感，少了那种写完一篇长文的成就感。</p>
+<p>但我觉得，<strong>省下来的时间用来想更多的问题，比花在排版和措辞上有价值得多。</strong></p>
+<p>毕竟，写作是为了传达思想，不是为了证明你能打多少字。</p>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>johnsonlee</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="/2026/02/11/ai-writes-my-blog/">https://johnsonlee.io/2026/02/11/ai-writes-my-blog/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"><a href="/tags/AI/">AI</a><a href="/tags/Claude/">Claude</a><a href="/tags/Blog/">Blog</a><a href="/tags/Productivity/">Productivity</a><a href="/tags/Workflow/">Workflow</a></div><div class="post-nav"><a class="pre" href="/2026/02/11/ai-investment-roi-reality-check/">一年烧 $700B，谁会是下一个摩托罗拉？</a><a class="next" href="/2026/02/11/wall-street-blindspots-contrarian-investing/">逆向投资：华尔街的盲点</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"不装了，文章都是AI写的","datePublished":"2026-02-11T10:00:00.000Z","dateModified":"2026-02-11T10:00:00.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2026/02/11/ai-writes-my-blog/"},"description":"上周有个朋友看完我的博客，发消息问我：“你哪来这么多时间写这些长文？” 我回了三个字：没时间。 然后他更困惑了。 事实是，这些文章确实是我“写”的——但不是我一个字一个字敲出来的。它们是我跟 AI 对话的产物。我负责想法和判断，AI 负责把它们变成完整的文章。 整个过程，5 分钟。 我知道你在想什么：AI 写的文章不就是那种“随着技术的不断发展”开头、“让我们拭目以待”结尾的八股文吗？ 还真不是。"}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (104)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (27)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investing/">Investing (3)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investment/">Investment (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (9)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Maven/" style="font-size: 15px;">Maven</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a> <a href="/tags/Music/" style="font-size: 15px;">Music</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/Transformer/" style="font-size: 15px;">Transformer</a> <a href="/tags/Deep-Learning/" style="font-size: 15px;">Deep Learning</a> <a href="/tags/HTML/" style="font-size: 15px;">HTML</a> <a href="/tags/Programming/" style="font-size: 15px;">Programming</a> <a href="/tags/Economics/" style="font-size: 15px;">Economics</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/SPI/" style="font-size: 15px;">SPI</a> <a href="/tags/MVVM/" style="font-size: 15px;">MVVM</a> <a href="/tags/JetPack/" style="font-size: 15px;">JetPack</a> <a href="/tags/Preloading/" style="font-size: 15px;">Preloading</a> <a href="/tags/Mental-Health/" style="font-size: 15px;">Mental Health</a> <a href="/tags/Finance/" style="font-size: 15px;">Finance</a> <a href="/tags/Society/" style="font-size: 15px;">Society</a> <a href="/tags/Wall-Street/" style="font-size: 15px;">Wall Street</a> <a href="/tags/Contrarian/" style="font-size: 15px;">Contrarian</a> <a href="/tags/Alpha/" style="font-size: 15px;">Alpha</a> <a href="/tags/Risk-Management/" style="font-size: 15px;">Risk Management</a> <a href="/tags/Hiring/" style="font-size: 15px;">Hiring</a> <a href="/tags/Interview/" style="font-size: 15px;">Interview</a> <a href="/tags/Engineering-Leadership/" style="font-size: 15px;">Engineering Leadership</a> <a href="/tags/Housing/" style="font-size: 15px;">Housing</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/DeepMind/" style="font-size: 15px;">DeepMind</a> <a href="/tags/AlphaFold2/" style="font-size: 15px;">AlphaFold2</a> <a href="/tags/CASP/" style="font-size: 15px;">CASP</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/02/26/from-llm-to-effective-communication/">从 LLM 到高效沟通</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/from-compiler-to-llm/">从编译器到 LLM：软件分层的轮回</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/llm-is-a-function/">LLM 的本质——函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/tetris-effect-of-ai-conversations/">植入潜意识——AI 版的盗梦空间</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/15/ai-as-thinking-partner/">当 AI 成为你的“思考伙伴”</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/14/agora-technical-journey/">Agora 的技术选型与踩坑实录</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/13/confirmation-bias/">别让你的认知偏差限制了 AI 的发挥</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/what-should-engineering-hiring-evaluate-in-ai-era/">都 2026 了，还在考算法？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/ai-debate-what-i-learned/">一场 AI 辩论暴露了 LLM 性格的本质</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/11/ai-investment-roi-reality-check/">一年烧 $700B，谁会是下一个摩托罗拉？</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>

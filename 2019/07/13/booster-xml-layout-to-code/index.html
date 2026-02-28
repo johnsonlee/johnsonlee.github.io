@@ -1,0 +1,178 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="做过开发的同学都深有体会，用 XML 来撸 UI 的效率简直是吊打手写代码，在 Anko (Kotlin 库) 还没有流行之前，大家对 XML 还是亲睐有加，虽然性能上偶尔会有卡顿，但是总体来说，还是勉强能接受，但是 Anko 的流行，也让我们开始思考，有没有办法既能享受 XML 撸 UI 的快感，又能享受像 Anko 一样的性能呢？ XML vs 代码XML 布局是在运行时解析的，由 XmlPu"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,架构设计,滴滴,快手,性能优化,我在滴滴做架构,johnsonlee,johnson,lijingsen,jingsen,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2019/07/13/booster-xml-layout-to-code/"><meta property="og:title" content="布局：XML vs 代码"><meta property="og:description" content="做过开发的同学都深有体会，用 XML 来撸 UI 的效率简直是吊打手写代码，在 Anko (Kotlin 库) 还没有流行之前，大家对 XML 还是亲睐有加，虽然性能上偶尔会有卡顿，但是总体来说，还是勉强能接受，但是 Anko 的流行，也让我们开始思考，有没有办法既能享受 XML 撸 UI 的快感，又能享受像 Anko 一样的性能呢？ XML vs 代码XML 布局是在运行时解析的，由 XmlPu"><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2019/07/13/booster-xml-layout-to-code/"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2019-07-13T20:00:00.000Z"><meta property="article:author" content="Johnson Lee"><meta property="article:tag" content="Booster"><meta property="article:tag" content="Performance Optimization"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="布局：XML vs 代码"><meta name="twitter:description" content="做过开发的同学都深有体会，用 XML 来撸 UI 的效率简直是吊打手写代码，在 Anko (Kotlin 库) 还没有流行之前，大家对 XML 还是亲睐有加，虽然性能上偶尔会有卡顿，但是总体来说，还是勉强能接受，但是 Anko 的流行，也让我们开始思考，有没有办法既能享受 XML 撸 UI 的快感，又能享受像 Anko 一样的性能呢？ XML vs 代码XML 布局是在运行时解析的，由 XmlPu"><title>布局：XML vs 代码 | Johnson Lee</title><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 6.3.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">布局：XML vs 代码</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">布局：XML vs 代码</h1><div class="post-meta">Jul 13, 2019<span> | </span><span class="category"><a href="/categories/computer-science/">Computer Science</a><a href="/categories/computer-science/open-source/"> / Open Source</a><a href="/categories/computer-science/open-source/booster/"> / Booster</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 1.2k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 4</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>做过开发的同学都深有体会，用 XML 来撸 UI 的效率简直是吊打手写代码，在 Anko (Kotlin 库) 还没有流行之前，大家对 XML 还是亲睐有加，虽然性能上偶尔会有卡顿，但是总体来说，还是勉强能接受，但是 Anko 的流行，也让我们开始思考，有没有办法既能享受 XML 撸 UI 的快感，又能享受像 Anko 一样的性能呢？</p>
+<h2 id="XML-vs-代码"><a href="#XML-vs-代码" class="headerlink" title="XML vs 代码"></a>XML vs 代码</h2><p>XML 布局是在运行时解析的，由 <code>XmlPullParser</code> 一边解析二进制的 XML 文件一边反射构造 View 节点，像 APP 首页一般都是由很多 XML 组成，这样会导致多次「加载-解析」。都说手写代码性能更好，到底有多好呢？以下是  Anko 与 XML 的性能对比数据：</p>
+<table>
+<thead>
+<tr>
+<th align="center">机型</th>
+<th align="center">规格</th>
+<th align="center">Anko</th>
+<th align="center">XML</th>
+<th align="center">差异</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">阿尔卡特One Touch</td>
+<td align="center">Mediatek MT6572Dual-core 1.3GHz Cortex-A7512MB RAM</td>
+<td align="center">169 ms</td>
+<td align="center">608ms</td>
+<td align="center">359%</td>
+</tr>
+<tr>
+<td align="center">华为 Y300</td>
+<td align="center">Qualcomm MSM 8225Dual-core 1.0GHz Cortex-A5512MB RAM</td>
+<td align="center">593 ms</td>
+<td align="center">3435ms</td>
+<td align="center">578%</td>
+</tr>
+<tr>
+<td align="center">华为 Y330</td>
+<td align="center">Mediatek MT6572Dual-core 1.3GHz Cortex-A7512MB RAM</td>
+<td align="center">162 ms</td>
+<td align="center">984ms</td>
+<td align="center">606%</td>
+</tr>
+<tr>
+<td align="center">三星 Galaxy S2</td>
+<td align="center">Exynos 4210Dual-core 1.2GHz Cortex-A91GB RAM</td>
+<td align="center">207 ms</td>
+<td align="center">753ms</td>
+<td align="center">363%</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>以上数据来源：<a target="_blank" rel="noopener" href="https://android.jlelse.eu/400-faster-layouts-with-anko-da17f32c45dd">https://android.jlelse.eu/400-faster-layouts-with-anko-da17f32c45dd</a></p>
+</blockquote>
+<h2 id="鱼和熊掌兼得"><a href="#鱼和熊掌兼得" class="headerlink" title="鱼和熊掌兼得"></a>鱼和熊掌兼得</h2><p>既然 Booster 是做专门用来做性能优化的，看到这里，大家可能想到了解决方案——将 XML 转译成字节码。没错，就是这样，大家可能会问：转译成字节码会有兼容性问题么？——这得看实现方式。目前来看，有以下两种实现：</p>
+<ol>
+<li>手写代码的思路</li>
+</ol>
+<p>  在解析 XML 后，根据 XML 元素的属性去调用对应的 API：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">RelativeLayout</span> <span class="variable">root</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RelativeLayout</span>(context);</span><br><span class="line"><span class="type">TextView</span> <span class="variable">txt</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TextView</span>(context);</span><br><span class="line">txt.setText(...);</span><br><span class="line">txt.setTextColor(...);</span><br><span class="line">txt.setTextSize(...);</span><br><span class="line">root.addView(txt);</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>运行时解析 XML 的思路</li>
+</ol>
+<p>  在解析 XML 后，根据 XML 元素的属性去构造 AttributeSet</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">AttributeSet</span> <span class="variable">attr</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AttributeSet</span>(...);</span><br><span class="line"><span class="type">RelativeLayout</span> <span class="variable">root</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RelativeLayout</span>(context, attr);</span><br><span class="line"><span class="type">TextView</span> <span class="variable">txt</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TextView</span>(context, attr);</span><br></pre></td></tr></table></figure>
+
+<p>从以上两种方案，我们可以发现：</p>
+<ul>
+<li>方案 1 需要适配所有的 <em>Layout</em> ，对于自定义的 <em>Layout</em> 或者 <em>View</em> ，生成的代码可能与 XML 的呈现不一致</li>
+<li>方案 2 只要保证 <em>AttributeSet</em> 正确性，就能保证最终呈现的 UI 跟 XML 渲染出来的是一致的</li>
+</ul>
+<p>因此，Booster 选择了第 2 种方案，至于其中的细节和原理，请参考此<a target="_blank" rel="noopener" href="https://github.com/johnsonlee/layoutlib">示例工程</a>。</p>
+<h2 id="Layout-Inflator"><a href="#Layout-Inflator" class="headerlink" title="Layout Inflator"></a>Layout Inflator</h2><p>Android SDK 提供了 <code>LayoutInflator</code> 用于将 XML 转换成 View，读过 AOSP 源码的同学可能会发现 <code>LayoutInflator</code> 是一个系统服务，为什么要将 <code>LayoutInflator</code> 作为一个系统服务而不是一个工具类呢？我认为，最主要的原因在于提升性能。</p>
+<p>「What?! 调用系统服务会涉及到跨进程调用，怎么可能会是为了提升性能呢？」</p>
+<p>这得从 XML 解析说起，因为 XML 布局中会引用三类资源：</p>
+<ul>
+<li>系统资源</li>
+<li>本 APP 的资源</li>
+<li>其它 APP 的资源</li>
+</ul>
+<p>所以，对于系统资源来说</p>
+<ul>
+<li>如果每次 <em>inflate</em> 时都要去加载一次系统资源，不 ANR 才怪</li>
+<li>如果引用了其它 <em>package</em> 的资源，对于当前 APP 来说，正常情况是无法访问的</li>
+</ul>
+<p>因此，基于以上原因，需要有一个更高层次的资源管理，因此作为一个系统服务合情合理。</p>
+<h2 id="Layout-Library"><a href="#Layout-Library" class="headerlink" title="Layout Library"></a>Layout Library</h2><p>为了分析 <code>LayoutInflator</code> 构造 <code>View</code> 的过程，我们想到了 <em>Android Studio</em> 的布局可视化设计器，就是这个<a target="_blank" rel="noopener" href="https://github.com/johnsonlee/layoutlib">示例工程</a>的由来，这样就可以在 IDE 中去单步调试 XML 的渲染过程。</p>
+<p><em>Layout Library</em> 由两部分组成：</p>
+<ul>
+<li><em>layoutlib-api</em> ： <em>layoutlib</em> 的接口层，随着 Android Studio 一起发布</li>
+<li><em>layoutlib</em> ： <em>layoutlib-api</em> 的实现层，随着 Android SDK 一起发布</li>
+</ul>
+<p>之所以这么设计，主要还是为了考虑向后兼容。</p>
+<p><em>Layout Library</em> 的另一大亮点在于它参用了类似 <a target="_blank" rel="noopener" href="http://robolectric.org/">Robolectric Shadow</a> 的方式，对 Android SDK 中的 API 进行了替换，这样，原本调用 native 的 API 都在 <em>Layout Library</em> 中用 Java 实现了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@LayoutlibDelegate</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">native_drawBitmap</span><span class="params">(</span></span><br><span class="line"><span class="params">        Canvas thisCanvas,</span></span><br><span class="line"><span class="params">        <span class="type">long</span> nativeCanvas,</span></span><br><span class="line"><span class="params">        Bitmap bitmap,</span></span><br><span class="line"><span class="params">        <span class="type">float</span> left,</span></span><br><span class="line"><span class="params">        <span class="type">float</span> top,</span></span><br><span class="line"><span class="params">        <span class="type">long</span> nativePaintOrZero,</span></span><br><span class="line"><span class="params">        <span class="type">int</span> canvasDensity,</span></span><br><span class="line"><span class="params">        <span class="type">int</span> screenDensity,</span></span><br><span class="line"><span class="params">        <span class="type">int</span> bitmapDensity)</span> &#123;</span><br><span class="line">    <span class="type">Bitmap_Delegate</span> <span class="variable">bitmapDelegate</span> <span class="operator">=</span> Bitmap_Delegate.getDelegate(bitmap);</span><br><span class="line">    <span class="keyword">if</span> (bitmapDelegate != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="type">BufferedImage</span> <span class="variable">image</span> <span class="operator">=</span> bitmapDelegate.getImage();</span><br><span class="line">        <span class="type">float</span> <span class="variable">right</span> <span class="operator">=</span> left + (<span class="type">float</span>)image.getWidth();</span><br><span class="line">        <span class="type">float</span> <span class="variable">bottom</span> <span class="operator">=</span> top + (<span class="type">float</span>)image.getHeight();</span><br><span class="line">        drawBitmap(nativeCanvas, bitmapDelegate, nativePaintOrZero, <span class="number">0</span>, <span class="number">0</span>,</span><br><span class="line">                image.getWidth(), image.getHeight(),</span><br><span class="line">                (<span class="type">int</span>)left, (<span class="type">int</span>)top, (<span class="type">int</span>)right, (<span class="type">int</span>)bottom);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>有兴趣的同学可以用单步调式<a target="_blank" rel="noopener" href="https://github.com/johnsonlee/layoutlib">示例工程</a>。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>了解了 <code>LayoutInflator</code> 和 <code>Layout Library</code> 的实现原理后，对于 Booster 如何去转换 XML 成为字节码，相信大家已经有了思路了，实现原理如下：</p>
+<ol>
+<li>根据 <em>compileSdk</em> 加载 Android SDK 中对应 <em>platform</em> 中的系统资源（第2步会用到）</li>
+<li>在 <em>mergeRes</em> 任务之后，加载 APP 资源</li>
+<li>解析项目中的布局 xml，并根据解析结果生成对应的代码</li>
+<li>在 <em>compile</em> 的过程中，将生成的代码一起参与编译</li>
+<li>在 <em>transform</em> 的过程中，扫描 class 中的以下方法调用替换成调用第3步生成的代码</li>
+</ol>
+<ul>
+<li><code>LayoutInflater.inflate(...)</code></li>
+<li><code>Activity.setContentView(int)</code></li>
+<li><code>Dialog.setContentView(int)</code></li>
+<li>……</li>
+</ul>
+<p>未完待续……</p>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>johnsonlee</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="/2019/07/13/booster-xml-layout-to-code/">https://johnsonlee.io/2019/07/13/booster-xml-layout-to-code/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"><a href="/tags/Booster/">Booster</a><a href="/tags/Performance-Optimization/">Performance Optimization</a></div><div class="post-nav"><a class="pre" href="/2019/10/30/booster-xml-layout-transpiler/">Booster 布局转译器</a><a class="next" href="/2019/07/02/booster-prevent-system-from-crash/">Booster 为系统 bug 兜底</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"布局：XML vs 代码","datePublished":"2019-07-13T20:00:00.000Z","dateModified":"2019-07-13T20:00:00.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2019/07/13/booster-xml-layout-to-code/"},"description":"做过开发的同学都深有体会，用 XML 来撸 UI 的效率简直是吊打手写代码，在 Anko (Kotlin 库) 还没有流行之前，大家对 XML 还是亲睐有加，虽然性能上偶尔会有卡顿，但是总体来说，还是勉强能接受，但是 Anko 的流行，也让我们开始思考，有没有办法既能享受 XML 撸 UI 的快感，又能享受像 Anko 一样的性能呢？ XML vs 代码XML 布局是在运行时解析的，由 XmlPu"}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (104)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (27)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investing/">Investing (3)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investment/">Investment (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (9)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Maven/" style="font-size: 15px;">Maven</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a> <a href="/tags/Music/" style="font-size: 15px;">Music</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/Transformer/" style="font-size: 15px;">Transformer</a> <a href="/tags/Deep-Learning/" style="font-size: 15px;">Deep Learning</a> <a href="/tags/HTML/" style="font-size: 15px;">HTML</a> <a href="/tags/Programming/" style="font-size: 15px;">Programming</a> <a href="/tags/Economics/" style="font-size: 15px;">Economics</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/SPI/" style="font-size: 15px;">SPI</a> <a href="/tags/MVVM/" style="font-size: 15px;">MVVM</a> <a href="/tags/JetPack/" style="font-size: 15px;">JetPack</a> <a href="/tags/Preloading/" style="font-size: 15px;">Preloading</a> <a href="/tags/Mental-Health/" style="font-size: 15px;">Mental Health</a> <a href="/tags/Finance/" style="font-size: 15px;">Finance</a> <a href="/tags/Society/" style="font-size: 15px;">Society</a> <a href="/tags/Wall-Street/" style="font-size: 15px;">Wall Street</a> <a href="/tags/Contrarian/" style="font-size: 15px;">Contrarian</a> <a href="/tags/Alpha/" style="font-size: 15px;">Alpha</a> <a href="/tags/Risk-Management/" style="font-size: 15px;">Risk Management</a> <a href="/tags/Hiring/" style="font-size: 15px;">Hiring</a> <a href="/tags/Interview/" style="font-size: 15px;">Interview</a> <a href="/tags/Engineering-Leadership/" style="font-size: 15px;">Engineering Leadership</a> <a href="/tags/Housing/" style="font-size: 15px;">Housing</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/DeepMind/" style="font-size: 15px;">DeepMind</a> <a href="/tags/AlphaFold2/" style="font-size: 15px;">AlphaFold2</a> <a href="/tags/CASP/" style="font-size: 15px;">CASP</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/02/26/from-llm-to-effective-communication/">从 LLM 到高效沟通</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/from-compiler-to-llm/">从编译器到 LLM：软件分层的轮回</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/llm-is-a-function/">LLM 的本质——函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/tetris-effect-of-ai-conversations/">植入潜意识——AI 版的盗梦空间</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/15/ai-as-thinking-partner/">当 AI 成为你的“思考伙伴”</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/14/agora-technical-journey/">Agora 的技术选型与踩坑实录</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/13/confirmation-bias/">别让你的认知偏差限制了 AI 的发挥</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/what-should-engineering-hiring-evaluate-in-ai-era/">都 2026 了，还在考算法？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/ai-debate-what-i-learned/">一场 AI 辩论暴露了 LLM 性格的本质</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/11/ai-investment-roi-reality-check/">一年烧 $700B，谁会是下一个摩托罗拉？</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>

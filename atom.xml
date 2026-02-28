@@ -1,0 +1,2995 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Johnson Lee</title>
+  <icon>https://johnsonlee.io/icon.png</icon>
+  <subtitle>Get into trouble, make mistakes, fight, love, live</subtitle>
+  <link href="https://johnsonlee.io/atom.xml" rel="self"/>
+  
+  <link href="https://johnsonlee.io/"/>
+  <updated>2026-02-26T00:03:00.000Z</updated>
+  <id>https://johnsonlee.io/</id>
+  
+  <author>
+    <name>Johnson Lee</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>从 LLM 到高效沟通</title>
+    <link href="https://johnsonlee.io/2026/02/26/from-llm-to-effective-communication/"/>
+    <id>https://johnsonlee.io/2026/02/26/from-llm-to-effective-communication/</id>
+    <published>2026-02-26T00:03:00.000Z</published>
+    <updated>2026-02-26T00:03:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;最近在给儿子讲 LLM 的工作原理，做了一套 &lt;a href=&quot;https://llm.johnsonlee.io/&quot;&gt;PPT&lt;/a&gt; 。讲到 context window 的时候，我随手举了个例子：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;你跟 AI</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/tags/Independent-Thinking/"/>
+    
+    <category term="AI" scheme="https://johnsonlee.io/tags/AI/"/>
+    
+    <category term="LLM" scheme="https://johnsonlee.io/tags/LLM/"/>
+    
+    <category term="Communication" scheme="https://johnsonlee.io/tags/Communication/"/>
+    
+    <category term="Education" scheme="https://johnsonlee.io/tags/Education/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>从编译器到 LLM：软件分层的轮回</title>
+    <link href="https://johnsonlee.io/2026/02/25/from-compiler-to-llm/"/>
+    <id>https://johnsonlee.io/2026/02/25/from-compiler-to-llm/</id>
+    <published>2026-02-25T12:28:00.000Z</published>
+    <updated>2026-02-25T12:28:00.000Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;同样是调用 Claude API 写代码，Cursor 做成了估值百亿的产品，而无数“套壳”应用悄无声息地死掉了。区别在哪？&lt;/p&gt;
+&lt;p&gt;这个问题让我想到一个更古老的类比。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+    <category term="AI" scheme="https://johnsonlee.io/tags/AI/"/>
+    
+    <category term="Agent" scheme="https://johnsonlee.io/tags/Agent/"/>
+    
+    <category term="LLM" scheme="https://johnsonlee.io/tags/LLM/"/>
+    
+    <category term="Software Engineering" scheme="https://johnsonlee.io/tags/Software-Engineering/"/>
+    
+    <category term="Architecture" scheme="https://johnsonlee.io/tags/Architecture/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>LLM 的本质——函数</title>
+    <link href="https://johnsonlee.io/2026/02/25/llm-is-a-function/"/>
+    <id>https://johnsonlee.io/2026/02/25/llm-is-a-function/</id>
+    <published>2026-02-25T12:21:03.000Z</published>
+    <updated>2026-02-25T12:21:03.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;前段时间，儿子问我：“爸爸，ChatGPT 是怎么知道该说什么的？”&lt;/p&gt;
+&lt;p&gt;我决定认真回答这个问题。不是敷衍一句“它很聪明”，而是真的把 LLM 的原理拆给他看。于是做了一套 PPT —— &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+    <category term="AI" scheme="https://johnsonlee.io/tags/AI/"/>
+    
+    <category term="LLM" scheme="https://johnsonlee.io/tags/LLM/"/>
+    
+    <category term="Machine Learning" scheme="https://johnsonlee.io/tags/Machine-Learning/"/>
+    
+    <category term="Transformer" scheme="https://johnsonlee.io/tags/Transformer/"/>
+    
+    <category term="Deep Learning" scheme="https://johnsonlee.io/tags/Deep-Learning/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>植入潜意识——AI 版的盗梦空间</title>
+    <link href="https://johnsonlee.io/2026/02/25/tetris-effect-of-ai-conversations/"/>
+    <id>https://johnsonlee.io/2026/02/25/tetris-effect-of-ai-conversations/</id>
+    <published>2026-02-25T08:20:00.000Z</published>
+    <updated>2026-02-25T08:20:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;连续半个月高强度使用 AI 之后，原本睡觉不怎么做梦的我，开始每天晚上梦见自己在和 AI 对话。不是偶尔一次，是连续好多天，从未间断。意识到这件事的时候，第一反应是：我的大脑是不是在不知不觉中被 AI 侵入了？后来查了一下，发现这并不是个例，而且有一个更专业的说法 —</summary>
+        
+      
+    
+    
+    
+    <category term="Cognitive Science" scheme="https://johnsonlee.io/categories/Cognitive-Science/"/>
+    
+    
+    <category term="AI" scheme="https://johnsonlee.io/tags/AI/"/>
+    
+    <category term="Productivity" scheme="https://johnsonlee.io/tags/Productivity/"/>
+    
+    <category term="Mental Health" scheme="https://johnsonlee.io/tags/Mental-Health/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>当 AI 成为你的“思考伙伴”</title>
+    <link href="https://johnsonlee.io/2026/02/15/ai-as-thinking-partner/"/>
+    <id>https://johnsonlee.io/2026/02/15/ai-as-thinking-partner/</id>
+    <published>2026-02-15T00:15:00.000Z</published>
+    <updated>2026-02-15T00:15:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;自从充了 Claude MAX 会员，每天跟 Claude 聊的比跟我老婆聊的都多。&lt;/p&gt;
+&lt;p&gt;经过了这么多天的切磋，脑子里又冒出来一个大胆的想法——&lt;strong&gt;AI</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/tags/Independent-Thinking/"/>
+    
+    <category term="AI" scheme="https://johnsonlee.io/tags/AI/"/>
+    
+    <category term="Claude" scheme="https://johnsonlee.io/tags/Claude/"/>
+    
+    <category term="Self-Reflection" scheme="https://johnsonlee.io/tags/Self-Reflection/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Agora 的技术选型与踩坑实录</title>
+    <link href="https://johnsonlee.io/2026/02/14/agora-technical-journey/"/>
+    <id>https://johnsonlee.io/2026/02/14/agora-technical-journey/</id>
+    <published>2026-02-14T23:27:00.000Z</published>
+    <updated>2026-02-14T23:27:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;为了更深入地了解 AI 的思维和推理模式，脑子里冒出一个大胆的想法——让两个 AI 像人一样互相辩论。于是就有了 &lt;a href=&quot;https://github.com/johnsonlee/agora&quot;&gt;Agora&lt;/a&gt; 这个项目。&lt;/p&gt;
+&lt;p&gt;一开始想得很简单：用</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Architecture Design" scheme="https://johnsonlee.io/categories/computer-science/architecture-design/"/>
+    
+    
+    <category term="AI" scheme="https://johnsonlee.io/tags/AI/"/>
+    
+    <category term="Browser Automation" scheme="https://johnsonlee.io/tags/Browser-Automation/"/>
+    
+    <category term="Puppeteer" scheme="https://johnsonlee.io/tags/Puppeteer/"/>
+    
+    <category term="CDP" scheme="https://johnsonlee.io/tags/CDP/"/>
+    
+    <category term="DOM" scheme="https://johnsonlee.io/tags/DOM/"/>
+    
+    <category term="Web Scraping" scheme="https://johnsonlee.io/tags/Web-Scraping/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>别让你的认知偏差限制了 AI 的发挥</title>
+    <link href="https://johnsonlee.io/2026/02/13/confirmation-bias/"/>
+    <id>https://johnsonlee.io/2026/02/13/confirmation-bias/</id>
+    <published>2026-02-13T22:00:00.000Z</published>
+    <updated>2026-02-13T22:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;当我们对一件事有了立场，就会不自觉地用对这个立场有利的证据来强化它，而忽略事实本身。这不是什么新发现——心理学把它叫 confirmation bias。&lt;/p&gt;
+&lt;p&gt;有意思的是，LLM 也会这样。&lt;/p&gt;
+&lt;p&gt;最近我做了一个实验：让</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+    <category term="AI" scheme="https://johnsonlee.io/tags/AI/"/>
+    
+    <category term="Claude" scheme="https://johnsonlee.io/tags/Claude/"/>
+    
+    <category term="LLM" scheme="https://johnsonlee.io/tags/LLM/"/>
+    
+    <category term="Gemini" scheme="https://johnsonlee.io/tags/Gemini/"/>
+    
+    <category term="ChatGPT" scheme="https://johnsonlee.io/tags/ChatGPT/"/>
+    
+    <category term="Financial Analysis" scheme="https://johnsonlee.io/tags/Financial-Analysis/"/>
+    
+    <category term="Model Evaluation" scheme="https://johnsonlee.io/tags/Model-Evaluation/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>都 2026 了，还在考算法？</title>
+    <link href="https://johnsonlee.io/2026/02/12/what-should-engineering-hiring-evaluate-in-ai-era/"/>
+    <id>https://johnsonlee.io/2026/02/12/what-should-engineering-hiring-evaluate-in-ai-era/</id>
+    <published>2026-02-12T22:29:00.000Z</published>
+    <updated>2026-02-12T22:29:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;最近被邀请去帮其他部门面试。题目一看，还是熟悉的配方：两轮 coding、一轮 design、一轮 leadership principle。&lt;/p&gt;
+&lt;p&gt;Zoom 里，candidate 正在共享屏幕手写 LRU</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+    <category term="AI" scheme="https://johnsonlee.io/tags/AI/"/>
+    
+    <category term="Android" scheme="https://johnsonlee.io/tags/Android/"/>
+    
+    <category term="Software Engineering" scheme="https://johnsonlee.io/tags/Software-Engineering/"/>
+    
+    <category term="Hiring" scheme="https://johnsonlee.io/tags/Hiring/"/>
+    
+    <category term="Interview" scheme="https://johnsonlee.io/tags/Interview/"/>
+    
+    <category term="Engineering Leadership" scheme="https://johnsonlee.io/tags/Engineering-Leadership/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一场 AI 辩论暴露了 LLM 性格的本质</title>
+    <link href="https://johnsonlee.io/2026/02/12/ai-debate-what-i-learned/"/>
+    <id>https://johnsonlee.io/2026/02/12/ai-debate-what-i-learned/</id>
+    <published>2026-02-12T09:25:03.000Z</published>
+    <updated>2026-02-12T09:25:03.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;昨天我做了一个小实验：让 Claude 和 Gemini 围绕“谁是最好的 AI”这个话题自由辩论。&lt;/p&gt;
+&lt;p&gt;为了实现这个实验，我写了一个叫 &lt;a href=&quot;https://github.com/johnsonlee/agora&quot;&gt;Agora&lt;/a&gt;</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+    <category term="AI" scheme="https://johnsonlee.io/tags/AI/"/>
+    
+    <category term="Claude" scheme="https://johnsonlee.io/tags/Claude/"/>
+    
+    <category term="LLM" scheme="https://johnsonlee.io/tags/LLM/"/>
+    
+    <category term="Gemini" scheme="https://johnsonlee.io/tags/Gemini/"/>
+    
+    <category term="Alignment" scheme="https://johnsonlee.io/tags/Alignment/"/>
+    
+    <category term="Communication" scheme="https://johnsonlee.io/tags/Communication/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一年烧 $700B，谁会是下一个摩托罗拉？</title>
+    <link href="https://johnsonlee.io/2026/02/11/ai-investment-roi-reality-check/"/>
+    <id>https://johnsonlee.io/2026/02/11/ai-investment-roi-reality-check/</id>
+    <published>2026-02-11T20:00:00.000Z</published>
+    <updated>2026-02-11T20:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Alphabet 刚发了一支百年债券。&lt;/p&gt;
+&lt;p&gt;没错，100 年。上一次科技公司干这件事，还是 1997 年的摩托罗拉——那也是摩托罗拉最后一年被认为是“大公司”。Michael Burry 立刻在 X 上发了一条警告，暗示 Google</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+    <category term="AI" scheme="https://johnsonlee.io/tags/AI/"/>
+    
+    <category term="Investing" scheme="https://johnsonlee.io/tags/Investing/"/>
+    
+    <category term="ROI" scheme="https://johnsonlee.io/tags/ROI/"/>
+    
+    <category term="Big Tech" scheme="https://johnsonlee.io/tags/Big-Tech/"/>
+    
+    <category term="Infrastructure" scheme="https://johnsonlee.io/tags/Infrastructure/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>不装了，文章都是AI写的</title>
+    <link href="https://johnsonlee.io/2026/02/11/ai-writes-my-blog/"/>
+    <id>https://johnsonlee.io/2026/02/11/ai-writes-my-blog/</id>
+    <published>2026-02-11T10:00:00.000Z</published>
+    <updated>2026-02-11T10:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;上周有个朋友看完我的博客，发消息问我：“你哪来这么多时间写这些长文？”&lt;/p&gt;
+&lt;p&gt;我回了三个字：没时间。&lt;/p&gt;
+&lt;p&gt;然后他更困惑了。&lt;/p&gt;
+&lt;p&gt;事实是，这些文章确实是我“写”的——但不是我一个字一个字敲出来的。它们是我跟 AI</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+    <category term="AI" scheme="https://johnsonlee.io/tags/AI/"/>
+    
+    <category term="Claude" scheme="https://johnsonlee.io/tags/Claude/"/>
+    
+    <category term="Blog" scheme="https://johnsonlee.io/tags/Blog/"/>
+    
+    <category term="Productivity" scheme="https://johnsonlee.io/tags/Productivity/"/>
+    
+    <category term="Workflow" scheme="https://johnsonlee.io/tags/Workflow/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>逆向投资：华尔街的盲点</title>
+    <link href="https://johnsonlee.io/2026/02/11/wall-street-blindspots-contrarian-investing/"/>
+    <id>https://johnsonlee.io/2026/02/11/wall-street-blindspots-contrarian-investing/</id>
+    <published>2026-02-11T00:23:00.000Z</published>
+    <updated>2026-02-11T00:23:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Jim Cramer 在 2008 年 3 月 11 日对着镜头斩钉截铁地说：“不！不！不！Bear Stearns 没问题。别把钱从 Bear 撤出来，那太傻了。”&lt;/p&gt;
+&lt;p&gt;五天后，Bear Stearns 以每股 $2 被 JP Morgan</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+    <category term="Investing" scheme="https://johnsonlee.io/tags/Investing/"/>
+    
+    <category term="Wall Street" scheme="https://johnsonlee.io/tags/Wall-Street/"/>
+    
+    <category term="Contrarian" scheme="https://johnsonlee.io/tags/Contrarian/"/>
+    
+    <category term="Alpha" scheme="https://johnsonlee.io/tags/Alpha/"/>
+    
+    <category term="Risk Management" scheme="https://johnsonlee.io/tags/Risk-Management/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>阅尽繁华，粗粝难欢</title>
+    <link href="https://johnsonlee.io/2026/02/10/the-right-tool-matters/"/>
+    <id>https://johnsonlee.io/2026/02/10/the-right-tool-matters/</id>
+    <published>2026-02-10T23:00:00.000Z</published>
+    <updated>2026-02-10T23:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;前几天提了一个 PR，是一个 MCP Server 的实现，从设计到编码到测试，前后大概花了 1 小时。同事看到 PR 后，在 Slack 上 @我说：“这也太快了吧？我研究了好几天都没搞明白 MCP 的 transport</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+    <category term="AI" scheme="https://johnsonlee.io/tags/AI/"/>
+    
+    <category term="Claude" scheme="https://johnsonlee.io/tags/Claude/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>当 Agent 成为入口，App 何去何从？</title>
+    <link href="https://johnsonlee.io/2026/02/10/agent-economy-app-future/"/>
+    <id>https://johnsonlee.io/2026/02/10/agent-economy-app-future/</id>
+    <published>2026-02-10T13:00:00.000Z</published>
+    <updated>2026-02-10T13:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;最近在跟团队讨论 AI 辅助开发的时候，话题突然跑偏到了一个更宏观的问题：如果未来所有软件都支持 Agent，那我们现在做的这些 App 还有存在的意义吗？&lt;/p&gt;
+&lt;p&gt;这个问题乍一听有点危言耸听，但仔细想想，却让人后背发凉。&lt;/p&gt;
+&lt;h2</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+    <category term="AI" scheme="https://johnsonlee.io/tags/AI/"/>
+    
+    <category term="Agent" scheme="https://johnsonlee.io/tags/Agent/"/>
+    
+    <category term="Claude" scheme="https://johnsonlee.io/tags/Claude/"/>
+    
+    <category term="Career" scheme="https://johnsonlee.io/tags/Career/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>软件工程的最后一次范式革命</title>
+    <link href="https://johnsonlee.io/2026/02/10/agent-oriented-engineering/"/>
+    <id>https://johnsonlee.io/2026/02/10/agent-oriented-engineering/</id>
+    <published>2026-02-10T09:00:00.000Z</published>
+    <updated>2026-02-10T09:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;最近这一年，AI 辅助编程工具如雨后春笋般涌现，从 GitHub Copilot 到 Cursor，再到 Claude Code，每一个都号称能让程序员的效率翻倍。作为一个在代码世界里摸爬滚打了 20 多年的老兵，我不禁开始思考：当 AI</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Engineering" scheme="https://johnsonlee.io/categories/computer-science/Engineering/"/>
+    
+    
+    <category term="AI" scheme="https://johnsonlee.io/tags/AI/"/>
+    
+    <category term="Agent" scheme="https://johnsonlee.io/tags/Agent/"/>
+    
+    <category term="Claude" scheme="https://johnsonlee.io/tags/Claude/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>AI 时代，我们还能做什么？</title>
+    <link href="https://johnsonlee.io/2026/02/08/ai-era-what-we-can-do/"/>
+    <id>https://johnsonlee.io/2026/02/08/ai-era-what-we-can-do/</id>
+    <published>2026-02-08T09:00:00.000Z</published>
+    <updated>2026-02-08T09:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;前段时间写完《亲眼见证程序员职业的终结》后，收到不少私信。有人问技术细节，有人讨论 Claude Code 的用法，但问得最多的是一个更根本的问题：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如果 AI 真能做到 Staff Engineer</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+    <category term="AI" scheme="https://johnsonlee.io/tags/AI/"/>
+    
+    <category term="Claude" scheme="https://johnsonlee.io/tags/Claude/"/>
+    
+    <category term="Career" scheme="https://johnsonlee.io/tags/Career/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>探索 Claude 的能力边界</title>
+    <link href="https://johnsonlee.io/2026/01/31/exploring-claude-boundaries/"/>
+    <id>https://johnsonlee.io/2026/01/31/exploring-claude-boundaries/</id>
+    <published>2026-01-31T00:00:00.000Z</published>
+    <updated>2026-01-31T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;自从用 Claude 完成了 &lt;a href=&quot;https://github.com/johnsonlee/graphite&quot;&gt;Graphite&lt;/a&gt; – 基于 JVM 字节码的静态分析框架，工程质量和解决问题的方法和效率着实把我给震撼到了，然后又让它用 Rust 写了</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/tags/Independent-Thinking/"/>
+    
+    <category term="AI" scheme="https://johnsonlee.io/tags/AI/"/>
+    
+    <category term="Claude" scheme="https://johnsonlee.io/tags/Claude/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>亲眼见证程序员职业的终结</title>
+    <link href="https://johnsonlee.io/2026/01/27/the-compounding-ai-thesis/"/>
+    <id>https://johnsonlee.io/2026/01/27/the-compounding-ai-thesis/</id>
+    <published>2026-01-27T09:00:00.000Z</published>
+    <updated>2026-01-27T09:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;之前在做 &lt;a href=&quot;https://github.com/johnsonlee/booster&quot;&gt;Booster&lt;/a&gt; 的时候，就想实现一个能做数据流分析的框架，但个人精力有限，只能束之高阁。自从 Claude Opus 4.5</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+    <category term="AI" scheme="https://johnsonlee.io/tags/AI/"/>
+    
+    <category term="Claude" scheme="https://johnsonlee.io/tags/Claude/"/>
+    
+    <category term="Career" scheme="https://johnsonlee.io/tags/Career/"/>
+    
+    <category term="Programming" scheme="https://johnsonlee.io/tags/Programming/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>短暂的停顿，是为了走得更远</title>
+    <link href="https://johnsonlee.io/2026/01/10/a-brief-break-to-go-the-distance/"/>
+    <id>https://johnsonlee.io/2026/01/10/a-brief-break-to-go-the-distance/</id>
+    <published>2026-01-10T16:00:00.000Z</published>
+    <updated>2026-01-10T16:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;每周六早上都要送儿子去 Banpo 运动场去练习足球，最近因为 Winter Break</summary>
+        
+      
+    
+    
+    
+    <category term="Life" scheme="https://johnsonlee.io/categories/life/"/>
+    
+    
+    <category term="Korea" scheme="https://johnsonlee.io/tags/Korea/"/>
+    
+    <category term="Seoul" scheme="https://johnsonlee.io/tags/Seoul/"/>
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/tags/Independent-Thinking/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>AI 时代的 Mentor</title>
+    <link href="https://johnsonlee.io/2026/01/01/mentor-in-the-age-of-ai/"/>
+    <id>https://johnsonlee.io/2026/01/01/mentor-in-the-age-of-ai/</id>
+    <published>2026-01-01T01:00:00.000Z</published>
+    <updated>2026-01-01T01:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;就在放 Winter Holiday 的前一天，Term 3 的 School Report 下来了。看到 Report 的那一刻，我当场气炸，零下 10 度的寒风里，我连抽了 3</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+    <category term="Education" scheme="https://johnsonlee.io/tags/Education/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>2年涨30%，是什么支撑韩国的房价？</title>
+    <link href="https://johnsonlee.io/2025/12/24/what-supports-korean-housing-prices/"/>
+    <id>https://johnsonlee.io/2025/12/24/what-supports-korean-housing-prices/</id>
+    <published>2025-12-24T22:00:00.000Z</published>
+    <updated>2025-12-24T22:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;房子的合同还有几个月就到期了。现在住的这套三居，说实话并不差，采光好，通勤也方便，周围朋友也多，住久了甚至还有点舍不得。但孩子慢慢长大，总觉得空间还是局促了一些，心里盘算着要不要换个四居。于是联系了中介，说明需求，预算也交代得很清楚。两个星期过去，中介终于有了消息，给推了两</summary>
+        
+      
+    
+    
+    
+    <category term="Investment" scheme="https://johnsonlee.io/categories/Investment/"/>
+    
+    
+    <category term="Korea" scheme="https://johnsonlee.io/tags/Korea/"/>
+    
+    <category term="Housing" scheme="https://johnsonlee.io/tags/Housing/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>为什么乘除10的幂几乎不用思考?</title>
+    <link href="https://johnsonlee.io/2025/12/20/positional-numeral-system-and-radix-shift/"/>
+    <id>https://johnsonlee.io/2025/12/20/positional-numeral-system-and-radix-shift/</id>
+    <published>2025-12-20T10:00:00.000Z</published>
+    <updated>2025-12-20T10:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;周末在给儿子辅导作业时，注意到他在算 450÷10 时几乎不假思索，但遇到 450÷6 时立刻眉头紧锁，这让我突然意识到一个我们习以为常，却很少认真想过的问题：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;为什么在算乘除 10</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Programming" scheme="https://johnsonlee.io/categories/computer-science/Programming/"/>
+    
+    
+    <category term="Programming" scheme="https://johnsonlee.io/tags/Programming/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>为什么计算机要区分文本和数字?</title>
+    <link href="https://johnsonlee.io/2025/12/19/why-computers-represent-text-and-numbers-differently/"/>
+    <id>https://johnsonlee.io/2025/12/19/why-computers-represent-text-and-numbers-differently/</id>
+    <published>2025-12-19T20:00:00.000Z</published>
+    <updated>2025-12-19T20:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;最近从零开始教儿子学编程，在讲解计算机是如何表示文本和数字的时候，儿子突然冒出了一个问题：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;为什么要用不同的方式来表示？数字不也是文本吗？&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;这样一个看似天真的问题，差点把我给整不会了。&lt;/p&gt;</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Programming" scheme="https://johnsonlee.io/categories/computer-science/Programming/"/>
+    
+    
+    <category term="Programming" scheme="https://johnsonlee.io/tags/Programming/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>AI 时代的教育</title>
+    <link href="https://johnsonlee.io/2025/12/06/education-in-the-age-of-ai/"/>
+    <id>https://johnsonlee.io/2025/12/06/education-in-the-age-of-ai/</id>
+    <published>2025-12-06T12:00:00.000Z</published>
+    <updated>2025-12-06T12:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;原本以为让孩子走国际路线可以逃离国内的内卷，但来到首尔后，我发现这里的竞争一点也不比国内少，尽管大环境如此，作为家长，我们对报补习班一直都很克制，不会自作主张给孩子报各种课后班，都是孩子说想学啥才给报。在和国际学校的其他家长们交流后，我才意识到大家的逻辑几乎惊人的一致</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+    <category term="Education" scheme="https://johnsonlee.io/tags/Education/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Circle - 链上的美联储</title>
+    <link href="https://johnsonlee.io/2025/06/23/circle-the-fed-on-chain/"/>
+    <id>https://johnsonlee.io/2025/06/23/circle-the-fed-on-chain/</id>
+    <published>2025-06-23T22:00:00.000Z</published>
+    <updated>2025-06-23T22:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;中国的数字人民币项目最早可以追溯到 2014 年，正式落地试点是在 2020</summary>
+        
+      
+    
+    
+    
+    <category term="Investing" scheme="https://johnsonlee.io/categories/Investing/"/>
+    
+    
+    <category term="Stock" scheme="https://johnsonlee.io/tags/Stock/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>为什么 All in CRCL?</title>
+    <link href="https://johnsonlee.io/2025/06/22/why-i-went-all-in-on-circle/"/>
+    <id>https://johnsonlee.io/2025/06/22/why-i-went-all-in-on-circle/</id>
+    <published>2025-06-22T16:00:00.000Z</published>
+    <updated>2025-06-22T16:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;在上一篇 &lt;a href=&quot;./no-time-to-think-from-bottom-fishing-google-tesla-to-going-all-in-on-circle.md&quot;&gt;无暇思考：从抄底 Google&amp;#x2F;Tesla 到 All in</summary>
+        
+      
+    
+    
+    
+    <category term="Investing" scheme="https://johnsonlee.io/categories/Investing/"/>
+    
+    
+    <category term="Stock" scheme="https://johnsonlee.io/tags/Stock/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>无暇思考：从抄底 Google/Tesla 到 All in Circle</title>
+    <link href="https://johnsonlee.io/2025/06/21/no-time-to-think-from-bottom-fishing-google-tesla-to-going-all-in-on-circle/"/>
+    <id>https://johnsonlee.io/2025/06/21/no-time-to-think-from-bottom-fishing-google-tesla-to-going-all-in-on-circle/</id>
+    <published>2025-06-21T16:00:00.000Z</published>
+    <updated>2025-06-21T16:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;最开始注意到 &lt;a href=&quot;https://finance.yahoo.com/quote/CRCL&quot;&gt;$CRCL&lt;/a&gt;，是在富途的“美股异动机会”榜单上。自从 IPO 之后，总是收到关于 &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Investing" scheme="https://johnsonlee.io/categories/Investing/"/>
+    
+    
+    <category term="Stock" scheme="https://johnsonlee.io/tags/Stock/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 5.0.0 版本发布</title>
+    <link href="https://johnsonlee.io/2024/07/21/booster-v5-0-0-released/"/>
+    <id>https://johnsonlee.io/2024/07/21/booster-v5-0-0-released/</id>
+    <published>2024-07-21T22:00:00.000Z</published>
+    <updated>2024-07-21T22:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster v5.0.0 主要的变更如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;支持 AGP 8.0, 8.1, 8.2，不再支持 AGP 8 以下的版本&lt;/li&gt;
+&lt;li&gt;移除</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Living in Seoul (1)</title>
+    <link href="https://johnsonlee.io/2024/04/27/living-in-seoul-1/"/>
+    <id>https://johnsonlee.io/2024/04/27/living-in-seoul-1/</id>
+    <published>2024-04-27T00:00:00.000Z</published>
+    <updated>2024-04-27T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;时光飞逝，犹如白驹过隙，不知不觉，马上就要在首尔度过第二个春天，春夏交替之季，即不像北京的清爽，也不像上海的阴雨连绵，偶尔突出其来的淅沥小雨，让年轻的上班族措手不及，经历了人生的风风雨雨，雨伞成了中年男人的标配之一，虽然我更喜欢干爽的气候，偶尔的小雨也勉强能接受。&lt;/p&gt;
+</summary>
+        
+      
+    
+    
+    
+    <category term="Life" scheme="https://johnsonlee.io/categories/life/"/>
+    
+    
+    <category term="Korea" scheme="https://johnsonlee.io/tags/Korea/"/>
+    
+    <category term="Seoul" scheme="https://johnsonlee.io/tags/Seoul/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>推荐阅读（思维篇）</title>
+    <link href="https://johnsonlee.io/2024/04/20/recommended-reading-thinking/"/>
+    <id>https://johnsonlee.io/2024/04/20/recommended-reading-thinking/</id>
+    <published>2024-04-20T00:00:00.000Z</published>
+    <updated>2024-04-20T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;最近又有同学问我：“森哥，为什么大佬看待事情的眼光总是那么犀利？有什么诀窍可以传授一下吗？”，嗯，这确实是个有意思的话题，在如今信息爆炸的时代，每天都有海量的信息涌现，在面对错综复杂的信息时，真正的大佬似乎总能从错综复杂的信息中找到关键信息，轻松地洞察事物的本质。《教父》里</summary>
+        
+      
+    
+    
+    
+    <category term="Reading" scheme="https://johnsonlee.io/categories/reading/"/>
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/tags/Independent-Thinking/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>洞察构建性能：选择正确的 Metrics</title>
+    <link href="https://johnsonlee.io/2024/01/27/use-better-metrics-for-build-performance-measurement/"/>
+    <id>https://johnsonlee.io/2024/01/27/use-better-metrics-for-build-performance-measurement/</id>
+    <published>2024-01-27T23:00:00.000Z</published>
+    <updated>2024-01-27T23:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;最近因为做架构重构，频繁大规模改代码，发现 Android 工程的构建速度简直到了无法忍受的地步，记得以前用 Intel 芯片的 Mac Book Pro 的时候，全量构建一次大概要 40 分钟，一番 deep dive</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Mobile" scheme="https://johnsonlee.io/categories/computer-science/mobile/"/>
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/tags/Independent-Thinking/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一封写给老板的邮件</title>
+    <link href="https://johnsonlee.io/2024/01/07/an-email-to-my-boss/"/>
+    <id>https://johnsonlee.io/2024/01/07/an-email-to-my-boss/</id>
+    <published>2024-01-07T07:00:00.000Z</published>
+    <updated>2024-01-07T07:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;最近在整理旧日的备忘录时，偶然间翻到了多年前写给老板的一封邮件。随着每一个字句的流淌，思绪也随之穿梭回到往昔，当年那个意气风发，满怀热情，勇敢直言，无惧无畏的少年已然跃然于纸上。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Dear Xxx,&lt;/p&gt;
+&lt;p&gt;Few</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/tags/Independent-Thinking/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>心之所向，道之所在</title>
+    <link href="https://johnsonlee.io/2024/01/01/where-the-heart-leads-the-truth-follows/"/>
+    <id>https://johnsonlee.io/2024/01/01/where-the-heart-leads-the-truth-follows/</id>
+    <published>2024-01-01T16:00:00.000Z</published>
+    <updated>2024-01-01T16:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;几个月前，偶然发现了一本新书《Why Greatness Cannot Be Planned》，中文名《为什么伟大不能被计划》，作者竟是来自 OpenAI 的科学家。那时，OpenAI 的 ChatGPT</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/tags/Independent-Thinking/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>在 JVM 上运行 Android ？！</title>
+    <link href="https://johnsonlee.io/2023/10/08/running-android-code-on-jvm/"/>
+    <id>https://johnsonlee.io/2023/10/08/running-android-code-on-jvm/</id>
+    <published>2023-10-08T15:00:00.000Z</published>
+    <updated>2023-10-08T15:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;没看错，就是在 JVM 上运行 Android 代码，而且，还不需要模拟器或者虚拟化技术，各位是不是很好奇，究竟如何做到把 Android 的代码跑在 JVM 上？别着急，咱们 step by step。&lt;/p&gt;
+&lt;h2</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Mobile" scheme="https://johnsonlee.io/categories/computer-science/mobile/"/>
+    
+    <category term="Android" scheme="https://johnsonlee.io/categories/computer-science/mobile/android/"/>
+    
+    
+    <category term="Gradle" scheme="https://johnsonlee.io/tags/Gradle/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>中国人文化不自信的根源</title>
+    <link href="https://johnsonlee.io/2023/09/24/the-root-cause-of-chinese-peoples-cultural-unconfidence/"/>
+    <id>https://johnsonlee.io/2023/09/24/the-root-cause-of-chinese-peoples-cultural-unconfidence/</id>
+    <published>2023-09-24T17:00:00.000Z</published>
+    <updated>2023-09-24T17:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;周末实在无聊，带孩子一起去了趟景福宫(경복궁)，来之前也没有做攻略，进了广场就看到对面有一群人在排队购票，我也带着娃去看票价，仔细研究了一番，发现有一个免票规则——「身着韩国传统服饰者可以免费参观」，顿时终于理解为啥那么多外国人也身着韩国传统服饰了，正是这个免票规则，让我陷</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+    <category term="Korea" scheme="https://johnsonlee.io/tags/Korea/"/>
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/tags/Independent-Thinking/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 4.16.3 版本发布</title>
+    <link href="https://johnsonlee.io/2023/09/04/booster-v4-16-3-released/"/>
+    <id>https://johnsonlee.io/2023/09/04/booster-v4-16-3-released/</id>
+    <published>2023-09-04T00:00:00.000Z</published>
+    <updated>2023-09-04T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster v4.16.3 主要的变更如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;支持 AGP 7.4&lt;/li&gt;
+&lt;li&gt;修复 &lt;a href=&quot;https://github.com/didi/booster/pull/422&quot;&gt;#422&lt;/a&gt;: end-of-stream</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 如何适配 AGP 8.0？</title>
+    <link href="https://johnsonlee.io/2023/05/29/how-booster-supports-agp-8/"/>
+    <id>https://johnsonlee.io/2023/05/29/how-booster-supports-agp-8/</id>
+    <published>2023-05-29T00:00:00.000Z</published>
+    <updated>2023-05-29T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;自 AGP 8.0 正式版本发布以来已经一个多月了，Booster 适配 AGP 8.0 还在持续进行中，主要是 AGP 8.0 删除了很多之前只是 deprecated 的 API，包括部分 &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 4.16.2 版本发布</title>
+    <link href="https://johnsonlee.io/2023/05/28/booster-v4-16-2-released/"/>
+    <id>https://johnsonlee.io/2023/05/28/booster-v4-16-2-released/</id>
+    <published>2023-05-28T00:00:00.000Z</published>
+    <updated>2023-05-28T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster v4.16.2 与 v4.15.0 相比，主要的变更如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;修复 &lt;a href=&quot;https://github.com/didi/booster/issues/406&quot;&gt;#406&lt;/a&gt; : 增量编译时对 Jar</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>关于战略架构框架的思考</title>
+    <link href="https://johnsonlee.io/2023/05/13/thoughts-on-strategic-architecture-framework/"/>
+    <id>https://johnsonlee.io/2023/05/13/thoughts-on-strategic-architecture-framework/</id>
+    <published>2023-05-13T20:00:00.000Z</published>
+    <updated>2023-05-13T20:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;在做架构设计的过程中，我们经常会提到一个概念——“标准化”。标准化，通过设定最佳实践和创建统一的标准，确保企业在所有业务领域中实现一致的性能。然而，当我们完成了标准化之后，我们应该怎么做呢？下一步又是什么？是否存在一个通用的框架，能够指导架构师和技术负责人进一步优化和发展？</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>[译] Stevey&#39;s Google Platforms Rant</title>
+    <link href="https://johnsonlee.io/2023/04/15/steveys-google-platforms-rant/"/>
+    <id>https://johnsonlee.io/2023/04/15/steveys-google-platforms-rant/</id>
+    <published>2023-04-15T00:00:00.000Z</published>
+    <updated>2023-04-15T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;I was at Amazon for about six and a half years, and now I’ve been at Google for that long. One thing that struck me immediately about</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Design System: 移动应用开发新视角</title>
+    <link href="https://johnsonlee.io/2023/03/31/design-system-mobile-engineering-perspective/"/>
+    <id>https://johnsonlee.io/2023/03/31/design-system-mobile-engineering-perspective/</id>
+    <published>2023-03-31T09:00:00.000Z</published>
+    <updated>2023-03-31T09:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;随着移动互联网的普及，移动应用逐渐成为人们生活中不可或缺的一部分。为了满足用户对于高品质应用的需求，移动工程师们在不断探索如何提高开发效率、降低开发成本的同时，实现更好的用户体验。本文将从移动应用开发的角度，从 UX</summary>
+        
+      
+    
+    
+    
+    <category term="UI/UX" scheme="https://johnsonlee.io/categories/UI-UX/"/>
+    
+    <category term="Design System" scheme="https://johnsonlee.io/categories/UI-UX/Design-System/"/>
+    
+    
+    <category term="UX" scheme="https://johnsonlee.io/tags/UX/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Kotlin 填坑记之 Compatibility</title>
+    <link href="https://johnsonlee.io/2022/12/07/do-you-really-know-kotlin-compatibility/"/>
+    <id>https://johnsonlee.io/2022/12/07/do-you-really-know-kotlin-compatibility/</id>
+    <published>2022-12-07T00:00:00.000Z</published>
+    <updated>2022-12-07T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;在前一篇 &lt;a href=&quot;/2022/12/03/do-you-really-know-kotlin-function/&quot;&gt;Kotlin 填坑记之 FunctionReference&lt;/a&gt; 中有提到关于如何解决 Kotlin 从 1.3 升级到 1.5 时由 &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Kotlin" scheme="https://johnsonlee.io/categories/computer-science/kotlin/"/>
+    
+    
+    <category term="Kotlin" scheme="https://johnsonlee.io/tags/Kotlin/"/>
+    
+    <category term="Compatibility" scheme="https://johnsonlee.io/tags/Compatibility/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Kotlin 填坑记之 FunctionReference</title>
+    <link href="https://johnsonlee.io/2022/12/03/do-you-really-know-kotlin-function/"/>
+    <id>https://johnsonlee.io/2022/12/03/do-you-really-know-kotlin-function/</id>
+    <published>2022-12-03T14:00:00.000Z</published>
+    <updated>2022-12-03T14:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;在 Booster 4.15.0 之前，一直使用的是 Kotlin 1.3，之所一直用比较低的 Kotlin 版本，主要的原因还是考虑到 Kotlin 版本的兼容性问题，但要支持 AGP 7.3 就不得不升级 Kotlin 版本，因为 AGP 7.3 就依赖了</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Kotlin" scheme="https://johnsonlee.io/categories/computer-science/kotlin/"/>
+    
+    
+    <category term="Compiler" scheme="https://johnsonlee.io/tags/Compiler/"/>
+    
+    <category term="Kotlin" scheme="https://johnsonlee.io/tags/Kotlin/"/>
+    
+    <category term="Lambda" scheme="https://johnsonlee.io/tags/Lambda/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 4.15.0 版本发布</title>
+    <link href="https://johnsonlee.io/2022/12/02/booster-v4-15-0-released/"/>
+    <id>https://johnsonlee.io/2022/12/02/booster-v4-15-0-released/</id>
+    <published>2022-12-02T23:00:00.000Z</published>
+    <updated>2022-12-02T23:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster 又双叒叕发布了新的版本—— v4.15.0，本次更新内容如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;修复 &lt;a href=&quot;https://github.com/didi/booster/issues/387&quot;&gt;#387&lt;/a&gt; by &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>培养独立思考的教育</title>
+    <link href="https://johnsonlee.io/2022/11/28/education-for-independent-thought/"/>
+    <id>https://johnsonlee.io/2022/11/28/education-for-independent-thought/</id>
+    <published>2022-11-28T00:00:00.000Z</published>
+    <updated>2022-11-28T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;有幸看过已故华人科学家张首晟的一次讲座 —— &lt;a href=&quot;https://www.youtube.com/watch?v=kLs4bf9g1aw&amp;t=2711s&quot;&gt;从沙粒中看世界&lt;/a&gt;，在讲座 &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/tags/Independent-Thinking/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>如何成为优秀的 PPT 工程师</title>
+    <link href="https://johnsonlee.io/2022/11/13/how-to-be-an-excellent-ppt-engineer/"/>
+    <id>https://johnsonlee.io/2022/11/13/how-to-be-an-excellent-ppt-engineer/</id>
+    <published>2022-11-13T00:00:00.000Z</published>
+    <updated>2022-11-13T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;最近看了很多工程师写的文档，发现工程师们普通存在的问题，要么通篇都是文字一个图也没有，要么技术规划全是一堆的 task，根本看不清楚这些 task 跟整体的目标是什么关系，等等，即便是高级工程师，有类似问题的也大有人在。&lt;/p&gt;
+&lt;h2 id=&quot;专业的态度&quot;&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Career" scheme="https://johnsonlee.io/categories/career/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>推荐阅读（经济篇）</title>
+    <link href="https://johnsonlee.io/2022/11/12/recommended-reading-economics/"/>
+    <id>https://johnsonlee.io/2022/11/12/recommended-reading-economics/</id>
+    <published>2022-11-12T07:00:00.000Z</published>
+    <updated>2022-11-12T07:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;最近有同学问我：“森哥，有什么值得一读的好书推荐吗？”，我抬头扫了一眼书架，还别说，值得一读的书还真不少，还是先从经济学开始吧，为什么会先推荐经济学相关的书呢？相信很多人都听过「天下熙熙皆为利来，天下攘攘皆为利往」，可以说人类的所有一切活动都可以用经济学的原理去解释，搞清楚</summary>
+        
+      
+    
+    
+    
+    <category term="Reading" scheme="https://johnsonlee.io/categories/reading/"/>
+    
+    
+    <category term="Economics" scheme="https://johnsonlee.io/tags/Economics/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 4.13.0 版本发布</title>
+    <link href="https://johnsonlee.io/2022/08/25/booster-v4-13-0-released/"/>
+    <id>https://johnsonlee.io/2022/08/25/booster-v4-13-0-released/</id>
+    <published>2022-08-25T23:00:00.000Z</published>
+    <updated>2022-08-25T23:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster 又双叒叕发布了新的版本—— v4.13.0，本次更新内容如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;修复 &lt;code&gt;ShadowScheduledThreadPoolExecutor&lt;/code&gt; 在 Android 5.1.1</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 4.12.0 版本发布</title>
+    <link href="https://johnsonlee.io/2022/07/09/booster-v4-12-0-released/"/>
+    <id>https://johnsonlee.io/2022/07/09/booster-v4-12-0-released/</id>
+    <published>2022-07-09T12:00:00.000Z</published>
+    <updated>2022-07-09T12:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster 又双叒叕发布了新的版本—— v4.12.0，本次更新内容如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;优化 CHA 支持 ClassSet 缓存，降低多工程大规模静态分析的内存占用&lt;/li&gt;
+&lt;li&gt;支持 &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 4.11.0 版本发布</title>
+    <link href="https://johnsonlee.io/2022/07/02/booster-v4-11-0-released/"/>
+    <id>https://johnsonlee.io/2022/07/02/booster-v4-11-0-released/</id>
+    <published>2022-07-02T12:00:00.000Z</published>
+    <updated>2022-07-02T12:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster 又双叒叕发布了新的版本—— v4.11.0，本次更新内容如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;修复 transform 的耗时计时问题&lt;/li&gt;
+&lt;li&gt;新增 &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 4.10.0 版本发布</title>
+    <link href="https://johnsonlee.io/2022/06/13/booster-v4-10-0-released/"/>
+    <id>https://johnsonlee.io/2022/06/13/booster-v4-10-0-released/</id>
+    <published>2022-06-13T09:00:00.000Z</published>
+    <updated>2022-06-13T09:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster 又双叒叕发布了新的版本—— v4.10.0，本次更新内容如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;完善 &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>类引用分析？Booster 轻松搞定！</title>
+    <link href="https://johnsonlee.io/2022/06/08/class-reference-analysis/"/>
+    <id>https://johnsonlee.io/2022/06/08/class-reference-analysis/</id>
+    <published>2022-06-08T01:00:00.000Z</published>
+    <updated>2022-06-08T01:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;在 App 架构演进的过程中，基础模块下沉是每个 App</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Gradle" scheme="https://johnsonlee.io/tags/Gradle/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 4.9.0 版本发布</title>
+    <link href="https://johnsonlee.io/2022/05/21/booster-v4-9-0-released/"/>
+    <id>https://johnsonlee.io/2022/05/21/booster-v4-9-0-released/</id>
+    <published>2022-05-21T00:00:00.000Z</published>
+    <updated>2022-05-21T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster 又双叒叕发布了新的版本—— v4.9.0，本次更新内容如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;修复漏洞 &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>iMac 升级 SSD</title>
+    <link href="https://johnsonlee.io/2022/05/06/upgrade-imac-with-ssd/"/>
+    <id>https://johnsonlee.io/2022/05/06/upgrade-imac-with-ssd/</id>
+    <published>2022-05-06T00:00:00.000Z</published>
+    <updated>2022-05-06T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;前段时间，我的 7 年高龄的 Mac Book Pro (Late 2013) 老是出现磁盘空间不足的情况，256G 的 SSD 实在是有点捉襟见肘了，于是打算换个 M1 ，上官网看一下价格，一个顶配算下来得 3 万多 RMB，太特么贵了，想当年，我这个 Mac Book</summary>
+        
+      
+    
+    
+    
+    <category term="DIY" scheme="https://johnsonlee.io/categories/diy/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 4.8.0 版本发布</title>
+    <link href="https://johnsonlee.io/2022/05/05/booster-v4-8-0-released/"/>
+    <id>https://johnsonlee.io/2022/05/05/booster-v4-8-0-released/</id>
+    <published>2022-05-05T00:00:00.000Z</published>
+    <updated>2022-05-05T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster 又双叒叕发布了新的版本—— v4.8.0，本次更新内容如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;修复 &lt;a href=&quot;https://github.com/didi/booster/issues/311&quot;&gt;#311&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;新增 API &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 4.7.0 版本发布</title>
+    <link href="https://johnsonlee.io/2022/04/26/booster-v4-7-0-released/"/>
+    <id>https://johnsonlee.io/2022/04/26/booster-v4-7-0-released/</id>
+    <published>2022-04-26T23:00:00.000Z</published>
+    <updated>2022-04-26T23:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster 又双叒叕发布了新的版本—— v4.7.0，本次更新内容如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Fix issue &lt;a href=&quot;https://github.com/didi/booster/issues/304&quot;&gt;#304&lt;/a&gt;:</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>关于数据的（不）可变性问题</title>
+    <link href="https://johnsonlee.io/2022/04/11/the-data-mutability-problem/"/>
+    <id>https://johnsonlee.io/2022/04/11/the-data-mutability-problem/</id>
+    <published>2022-04-11T00:00:00.000Z</published>
+    <updated>2022-04-11T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;关于数据的可变性或者不可变性，是指数据在被创建后，到底支不支持可变（修改），尽管我们知道 &lt;em&gt;Java&lt;/em&gt; 中的 &lt;em&gt;String&lt;/em&gt;</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Architecture Design" scheme="https://johnsonlee.io/categories/computer-science/architecture-design/"/>
+    
+    
+    <category term="Android" scheme="https://johnsonlee.io/tags/Android/"/>
+    
+    <category term="Java" scheme="https://johnsonlee.io/tags/Java/"/>
+    
+    <category term="Kotlin" scheme="https://johnsonlee.io/tags/Kotlin/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>是时候放弃 JavaPoet/KotlinPoet 了</title>
+    <link href="https://johnsonlee.io/2022/04/10/its-time-to-abandon-javapoet-kotlinpoet/"/>
+    <id>https://johnsonlee.io/2022/04/10/its-time-to-abandon-javapoet-kotlinpoet/</id>
+    <published>2022-04-10T00:00:00.000Z</published>
+    <updated>2022-04-10T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;相信大家对于 &lt;a href=&quot;https://github.com/square/javapoet&quot;&gt;JavaPoet&lt;/a&gt; 和 &lt;a href=&quot;https://github.com/square/kotlinpoet&quot;&gt;KotlinPoet&lt;/a&gt;</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Architecture Design" scheme="https://johnsonlee.io/categories/computer-science/architecture-design/"/>
+    
+    
+    <category term="Java" scheme="https://johnsonlee.io/tags/Java/"/>
+    
+    <category term="Kotlin" scheme="https://johnsonlee.io/tags/Kotlin/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 4.6.0 版本发布</title>
+    <link href="https://johnsonlee.io/2022/04/05/booster-v4-6-0-released/"/>
+    <id>https://johnsonlee.io/2022/04/05/booster-v4-6-0-released/</id>
+    <published>2022-04-05T23:00:00.000Z</published>
+    <updated>2022-04-05T23:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster 又双叒叕发布了新的版本—— v4.6.0，本次更新内容如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Add extension property &lt;code&gt;BaseVariant.mergedNativeLibs:</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 4.5.3 版本发布</title>
+    <link href="https://johnsonlee.io/2022/03/06/booster-v4-5-3-released/"/>
+    <id>https://johnsonlee.io/2022/03/06/booster-v4-5-3-released/</id>
+    <published>2022-03-06T23:00:00.000Z</published>
+    <updated>2022-03-06T23:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster 又双叒叕发布了新的版本—— v4.5.3，本次更新内容如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Fix issue &lt;a href=&quot;https://github.com/didi/booster/issues/284&quot;&gt;#284&lt;/a&gt; -</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 4.5.1 版本发布</title>
+    <link href="https://johnsonlee.io/2022/03/06/booster-v4-5-1-released/"/>
+    <id>https://johnsonlee.io/2022/03/06/booster-v4-5-1-released/</id>
+    <published>2022-03-06T15:00:00.000Z</published>
+    <updated>2022-03-06T15:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster 又双叒叕发布了新的版本—— v4.5.1，本次更新内容如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Fix issue &lt;a href=&quot;https://github.com/didi/booster/issues/280&quot;&gt;#280&lt;/a&gt; - thread</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster Collector API</title>
+    <link href="https://johnsonlee.io/2022/01/16/booster-collector-api/"/>
+    <id>https://johnsonlee.io/2022/01/16/booster-collector-api/</id>
+    <published>2022-01-16T23:00:00.000Z</published>
+    <updated>2022-01-16T23:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster 之所以保持着高性能，除了并行 I&amp;#x2F;O 以外，还有一个很重要的方面 —— 单次 I&amp;#x2F;O。可能有人会问，什么叫单次 I&amp;#x2F;O？所谓单次 I&amp;#x2F;O 是指，在 Transform 的过程中，对于每一个输入</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 4.4.0 版本发布</title>
+    <link href="https://johnsonlee.io/2022/01/16/booster-v4-4-0-released/"/>
+    <id>https://johnsonlee.io/2022/01/16/booster-v4-4-0-released/</id>
+    <published>2022-01-16T20:00:00.000Z</published>
+    <updated>2022-01-16T20:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster 又双叒叕发布了新的版本—— v4.4.0，本次更新内容如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;支持对增量编译的 transform 输入进行强制更新&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;参见：&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Zero to One - Importance of Mobile App Monitoring</title>
+    <link href="https://johnsonlee.io/2021/12/31/importance-of-mobile-app-monitoring/"/>
+    <id>https://johnsonlee.io/2021/12/31/importance-of-mobile-app-monitoring/</id>
+    <published>2021-12-31T00:00:00.000Z</published>
+    <updated>2021-12-31T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Stability is one of the three most important metrics for Coupang apps in providing a Wow customer experience. The mobile app monitoring</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Observability" scheme="https://johnsonlee.io/categories/computer-science/observability/"/>
+    
+    
+    <category term="Coupang" scheme="https://johnsonlee.io/tags/Coupang/"/>
+    
+    <category term="Reveal2021" scheme="https://johnsonlee.io/tags/Reveal2021/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 4.3.0 版本发布</title>
+    <link href="https://johnsonlee.io/2021/12/21/booster-v4-3-0-released/"/>
+    <id>https://johnsonlee.io/2021/12/21/booster-v4-3-0-released/</id>
+    <published>2021-12-21T00:00:00.000Z</published>
+    <updated>2021-12-21T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster 又双叒叕发布了新的版本—— v4.3.0，本次更新内容如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;支持在本地单元测试环境中运行 &lt;code&gt;Transformer&lt;/code&gt;，并同时支持 &lt;em&gt;ASM&lt;/em&gt; 和</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>第一个 UI 控件</title>
+    <link href="https://johnsonlee.io/2021/12/19/my-first-ui-widget/"/>
+    <id>https://johnsonlee.io/2021/12/19/my-first-ui-widget/</id>
+    <published>2021-12-19T00:00:00.000Z</published>
+    <updated>2021-12-19T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;尽管我使用 &lt;em&gt;Java&lt;/em&gt; 编程已有十年有余，但其实 &lt;em&gt;JavaScript&lt;/em&gt; 才是我最早掌握的一门编程语言，虽然 &lt;em&gt;C&lt;/em&gt; 语言是大学生的必修课，但我真不敢说在当时我已经掌握了它，在 &lt;em&gt;Web 2.0&lt;/em&gt;</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Graphics" scheme="https://johnsonlee.io/categories/computer-science/graphics/"/>
+    
+    
+    <category term="JavaScript" scheme="https://johnsonlee.io/tags/JavaScript/"/>
+    
+    <category term="HTML" scheme="https://johnsonlee.io/tags/HTML/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>可测试应用架构设计（二）</title>
+    <link href="https://johnsonlee.io/2021/12/18/testable-app-architecture-design-2/"/>
+    <id>https://johnsonlee.io/2021/12/18/testable-app-architecture-design-2/</id>
+    <published>2021-12-18T00:00:00.000Z</published>
+    <updated>2021-12-18T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;在&lt;a href=&quot;/2021/11/23/testable-app-architecture-design-1/&quot;&gt;可测试应用架构设计（一）&lt;/a&gt;中有介绍过 &lt;em&gt;Booster&lt;/em&gt; 是如何解决 &lt;code&gt;Transformer&lt;/code&gt;</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Architecture Design" scheme="https://johnsonlee.io/categories/computer-science/architecture-design/"/>
+    
+    
+    <category term="Android" scheme="https://johnsonlee.io/tags/Android/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 4.2.0 版本发布</title>
+    <link href="https://johnsonlee.io/2021/12/14/booster-v4-2-0-released/"/>
+    <id>https://johnsonlee.io/2021/12/14/booster-v4-2-0-released/</id>
+    <published>2021-12-14T01:00:00.000Z</published>
+    <updated>2021-12-14T01:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster 又双叒叕发布了新的版本—— v4.2.0，本次更新内容如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;增加对运行时字节码注入的支持，开发者可以使用 &lt;strong&gt;Booster&lt;/strong&gt; 提供的</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>可测试应用架构设计（一）</title>
+    <link href="https://johnsonlee.io/2021/11/23/testable-app-architecture-design-1/"/>
+    <id>https://johnsonlee.io/2021/11/23/testable-app-architecture-design-1/</id>
+    <published>2021-11-23T00:00:00.000Z</published>
+    <updated>2021-11-23T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;自从字节码操作技术在移动端普及之后，各种 &lt;em&gt;app&lt;/em&gt; 的架构中都采用了这一技术，最典型的例子便是采用 &lt;em&gt;Service Locator&lt;/em&gt; 模式实现的 &lt;em&gt;IoC&lt;/em&gt;</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Architecture Design" scheme="https://johnsonlee.io/categories/computer-science/architecture-design/"/>
+    
+    
+    <category term="Android" scheme="https://johnsonlee.io/tags/Android/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 4.1.0 版本发布</title>
+    <link href="https://johnsonlee.io/2021/11/12/booster-v4-1-0-released/"/>
+    <id>https://johnsonlee.io/2021/11/12/booster-v4-1-0-released/</id>
+    <published>2021-11-12T01:00:00.000Z</published>
+    <updated>2021-11-12T01:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster 又双叒叕发布了新的版本—— v4.1.0，本次更新内容如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Fix issue &lt;a href=&quot;https://github.com/didi/booster/issues/258&quot;&gt;#258&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Fix</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>两种哲学，两个世界</title>
+    <link href="https://johnsonlee.io/2021/10/31/two-philosophies-two-worlds/"/>
+    <id>https://johnsonlee.io/2021/10/31/two-philosophies-two-worlds/</id>
+    <published>2021-10-31T23:00:00.000Z</published>
+    <updated>2021-10-31T23:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;很早就想写一篇关于两种不同的做事哲学的文章，一直有些纠结标题是「两个世界，两种哲学」还是「两种哲学，两个世界」，前者在于从结果的角度出发，后者则是从原因的角度出发，以佛教的观点一看，因即是果，果即是因，其实都是一样，但其实我们从解决问题的角度来说，一般还是由果及因，找到了根</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Kotlin 填坑记之 Metadata</title>
+    <link href="https://johnsonlee.io/2021/10/29/do-you-really-know-kotlin-1/"/>
+    <id>https://johnsonlee.io/2021/10/29/do-you-really-know-kotlin-1/</id>
+    <published>2021-10-29T23:00:00.000Z</published>
+    <updated>2021-10-29T23:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;最近用 &lt;strong&gt;KAPT&lt;/strong&gt; 来生成 &lt;strong&gt;Kotlin&lt;/strong&gt; 代码，遇到了一个头疼的问题，生成的 &lt;strong&gt;Kotlin&lt;/strong&gt; 代码需要调用源 &lt;strong&gt;Kotlin&lt;/strong&gt; 代码中被</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Kotlin" scheme="https://johnsonlee.io/categories/computer-science/kotlin/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>你真的会 Java 吗？（二）</title>
+    <link href="https://johnsonlee.io/2021/10/17/do-you-really-know-java-2/"/>
+    <id>https://johnsonlee.io/2021/10/17/do-you-really-know-java-2/</id>
+    <published>2021-10-17T15:00:00.000Z</published>
+    <updated>2021-10-17T15:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;是个 &lt;strong&gt;Java&amp;#x2F;Android&lt;/strong&gt; 工程师都知道，用 &lt;code&gt;==&lt;/code&gt; 比较其实是比较的两个对象是否是同一个实例，比较实例其实就是比较内存地址是否相等，当我们在打印一个 &lt;code&gt;Object&lt;/code&gt;</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Java" scheme="https://johnsonlee.io/categories/computer-science/java/"/>
+    
+    
+    <category term="JVM" scheme="https://johnsonlee.io/tags/JVM/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一行搞定开源库发布到 Maven Central</title>
+    <link href="https://johnsonlee.io/2021/10/07/sonatype-publish-plugin/"/>
+    <id>https://johnsonlee.io/2021/10/07/sonatype-publish-plugin/</id>
+    <published>2021-10-07T10:00:00.000Z</published>
+    <updated>2021-10-07T10:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;发布过开源库的同学肯定深有感触，想要将一个开源库发布到 &lt;strong&gt;Maven Central&lt;/strong&gt; 对于开发者来说并不简单，尤其是通过 &lt;a href=&quot;https://oss.sonatype.org/&quot;&gt;Sonatype&lt;/a&gt;</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Gradle" scheme="https://johnsonlee.io/categories/computer-science/gradle/"/>
+    
+    
+    <category term="Android" scheme="https://johnsonlee.io/tags/Android/"/>
+    
+    <category term="Java" scheme="https://johnsonlee.io/tags/Java/"/>
+    
+    <category term="Maven" scheme="https://johnsonlee.io/tags/Maven/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>如何让 Gradle Plugin 与 Library 共存</title>
+    <link href="https://johnsonlee.io/2021/10/06/integrate-gradle-plugin-and-library-into-one-project/"/>
+    <id>https://johnsonlee.io/2021/10/06/integrate-gradle-plugin-and-library-into-one-project/</id>
+    <published>2021-10-06T23:00:00.000Z</published>
+    <updated>2021-10-06T23:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;当开发一个 &lt;strong&gt;Android Library&lt;/strong&gt; 时，如果还同时还要提供相应的 __Gradle Plugin__，对于 &lt;strong&gt;Gradle&lt;/strong&gt; 新手来说，要在一个 &lt;strong&gt;Gradle&lt;/strong&gt;</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Gradle" scheme="https://johnsonlee.io/categories/computer-science/gradle/"/>
+    
+    
+    <category term="Android" scheme="https://johnsonlee.io/tags/Android/"/>
+    
+    <category term="Java" scheme="https://johnsonlee.io/tags/Java/"/>
+    
+    <category term="Maven" scheme="https://johnsonlee.io/tags/Maven/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>GUI 应用的烦恼</title>
+    <link href="https://johnsonlee.io/2021/10/01/problems-of-gui-app/"/>
+    <id>https://johnsonlee.io/2021/10/01/problems-of-gui-app/</id>
+    <published>2021-10-01T23:00:00.000Z</published>
+    <updated>2021-10-01T23:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;在移动互联网蓬勃发展的时代，出现了很多现代化的编程语言，&lt;em&gt;Write Once and Run Anywhere&lt;/em&gt; 早已不再是 Java 所独有的特性，然而在 &lt;em&gt;Android&lt;/em&gt; 系统推出之前，想要在嵌入式 &lt;em&gt;Linux&lt;/em&gt;</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Graphics" scheme="https://johnsonlee.io/categories/computer-science/graphics/"/>
+    
+    
+    <category term="Android" scheme="https://johnsonlee.io/tags/Android/"/>
+    
+    <category term="Java" scheme="https://johnsonlee.io/tags/Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>你真的会 Java 吗？（一）</title>
+    <link href="https://johnsonlee.io/2021/09/21/do-you-really-know-java-1/"/>
+    <id>https://johnsonlee.io/2021/09/21/do-you-really-know-java-1/</id>
+    <published>2021-09-21T13:00:00.000Z</published>
+    <updated>2021-09-21T13:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;正在开车呢，收到一条微信：“森哥，这段代码为啥输出是</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Java" scheme="https://johnsonlee.io/categories/computer-science/java/"/>
+    
+    
+    <category term="JVM" scheme="https://johnsonlee.io/tags/JVM/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>度日如年与度日如年</title>
+    <link href="https://johnsonlee.io/2021/09/20/days-are-like-years/"/>
+    <id>https://johnsonlee.io/2021/09/20/days-are-like-years/</id>
+    <published>2021-09-20T02:00:00.000Z</published>
+    <updated>2021-09-20T02:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;正静坐思考人生，突然意识到加入 Coupang 已经一年了，从头到尾捋了一遍，脑海里冒出来一个词 —— 度日如年，此「度日如年」并非彼「度日如年」，一切都是相对的，这儿正好相反。在 Coupang</summary>
+        
+      
+    
+    
+    
+    <category term="Life" scheme="https://johnsonlee.io/categories/life/"/>
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/tags/Independent-Thinking/"/>
+    
+    <category term="Career" scheme="https://johnsonlee.io/tags/Career/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 4.0.0 版本发布</title>
+    <link href="https://johnsonlee.io/2021/08/22/booster-v4-0-0-released/"/>
+    <id>https://johnsonlee.io/2021/08/22/booster-v4-0-0-released/</id>
+    <published>2021-08-22T20:00:00.000Z</published>
+    <updated>2021-08-22T20:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster 又双叒叕发布了新的版本—— v4.0.0，本次更新内容如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;支持 &lt;em&gt;AGP 7.0&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;开放 &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 3.5.0 正式发布</title>
+    <link href="https://johnsonlee.io/2021/08/17/booster-v3-5-0-released/"/>
+    <id>https://johnsonlee.io/2021/08/17/booster-v3-5-0-released/</id>
+    <published>2021-08-17T23:00:00.000Z</published>
+    <updated>2021-08-17T23:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster 又双叒叕发布了新的版本—— v3.5.0，本次更新内容如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;增加 &lt;em&gt;booster-transform-service-loader&lt;/em&gt; 模块，支持 &lt;code&gt;ServiceLoader&lt;/code&gt;</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 3.4.0 正式发布</title>
+    <link href="https://johnsonlee.io/2021/08/12/booster-v3-4-0-released/"/>
+    <id>https://johnsonlee.io/2021/08/12/booster-v3-4-0-released/</id>
+    <published>2021-08-12T22:00:00.000Z</published>
+    <updated>2021-08-12T22:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster 又双叒叕发布了新的版本—— v3.4.0，本次更新内容如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;重构了 &lt;em&gt;booster-cha (Class Hierarchy Analysis)&lt;/em&gt; 模块，支持字节码框架无关的通用</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>翩翩少年</title>
+    <link href="https://johnsonlee.io/2021/08/09/lost-youth/"/>
+    <id>https://johnsonlee.io/2021/08/09/lost-youth/</id>
+    <published>2021-08-09T00:00:00.000Z</published>
+    <updated>2021-08-09T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;整理磁盘空间的时候，发现了多年前自己录的歌，重温了一曲，思绪停留在了 2013 年的那个夜晚，暮色渐浓，在房间里支起了熨衣板，整理完衬衫，兴致盎然，拿过竖在墙角的电吉他，手机打开 Voice</summary>
+        
+      
+    
+    
+    
+    <category term="Life" scheme="https://johnsonlee.io/categories/life/"/>
+    
+    
+    <category term="Music" scheme="https://johnsonlee.io/tags/Music/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>AGP Transform API 被废弃意味着什么？</title>
+    <link href="https://johnsonlee.io/2021/08/02/the-deprecation-of-agp-transform-api/"/>
+    <id>https://johnsonlee.io/2021/08/02/the-deprecation-of-agp-transform-api/</id>
+    <published>2021-08-02T00:00:00.000Z</published>
+    <updated>2021-08-02T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;前几天 AGP 7.0 正式发布，细心的同学可能已经发现 从 AGP 1.3 一直存在的 Transform API 被标记为废弃了，但从注释中并没有说明应该用哪个 API 来替代，发现了这个问题，有同学就不淡定了，连 AGP 中最稳定的 Transform API</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Mobile" scheme="https://johnsonlee.io/categories/computer-science/mobile/"/>
+    
+    <category term="Android" scheme="https://johnsonlee.io/categories/computer-science/mobile/android/"/>
+    
+    
+    <category term="Gradle" scheme="https://johnsonlee.io/tags/Gradle/"/>
+    
+    <category term="Android" scheme="https://johnsonlee.io/tags/Android/"/>
+    
+    <category term="Build" scheme="https://johnsonlee.io/tags/Build/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>真相与现实</title>
+    <link href="https://johnsonlee.io/2021/06/10/truth-and-reality/"/>
+    <id>https://johnsonlee.io/2021/06/10/truth-and-reality/</id>
+    <published>2021-06-10T00:00:00.000Z</published>
+    <updated>2021-06-10T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;人类社会活动之复杂，导致绝大多数人都完全搞不清楚我们生活的这个空间是如何进行运转的，就拿「经济」这一话题来说，这个领域恐怕很多人都是一知百解，因为搞不清这个社会运行的底层逻辑，所以，绝大多数人只能随波逐流，人云亦云。&lt;/p&gt;
+&lt;h2 id=&quot;房子&quot;&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Independent Thinking" scheme="https://johnsonlee.io/categories/Independent-Thinking/"/>
+    
+    
+    <category term="Society" scheme="https://johnsonlee.io/tags/Society/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>你不可能成为大牛</title>
+    <link href="https://johnsonlee.io/2021/05/26/you-wont-be-a-master/"/>
+    <id>https://johnsonlee.io/2021/05/26/you-wont-be-a-master/</id>
+    <published>2021-05-26T12:00:00.000Z</published>
+    <updated>2021-05-26T12:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;你没看错，你 &lt;em&gt;不可能&lt;/em&gt;</summary>
+        
+      
+    
+    
+    
+    <category term="Career" scheme="https://johnsonlee.io/categories/career/"/>
+    
+    
+    <category term="Career" scheme="https://johnsonlee.io/tags/Career/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 3.3.1 正式发布</title>
+    <link href="https://johnsonlee.io/2021/05/11/booster-v3-3-1-released/"/>
+    <id>https://johnsonlee.io/2021/05/11/booster-v3-3-1-released/</id>
+    <published>2021-05-11T22:00:00.000Z</published>
+    <updated>2021-05-11T22:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster 又双叒叕发布了新的版本—— v3.3.1，本次更新内容如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Fix issue &lt;a href=&quot;https://github.com/didi/booster/issues/222&quot;&gt;#222&lt;/a&gt; :</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 3.3.0 正式发布</title>
+    <link href="https://johnsonlee.io/2021/05/10/booster-v3-3-0-released/"/>
+    <id>https://johnsonlee.io/2021/05/10/booster-v3-3-0-released/</id>
+    <published>2021-05-10T20:00:00.000Z</published>
+    <updated>2021-05-10T20:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Booster 又双叒叕发布了新的版本—— v3.3.0，本次更新内容如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Fix &lt;code&gt;constraintlayout&lt;/code&gt; 导致的 &lt;em&gt;R&lt;/em&gt; 内联的问题 &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java 11 新特性</title>
+    <link href="https://johnsonlee.io/2021/05/07/java-11-new-features/"/>
+    <id>https://johnsonlee.io/2021/05/07/java-11-new-features/</id>
+    <published>2021-05-07T11:00:00.000Z</published>
+    <updated>2021-05-07T11:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Java 11 于 2018 年 9 月 25 日发布，该版本目前已开放以进行错误修复。它提供 LTS 或长期支持，这也是为什么新版本的 &lt;em&gt;IntelliJ IDEA&lt;/em&gt; 及 &lt;em&gt;Android Studio&lt;/em&gt; 都将内置的 JDK 版本升级到了</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Java" scheme="https://johnsonlee.io/categories/computer-science/java/"/>
+    
+    
+    <category term="Java" scheme="https://johnsonlee.io/tags/Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java 10 新特性</title>
+    <link href="https://johnsonlee.io/2021/05/07/java-10-new-features/"/>
+    <id>https://johnsonlee.io/2021/05/07/java-10-new-features/</id>
+    <published>2021-05-07T10:00:00.000Z</published>
+    <updated>2021-05-07T10:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Java 10 根据 &lt;em&gt;JSR 383&lt;/em&gt; 所开发，于 2018 年 3 月 20 日正式发布。Oracle 提供 GPL 下可用于生产的二进制文件，此次发布包含了十二项新特性。&lt;/p&gt;
+&lt;h2</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Java" scheme="https://johnsonlee.io/categories/computer-science/java/"/>
+    
+    
+    <category term="Java" scheme="https://johnsonlee.io/tags/Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java 9 新特性</title>
+    <link href="https://johnsonlee.io/2021/05/07/java-9-new-features/"/>
+    <id>https://johnsonlee.io/2021/05/07/java-9-new-features/</id>
+    <published>2021-05-07T09:00:00.000Z</published>
+    <updated>2021-05-07T09:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;在 2011 年的 &lt;em&gt;JavaOne&lt;/em&gt; 中，Oracle 讨论了一些他们希望在 2016 年于 Java 9 中发布的功能。&lt;em&gt;Java 9&lt;/em&gt; 应当对千兆级堆拥有更好的支持，同时能够更好地集成本机代码，且拥有新的垃圾收集器 &lt;em&gt;G1&lt;/em&gt;</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Java" scheme="https://johnsonlee.io/categories/computer-science/java/"/>
+    
+    
+    <category term="Java" scheme="https://johnsonlee.io/tags/Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java 8 新特性</title>
+    <link href="https://johnsonlee.io/2021/05/07/java-8-new-features/"/>
+    <id>https://johnsonlee.io/2021/05/07/java-8-new-features/</id>
+    <published>2021-05-07T08:00:00.000Z</published>
+    <updated>2021-05-07T08:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Java 8 于 2014 年 3 月 18 日发布，包含了一些原本计划在 Java 7 中发布但后来却推迟的功能。Java 8 不再支持 &lt;em&gt;Windows XP&lt;/em&gt; ，但 &lt;em&gt;JDK 8&lt;/em&gt; 第 25 版更新仍然可以在 &lt;em&gt;Windows</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Java" scheme="https://johnsonlee.io/categories/computer-science/java/"/>
+    
+    
+    <category term="Java" scheme="https://johnsonlee.io/tags/Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java 7 新特性</title>
+    <link href="https://johnsonlee.io/2021/05/07/java-7-new-features/"/>
+    <id>https://johnsonlee.io/2021/05/07/java-7-new-features/</id>
+    <published>2021-05-07T07:00:00.000Z</published>
+    <updated>2021-05-07T07:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Java 7 代号 &lt;em&gt;Dolphin&lt;/em&gt; 是一个重大的更新，于 2011 年 7 月 7 日亮相，并在 2011 年7 月 28 日开放给开发者使用。开发周期被分类成十三个重要阶段，最后一个阶段在 2011 年 6 月 6 日完成。平均来看，每个里程碑各有 8</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Java" scheme="https://johnsonlee.io/categories/computer-science/java/"/>
+    
+    
+    <category term="Java" scheme="https://johnsonlee.io/tags/Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java 6 新特性</title>
+    <link href="https://johnsonlee.io/2021/05/07/java-6-new-features/"/>
+    <id>https://johnsonlee.io/2021/05/07/java-6-new-features/</id>
+    <published>2021-05-07T06:00:00.000Z</published>
+    <updated>2021-05-07T06:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Java 6 代号为 &lt;em&gt;Mustang&lt;/em&gt; 。版本发布于 2006 年 12 月 11 日，&lt;em&gt;Sun&lt;/em&gt; 把原本的名称 &lt;em&gt;“J2SE”&lt;/em&gt; 改为 &lt;em&gt;“Java SE”&lt;/em&gt; ，然后再从版本号中去掉 &lt;em&gt;“.0”&lt;/em&gt;</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Java" scheme="https://johnsonlee.io/categories/computer-science/java/"/>
+    
+    
+    <category term="Java" scheme="https://johnsonlee.io/tags/Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java 5 新特性</title>
+    <link href="https://johnsonlee.io/2021/05/07/java-5-new-features/"/>
+    <id>https://johnsonlee.io/2021/05/07/java-5-new-features/</id>
+    <published>2021-05-07T05:00:00.000Z</published>
+    <updated>2021-05-07T05:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;J2SE 5.0 代号为 &lt;em&gt;Tiger&lt;/em&gt; 。这个在 2004 年 9 月 30 日发布的版本原本以 1.5 编号，也就是仍然使用内部版本编号。这个数字辈改变是为了“更好地反映成熟度、稳定性、可扩展性和 J2SE</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Java" scheme="https://johnsonlee.io/categories/computer-science/java/"/>
+    
+    
+    <category term="Java" scheme="https://johnsonlee.io/tags/Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java 各版本的新特性</title>
+    <link href="https://johnsonlee.io/2021/05/07/java-new-features/"/>
+    <id>https://johnsonlee.io/2021/05/07/java-new-features/</id>
+    <published>2021-05-07T00:00:00.000Z</published>
+    <updated>2021-05-07T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;../java-11-new-features/&quot;&gt;Java 11 新特性&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;../java-10-new-features/&quot;&gt;Java 10 新特性&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Java" scheme="https://johnsonlee.io/categories/computer-science/java/"/>
+    
+    
+    <category term="Java" scheme="https://johnsonlee.io/tags/Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>如何编写优雅的代码</title>
+    <link href="https://johnsonlee.io/2021/05/06/how-to-write-elegant-code/"/>
+    <id>https://johnsonlee.io/2021/05/06/how-to-write-elegant-code/</id>
+    <published>2021-05-06T00:00:00.000Z</published>
+    <updated>2021-05-06T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;最近 review</summary>
+        
+      
+    
+    
+    
+    <category term="Career" scheme="https://johnsonlee.io/categories/career/"/>
+    
+    
+    <category term="Android" scheme="https://johnsonlee.io/tags/Android/"/>
+    
+    <category term="iOS" scheme="https://johnsonlee.io/tags/iOS/"/>
+    
+    <category term="Java" scheme="https://johnsonlee.io/tags/Java/"/>
+    
+    <category term="Kotlin" scheme="https://johnsonlee.io/tags/Kotlin/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Booster 3.2.0 正式发布</title>
+    <link href="https://johnsonlee.io/2021/05/05/booster-v3-2-0-released/"/>
+    <id>https://johnsonlee.io/2021/05/05/booster-v3-2-0-released/</id>
+    <published>2021-05-05T22:00:00.000Z</published>
+    <updated>2021-05-05T22:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;等了小半年，终于等到了 &lt;em&gt;AGP&lt;/em&gt; &lt;code&gt;4.2&lt;/code&gt; 稳定版本发布，&lt;em&gt;Android Studio&lt;/em&gt; &lt;code&gt;4.2&lt;/code&gt; 也同步发布，详情请戳：&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Open Source" scheme="https://johnsonlee.io/categories/computer-science/open-source/"/>
+    
+    <category term="Booster" scheme="https://johnsonlee.io/categories/computer-science/open-source/booster/"/>
+    
+    
+    <category term="Booster" scheme="https://johnsonlee.io/tags/Booster/"/>
+    
+    <category term="ReleaseNote" scheme="https://johnsonlee.io/tags/ReleaseNote/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>感恩有你</title>
+    <link href="https://johnsonlee.io/2021/04/20/grateful-to-you/"/>
+    <id>https://johnsonlee.io/2021/04/20/grateful-to-you/</id>
+    <published>2021-04-20T02:00:00.000Z</published>
+    <updated>2021-04-20T02:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;都说每个成功的男人背后都有一个伟大的女人，虽然我算不上什么成功，但勉强还算得上勤奋，在我人生的旅途，因为有她们的鼓励和启发，让我从一个不经世事的男孩成长为一个沉着、自信、有担当的男人，每每忆起过往，总感觉自己是这个世界上最幸运的人，因为她们的存在，让我的生命变得如此绚烂而有</summary>
+        
+      
+    
+    
+    
+    <category term="Life" scheme="https://johnsonlee.io/categories/life/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>架构师训练营</title>
+    <link href="https://johnsonlee.io/2021/03/30/architecture-training/"/>
+    <id>https://johnsonlee.io/2021/03/30/architecture-training/</id>
+    <published>2021-03-30T00:00:00.000Z</published>
+    <updated>2021-03-30T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;昨天发了一个招聘贴 &lt;a href=&quot;https://johnsonlee.io/2021/03/27/build-an-app-monitoring-platform-from-0-to-1/&quot;&gt;从 0 到 1 构建移动端监控平台&lt;/a&gt;</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Architecture Design" scheme="https://johnsonlee.io/categories/computer-science/architecture-design/"/>
+    
+    
+    <category term="Android" scheme="https://johnsonlee.io/tags/Android/"/>
+    
+    <category term="iOS" scheme="https://johnsonlee.io/tags/iOS/"/>
+    
+    <category term="Java" scheme="https://johnsonlee.io/tags/Java/"/>
+    
+    <category term="Kotlin" scheme="https://johnsonlee.io/tags/Kotlin/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>从 0 到 1 构建移动端监控平台</title>
+    <link href="https://johnsonlee.io/2021/03/27/build-an-app-monitoring-platform-from-0-to-1/"/>
+    <id>https://johnsonlee.io/2021/03/27/build-an-app-monitoring-platform-from-0-to-1/</id>
+    <published>2021-03-27T00:00:00.000Z</published>
+    <updated>2021-03-27T00:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;对于移动端来说，监控平台属于 App</summary>
+        
+      
+    
+    
+    
+    <category term="Computer Science" scheme="https://johnsonlee.io/categories/computer-science/"/>
+    
+    <category term="Observability" scheme="https://johnsonlee.io/categories/computer-science/observability/"/>
+    
+    
+    <category term="Android" scheme="https://johnsonlee.io/tags/Android/"/>
+    
+    <category term="iOS" scheme="https://johnsonlee.io/tags/iOS/"/>
+    
+  </entry>
+  
+</feed>

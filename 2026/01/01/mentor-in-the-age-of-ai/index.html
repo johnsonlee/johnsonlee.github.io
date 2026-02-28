@@ -1,0 +1,199 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="就在放 Winter Holiday 的前一天，Term 3 的 School Report 下来了。看到 Report 的那一刻，我当场气炸，零下 10 度的寒风里，我连抽了 3 根烟。回家后我把报告递给老婆看，她看完冒出一句：「还行啊。」 还行？ 如果只看报告本身，确实看不出特别明显的问题：字都挺“正”，评价也挺“礼貌”。但这恰恰是 AI 时代最危险的地方 —— 表面信息越充分，越容易让人放弃"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,架构设计,滴滴,快手,性能优化,我在滴滴做架构,johnsonlee,johnson,lijingsen,jingsen,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2026/01/01/mentor-in-the-age-of-ai/"><meta property="og:title" content="AI 时代的 Mentor"><meta property="og:description" content="就在放 Winter Holiday 的前一天，Term 3 的 School Report 下来了。看到 Report 的那一刻，我当场气炸，零下 10 度的寒风里，我连抽了 3 根烟。回家后我把报告递给老婆看，她看完冒出一句：「还行啊。」 还行？ 如果只看报告本身，确实看不出特别明显的问题：字都挺“正”，评价也挺“礼貌”。但这恰恰是 AI 时代最危险的地方 —— 表面信息越充分，越容易让人放弃"><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2026/01/01/mentor-in-the-age-of-ai/"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2026-01-01T01:00:00.000Z"><meta property="article:author" content="Johnson Lee"><meta property="article:tag" content="Education"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="AI 时代的 Mentor"><meta name="twitter:description" content="就在放 Winter Holiday 的前一天，Term 3 的 School Report 下来了。看到 Report 的那一刻，我当场气炸，零下 10 度的寒风里，我连抽了 3 根烟。回家后我把报告递给老婆看，她看完冒出一句：「还行啊。」 还行？ 如果只看报告本身，确实看不出特别明显的问题：字都挺“正”，评价也挺“礼貌”。但这恰恰是 AI 时代最危险的地方 —— 表面信息越充分，越容易让人放弃"><title>AI 时代的 Mentor | Johnson Lee</title><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 6.3.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">AI 时代的 Mentor</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">AI 时代的 Mentor</h1><div class="post-meta">Jan 1, 2026<span> | </span><span class="category"><a href="/categories/Independent-Thinking/">Independent Thinking</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 2.5k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 8</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>就在放 Winter Holiday 的前一天，Term 3 的 School Report 下来了。看到 Report 的那一刻，我当场气炸，零下 10 度的寒风里，我连抽了 3 根烟。回家后我把报告递给老婆看，她看完冒出一句：「还行啊。」</p>
+<blockquote>
+<p>还行？</p>
+</blockquote>
+<p>如果只看报告本身，确实看不出特别明显的问题：字都挺“正”，评价也挺“礼貌”。但这恰恰是 AI 时代最危险的地方 —— 表面信息越充分，越容易让人放弃思考。</p>
+<p>于是我翻出了上个学年最后一个学期的 School Report 一对比，问题瞬间变得刺眼：Math 和 Chinese 从 Significant Above 掉下来了。其他项目也有不同程度下滑。</p>
+<p>那天我把儿子单独叫进书房，一顿训下来，他泪眼汪汪。我问他：你知道问题在哪吗？</p>
+<p>他擦擦眼泪，怯怯地说：Math 和 Chinese？</p>
+<p>听到这句，我心里一阵哇凉 —— 他只看到了“结果”，但没看到“结构”。</p>
+<blockquote>
+<p>给你半小时，把你目前存在的问题和解决办法，像写 Report 一样写下来。</p>
+</blockquote>
+<p>半小时后，他交上来一张纸：每个科目一行字，连在一起写，没分点、没结构、没逻辑。</p>
+<p>我清了清嗓子：</p>
+<blockquote>
+<p>你这玩意儿有两个大问题</p>
+<ul>
+<li>Story Telling：写作不是把字写满，是把想法表达清楚。你这一满版让人怎么看？</li>
+<li>洞察力：你看问题太片面。我来告诉你，你真正的问题是什么。</li>
+</ul>
+</blockquote>
+<h2 id="作为-AI-时代的学生，什么才是核心竞争力？"><a href="#作为-AI-时代的学生，什么才是核心竞争力？" class="headerlink" title="作为 AI 时代的学生，什么才是核心竞争力？"></a>作为 AI 时代的学生，什么才是核心竞争力？</h2><p>传统教育早就把“核心竞争力”识别得差不多了：记忆力、刷题能力、标准答案输出能力、按流程执行能力……<br>问题是：这些能力正在被 AI 以指数级碾压。</p>
+<p>当“会做题”变成了按钮，“会写作文”变成了模板，“会查资料”变成了搜索框——你再卷这些，只是在和 GPU 比耐力。</p>
+<p>把那些可预见会被替代的核心竞争力剔除掉，剩下的，我认为就三样：</p>
+<h3 id="Story-Telling：AI-时代的第一生产力"><a href="#Story-Telling：AI-时代的第一生产力" class="headerlink" title="Story Telling：AI 时代的第一生产力"></a>Story Telling：AI 时代的第一生产力</h3><p>我把 story telling 放在首位，不是因为“文科重要”，而是因为它本质上是一种综合能力：</p>
+<ul>
+<li>语言能力（表达清晰）</li>
+<li>沟通能力（让别人听懂、愿意听）</li>
+<li>社会能力（理解人、理解关系）</li>
+<li>影响力与领导力（能让人跟你走）</li>
+</ul>
+<p>更关键的是，在 AI 时代，Story telling 是 prompt engineering 的加速器。</p>
+<p>同样一个模型，同样的工具，差距往往不在“懂不懂 AI”，而在于你能不能把需求讲清楚、把目标讲具体、把约束讲完整、把上下文讲得可复用。</p>
+<p>你不会讲故事，你的 prompt 就永远是：“帮我写一下……”</p>
+<p>你会讲故事，你的 prompt 会像一个好导演：人物、动机、冲突、节奏、风格、边界条件，一句话一句话把模型逼到该去的地方。</p>
+<h3 id="Math：计算与抽象的地基"><a href="#Math：计算与抽象的地基" class="headerlink" title="Math：计算与抽象的地基"></a>Math：计算与抽象的地基</h3><p>数学不是为了考试分数，是为了训练一种能力：抽象、建模、推理、验证。</p>
+<p>AI 可以帮你算，但它替代不了你判断“该不该算”“怎么算才对”“结果是否可信”。</p>
+<p>而未来最值钱的人，往往不是“会用工具的人”，而是“知道工具在解决什么问题的人”。</p>
+<h3 id="Computing-x2F-Programming：驾驭工具的抓手"><a href="#Computing-x2F-Programming：驾驭工具的抓手" class="headerlink" title="Computing &#x2F; Programming：驾驭工具的抓手"></a>Computing &#x2F; Programming：驾驭工具的抓手</h3><p>AI 让工具更强，但也让门槛变得更诡异：看起来谁都能写代码，实际上谁都写不出来系统。</p>
+<p>你可以用 AI 生成一段脚本，但你没有 computing 基础，就无法：</p>
+<ul>
+<li>拆解问题</li>
+<li>组织数据</li>
+<li>理解边界</li>
+<li>调试错误</li>
+<li>形成可维护的结构</li>
+</ul>
+<p>最终只能停留在“复制粘贴”与“祈祷能跑”的阶段。</p>
+<h2 id="理解当下的问题和挑战"><a href="#理解当下的问题和挑战" class="headerlink" title="理解当下的问题和挑战"></a>理解当下的问题和挑战</h2><p>我当时跟儿子说了一句很扎心的话：</p>
+<blockquote>
+<p>Significant Above 意味着什么？意味着这是你的核心竞争力。<br>而现在，它不复存在了。</p>
+</blockquote>
+<p>很多孩子（以及很多家长）会把 Report 当成“成绩单”。</p>
+<p>但在 AI 时代，Report 更像是一张 Competitiveness Dashboard：你要看的不是某一次的分数，而是你能力曲线的趋势。</p>
+<h3 id="核心竞争力消失"><a href="#核心竞争力消失" class="headerlink" title="核心竞争力消失"></a>核心竞争力消失</h3><p>他回答“Math 和 Chinese”，说明他只会盯着红字和粗体。</p>
+<p>真正可怕的是：过去能显著领先的东西，突然变成普通水平。</p>
+<p>这意味着两种可能：</p>
+<ul>
+<li>要么你之前的领先是“吃老本”（运气、基础、老师、题型）</li>
+<li>要么你进入新阶段后，学习方法没升级，开始被同龄人反超</li>
+</ul>
+<p>AI 时代没有“吃老本”这回事。因为 AI 会把“基础技能的差距”快速抹平，剩下的比拼是：学习系统。</p>
+<h3 id="Feedback-Loop-断了"><a href="#Feedback-Loop-断了" class="headerlink" title="Feedback Loop 断了"></a>Feedback Loop 断了</h3><p>老师评语总说“态度”，但我更愿意把它翻译成：feedback loop 断了。</p>
+<ul>
+<li>没有目标（我为什么要做）</li>
+<li>没有反馈（我做得好不好）</li>
+<li>没有纠偏（我哪里错、怎么改）</li>
+<li>没有复盘（下次怎么更好）</li>
+</ul>
+<p>于是孩子会选择最省力的策略 —— 糊弄过去。这不是骂两句能解决的，这需要系统性重建。</p>
+<h2 id="搭建-Feedback-Loop"><a href="#搭建-Feedback-Loop" class="headerlink" title="搭建 Feedback Loop"></a>搭建 Feedback Loop</h2><h3 id="未及预期的-AI-编程课"><a href="#未及预期的-AI-编程课" class="headerlink" title="未及预期的 AI 编程课"></a>未及预期的 AI 编程课</h3><p>上了大半年编程网课，我以为他至少能写点东西了。我想着带他刷 LeetCode，教他点数据结构和算法。于是给他出了个最简单的题：</p>
+<blockquote>
+<p>从数组中查找偶数并打印出来</p>
+</blockquote>
+<p>结果他愣在原地，无从下手。</p>
+<p>我强憋着火问：</p>
+<blockquote>
+<p>你每周学 AI 编程都学了些啥？</p>
+</blockquote>
+<p>他说：“学了用 python 图片识别、声音识别啥的，都是在老师给的软件里写代码，没在编辑器（PyCharm）里写过。”</p>
+<p>我心想：真是完犊子了。</p>
+<p>你在一个封闭环境里“填空式写代码”，学到的不是 programming，是“点按钮”。这就像你在自动驾驶里学开车，学了半年，连方向盘都没摸过。</p>
+<p>所以我跟老婆说：后面的编程课不报了，我要亲自教。</p>
+<p>于是有时间就备课，后来干脆搞了个在线 PPT：<a target="_blank" rel="noopener" href="https://cs.johnsonlee.io/">https://cs.johnsonlee.io</a></p>
+<p>从 0 到 1 开始，用更接近工程化的方式训练真正的编程，去解决现实生活中真正的问题</p>
+<p>我也看了网上很多儿童编程视频，大多从 Scratch 或者游戏开始。从我的角度看：有点用，但也仅仅是有点用。</p>
+<p>Coding 是必经之路。与其把大量时间花在理解 Scratch 的“积木语法”，不如直接开始接触真实世界的表达方式。</p>
+<h3 id="一篇日记把我差点送走"><a href="#一篇日记把我差点送走" class="headerlink" title="一篇日记把我差点送走"></a>一篇日记把我差点送走</h3><p>之前中文课老师一直反馈他写作有待提高，我就计划让他每周写篇周记，无论是中文还是英文，都可以。</p>
+<p>上周末去滑雪，他写了一篇日记。我看到那篇作品的那一刻，一口老血差点喷出来 —— 纯纯流水账：</p>
+<blockquote>
+<p>早上吃了什么，中午吃了什么，下午干了什么，晚上回家了，结束。</p>
+</blockquote>
+<p>我对他说：</p>
+<blockquote>
+<p>儿呀，日记虽然顾名思义叫日记，但你觉得记流水账的文字会有人看吗？<br>你得运用逆向思维：写什么样的内容大家才爱看？<br>如果是考试，那就想想什么样的作文才算高分作文，高分作文的评判标准是什么。</p>
+</blockquote>
+<p>我又补了一刀：</p>
+<blockquote>
+<p>早餐谁不吃啊？如果你写的内容像空气一样随处可见，就会被忽略。<br>你读别人的作品时，什么更有意思？<br>新颖的、和大多数人不一样的 —— 不一样的经历，不一样的思想……写作就是讲故事。</p>
+</blockquote>
+<p>于是他按我的思路重写了一篇。你以为这就完了？好戏才刚刚开始。</p>
+<p>我让他打开 ChatGPT，把前后两篇日记丢进去，让 ChatGPT 对比并点评。当他看到新版本获得更高评价的时候，露出了得意的笑容。</p>
+<p>AI 最适合做的事情之一，是成为孩子的即时评审团。但前提是：孩子得先学会把“故事”写出来。</p>
+<h3 id="Mentor-vs-授课老师"><a href="#Mentor-vs-授课老师" class="headerlink" title="Mentor vs 授课老师"></a>Mentor vs 授课老师</h3><p>虽然我也教儿子编程，但我更多的是：</p>
+<ul>
+<li>观察和发现目前存在的问题 —— 什么是主要问题，什么是次要问题</li>
+<li>分析问题，识别核心竞争力 —— 到底靠什么赢</li>
+<li>搭建 feedback loop —— 怎么持续变强？</li>
+<li>利用 AI 建立评价标准 —— 什么叫好？什么叫不行？</li>
+<li>时刻监督，对抗人性：懒惰、逃避、拖延、投机</li>
+</ul>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>我那天在书房训完他，其实自己也冷静下来想了想：</p>
+<p>我想要的不是他“这次把分数提上来”，而是他在未来 3 年里，能拥有一套不会过时的能力。</p>
+<p>但问题在于 —— 把毕生功力倾囊相授这件事，最难的不是方法，是节奏。</p>
+<p>孩子不是你的项目，不会因为你写了 PRD 就按期上线。</p>
+<p>更现实的情况是：你教三遍，他听一遍；你讲道理，他先情绪；你越急，他越逃。</p>
+<p>所以我给自己定了三条原则：</p>
+<ul>
+<li>循序渐进：一次只抓一个关键点，不搞“大而全”的改造</li>
+<li>让他自己参与制定规则：他参与的系统，他才愿意维护</li>
+<li>用 AI 做即时反馈，而不是用 AI 代替思考：让 AI 当镜子，不当拐杖</li>
+</ul>
+<p>我当然希望他能早点开窍，但我也知道，真正的成长从来不是一场冲刺，而是一场马拉松。</p>
+<p>毕竟，能把“自己的毕生所学”传给孩子的前提是 —— 你得先学会在他跌跌撞撞的时候，别把他当成你自己的延长线。而这，可能才是 AI 时代成为 Mentor 的第一课。</p>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>johnsonlee</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="/2026/01/01/mentor-in-the-age-of-ai/">https://johnsonlee.io/2026/01/01/mentor-in-the-age-of-ai/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"><a href="/tags/Education/">Education</a></div><div class="post-nav"><a class="pre" href="/2026/01/10/a-brief-break-to-go-the-distance/">短暂的停顿，是为了走得更远</a><a class="next" href="/2025/12/24/what-supports-korean-housing-prices/">2年涨30%，是什么支撑韩国的房价？</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"AI 时代的 Mentor","datePublished":"2026-01-01T01:00:00.000Z","dateModified":"2026-01-01T01:00:00.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2026/01/01/mentor-in-the-age-of-ai/"},"description":"就在放 Winter Holiday 的前一天，Term 3 的 School Report 下来了。看到 Report 的那一刻，我当场气炸，零下 10 度的寒风里，我连抽了 3 根烟。回家后我把报告递给老婆看，她看完冒出一句：「还行啊。」 还行？ 如果只看报告本身，确实看不出特别明显的问题：字都挺“正”，评价也挺“礼貌”。但这恰恰是 AI 时代最危险的地方 —— 表面信息越充分，越容易让人放弃"}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (104)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (27)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investing/">Investing (3)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investment/">Investment (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (9)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Maven/" style="font-size: 15px;">Maven</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a> <a href="/tags/Music/" style="font-size: 15px;">Music</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/Transformer/" style="font-size: 15px;">Transformer</a> <a href="/tags/Deep-Learning/" style="font-size: 15px;">Deep Learning</a> <a href="/tags/HTML/" style="font-size: 15px;">HTML</a> <a href="/tags/Programming/" style="font-size: 15px;">Programming</a> <a href="/tags/Economics/" style="font-size: 15px;">Economics</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/SPI/" style="font-size: 15px;">SPI</a> <a href="/tags/MVVM/" style="font-size: 15px;">MVVM</a> <a href="/tags/JetPack/" style="font-size: 15px;">JetPack</a> <a href="/tags/Preloading/" style="font-size: 15px;">Preloading</a> <a href="/tags/Mental-Health/" style="font-size: 15px;">Mental Health</a> <a href="/tags/Finance/" style="font-size: 15px;">Finance</a> <a href="/tags/Society/" style="font-size: 15px;">Society</a> <a href="/tags/Wall-Street/" style="font-size: 15px;">Wall Street</a> <a href="/tags/Contrarian/" style="font-size: 15px;">Contrarian</a> <a href="/tags/Alpha/" style="font-size: 15px;">Alpha</a> <a href="/tags/Risk-Management/" style="font-size: 15px;">Risk Management</a> <a href="/tags/Hiring/" style="font-size: 15px;">Hiring</a> <a href="/tags/Interview/" style="font-size: 15px;">Interview</a> <a href="/tags/Engineering-Leadership/" style="font-size: 15px;">Engineering Leadership</a> <a href="/tags/Housing/" style="font-size: 15px;">Housing</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/DeepMind/" style="font-size: 15px;">DeepMind</a> <a href="/tags/AlphaFold2/" style="font-size: 15px;">AlphaFold2</a> <a href="/tags/CASP/" style="font-size: 15px;">CASP</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/02/26/from-llm-to-effective-communication/">从 LLM 到高效沟通</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/from-compiler-to-llm/">从编译器到 LLM：软件分层的轮回</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/llm-is-a-function/">LLM 的本质——函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/tetris-effect-of-ai-conversations/">植入潜意识——AI 版的盗梦空间</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/15/ai-as-thinking-partner/">当 AI 成为你的“思考伙伴”</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/14/agora-technical-journey/">Agora 的技术选型与踩坑实录</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/13/confirmation-bias/">别让你的认知偏差限制了 AI 的发挥</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/what-should-engineering-hiring-evaluate-in-ai-era/">都 2026 了，还在考算法？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/ai-debate-what-i-learned/">一场 AI 辩论暴露了 LLM 性格的本质</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/11/ai-investment-roi-reality-check/">一年烧 $700B，谁会是下一个摩托罗拉？</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="自从用 Claude 完成了 Graphite – 基于 JVM 字节码的静态分析框架，工程质量和解决问题的方法和效率着实把我给震撼到了，然后又让它用 Rust 写了 Rustyman – 面向 AI 的网络代理服务，效果也很是出奇的好，名副其实的 10x 工程师。于是，便产生了一个大胆的想法 – TestPilot，在纯 JVM 上运行 Android APK 。拿到需求后，它便进入了 Plan"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,架构设计,滴滴,快手,性能优化,我在滴滴做架构,johnsonlee,johnson,lijingsen,jingsen,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2026/01/31/exploring-claude-boundaries/"><meta property="og:title" content="探索 Claude 的能力边界"><meta property="og:description" content="自从用 Claude 完成了 Graphite – 基于 JVM 字节码的静态分析框架，工程质量和解决问题的方法和效率着实把我给震撼到了，然后又让它用 Rust 写了 Rustyman – 面向 AI 的网络代理服务，效果也很是出奇的好，名副其实的 10x 工程师。于是，便产生了一个大胆的想法 – TestPilot，在纯 JVM 上运行 Android APK 。拿到需求后，它便进入了 Plan"><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2026/01/31/exploring-claude-boundaries/"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2026-01-31T00:00:00.000Z"><meta property="article:author" content="Johnson Lee"><meta property="article:tag" content="Independent Thinking"><meta property="article:tag" content="AI"><meta property="article:tag" content="Claude"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="探索 Claude 的能力边界"><meta name="twitter:description" content="自从用 Claude 完成了 Graphite – 基于 JVM 字节码的静态分析框架，工程质量和解决问题的方法和效率着实把我给震撼到了，然后又让它用 Rust 写了 Rustyman – 面向 AI 的网络代理服务，效果也很是出奇的好，名副其实的 10x 工程师。于是，便产生了一个大胆的想法 – TestPilot，在纯 JVM 上运行 Android APK 。拿到需求后，它便进入了 Plan"><title>探索 Claude 的能力边界 | Johnson Lee</title><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 6.3.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">探索 Claude 的能力边界</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">探索 Claude 的能力边界</h1><div class="post-meta">Jan 31, 2026<span> | </span><span class="category"><a href="/categories/Independent-Thinking/">Independent Thinking</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 1.9k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 6</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>自从用 Claude 完成了 <a target="_blank" rel="noopener" href="https://github.com/johnsonlee/graphite">Graphite</a> – 基于 JVM 字节码的静态分析框架，工程质量和解决问题的方法和效率着实把我给震撼到了，然后又让它用 Rust 写了 <a target="_blank" rel="noopener" href="https://github.com/johnsonlee/rustyman">Rustyman</a> – 面向 AI 的网络代理服务，效果也很是出奇的好，名副其实的 10x 工程师。于是，便产生了一个大胆的想法 – <a target="_blank" rel="noopener" href="https://github.com/johnsonlee/testpilot">TestPilot</a>，在纯 JVM 上运行 Android APK 。拿到需求后，它便进入了 Plan 模式，根据对需求的理解提出了双层架构的方案，然后规划了 Road Map，分了 3 个阶段来进行，从 Phase 1 - MVP 到 Phase 3 - Production Ready。在 MVP 阶段表现跟前两个项目一样丝滑，到了 Phase 2 一开始风风火火的重写各种 Android 系统类，也没觉得有什么不对，逐步完了 Activity, View, Fragment, ViewPager, RecyclerView 的重写，接下来它提出要重写 ConstraintLayout 的时候，我意识到不对劲了– 重写系统类我能理解，但为什么要重写一个二方库？ConstraintLayout 并不属于 Android Framework？于是便跟它一起仔细地 review 了整个方案，才发现它对底层依赖的 layoutlib 的能力不太了解，才提出重写系统类的方案，这不禁让我开始思考一个问题：<strong>Claude 的能力边界到底在哪里？</strong></p>
+<h2 id="从一次对话说起"><a href="#从一次对话说起" class="headerlink" title="从一次对话说起"></a>从一次对话说起</h2><p>我问 Claude：</p>
+<blockquote>
+<p>为什么你在 Graphite 上的表现比 TestPilot 好那么多？</p>
+</blockquote>
+<p>它的回答让我有些意外。它没有给出那种“AI 有局限性”的套话，而是非常具体地分析了两个项目在问题性质上的本质差异：</p>
+<blockquote>
+<p>Graphite 我能做好的原因：问题是组合式的。静态分析 &#x3D; 解析 + 遍历 + 匹配。每一步都有成熟的库和明确的 API 边界。</p>
+<p>TestPilot 我挣扎的原因：问题是仿真式的。要模拟 Android 运行时行为，但 Android 运行时是个巨大的黑盒，有大量隐式契约。</p>
+</blockquote>
+<p>它用了一个比喻：Graphite 是在一个有规则的棋盘上下棋；TestPilot 是在模拟一个它没完整见过的物理系统。</p>
+<p>这个自我认知的准确程度，说实话，超出了我的预期。</p>
+<h2 id="问题域的确定性"><a href="#问题域的确定性" class="headerlink" title="问题域的确定性"></a>问题域的确定性</h2><p>顺着它的思路，我整理了一下两个项目的差异：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Graphite</th>
+<th>TestPilot</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>问题定义</td>
+<td>清晰、封闭</td>
+<td>模糊、开放</td>
+</tr>
+<tr>
+<td>边界</td>
+<td>明确 (JVM bytecode → 调用图)</td>
+<td>模糊 (Android 整个运行时)</td>
+</tr>
+<tr>
+<td>参考实现</td>
+<td>有 (SootUp, ASM)</td>
+<td>无完整先例</td>
+</tr>
+<tr>
+<td>成功标准</td>
+<td>可验证 (找到的常量对不对)</td>
+<td>难验证 (行为“像”Android 吗)</td>
+</tr>
+</tbody></table>
+<p>Graphite 的每一步都可以增量验证：写一个查询，跑一下，结果对不对立刻知道。而 TestPilot 的难点在于——<code>View.measure()</code> 该怎么工作？文档说得很笼统，真正的行为藏在 AOSP 源码里，而且版本间有差异。</p>
+<p>这让我想到了《为什么伟大不能被计划》中提到的一个观点：<strong>目标越明确，路径越清晰；目标越模糊，越需要探索。</strong> AI 在前者上表现出色，在后者上则需要人类的引导。</p>
+<h2 id="Claude-的局限性"><a href="#Claude-的局限性" class="headerlink" title="Claude 的局限性"></a>Claude 的局限性</h2><p>在对话中，我直接问 Claude：你在软件工程方面有哪些局限性？</p>
+<p>它的回答相当坦诚：</p>
+<ul>
+<li><strong>上下文的断层感</strong>——它看不到完整代码库。即使把代码贴给它，它也缺乏 IDE 那种“活”的理解，比如一个类被哪些地方引用、某个改动会不会破坏下游模块。</li>
+<li><strong>没有真正的执行反馈</strong>——它能生成代码，但它不会“跑”代码然后学习。这意味着它在对话之外是断掉的反馈循环。</li>
+<li><strong>生产环境的盲区</strong>——真实的 bug 往往藏在时序、并发、设备差异里。它可以帮分析堆栈，但复现条件、设备碎片化这些“脏活”它只能推测。</li>
+</ul>
+<p>这些局限性其实不难理解。但接下来它说的一句话让我印象深刻：</p>
+<blockquote>
+<p>你把我当一个随叫随到但每次都需要重新 onboard 的 Staff Engineer 用，期望就比较合理。</p>
+</blockquote>
+<p>这个定位非常准确。</p>
+<h2 id="弥补局限的方法"><a href="#弥补局限的方法" class="headerlink" title="弥补局限的方法"></a>弥补局限的方法</h2><p>既然知道了局限在哪里，下一步自然是想办法弥补。我问 Claude：有什么办法能弥补你的这些局限？</p>
+<p>它给出了几个思路：</p>
+<ul>
+<li><strong>把结构化知识喂给它</strong>——比如 Graphite 产出的调用图谱，如果能导出成可读格式，贴给它时建议会精准很多。不需要完整代码，只需要“骨架”。</li>
+<li><strong>把结果回流给它</strong>——跑完它建议的脚本后，告诉它“这个在 module-x 上跑了 3 分钟，干掉了 47 个 dead branch，但漏了 lazy-init 的场景”——这就是手动的反馈循环。</li>
+<li><strong>用 Claude Code 做闭环</strong>——Claude Code 能执行、看报错、自己迭代，正好补了“不能跑代码”的短板。对话式的 Claude 适合前期方案设计和 review，Claude Code 适合执行层。</li>
+</ul>
+<p>其中最有意思的是它提到的一个本质性思路：</p>
+<blockquote>
+<p>不需要我记住一切，只需要我能查到一切。</p>
+</blockquote>
+<p>如果 Graphite 能回答“这个类被谁依赖”，它就不需要记住依赖图——它只需要知道怎么问 Graphite。理想状态是：我问问题 → 它调用我的工具拿数据 → 基于数据回答。</p>
+<p>这让我想到了 MCP（Model Context Protocol）。把 Graphite 的查询接口暴露成 MCP server，Claude 就能“实时查”而不是“靠记忆”。</p>
+<h2 id="大型代码库的-Onboard"><a href="#大型代码库的-Onboard" class="headerlink" title="大型代码库的 Onboard"></a>大型代码库的 Onboard</h2><p>我还问了一个实际问题：对于一个存在了 10 多年的代码库，你最高效的 onboard 方式是什么？</p>
+<p>它的回答出乎我的意料：<strong>不是从代码开始，是从“力的分布”开始。</strong></p>
+<p>它建议我先回答这些问题：</p>
+<ul>
+<li>什么东西改起来最慢&#x2F;最怕？</li>
+<li>最近 3 个月的 incident 集中在哪些模块？</li>
+<li>新人上手最常踩的坑是什么？</li>
+</ul>
+<p>这比架构图有用。10 年的仓库，架构图大概率是过时的或理想化的。但痛点是真实的，能帮它快速定位哪些区域值得深入。</p>
+<p>它还建议我写一份“生存指南”而非文档：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># Project Survival Guide</span></span><br><span class="line"></span><br><span class="line"><span class="section">## 模块心智模型</span></span><br><span class="line"><span class="bullet">-</span> core-network: 所有 API 调用的唯一出口，别绕过它</span><br><span class="line"><span class="bullet">-</span> legacy-payment: 正在迁移到 payment-v2，新代码不要依赖</span><br><span class="line"></span><br><span class="line"><span class="section">## 历史包袱</span></span><br><span class="line"><span class="bullet">-</span> analytics 模块有 3 套 API，只用 AnalyticsV3</span><br><span class="line"><span class="bullet">-</span> 有些 AB 实验 flag 永远返回 true，但代码没删</span><br><span class="line"></span><br><span class="line"><span class="section">## 地雷</span></span><br><span class="line"><span class="bullet">-</span> 不要动 BaseActivity，继承链太深</span><br><span class="line"><span class="bullet">-</span> ProGuard rules 碰之前先跑 release build</span><br></pre></td></tr></table></figure>
+
+<p>这种文档 500 行以内，但能让它在 5 分钟内变得“可用”。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>这次对话让我对 AI 辅助开发有了更清晰的认知。</p>
+<ul>
+<li><strong>AI 的能力边界由问题域的确定性决定</strong>。问题越封闭、边界越清晰、验证越容易，AI 的表现就越好。反过来，如果问题是开放的、需要模拟未知系统的行为，AI 就会挣扎。</li>
+<li><strong>弥补 AI 局限的关键不是让它记住更多，而是让它能查到更多</strong>。外部化 context，按需注入，让 AI 成为工具链的一部分而非独立的 oracle。</li>
+<li><strong>最高效的人机协作模式是互补而非替代</strong>。AI 擅长快速原型、代码审查、解释复杂概念、生成样板代码；人类擅长判断模糊需求、理解组织政治、维护长期的项目心智模型。</li>
+</ul>
+<p>Steve Jobs 说过：</p>
+<blockquote>
+<p>The computer is a bicycle for the mind.</p>
+</blockquote>
+<p>AI 是这辆自行车的升级版。但骑车的人，依然是我们自己。</p>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>johnsonlee</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="/2026/01/31/exploring-claude-boundaries/">https://johnsonlee.io/2026/01/31/exploring-claude-boundaries/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"><a href="/tags/Independent-Thinking/">Independent Thinking</a><a href="/tags/AI/">AI</a><a href="/tags/Claude/">Claude</a></div><div class="post-nav"><a class="pre" href="/2026/02/08/ai-era-what-we-can-do/">AI 时代，我们还能做什么？</a><a class="next" href="/2026/01/27/the-compounding-ai-thesis/">亲眼见证程序员职业的终结</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"探索 Claude 的能力边界","datePublished":"2026-01-31T00:00:00.000Z","dateModified":"2026-01-31T00:00:00.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2026/01/31/exploring-claude-boundaries/"},"description":"自从用 Claude 完成了 Graphite – 基于 JVM 字节码的静态分析框架，工程质量和解决问题的方法和效率着实把我给震撼到了，然后又让它用 Rust 写了 Rustyman – 面向 AI 的网络代理服务，效果也很是出奇的好，名副其实的 10x 工程师。于是，便产生了一个大胆的想法 – TestPilot，在纯 JVM 上运行 Android APK 。拿到需求后，它便进入了 Plan"}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (104)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (27)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investing/">Investing (3)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investment/">Investment (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (9)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Maven/" style="font-size: 15px;">Maven</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a> <a href="/tags/Music/" style="font-size: 15px;">Music</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/Transformer/" style="font-size: 15px;">Transformer</a> <a href="/tags/Deep-Learning/" style="font-size: 15px;">Deep Learning</a> <a href="/tags/HTML/" style="font-size: 15px;">HTML</a> <a href="/tags/Programming/" style="font-size: 15px;">Programming</a> <a href="/tags/Economics/" style="font-size: 15px;">Economics</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/SPI/" style="font-size: 15px;">SPI</a> <a href="/tags/MVVM/" style="font-size: 15px;">MVVM</a> <a href="/tags/JetPack/" style="font-size: 15px;">JetPack</a> <a href="/tags/Preloading/" style="font-size: 15px;">Preloading</a> <a href="/tags/Mental-Health/" style="font-size: 15px;">Mental Health</a> <a href="/tags/Finance/" style="font-size: 15px;">Finance</a> <a href="/tags/Society/" style="font-size: 15px;">Society</a> <a href="/tags/Wall-Street/" style="font-size: 15px;">Wall Street</a> <a href="/tags/Contrarian/" style="font-size: 15px;">Contrarian</a> <a href="/tags/Alpha/" style="font-size: 15px;">Alpha</a> <a href="/tags/Risk-Management/" style="font-size: 15px;">Risk Management</a> <a href="/tags/Hiring/" style="font-size: 15px;">Hiring</a> <a href="/tags/Interview/" style="font-size: 15px;">Interview</a> <a href="/tags/Engineering-Leadership/" style="font-size: 15px;">Engineering Leadership</a> <a href="/tags/Housing/" style="font-size: 15px;">Housing</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/DeepMind/" style="font-size: 15px;">DeepMind</a> <a href="/tags/AlphaFold2/" style="font-size: 15px;">AlphaFold2</a> <a href="/tags/CASP/" style="font-size: 15px;">CASP</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/02/26/from-llm-to-effective-communication/">从 LLM 到高效沟通</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/from-compiler-to-llm/">从编译器到 LLM：软件分层的轮回</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/llm-is-a-function/">LLM 的本质——函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/tetris-effect-of-ai-conversations/">植入潜意识——AI 版的盗梦空间</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/15/ai-as-thinking-partner/">当 AI 成为你的“思考伙伴”</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/14/agora-technical-journey/">Agora 的技术选型与踩坑实录</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/13/confirmation-bias/">别让你的认知偏差限制了 AI 的发挥</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/what-should-engineering-hiring-evaluate-in-ai-era/">都 2026 了，还在考算法？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/ai-debate-what-i-learned/">一场 AI 辩论暴露了 LLM 性格的本质</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/11/ai-investment-roi-reality-check/">一年烧 $700B，谁会是下一个摩托罗拉？</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>

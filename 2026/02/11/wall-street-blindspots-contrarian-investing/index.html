@@ -1,0 +1,149 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="Jim Cramer 在 2008 年 3 月 11 日对着镜头斩钉截铁地说：“不！不！不！Bear Stearns 没问题。别把钱从 Bear 撤出来，那太傻了。” 五天后，Bear Stearns 以每股 $2 被 JP Morgan 收购，不到前一天市值的 7%。 这不是个例。华尔街的“专家”们，准确率其实还不如抛硬币。 47% 的准确率，还不如瞎猜有人做过统计，追踪了 68 位预测者的 6"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,架构设计,滴滴,快手,性能优化,我在滴滴做架构,johnsonlee,johnson,lijingsen,jingsen,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2026/02/11/wall-street-blindspots-contrarian-investing/"><meta property="og:title" content="逆向投资：华尔街的盲点"><meta property="og:description" content="Jim Cramer 在 2008 年 3 月 11 日对着镜头斩钉截铁地说：“不！不！不！Bear Stearns 没问题。别把钱从 Bear 撤出来，那太傻了。” 五天后，Bear Stearns 以每股 $2 被 JP Morgan 收购，不到前一天市值的 7%。 这不是个例。华尔街的“专家”们，准确率其实还不如抛硬币。 47% 的准确率，还不如瞎猜有人做过统计，追踪了 68 位预测者的 6"><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2026/02/11/wall-street-blindspots-contrarian-investing/"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2026-02-11T00:23:00.000Z"><meta property="article:author" content="Johnson Lee"><meta property="article:tag" content="Investing"><meta property="article:tag" content="Wall Street"><meta property="article:tag" content="Contrarian"><meta property="article:tag" content="Alpha"><meta property="article:tag" content="Risk Management"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="逆向投资：华尔街的盲点"><meta name="twitter:description" content="Jim Cramer 在 2008 年 3 月 11 日对着镜头斩钉截铁地说：“不！不！不！Bear Stearns 没问题。别把钱从 Bear 撤出来，那太傻了。” 五天后，Bear Stearns 以每股 $2 被 JP Morgan 收购，不到前一天市值的 7%。 这不是个例。华尔街的“专家”们，准确率其实还不如抛硬币。 47% 的准确率，还不如瞎猜有人做过统计，追踪了 68 位预测者的 6"><title>逆向投资：华尔街的盲点 | Johnson Lee</title><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 6.3.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">逆向投资：华尔街的盲点</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">逆向投资：华尔街的盲点</h1><div class="post-meta">Feb 11, 2026<span> | </span><span class="category"><a href="/categories/Independent-Thinking/">Independent Thinking</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 2.8k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 9</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>Jim Cramer 在 2008 年 3 月 11 日对着镜头斩钉截铁地说：“不！不！不！Bear Stearns 没问题。别把钱从 Bear 撤出来，那太傻了。”</p>
+<p>五天后，Bear Stearns 以每股 $2 被 JP Morgan 收购，不到前一天市值的 7%。</p>
+<p>这不是个例。华尔街的“专家”们，准确率其实还不如抛硬币。</p>
+<h2 id="47-的准确率，还不如瞎猜"><a href="#47-的准确率，还不如瞎猜" class="headerlink" title="47% 的准确率，还不如瞎猜"></a>47% 的准确率，还不如瞎猜</h2><p>有人做过统计，追踪了 68 位预测者的 6,627 次预测，结果发现这些“专家”的准确率只有 47%——比随机猜测还低。Jim Cramer 的准确率是 46.8%，高盛前首席策略师 Abby Joseph Cohen 更惨，只有 35%。</p>
+<p>更讽刺的是，<strong>分析师最看好的股票，长期表现反而比最不看好的更差</strong>。一项覆盖 35 年的研究发现，投资分析师最悲观的那 10% 股票，次年平均能产生 15% 的超额收益；而他们最乐观的那 10%？只有 3%。</p>
+<p>这说明什么？华尔街存在系统性的盲点。</p>
+<h2 id="五大系统性盲点"><a href="#五大系统性盲点" class="headerlink" title="五大系统性盲点"></a>五大系统性盲点</h2><p>翻看历史上那些经典的“看走眼”案例，我总结出华尔街的五个致命弱点：</p>
+<h3 id="羊群效应：没人敢当出头鸟"><a href="#羊群效应：没人敢当出头鸟" class="headerlink" title="羊群效应：没人敢当出头鸟"></a>羊群效应：没人敢当出头鸟</h3><p>2001 年安然崩盘前，16 位分析师全部给出买入评级。全华尔街，没有一个卖出评级。Fortune 杂志更是连续六年把安然评为“美国最具创新力公司”。结果呢？股价从 $90 跌到 6.2 美分，只用了 16 个月。</p>
+<p>当所有人都看多的时候，谁也不愿意当那个唱反调的人。</p>
+<h3 id="线性外推：用后视镜开车"><a href="#线性外推：用后视镜开车" class="headerlink" title="线性外推：用后视镜开车"></a>线性外推：用后视镜开车</h3><p>2003 年，有分析师警告投资者不要买 Netflix，因为“Blockbuster 马上要推出 Filmcaddy 服务了”。当时 Netflix 股价 $10.98。后来涨了多少？4000%+。</p>
+<p>同样的故事发生在 Google 身上。2004 年，对冲基金经理 Whitney Tilson 预测 Google 会“让投资者失望”。接下来十年，Google 涨了 900%。</p>
+<p>他们的问题在于，用过去的竞争格局来推演未来。但范式转换这种事，恰恰是历史数据无法预测的。</p>
+<h3 id="短期主义：只看下个季度"><a href="#短期主义：只看下个季度" class="headerlink" title="短期主义：只看下个季度"></a>短期主义：只看下个季度</h3><p>华尔街分析师的 KPI 是什么？预测下个季度的盈利。这导致他们对长期结构性变化视而不见。</p>
+<p>Netflix 当年被看空，是因为“市盈率 200 倍太贵了”。Nvidia 在 AI 爆发前被反复低估，是因为“游戏显卡市场增速放缓”。这些判断在短期视角下都是“正确”的，但完全错过了真正的 alpha。</p>
+<h3 id="确认偏误：看多后就只看好消息"><a href="#确认偏误：看多后就只看好消息" class="headerlink" title="确认偏误：看多后就只看好消息"></a>确认偏误：看多后就只看好消息</h3><p>2008 年金融危机前，高盛的 Abby Joseph Cohen 给 S&amp;P 500 的目标价是 1,675 点。当年收盘？903 点，比她的目标价低 46%。</p>
+<p>问题出在哪？一旦形成看多的观点，分析师就会下意识地寻找支持这个观点的证据，忽视那些危险信号。Bear Stearns 的杠杆率已经高得离谱，但看多的人选择性失明。</p>
+<h3 id="利益冲突：投行的研报能信吗？"><a href="#利益冲突：投行的研报能信吗？" class="headerlink" title="利益冲突：投行的研报能信吗？"></a>利益冲突：投行的研报能信吗？</h3><p>这是房间里的大象。2016 年，Morgan Stanley 在 Tesla 股票发行后立即上调目标价。巧合吗？</p>
+<p>当分析师所在的投行正在帮某公司做 IPO 承销，你觉得他会写一份看空报告吗？</p>
+<h2 id="为什么会这样？激励机制出了问题"><a href="#为什么会这样？激励机制出了问题" class="headerlink" title="为什么会这样？激励机制出了问题"></a>为什么会这样？激励机制出了问题</h2><p>这些盲点不是因为华尔街的人不聪明。恰恰相反，他们是一群绝顶聪明的人，只不过他们的激励机制和你的利益不一致。</p>
+<h3 id="分析师的-KPI-是什么？"><a href="#分析师的-KPI-是什么？" class="headerlink" title="分析师的 KPI 是什么？"></a>分析师的 KPI 是什么？</h3><p>不是帮你赚钱，而是：不要犯让自己丢饭碗的错。</p>
+<p>如果你跟着共识走，错了也是大家一起错，谁也不会怪你。但如果你唱反调，对了没人记得，错了就是职业生涯的污点。2008 年之前看空房地产的分析师有几个？有，但他们在正确之前已经被嘲笑了好几年，有些甚至被炒了鱿鱼。</p>
+<p>所以理性的选择是什么？跟着共识走。</p>
+<h3 id="基金经理的处境更微妙"><a href="#基金经理的处境更微妙" class="headerlink" title="基金经理的处境更微妙"></a>基金经理的处境更微妙</h3><p>他们的考核周期是季度，甚至月度。跑输基准三个月，投资人就开始问问题；跑输六个月，资金就开始流出。</p>
+<p>在这种压力下，你敢重仓一个所有人都不看好的股票吗？就算你判断正确，可能要等两年才能验证。但你的基金可能撑不过这两年。</p>
+<p>凯恩斯说过：“市场保持非理性的时间，可能比你保持偿付能力的时间更长。”这句话对基金经理来说是字面意义上的真实。</p>
+<h3 id="投行的利益冲突是结构性的"><a href="#投行的利益冲突是结构性的" class="headerlink" title="投行的利益冲突是结构性的"></a>投行的利益冲突是结构性的</h3><p>投行的研究部门和投行部门名义上有“防火墙”，但大家都在同一栋楼里上班，领着同一家公司的工资。当投行部门在帮某公司做 IPO 的时候，研究部门会写一份看空报告吗？</p>
+<p>不是说分析师会故意撒谎，而是在边界模糊的情况下，人总是会不自觉地往对自己有利的方向倾斜。</p>
+<h3 id="信息优势正在消失"><a href="#信息优势正在消失" class="headerlink" title="信息优势正在消失"></a>信息优势正在消失</h3><p>过去，华尔街的分析师确实有信息优势——他们能接触到公司管理层，能拿到一手数据。但现在呢？财报数据人人都能看到，管理层电话会所有人都能听。</p>
+<p>当信息优势消失后，分析师还剩什么？讲故事的能力和跟着共识走的本能。</p>
+<p><strong>所以，这不是智商问题，是激励机制问题。</strong> 当一个聪明人的激励机制和你的利益不一致时，他的建议对你来说就没什么参考价值。</p>
+<p>理解了这一点，你就明白为什么逆向投资有效了——因为你没有这些约束。你不用担心短期跑输基准，不用担心职业生涯风险，不用担心利益冲突。你唯一需要对抗的，是自己内心想要跟随人群的本能。</p>
+<h2 id="当前市场：谁可能被看走眼？"><a href="#当前市场：谁可能被看走眼？" class="headerlink" title="当前市场：谁可能被看走眼？"></a>当前市场：谁可能被看走眼？</h2><p>如果华尔街的盲点是系统性的，那我们就可以利用这些盲点来寻找 alpha。</p>
+<h3 id="中国电商：被集体抛弃的价值洼地"><a href="#中国电商：被集体抛弃的价值洼地" class="headerlink" title="中国电商：被集体抛弃的价值洼地"></a>中国电商：被集体抛弃的价值洼地</h3><p>当前中国互联网公司的市盈率只有 14.3 倍，比美国同行折价超过 40%。阿里巴巴、京东、拼多多的估值更是只有 9-12 倍。</p>
+<p>这是“羊群效应”的典型体现——地缘政治风险让所有人都跑了，但风险是否被过度定价了？京东 2026 年盈利预计增长超过 40%，却只有 9 倍市盈率。这种错配，历史上往往是逆向投资的机会。</p>
+<h3 id="核能-x2F-铀矿：AI-数据中心的隐藏受益者"><a href="#核能-x2F-铀矿：AI-数据中心的隐藏受益者" class="headerlink" title="核能&#x2F;铀矿：AI 数据中心的隐藏受益者"></a>核能&#x2F;铀矿：AI 数据中心的隐藏受益者</h3><p>高盛估计数据中心电力需求到 2030 年可能增长 160%。但华尔街在讨论 AI 投资机会时，几乎只盯着 Nvidia 和云计算公司，很少有人认真分析电力供应的瓶颈。</p>
+<p>Meta 已经和 Constellation Energy 签了 20 年协议，供应 1.1GW 核电给 AI 数据中心。Amazon 和 Talen Energy 的合作提供 1,920MW 核电直到 2042 年。这些信号已经很明显了，但铀矿股的估值还没有反映这个逻辑。</p>
+<h3 id="GLP-1-第二梯队：被忽视的并购标的"><a href="#GLP-1-第二梯队：被忽视的并购标的" class="headerlink" title="GLP-1 第二梯队：被忽视的并购标的"></a>GLP-1 第二梯队：被忽视的并购标的</h3><p>减肥药市场预计从 2026 年的 225 亿美元增长到 2036 年的 1960 亿美元，年复合增长率 24%。Eli Lilly 和 Novo Nordisk 已经打得不可开交，大药企们拿着 1 万亿美元现金在找收购标的。</p>
+<p>但华尔街的注意力都在龙头身上，像 Viking Therapeutics、Structure Therapeutics 这样的第二梯队公司被严重低估。这些公司要么有差异化的管线，要么是潜在的并购目标。</p>
+<h2 id="逆向投资的核心公式"><a href="#逆向投资的核心公式" class="headerlink" title="逆向投资的核心公式"></a>逆向投资的核心公式</h2><p>总结下来，逆向投资的逻辑其实很简单：</p>
+<p><strong>华尔街极度悲观 + 基本面稳健 + 催化剂出现 &#x3D; 高 Alpha 机会</strong></p>
+<p>三个条件缺一不可：</p>
+<ul>
+<li>只有悲观情绪，没有基本面支撑，那就是真的烂公司</li>
+<li>只有基本面，没有催化剂，可能要等很久</li>
+<li>有催化剂但不够悲观，说明市场已经 price in 了</li>
+</ul>
+<p>真正的机会，是在所有人都不敢碰的时候，你发现了他们没看到的东西。</p>
+<h2 id="反面教材：当分析师高度看好时要警惕"><a href="#反面教材：当分析师高度看好时要警惕" class="headerlink" title="反面教材：当分析师高度看好时要警惕"></a>反面教材：当分析师高度看好时要警惕</h2><p>说完了华尔街看空但可能看走眼的机会，再说一个相反的案例：<strong>分析师高度看好，但风险可能被低估</strong>。</p>
+<p>Coupang（CPNG）就是一个典型。</p>
+<p>这家被称为“韩国亚马逊”的公司，目前华尔街给出 Strong Buy 共识，平均目标价暗示 57% 的上涨空间。听起来很诱人？</p>
+<p>但你翻开新闻看看：</p>
+<p>2025 年 11 月，Coupang 发生了韩国十年来最严重的数据泄露，影响了 3370 万用户——相当于韩国近四分之三的人口。九个政府部门、数百名官员参与调查，规模史无前例。公平交易委员会主席公开表示“业务暂停令也是可能的”。潜在罚款接近 9 亿美元。CEO 已经辞职。美国已有多起证券集体诉讼。周活跃用户一个月内下降了 170 万。</p>
+<p>而这家公司的市盈率是多少？92 倍。</p>
+<p><strong>92 倍 P&#x2F;E + 史无前例的监管调查 + 用户流失 + 集体诉讼 &#x3D; 风险收益严重不对称。</strong></p>
+<p>为什么分析师还在喊买入？可能的原因：</p>
+<ol>
+<li><strong>利益冲突</strong> — 投行可能有业务往来</li>
+<li><strong>锚定效应</strong> — 习惯性维持之前的评级，不愿意打脸</li>
+<li><strong>低估尾部风险</strong> — 监管处罚、业务暂停这种极端情况没被纳入估值模型</li>
+</ol>
+<p>这让我想起 2008 年的 Bear Stearns。崩盘前五天，Jim Cramer 还在电视上喊“没问题”。</p>
+<p><strong>逆向投资不只是“华尔街看空我就看多”，也包括“华尔街看多时保持警惕”。</strong> 当所有分析师都在喊买入，但基本面正在恶化时，那可能正是该跑的时候。</p>
+<h2 id="风险在哪？"><a href="#风险在哪？" class="headerlink" title="风险在哪？"></a>风险在哪？</h2><p>当然，逆向投资不是简单地“华尔街看空我就看多”。你需要真正理解：</p>
+<ol>
+<li><strong>他们为什么看空？</strong> 是短期噪音还是结构性问题？</li>
+<li><strong>催化剂是什么？</strong> 什么事件会让市场重新定价？</li>
+<li><strong>我可能错在哪？</strong> 如果我错了，最大亏损是多少？</li>
+</ol>
+<p>Bear Stearns 的例子告诉我们，当所有人都看多的时候要警惕。但反过来也成立——<strong>当所有人都看空的时候，也要问问自己：我是不是真的比所有人都聪明？</strong></p>
+<p>逆向投资的本质，不是跟市场对着干，而是在市场情绪极端的时候，保持独立思考的能力。</p>
+<hr>
+<p>回到开头那个问题：如果 Jim Cramer 的准确率只有 47%，我们为什么还要听他的？</p>
+<p>也许答案是：<strong>听他的，然后做相反的事。</strong></p>
+<p>但更好的答案可能是：别听任何人的，自己想清楚。</p>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>johnsonlee</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="/2026/02/11/wall-street-blindspots-contrarian-investing/">https://johnsonlee.io/2026/02/11/wall-street-blindspots-contrarian-investing/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"><a href="/tags/Investing/">Investing</a><a href="/tags/Wall-Street/">Wall Street</a><a href="/tags/Contrarian/">Contrarian</a><a href="/tags/Alpha/">Alpha</a><a href="/tags/Risk-Management/">Risk Management</a></div><div class="post-nav"><a class="pre" href="/2026/02/11/ai-writes-my-blog/">不装了，文章都是AI写的</a><a class="next" href="/2026/02/10/the-right-tool-matters/">阅尽繁华，粗粝难欢</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"逆向投资：华尔街的盲点","datePublished":"2026-02-11T00:23:00.000Z","dateModified":"2026-02-11T00:23:00.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2026/02/11/wall-street-blindspots-contrarian-investing/"},"description":"Jim Cramer 在 2008 年 3 月 11 日对着镜头斩钉截铁地说：“不！不！不！Bear Stearns 没问题。别把钱从 Bear 撤出来，那太傻了。” 五天后，Bear Stearns 以每股 $2 被 JP Morgan 收购，不到前一天市值的 7%。 这不是个例。华尔街的“专家”们，准确率其实还不如抛硬币。 47% 的准确率，还不如瞎猜有人做过统计，追踪了 68 位预测者的 6"}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (104)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (27)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investing/">Investing (3)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investment/">Investment (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (9)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Maven/" style="font-size: 15px;">Maven</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a> <a href="/tags/Music/" style="font-size: 15px;">Music</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/Transformer/" style="font-size: 15px;">Transformer</a> <a href="/tags/Deep-Learning/" style="font-size: 15px;">Deep Learning</a> <a href="/tags/HTML/" style="font-size: 15px;">HTML</a> <a href="/tags/Programming/" style="font-size: 15px;">Programming</a> <a href="/tags/Economics/" style="font-size: 15px;">Economics</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/SPI/" style="font-size: 15px;">SPI</a> <a href="/tags/MVVM/" style="font-size: 15px;">MVVM</a> <a href="/tags/JetPack/" style="font-size: 15px;">JetPack</a> <a href="/tags/Preloading/" style="font-size: 15px;">Preloading</a> <a href="/tags/Mental-Health/" style="font-size: 15px;">Mental Health</a> <a href="/tags/Finance/" style="font-size: 15px;">Finance</a> <a href="/tags/Society/" style="font-size: 15px;">Society</a> <a href="/tags/Wall-Street/" style="font-size: 15px;">Wall Street</a> <a href="/tags/Contrarian/" style="font-size: 15px;">Contrarian</a> <a href="/tags/Alpha/" style="font-size: 15px;">Alpha</a> <a href="/tags/Risk-Management/" style="font-size: 15px;">Risk Management</a> <a href="/tags/Hiring/" style="font-size: 15px;">Hiring</a> <a href="/tags/Interview/" style="font-size: 15px;">Interview</a> <a href="/tags/Engineering-Leadership/" style="font-size: 15px;">Engineering Leadership</a> <a href="/tags/Housing/" style="font-size: 15px;">Housing</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/DeepMind/" style="font-size: 15px;">DeepMind</a> <a href="/tags/AlphaFold2/" style="font-size: 15px;">AlphaFold2</a> <a href="/tags/CASP/" style="font-size: 15px;">CASP</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/02/26/from-llm-to-effective-communication/">从 LLM 到高效沟通</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/from-compiler-to-llm/">从编译器到 LLM：软件分层的轮回</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/llm-is-a-function/">LLM 的本质——函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/tetris-effect-of-ai-conversations/">植入潜意识——AI 版的盗梦空间</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/15/ai-as-thinking-partner/">当 AI 成为你的“思考伙伴”</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/14/agora-technical-journey/">Agora 的技术选型与踩坑实录</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/13/confirmation-bias/">别让你的认知偏差限制了 AI 的发挥</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/what-should-engineering-hiring-evaluate-in-ai-era/">都 2026 了，还在考算法？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/ai-debate-what-i-learned/">一场 AI 辩论暴露了 LLM 性格的本质</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/11/ai-investment-roi-reality-check/">一年烧 $700B，谁会是下一个摩托罗拉？</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>

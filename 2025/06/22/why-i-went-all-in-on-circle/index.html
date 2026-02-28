@@ -1,0 +1,233 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="在上一篇 无暇思考：从抄底 Google&amp;#x2F;Tesla 到 All in Circle 中有提到，我凭直觉做出 All in 的决策，为什么会 All in 一个还没来得及深入研究的东西呢？这还得从 $NVDA 和 $TSLA 说起。 2024 年 5 月，Nvidia 财报爆炸式超预期，盘后一口气拉了 25%。我原本只是想博个短线财报套利，结果等我意识到异动异常，股价已经突破 1,000"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,架构设计,滴滴,快手,性能优化,我在滴滴做架构,johnsonlee,johnson,lijingsen,jingsen,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2025/06/22/why-i-went-all-in-on-circle/"><meta property="og:title" content="为什么 All in CRCL?"><meta property="og:description" content="在上一篇 无暇思考：从抄底 Google&amp;#x2F;Tesla 到 All in Circle 中有提到，我凭直觉做出 All in 的决策，为什么会 All in 一个还没来得及深入研究的东西呢？这还得从 $NVDA 和 $TSLA 说起。 2024 年 5 月，Nvidia 财报爆炸式超预期，盘后一口气拉了 25%。我原本只是想博个短线财报套利，结果等我意识到异动异常，股价已经突破 1,000"><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2025/06/22/why-i-went-all-in-on-circle/"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2025-06-22T16:00:00.000Z"><meta property="article:author" content="Johnson Lee"><meta property="article:tag" content="Stock"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="为什么 All in CRCL?"><meta name="twitter:description" content="在上一篇 无暇思考：从抄底 Google&amp;#x2F;Tesla 到 All in Circle 中有提到，我凭直觉做出 All in 的决策，为什么会 All in 一个还没来得及深入研究的东西呢？这还得从 $NVDA 和 $TSLA 说起。 2024 年 5 月，Nvidia 财报爆炸式超预期，盘后一口气拉了 25%。我原本只是想博个短线财报套利，结果等我意识到异动异常，股价已经突破 1,000"><title>为什么 All in CRCL? | Johnson Lee</title><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 6.3.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">为什么 All in CRCL?</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">为什么 All in CRCL?</h1><div class="post-meta">Jun 22, 2025<span> | </span><span class="category"><a href="/categories/Investing/">Investing</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 3.4k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 11</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>在上一篇 <a href="./no-time-to-think-from-bottom-fishing-google-tesla-to-going-all-in-on-circle.md">无暇思考：从抄底 Google&#x2F;Tesla 到 All in Circle</a> 中有提到，我凭直觉做出 All in 的决策，为什么会 All in 一个还没来得及深入研究的东西呢？这还得从 <a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/NVDA">$NVDA</a> 和 <a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/TSLA">$TSLA</a> 说起。</p>
+<p>2024 年 5 月，Nvidia 财报爆炸式超预期，盘后一口气拉了 25%。我原本只是想博个短线财报套利，结果等我意识到异动异常，股价已经突破 1,000 美元。我没追多，反而选择做空，结果……被市场当场教做人。</p>
+<p>那之后的几个月，Nvidia 和 Tesla 几乎天天都是霸榜兄弟。做空 <a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/NVDA">$NVDA</a> 让我没能吃上那波涨幅。好在 2024 年 <a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/TSLA">$TSLA</a> 这波行情赶上了，狠狠地吃了一波。</p>
+<p>虽然还没来得及深入研究 <a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/CRCL">$CRCL</a>，但它给我的感觉——不是普通热股，它是一种<strong>「结构异动」</strong>——类似的不是 Coinbase，也不是 PayPal，而是 2020 的 Tesla、2023 的 NVDA。</p>
+<h2 id="范式断裂"><a href="#范式断裂" class="headerlink" title="范式断裂"></a>范式断裂</h2><p>在我的交易体系里，每一支股票的涨跌都应有其逻辑边界。技术结构对应信心阈值，情绪驱动也有上限。<a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/CRCL">$CRCL</a> 是个例外。</p>
+<p>它刚上市两周，走势几乎无视筹码密集区和情绪修复规律。成交量不断刷新，波动率像极了币圈，而不是纳斯达克挂牌公司。大多数人以为这只是散户爆炒，但对我来说，这种走势只有在一个前提下才成立：市场对它根本无法定价。类似的感受，我只在极少数时刻经历过。</p>
+<p><a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/CRCL">$CRCL</a> 给我同样的震撼。它不是技术破位，而是范式破裂；不是主力洗盘，而是旧定价体系彻底失灵。这个时候，如果你还在用“合理估值”“短期回调”“技术超买”来解释它，就等于拿航海图去导航太空船。</p>
+<p>当无法判断本身是否合理时，Benchmark （对标）法就是一个重要的方法。</p>
+<p>经历了 300%+ 的上涨的 <a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/CRCL">$CRCL</a> 市值也才不到 500 亿，还不如 <a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/CPNG">$CPNG</a>。后者靠补贴物流、堆仓库起家，在一个封闭内需市场上卷毛利、卷库存；而 <a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/CRCL">$CRCL</a> ，是把美元变成链上资产、在全球范围内重新组织支付网络的底层协议。</p>
+<p>再看看隔离的 Tether，IPO 估值高达 5000 亿，500 vs 5000，这不搞笑嘛。</p>
+<p>这明显不合理嘛！</p>
+<blockquote>
+<p>这是低维市场对高维叙事的系统性误判</p>
+</blockquote>
+<h2 id="资本的真实需求"><a href="#资本的真实需求" class="headerlink" title="资本的真实需求"></a>资本的真实需求</h2><p>2024 年中，<a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/NVDA">$NVDA</a> 拆股后的狂热逐渐冷却，7 月一度回调至 $100 以下，如今横盘在 $140 左右；<a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/TSLA">$TSLA</a> 在那一年也涨了超过 4 倍，从拆股消息、Robotaxi、马斯克政治动作一路顶到天花板，最终疲态尽显。</p>
+<p>这些经历让我意识到一个关键点：传统估值方法在这些“叙事资产”面前是失效的。</p>
+<p>因为资本不是来做价值发现的，资本是来「寻找叙事出口」的。</p>
+<p>而当 <a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/NVDA">$NVDA</a> 和 <a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/TSLA">$TSLA</a> 的故事已经装不下海量资金时，市场必然会寻找下一个具有全球性、制度性、货币性想象空间的容器。</p>
+<p>这个容器，必须足够新、足够“合法”、足够全球，同时必须能讲出“美元之外的美元”的大故事。</p>
+<p><a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/CRCL">$CRCL</a> 就是那个故事。</p>
+<h2 id="All-in-的不是我，是时代"><a href="#All-in-的不是我，是时代" class="headerlink" title="All in 的不是我，是时代"></a>All in 的不是我，是时代</h2><p>如果说价格行为是一种信号，那政策异动就是信号背后的地壳运动。<a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/CRCL">$CRCL</a> 的爆发，不只是市场情绪堆出来的投机潮，更像是一个更大趋势在局部突破了封锁线。</p>
+<p>2024 年下半年开始，美国稳定币监管出现明显松动。《Clarity for Payment Stablecoins Act》重新被提上议程，稳定币首次被视作“支付型金融工具”而非证券或投机品，同时，美联储与财政部也开始默许 USDC 等合规稳定币进入传统银行清算网络。</p>
+<p>Trump 不仅公开支持由其支持的 USD1 项目，还签署行政令，推动“合法合规的美元稳定币”，明确将稳定币作为美元主权延续与全球支付主权的一部分，这与 MAGA 在战略上的目标是完全一致的，也是 Trump 实现 MAGA 的一个重要手段和工具。</p>
+<p>所以 All in 不是在赌个随机题材，而是在承认：资本与政策已经同步布局这个新叙事，<a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/CRCL">$CRCL</a> 是首发壳。</p>
+<h2 id="美股结构里的“新物种”"><a href="#美股结构里的“新物种”" class="headerlink" title="美股结构里的“新物种”"></a>美股结构里的“新物种”</h2><p>很多人把 <a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/CRCL">$CRCL</a> 当作“加密概念股”来看待，或者把它类比为 Coinbase、PayPal，甚至更低级地把它理解为一家“区块链金融公司”。但真正理解了 <a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/CRCL">$CRCL</a> 背后的结构之后，我意识到一个更准确的类比是：</p>
+<p>它不是股权，不是代币，也不是科技产品，而是一种美元系统的“股份化表达”。</p>
+<p>我们过去投资美股，无论是科技股、金融股、还是 AI 概念，其本质都是对某种商业模式的盈利能力进行估值。哪怕是特斯拉和英伟达这种超级叙事股，说到底仍然挂钩收入、利润、自由现金流。但 <a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/CRCL">$CRCL</a> 完全不是这个逻辑。</p>
+<p>它的基本面，不是收入报表，而是网络规模。不是用户增长，而是流通美元的资产托管深度。不是营收增速，而是它能承载多少“链上美元”的迁移通道。</p>
+<p>这种公司，不属于传统行业分类。它是某种制度性架构的 API，让美元这个全球霸权资产，有机会以一种更高效、透明、可编程的方式输出到世界各地。</p>
+<p>传统意义上的金融公司，是美元的使用者；而 <a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/CRCL">$CRCL</a>，正在变成美元的基础设施提供者。</p>
+<p>更准确地说，它提供的不是美元，而是“美元作为一种网络”的可能性。</p>
+<p>这种公司，美股历史上没有。它不是传统金融的延申，也不是 DeFi 的再包装，而是一个在「旧制度」和「新技术」之间建立桥梁的实体。既要满足美式合规，也要具备全球运行能力；既是技术服务公司，又隐含货币级别的影响力。</p>
+<p>它不是新科技，而是新主权。</p>
+<h2 id="Circle-到底是什么？"><a href="#Circle-到底是什么？" class="headerlink" title="Circle 到底是什么？"></a>Circle 到底是什么？</h2><p>Circle 成立于 2013 年，是美国本土的金融科技公司。它最初是一家加密支付平台，后来转型为稳定币发行机构。它的明星产品——USDC（USD Coin），是目前全球第二大稳定币，仅次于 Tether（USDT）。</p>
+<p>和大多数“发币的公司”不同，Circle 从一开始就走合规路线：</p>
+<ul>
+<li>总部设在美国波士顿</li>
+<li>持有多个州的货币服务商牌照（MSB）</li>
+<li>所有 USDC 背后资产均须受第三方审计</li>
+<li>支持机构级对接（银行、券商、金融 API）</li>
+<li>它不是币圈土炮，是华尔街出身的“合规稳定币机构”。投资人阵容直接体现这一点：<ul>
+<li>BlackRock 是战略股东</li>
+<li>Coinbase 与其合作推出 USDC</li>
+</ul>
+</li>
+</ul>
+<p>2022 年原本计划 SPAC 上市，但后因监管未决被迫搁置</p>
+<h3 id="CRCL-是什么"><a href="#CRCL-是什么" class="headerlink" title="CRCL 是什么"></a>CRCL 是什么</h3><p><a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/CRCL">$CRCL</a> 是 Circle 通过反向借壳方式登陆纽交所后的股票代码，代表的是 Circle 这家公司的股权。</p>
+<p>它不是稳定币，也不锚定稳定币的价格，但它锚定了 USDC 网络的增长。</p>
+<p>换句话说：</p>
+<blockquote>
+<p>USDC 是产品，CRCL 是这个产品背后的公司股票。</p>
+</blockquote>
+<p>这就像：</p>
+<ul>
+<li>Apple 推出 iPhone → iPhone 是产品，AAPL 是股权</li>
+<li>Circle 发行 USDC → USDC 是产品，CRCL 是股权</li>
+</ul>
+<p>但特别的是，USDC 本身并不收费，也不以传统金融产品方式赚钱。它的价值更多来自以下几个方面：</p>
+<ul>
+<li>托管资产规模（AUM）：USDC 总发行量 × 利率 &#x3D; 收益</li>
+<li>清算通道和 API 商业化：企业通过 Circle 提供的 API 清算链上资金</li>
+<li>网络效应和集成度：越多金融机构、钱包、交易所集成 USDC，Circle 的控制力就越强</li>
+</ul>
+<p>所以 CRCL 的价值不是来自“赚了多少钱”，而是来自作为美元通证网络的中枢地位。</p>
+<h3 id="对「Circle-要将其-50-利润分给-Coinbase」-的误解"><a href="#对「Circle-要将其-50-利润分给-Coinbase」-的误解" class="headerlink" title="对「Circle 要将其 50% 利润分给 Coinbase」 的误解"></a>对「Circle 要将其 50% 利润分给 Coinbase」 的误解</h3><p>在 Circle 的业务模型里，Coinbase 的确分润，但远没到掏空的地步。很多人看到的那句「Circle 将向 Coinbase 分配 50% 的稳定币利息收入」，就认定这家公司相当于给 Coinbase 打工，<a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/CRCL">$CRCL</a> 不值得投。这是严重误读。</p>
+<p>我们先把原话还原一下：</p>
+<blockquote>
+<p>在 2023 年 Circle 和 Coinbase 签署的合作条款中，USDC 相关收益中的“净利息收益（Net Interest Income）”由双方五五分成，前提是：</p>
+</blockquote>
+<ul>
+<li>该笔 USDC 是由 Coinbase 用户存入或生成的</li>
+<li>利息收益来自于 Circle 持有的托底资产（比如美债、现金）</li>
+</ul>
+<p>听起来很可怕？其实不然。Circle 的收入结构中，净利息收益当然是主力，但并不是全部，更不是“被抽税”的全部：</p>
+<p>✔ 真实逻辑是：</p>
+<ul>
+<li>只有来自 Coinbase 渠道的 USDC 才五五分账</li>
+<li>Circle 自有渠道、企业 API、跨境结算、链上原生发行的 USDC 都不受该协议影响</li>
+<li>更关键的是：Coinbase 本身是 Circle 的大股东</li>
+</ul>
+<p>这相当于内部利润重组而非渠道剥削。</p>
+<p>甚至可以这样理解：Coinbase 帮 Circle 增发 USDC、承接 KYC、负责用户运营，然后共享这部分链上利差，而不是对 Circle 的核心收入进行掠夺。</p>
+<p>一句话总结：</p>
+<blockquote>
+<p>Circle 并没有把利润“分给” Coinbase，而是和主要销售渠道“共享”利润，同时 Coinbase 本身也是利益方。</p>
+</blockquote>
+<p>这就像 Apple 把 iPhone 分销利润分一部分给电信运营商，但运营商也是 Apple 的股东——这叫体系内共赢，不叫被掏空。</p>
+<p>所以，“Circle 没有利润”，“CRCL 不值得投”这类声音，大多建立在二手误读和低维理解上。真正理解它的结构，就知道：<a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/CRCL">$CRCL</a> 是系统性资产，不是打工代币。</p>
+<h2 id="USDC-vs-USDT"><a href="#USDC-vs-USDT" class="headerlink" title="USDC vs USDT"></a>USDC vs USDT</h2><p>很多人把 USDC 和 USDT 看作“功能相似、逻辑重复”的两种稳定币，区别无非是“一个更安全、一个更普及”。但真要理解 <a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/CRCL">$CRCL</a>，你必须看清这两个项目之间本质性的分野：</p>
+<p>USDC 和 USDT 的区别，不是用户、审计、合规这些技术细节，而是它们分别代表了两种完全不同的货币秩序。</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>USDC（Circle）</th>
+<th>USDT（Tether）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>发行机构</td>
+<td>Circle（美国公司）</td>
+<td>Tether Ltd（英属维京群岛）</td>
+</tr>
+<tr>
+<td>合规性</td>
+<td>持牌、受美监管、审计合规</td>
+<td>无有效监管、仅披露部分储备</td>
+</tr>
+<tr>
+<td>储备结构</td>
+<td>主要为美国国债+现金等价物</td>
+<td>曾曝出商业票据、加密资产</td>
+</tr>
+<tr>
+<td>审计机制</td>
+<td>定期第三方审计+链上透明地址</td>
+<td>披露不一致、曾多次延期</td>
+</tr>
+<tr>
+<td>支持机构</td>
+<td>BlackRock、Coinbase、Visa</td>
+<td>Bitfinex 关联，支持方模糊</td>
+</tr>
+<tr>
+<td>使用场景</td>
+<td>CEX、DeFi、企业链上支付</td>
+<td>CEX 为主、链下转账灰色地带</td>
+</tr>
+</tbody></table>
+<h3 id="核心区别，不在链上，在权力结构里"><a href="#核心区别，不在链上，在权力结构里" class="headerlink" title="核心区别，不在链上，在权力结构里"></a>核心区别，不在链上，在权力结构里</h3><p>USDT 的诞生，是为了绕开美国金融管制，让全球资本可以在链上“偷偷用美元”做事。它是整个美元体系的漏洞，是灰色套利空间的副产品。</p>
+<p>而 USDC 的出现，是美国主动拥抱这一需求、并将其纳入监管的结果。它不是技术产品，而是美元治理的迭代接口。</p>
+<p>说得再直白一点：</p>
+<ul>
+<li>USDT 是美元霸权的“地下水”</li>
+<li>USDC 是美元官方允许你接的“自来水”</li>
+<li>一个在灰区滋生，一个在规则里成长。</li>
+</ul>
+<h3 id="USDT-是美元失控的副作用，USDC-是美元秩序的延伸"><a href="#USDT-是美元失控的副作用，USDC-是美元秩序的延伸" class="headerlink" title="USDT 是美元失控的副作用，USDC 是美元秩序的延伸"></a>USDT 是美元失控的副作用，USDC 是美元秩序的延伸</h3><p>USDT 是 dollar demand（美元需求）的副作用，是离岸市场和链上资本的共谋，它的存在证明了美元太好用了，以至于所有人都想绕过规则去“仿制一份”。</p>
+<p>而 USDC 是 dollar infrastructure（美元基础设施）的一部分，是美国官方试图通过制度性手段，把这种需求“正名化”，纳入监管、金融系统、结算通道之中。</p>
+<p>这背后其实是一个更深的博弈命题：</p>
+<blockquote>
+<p>未来的美元，是继续靠国债+Swift 维持全球统治，还是用链上合规稳定币重构基础设施？</p>
+</blockquote>
+<p>USDC 是答案，CRCL 是筹码。</p>
+<p>所以你如果只是因为“USDC 市占不如 USDT”而小看 CRCL，那就像 2004 年在诺基亚销量最高时看衰苹果一样——你忽略了结构正在变化。</p>
+<p>而结构一旦变了，估值逻辑也就不一样了。</p>
+<h2 id="下篇预告：Circle-链上的美联储"><a href="#下篇预告：Circle-链上的美联储" class="headerlink" title="下篇预告：Circle - 链上的美联储"></a>下篇预告：Circle - 链上的美联储</h2><p>从技术图景来看，USDC 是稳定币；从金融视角来看，<a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/CRCL">$CRCL</a> 是美元链上化的股份；但从制度视角看，这一切不过是美国在重塑其货币统治方式的第一步。</p>
+<p>美联储不可能直接参与每一笔跨境支付、每一次链上交易；但它可以允许一个合规、可信、透明的“美元副本”来扮演这个角色。</p>
+<p>于是，USDC 不是一个简单的 stablecoin，它是一种“美元治理的委托中介”。</p>
+<p>而 <a target="_blank" rel="noopener" href="https://finance.yahoo.com/quote/CRCL">$CRCL</a>，就是这个系统背后的控制权溢价表达。</p>
+<p>下篇我们将深入讨论：</p>
+<ul>
+<li>Circle：不只是铸币</li>
+<li>链上&#x2F;链下美元系统</li>
+<li>新货币秩序的试验场</li>
+<li>铸币权的证券化</li>
+</ul>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>johnsonlee</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="/2025/06/22/why-i-went-all-in-on-circle/">https://johnsonlee.io/2025/06/22/why-i-went-all-in-on-circle/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"><a href="/tags/Stock/">Stock</a></div><div class="post-nav"><a class="pre" href="/2025/06/23/circle-the-fed-on-chain/">Circle - 链上的美联储</a><a class="next" href="/2025/06/21/no-time-to-think-from-bottom-fishing-google-tesla-to-going-all-in-on-circle/">无暇思考：从抄底 Google/Tesla 到 All in Circle</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"为什么 All in CRCL?","datePublished":"2025-06-22T16:00:00.000Z","dateModified":"2025-06-22T16:00:00.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2025/06/22/why-i-went-all-in-on-circle/"},"description":"在上一篇 无暇思考：从抄底 Google&#x2F;Tesla 到 All in Circle 中有提到，我凭直觉做出 All in 的决策，为什么会 All in 一个还没来得及深入研究的东西呢？这还得从 $NVDA 和 $TSLA 说起。 2024 年 5 月，Nvidia 财报爆炸式超预期，盘后一口气拉了 25%。我原本只是想博个短线财报套利，结果等我意识到异动异常，股价已经突破 1,000"}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (104)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (27)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investing/">Investing (3)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investment/">Investment (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (9)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Maven/" style="font-size: 15px;">Maven</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a> <a href="/tags/Music/" style="font-size: 15px;">Music</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/Transformer/" style="font-size: 15px;">Transformer</a> <a href="/tags/Deep-Learning/" style="font-size: 15px;">Deep Learning</a> <a href="/tags/HTML/" style="font-size: 15px;">HTML</a> <a href="/tags/Programming/" style="font-size: 15px;">Programming</a> <a href="/tags/Economics/" style="font-size: 15px;">Economics</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/SPI/" style="font-size: 15px;">SPI</a> <a href="/tags/MVVM/" style="font-size: 15px;">MVVM</a> <a href="/tags/JetPack/" style="font-size: 15px;">JetPack</a> <a href="/tags/Preloading/" style="font-size: 15px;">Preloading</a> <a href="/tags/Mental-Health/" style="font-size: 15px;">Mental Health</a> <a href="/tags/Finance/" style="font-size: 15px;">Finance</a> <a href="/tags/Society/" style="font-size: 15px;">Society</a> <a href="/tags/Wall-Street/" style="font-size: 15px;">Wall Street</a> <a href="/tags/Contrarian/" style="font-size: 15px;">Contrarian</a> <a href="/tags/Alpha/" style="font-size: 15px;">Alpha</a> <a href="/tags/Risk-Management/" style="font-size: 15px;">Risk Management</a> <a href="/tags/Hiring/" style="font-size: 15px;">Hiring</a> <a href="/tags/Interview/" style="font-size: 15px;">Interview</a> <a href="/tags/Engineering-Leadership/" style="font-size: 15px;">Engineering Leadership</a> <a href="/tags/Housing/" style="font-size: 15px;">Housing</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/DeepMind/" style="font-size: 15px;">DeepMind</a> <a href="/tags/AlphaFold2/" style="font-size: 15px;">AlphaFold2</a> <a href="/tags/CASP/" style="font-size: 15px;">CASP</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/02/26/from-llm-to-effective-communication/">从 LLM 到高效沟通</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/from-compiler-to-llm/">从编译器到 LLM：软件分层的轮回</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/llm-is-a-function/">LLM 的本质——函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/25/tetris-effect-of-ai-conversations/">植入潜意识——AI 版的盗梦空间</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/15/ai-as-thinking-partner/">当 AI 成为你的“思考伙伴”</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/14/agora-technical-journey/">Agora 的技术选型与踩坑实录</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/13/confirmation-bias/">别让你的认知偏差限制了 AI 的发挥</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/what-should-engineering-hiring-evaluate-in-ai-era/">都 2026 了，还在考算法？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/12/ai-debate-what-i-learned/">一场 AI 辩论暴露了 LLM 性格的本质</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/02/11/ai-investment-roi-reality-check/">一年烧 $700B，谁会是下一个摩托罗拉？</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>
