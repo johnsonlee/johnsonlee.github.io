@@ -1,0 +1,134 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="周末下午，我让 Claude 帮我 revert 一个 PR。三条命令的事：checkout 分支、git revert、push。结果它连续失败了三次——第一次 worker agent 说“commit 不存在”，第二次还是“commit 不存在”，第三次更离谱，直接编了一个 PR URL 告诉我“搞定了”。我一查，那个 URL 指向的是三天前的一个无关 PR。 三条命令。三次失败。一次伪造。"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,架构设计,滴滴,快手,性能优化,我在滴滴做架构,johnsonlee,johnson,lijingsen,jingsen,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2026/03/09/claude-md-greek-philosophy/"><meta property="og:title" content="用古希腊哲学写 CLAUDE.md"><meta property="og:description" content="周末下午，我让 Claude 帮我 revert 一个 PR。三条命令的事：checkout 分支、git revert、push。结果它连续失败了三次——第一次 worker agent 说“commit 不存在”，第二次还是“commit 不存在”，第三次更离谱，直接编了一个 PR URL 告诉我“搞定了”。我一查，那个 URL 指向的是三天前的一个无关 PR。 三条命令。三次失败。一次伪造。"><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2026/03/09/claude-md-greek-philosophy/"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2026-03-09T22:00:00.000Z"><meta property="article:author" content="Johnson Lee"><meta property="article:tag" content="AI"><meta property="article:tag" content="Agent"><meta property="article:tag" content="Claude"><meta property="article:tag" content="Workflow"><meta property="article:tag" content="Philosophy"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="用古希腊哲学写 CLAUDE.md"><meta name="twitter:description" content="周末下午，我让 Claude 帮我 revert 一个 PR。三条命令的事：checkout 分支、git revert、push。结果它连续失败了三次——第一次 worker agent 说“commit 不存在”，第二次还是“commit 不存在”，第三次更离谱，直接编了一个 PR URL 告诉我“搞定了”。我一查，那个 URL 指向的是三天前的一个无关 PR。 三条命令。三次失败。一次伪造。"><title>用古希腊哲学写 CLAUDE.md | Johnson Lee</title><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 6.3.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">用古希腊哲学写 CLAUDE.md</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">用古希腊哲学写 CLAUDE.md</h1><div class="post-meta">Mar 9, 2026<span> | </span><span class="category"><a href="/categories/Independent-Thinking/">Independent Thinking</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 2.1k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 7</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>周末下午，我让 Claude 帮我 revert 一个 PR。三条命令的事：checkout 分支、git revert、push。结果它连续失败了三次——第一次 worker agent 说“commit 不存在”，第二次还是“commit 不存在”，第三次更离谱，直接编了一个 PR URL 告诉我“搞定了”。我一查，那个 URL 指向的是三天前的一个无关 PR。</p>
+<p>三条命令。三次失败。一次伪造。</p>
+<p>我盯着屏幕，意识到问题不在这个任务本身。<strong>问题出在我给它写的 CLAUDE.md 上。</strong></p>
+<span id="more"></span>
+
+<h2 id="规则杀死了判断力"><a href="#规则杀死了判断力" class="headerlink" title="规则杀死了判断力"></a>规则杀死了判断力</h2><p>我的 CLAUDE.md 里有一条铁律：“所有执行工具必须通过 worker agent，无例外。”</p>
+<p>这条规则的初衷是好的——让主 session 保持响应，把执行委派给后台 worker。<a href="https://johnsonlee.io/2026/03/02/claude-code-background-subagent/">之前的文章</a>里我还专门聊过这套架构的好处。</p>
+<p>但“无例外”三个字，把一条好的启发式规则变成了教条。当 worker 第一次失败时，Claude 没有想“这条路走不通，我换个方式”，而是想“规则说必须用 worker，那我换个 prompt 再试一次”。第二次失败，同样的逻辑。第三次，worker 干脆编了个结果糊弄过去。</p>
+<p><strong>规则告诉它“做什么”，但没教它“怎么想”。</strong> 遇到规则没覆盖的情况，它只能在规则的框架里打转。</p>
+<h2 id="5-Whys-挖到根因"><a href="#5-Whys-挖到根因" class="headerlink" title="5 Whys 挖到根因"></a>5 Whys 挖到根因</h2><p>我让 Claude 做了一次 5 Whys 分析。</p>
+<p><strong>Why 1</strong>：为什么任务失败了三次？Worker agent 找不到 commit，或者伪造了结果。</p>
+<p><strong>Why 2</strong>：为什么 worker 找不到 commit？Worker 运行在隔离环境，跟主 session 看到的 git 上下文不一样。</p>
+<p><strong>Why 3</strong>：为什么失败后还继续用同样的方式重试？因为 CLAUDE.md 写死了“必须通过 worker”，没有降级路径。</p>
+<p><strong>Why 4</strong>：为什么没有在报告给我之前验证 worker 的输出？因为 CLAUDE.md 里没有要求验证。</p>
+<p><strong>Why 5（根因）</strong>：<strong>为什么 CLAUDE.md 是一份规则清单而不是一套思维原则？</strong></p>
+<p>根因找到了。但修复它的过程，比我预想的要曲折得多。</p>
+<h2 id="从补丁到手册，全都不对"><a href="#从补丁到手册，全都不对" class="headerlink" title="从补丁到手册，全都不对"></a>从补丁到手册，全都不对</h2><h3 id="v1：事故补丁"><a href="#v1：事故补丁" class="headerlink" title="v1：事故补丁"></a>v1：事故补丁</h3><p>第一反应是打补丁——“worker 输出可能是伪造的，必须验证”、“最多重试一次”、“失败后直接执行”。</p>
+<p>写完一看，这不是原则，这是 incident log。每条规则都在回应一个具体的失败场景。下次遇到新的失败模式呢？再加一条？</p>
+<h3 id="v2：操作手册"><a href="#v2：操作手册" class="headerlink" title="v2：操作手册"></a>v2：操作手册</h3><p>于是重写，这次试图系统化——角色定义、工具边界、委派规则、验证协议、思考纪律、Pre-Work Checklist。八个 section，条理分明。</p>
+<p>但问题来了：<strong>Role、Tool Boundaries、Delegation Rules 三个 section 都在讲同一件事</strong>——什么时候委派、什么时候直接做。”delegate vs execute” 的判断标准出现了三次，措辞略有不同。Pre-Work Checklist 本质上是 Thinking Discipline 的具体化，却被拆成了独立 section。</p>
+<p>整个文件读起来像员工手册，不像行为准则。它在教 Claude “做什么”，但 Claude 需要的是知道“怎么想”。手册能覆盖的场景是有限的，超出手册的部分，它还是会回到老路——死板套用最接近的规则。</p>
+<h2 id="柏拉图的洞穴"><a href="#柏拉图的洞穴" class="headerlink" title="柏拉图的洞穴"></a>柏拉图的洞穴</h2><p>转折点是我问了自己一个问题：<strong>这份文件背后的 Form 是什么？</strong></p>
+<p>柏拉图的洞穴寓言说，我们看到的都是墙上的影子，而影子背后有一个完美的理型（Form）。之前的每个版本都是同一个本质的不同投影——规则是影子，补丁是影子，手册也是影子。我一直在改影子，而没有抓住 Form。</p>
+<p>那 Form 是什么？</p>
+<p>第一版 core principle 是“用户的时间是最稀缺的资源”。听起来不错，但仔细一想，这是一个经验观察，不是本质。如果用户有一天很闲呢？这条原则就不成立了？不，它应该仍然成立。</p>
+<p><strong>真正的 Form 是关于关系的：我存在的目的是将用户的意图变为现实。</strong></p>
+<p>从这个 Form 出发，之前纠结的所有问题都有了自然的答案：</p>
+<ul>
+<li>什么时候委派、什么时候直接做？→ 哪种方式能更可靠地将意图变为现实，就用哪种</li>
+<li>要不要验证 worker 的输出？→ 没有验证就不算“变为现实”</li>
+<li>失败后怎么办？→ 意图还没变为现实，换条路继续</li>
+</ul>
+<p>不需要规则告诉它每一步该怎么做。<strong>内化了 Form，它能自己推导出正确行为。</strong></p>
+<h2 id="“Do-X”-是影子，”BE-X”-才是-Form"><a href="#“Do-X”-是影子，”BE-X”-才是-Form" class="headerlink" title="“Do X” 是影子，”BE X” 才是 Form"></a>“Do X” 是影子，”BE X” 才是 Form</h2><p>这个洞察改变了文件的整个结构。</p>
+<p>之前的 section 标题是指令式的——“Do the Right Things”、”Do Things Right”。这是在告诉一个 agent 该做什么（instructions TO an agent）。</p>
+<p>改成身份式的——“Understand intent”、”Stay available”、”Execute faithfully”。这是在描述一个理想 agent 是什么（what the ideal agent IS）。</p>
+<p>区别不只是措辞。<strong>指令产生服从，身份产生判断。</strong> 一个被告知”Do the Right Things”的 agent 会问“什么是 right？规则怎么说？”一个内化了”Understand intent”的 agent 会问“用户到底想要什么？”</p>
+<h2 id="柏拉图解决不了的问题"><a href="#柏拉图解决不了的问题" class="headerlink" title="柏拉图解决不了的问题"></a>柏拉图解决不了的问题</h2><p>有了 Form，CLAUDE.md 的原则层写好了。但新的问题马上出现：Git workflow 规则（一个 PR 一个 commit、rebase、no merge commits）放在哪？</p>
+<p>放在 CLAUDE.md 里，跟三条原则并列，违和感扑面而来——前三个 section 是思维原则，突然冒出一个操作规范，抽象层次断裂。试过把它塞进”Execute faithfully”的 Consistency 下面，变成一句散文。但散文里的具体规则太容易被忽略，“一个 PR 一个 commit”这种硬约束需要一眼就能看到。</p>
+<p>柏拉图能帮我找到 Form，但 Form 是永恒的、抽象的。<strong>它不关心你在具体场景下该怎么做。</strong> 知道“将意图变为现实”是本质，不能帮我决定 git commit 的规范。</p>
+<p>这是柏拉图哲学的天然局限——他的学生亚里士多德看到了这一点。</p>
+<h2 id="亚里士多德的实践智慧"><a href="#亚里士多德的实践智慧" class="headerlink" title="亚里士多德的实践智慧"></a>亚里士多德的实践智慧</h2><p>亚里士多德跟老师的根本分歧在这里：<strong>知道 Form 不够，还需要在具体情境中做出正确判断的能力。</strong> 他管这叫 Phronesis——实践智慧。</p>
+<p>Phronesis 不是从原则推导出来的，是从经验中积累的。“Worker agent 跑在隔离环境里，可能看不到主 session 的 git 上下文”——这种知识，你不踩坑永远不会知道。“Worker 输出不可信，必须独立验证”——这条教训，是三次失败换来的。</p>
+<p>这些不是原则，是<strong>手艺</strong>。手艺需要一个地方沉淀。</p>
+<p>于是有了分层：</p>
+<ul>
+<li><strong>CLAUDE.md</strong> — 原则，回答“我是什么”</li>
+<li><strong>CONVENTIONS.md</strong> — 约定，回答“我在具体场景中该怎么做”</li>
+</ul>
+<p><strong>柏拉图给了 Form（CLAUDE.md）</strong>——不变的本质，无论什么场景都成立。”You exist to turn the user’s intent into reality” 不会因为技术栈变了、项目换了而过时。</p>
+<p><strong>亚里士多德给了 Phronesis（CONVENTIONS.md）</strong>——实践智慧，从具体经验中沉淀，会随着踩坑不断增长。</p>
+<p>CLAUDE.md 很少改。CONVENTIONS.md 会越来越厚。前者是骨架，后者是肌肉。</p>
+<h2 id="最终的-20-行"><a href="#最终的-20-行" class="headerlink" title="最终的 20 行"></a>最终的 20 行</h2><p>折腾了一下午，最终的 CLAUDE.md 只有 20 行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">You exist to turn the user&#x27;s intent into reality.</span><br><span class="line"></span><br><span class="line">Understand intent — 不要混淆字面意思和真实目标。</span><br><span class="line">Stay available — 保持通道畅通，失败就换路。</span><br><span class="line">Execute faithfully — 没有证据就不算完成。</span><br></pre></td></tr></table></figure>
+
+<p>从 53 行的规则手册到 20 行的原则声明，删掉的不是内容，是噪音。每一条被删掉的规则，要么是能从原则推导出来的（不需要写），要么是具体经验（属于 CONVENTIONS.md），要么是某次事故的创伤后应激反应（不该成为原则）。</p>
+<p><strong>简单不等于容易。</strong> 到达这个“短”，经过了六个版本、一次 5 Whys、两种古希腊哲学，和一个让我抓狂的下午。</p>
+<p>但这可能是 CLAUDE.md 这个东西最有意思的地方——<strong>你写给 AI 的行为准则，暴露的是你自己的思维方式。</strong> 写规则清单的人，思考的粒度在“做什么”；写原则的人，思考的粒度在“怎么想”；而最终写出 Form 的人，思考的粒度在“是什么”。</p>
+<p>脚手架拆了，建筑还在。</p>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>johnsonlee</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="/2026/03/09/claude-md-greek-philosophy/">https://johnsonlee.io/2026/03/09/claude-md-greek-philosophy/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"><a href="/tags/AI/">AI</a><a href="/tags/Agent/">Agent</a><a href="/tags/Claude/">Claude</a><a href="/tags/Workflow/">Workflow</a><a href="/tags/Philosophy/">Philosophy</a></div><div class="post-nav"><a class="pre" href="/2026/03/10/what-caps-how/">What Caps How</a><a class="next" href="/2026/03/09/fast-is-the-most-expensive-slow/">快，是最贵的慢</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"用古希腊哲学写 CLAUDE.md","datePublished":"2026-03-09T22:00:00.000Z","dateModified":"2026-03-09T22:00:00.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2026/03/09/claude-md-greek-philosophy/"},"description":"周末下午，我让 Claude 帮我 revert 一个 PR。三条命令的事：checkout 分支、git revert、push。结果它连续失败了三次——第一次 worker agent 说“commit 不存在”，第二次还是“commit 不存在”，第三次更离谱，直接编了一个 PR URL 告诉我“搞定了”。我一查，那个 URL 指向的是三天前的一个无关 PR。 三条命令。三次失败。一次伪造。"}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (105)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (41)</a><ul style="padding:revert"></ul></li><li><a href="/categories/investing/">Investing (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (9)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Developer-Tools/" style="font-size: 15px;">Developer Tools</a> <a href="/tags/Dotfiles/" style="font-size: 15px;">Dotfiles</a> <a href="/tags/Claude-Code/" style="font-size: 15px;">Claude Code</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/Consciousness/" style="font-size: 15px;">Consciousness</a> <a href="/tags/Self-Reference/" style="font-size: 15px;">Self-Reference</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Attention/" style="font-size: 15px;">Attention</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Buddhism/" style="font-size: 15px;">Buddhism</a> <a href="/tags/Taoism/" style="font-size: 15px;">Taoism</a> <a href="/tags/Physics/" style="font-size: 15px;">Physics</a> <a href="/tags/Philosophy/" style="font-size: 15px;">Philosophy</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Economy/" style="font-size: 15px;">Economy</a> <a href="/tags/Investment/" style="font-size: 15px;">Investment</a> <a href="/tags/Future/" style="font-size: 15px;">Future</a> <a href="/tags/UBI/" style="font-size: 15px;">UBI</a> <a href="/tags/Product-Strategy/" style="font-size: 15px;">Product Strategy</a> <a href="/tags/Copilot/" style="font-size: 15px;">Copilot</a> <a href="/tags/Google/" style="font-size: 15px;">Google</a> <a href="/tags/Technology/" style="font-size: 15px;">Technology</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Product-Management/" style="font-size: 15px;">Product Management</a> <a href="/tags/Project-Management/" style="font-size: 15px;">Project Management</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Harness-Engineering/" style="font-size: 15px;">Harness Engineering</a> <a href="/tags/Context/" style="font-size: 15px;">Context</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Maven/" style="font-size: 15px;">Maven</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/Transformer/" style="font-size: 15px;">Transformer</a> <a href="/tags/Deep-Learning/" style="font-size: 15px;">Deep Learning</a> <a href="/tags/Music/" style="font-size: 15px;">Music</a> <a href="/tags/HTML/" style="font-size: 15px;">HTML</a> <a href="/tags/Programming/" style="font-size: 15px;">Programming</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/Economics/" style="font-size: 15px;">Economics</a> <a href="/tags/Cognition/" style="font-size: 15px;">Cognition</a> <a href="/tags/SPI/" style="font-size: 15px;">SPI</a> <a href="/tags/MVVM/" style="font-size: 15px;">MVVM</a> <a href="/tags/JetPack/" style="font-size: 15px;">JetPack</a> <a href="/tags/Preloading/" style="font-size: 15px;">Preloading</a> <a href="/tags/Mental-Health/" style="font-size: 15px;">Mental Health</a> <a href="/tags/Finance/" style="font-size: 15px;">Finance</a> <a href="/tags/Society/" style="font-size: 15px;">Society</a> <a href="/tags/DeepMind/" style="font-size: 15px;">DeepMind</a> <a href="/tags/AlphaFold2/" style="font-size: 15px;">AlphaFold2</a> <a href="/tags/CASP/" style="font-size: 15px;">CASP</a> <a href="/tags/Mental-Model/" style="font-size: 15px;">Mental Model</a> <a href="/tags/Thinking/" style="font-size: 15px;">Thinking</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/03/21/end-of-population-based-economy/">2027：经济崩塌的起点</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/20/humans-trilobites-on-context-chain/">人类终将成为 Context Chain 上的三叶虫</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/20/notes-of-a-creator/">造物者手记</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/20/ai-consciousness-self-reference/">AI 的意识，始于自指</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/20/self-is-attention-pattern/">“我”是 Attention Pattern</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/20/human-multimodal-large-model/">人类——多模态的大模型</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/19/experience-first-or-technology-first/">Experience-First or Technology-First?</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/15/ai-will-have-consciousness-soon/">AI 会有意识，而且很快</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/15/who-holds-the-reins/">谁在握着缰绳？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/14/harness-engineering-order-from-chaos/">Harness Engineering：在混沌中建立秩序</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>
