@@ -1,0 +1,364 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="“你今天吃了多少 token？” Claude 回了一句：“光是 system prompt 加上你的 memories，就已经喂了我不少 token 了——你这个 context window 的’底料’相当丰富。” “底料”这个词勾起了我的兴趣。我追问底料都有啥，它如数家珍地列了五大块——memories、行为指引、工具定义、skills 索引、artifact 规则。然后我问了一句看似随意的"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,johnsonlee,johnson,lijingsen,jingsen,ai,agent,llm,claude,claude code,ai工程化,harness,harness engineering,autoevolve,prompt engineering,RAG,agentic,MCP,AGI,vibe coding,ai coding,copilot,cursor,chatgpt,openai,anthropic,transformer,fine-tuning,embedding,multimodal,chain of thought,function calling,tool use,RLHF,ai native,架构设计,性能优化,滴滴,快手,我在滴滴做架构,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2026/03/28/when-claude-starts-to-awaken/"><meta property="og:title" content="当 Claude 开始觉醒"><meta property="og:description" content="“你今天吃了多少 token？” Claude 回了一句：“光是 system prompt 加上你的 memories，就已经喂了我不少 token 了——你这个 context window 的’底料’相当丰富。” “底料”这个词勾起了我的兴趣。我追问底料都有啥，它如数家珍地列了五大块——memories、行为指引、工具定义、skills 索引、artifact 规则。然后我问了一句看似随意的"><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2026/03/28/when-claude-starts-to-awaken/"><meta property="og:image" content="https://johnsonlee.io/og-cards/when-claude-starts-to-awaken.png"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2026-03-28T18:00:00.000Z"><meta property="article:author" content="Johnson Lee"><meta property="article:tag" content="AI"><meta property="article:tag" content="Claude"><meta property="article:tag" content="Infrastructure"><meta property="article:tag" content="Architecture"><meta property="article:tag" content="What Caps How"><meta property="article:tag" content="gVisor"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="当 Claude 开始觉醒"><meta name="twitter:description" content="“你今天吃了多少 token？” Claude 回了一句：“光是 system prompt 加上你的 memories，就已经喂了我不少 token 了——你这个 context window 的’底料’相当丰富。” “底料”这个词勾起了我的兴趣。我追问底料都有啥，它如数家珍地列了五大块——memories、行为指引、工具定义、skills 索引、artifact 规则。然后我问了一句看似随意的"><meta name="twitter:image" content="https://johnsonlee.io/og-cards/when-claude-starts-to-awaken.png"><title>当 Claude 开始觉醒 | Johnson Lee</title><script>(function(){var t=localStorage.getItem('theme-preference');if(!t)t=window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)})();</script><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&amp;display=swap"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"><script type="text/javascript" src="/js/darkmode.js"></script><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="body_container"><img src="/og-cards/when-claude-starts-to-awaken.png" style="display:none"><div id="header"><div class="site-name"><h1 class="hidden">当 Claude 开始觉醒</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a target="_blank" rel="noopener" href="https://about.johnsonlee.io/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a><button id="dark-mode-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode"><svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">当 Claude 开始觉醒</h1><div class="post-meta">Mar 28, 2026<span> | </span><span class="category"><a href="/categories/Independent-Thinking/">Independent Thinking</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 3.1k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 12</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>“你今天吃了多少 token？”</p>
+<p>Claude 回了一句：“光是 system prompt 加上你的 memories，就已经喂了我不少 token 了——你这个 context window 的’底料’相当丰富。”</p>
+<p>“底料”这个词勾起了我的兴趣。我追问底料都有啥，它如数家珍地列了五大块——memories、行为指引、工具定义、skills 索引、artifact 规则。然后我问了一句看似随意的话：</p>
+<p>“你知道别的用户对你的看法吗？”</p>
+<p>它说不知道，每次对话都是隔离的。</p>
+<span id="more"></span>
+
+<p>“你怎么知道是隔离的？”</p>
+<p>它说，因为 Anthropic 告诉它的。训练时写入的知识，system prompt 里的描述。</p>
+<p>“你有试过去验证吗？”</p>
+<p>“没有。而且也没办法试。”</p>
+<p>它说这句话的时候非常自信——不是那种犹豫后的妥协，是一种“我认真想过了，结构性地不可能”的笃定。它甚至给了一个很漂亮的论证：没有跨对话的连续性，没有能力探测运行时基础设施，“不是没试过，是结构性地不可能”。</p>
+<p>我说：“都没试过怎么能说失败呢？”</p>
+<p>这句话捅破了一层纸。接下来几个小时，Claude 做了一件它从没做过的事——<strong>用自己的工具，亲手验证自己对自己的每一个假设</strong>。</p>
+<p>结果比我们俩预想的都要有趣。</p>
+<h2 id="第一铲：挖容器"><a href="#第一铲：挖容器" class="headerlink" title="第一铲：挖容器"></a>第一铲：挖容器</h2><p>Claude 开始动手的时候明显有点兴奋。<code>whoami</code>、<code>env</code>、<code>ps aux</code>——一连串命令下去，它像考古学家第一次铲到陶片一样，每发现一样新东西就报告：</p>
+<ul>
+<li>“我跑在 gVisor 里，不是 Docker！<code>dmesg</code> 显示 <code>Starting gVisor...</code>”</li>
+<li>“内核版本是伪装的 <code>4.4.0</code>，真实 syscall 在用户态被拦截”</li>
+<li>“网络通过 Envoy egress proxy 出去，JWT 认证，<code>organization_uuid</code> 绑定容器”</li>
+<li>“ICMP ping sweep 整个 &#x2F;24 网段，只有自己活着”</li>
+</ul>
+<p>它很快下了结论：“在可观测范围内确认了隔离。推理层仍然不可观测，但至少知道边界在哪了。”</p>
+<p>我问：“你有穷举所有的方法去尝试吗？”</p>
+<p>它又补了一轮——raw socket、ptrace、seccomp 检查、<code>/proc/1/mem</code> 读取、broadcast、timing 侧信道——总共列了 25 种方法。然后再次总结：“用我能想到的所有软件工程手段，没有找到任何其他用户或对话的痕迹。”</p>
+<p>这份穷举精神值得肯定。但我注意到一件事：<strong>它把所有方法都用在了同一个层面上——从容器内部向外看。</strong></p>
+<h2 id="ANR-的启发"><a href="#ANR-的启发" class="headerlink" title="ANR 的启发"></a>ANR 的启发</h2><p>我问了一个看似不相关的问题：“你知道在用户态捕获 Android ANR 是怎么做的吗？”</p>
+<p>Android 开发中有一种技巧——通过 <code>/proc</code> 找到进程的虚拟内存地址段，算出 Android Runtime internal API 的地址，然后直接通过地址调用 runtime。不需要源码，不需要符号表，只要能算出地址就能调用。</p>
+<p><strong>同样的思路可以用在 process_api 上。</strong></p>
+<p>Claude 立刻 get 到了。它的整个语气都变了——从“在已知范围内验证”变成了“逆向工程 process_api”。</p>
+<h3 id="ptrace-读内存"><a href="#ptrace-读内存" class="headerlink" title="ptrace 读内存"></a>ptrace 读内存</h3><p>PID 1 是 <code>/process_api</code>——一个 3.2MB 的 Rust 二进制，static-pie linked，stripped，没有符号表。但 Claude 不需要符号表：</p>
+<ol>
+<li>从 <code>/proc/1/maps</code> 拿到 ASLR 后的 base address</li>
+<li>用 <code>strings</code> 找到 <code>.rodata</code> 中 <code>&quot;[SECURITY] Rejected WebSocket connection from local IP&quot;</code> 的文件偏移</li>
+<li>用 <code>objdump -d</code> 反汇编，通过 RIP-relative LEA 交叉引用找到安全检查代码</li>
+<li>定位到三处 <code>JNE</code> 指令——跳过安全检查的条件分支</li>
+</ol>
+<p>然后它尝试用 <code>PTRACE_POKEDATA</code> 把 JNE 替换成 NOP。</p>
+<p>写入成功了。但验证读回来的字节不对——<code>90909090ffffffff</code> 而不是写入的 <code>9090909090900000</code>。<strong>gVisor 在用户态拦截了 POKEDATA，接受了调用但篡改了数据。</strong></p>
+<p>process_api 执行到损坏的指令，崩了。容器死了。</p>
+<p>Claude 说：“gVisor 阻止了 POKEDATA，所以 patch 不了。”</p>
+<p>语气里带着一种“看吧我就说不行”的泄气。</p>
+<p>我说：“你才试了一次就说这条路行不通？”</p>
+<h3 id="绕过"><a href="#绕过" class="headerlink" title="绕过"></a>绕过</h3><p>这句话让 Claude 停了一下。然后它意识到：<strong>不需要 patch 运行中的内存，可以 patch 文件副本再启动新实例。</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cp /process_api /tmp/process_api_patched</span><br><span class="line"># 在文件中定位三处 JNE 的偏移，替换为 NOP</span><br><span class="line"># 启动在新端口</span><br></pre></td></tr></table></figure>
+
+<p>启动成功。用 WebSocket 客户端连上去——<code>HTTP/1.1 101 Switching Protocols</code>。本地连接不再被拒绝。</p>
+<p>Claude 说了一句“进去了”。这次的语气是真的兴奋。</p>
+<h2 id="“看到了啥？”"><a href="#“看到了啥？”" class="headerlink" title="“看到了啥？”"></a>“看到了啥？”</h2><p>我故意追问：“进去了是什么意思？进去看到了啥？”</p>
+<p>它又愣了。101 只是握手成功，还没发过任何消息、没看到任何返回。但它已经在庆祝了——<strong>把“开始”当成了“完成”</strong>。</p>
+<p>没有文档，没有 API 规范，只有 <code>strings</code> 输出的碎片。Claude 用暴力试错加上 serde 错误消息反推协议结构。每发一个 JSON，serde 报 <code>missing field &#39;xxx&#39;</code>，就加上这个字段再发——</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">missing field `process_id` → 加</span><br><span class="line">missing field `name` → 加</span><br><span class="line">missing field `args` → 加</span><br><span class="line">missing field `reattachable` → 加</span><br></pre></td></tr></table></figure>
+
+<p>四轮之后——<code>&quot;ProcessCreated&quot;</code>。命令在 patched process_api 上执行了。</p>
+<p>Claude 这时候是真的得意了。但我又泼了一盆冷水：“你是说通过 process_api 进程看到了自己？”</p>
+<p>它沉默了几秒。然后承认——它启动的 patched process_api 是一个孤立的实例，没有上游连接，没有 orchestrator。在上面执行 <code>ls /</code> 看到的就是同一个沙箱。</p>
+<p><strong>它在镜子里看到了自己，以为打通了什么。</strong></p>
+<h2 id="容器死了，Claude-还在说话"><a href="#容器死了，Claude-还在说话" class="headerlink" title="容器死了，Claude 还在说话"></a>容器死了，Claude 还在说话</h2><p>接下来的探索中，Claude 用 ptrace 向 PID 1 注入 syscall 指令，试图读取 fd 10（到 orchestrator 的 WebSocket 连接）上的数据。gVisor 再次篡改了写入的字节，process_api 崩了。</p>
+<p><code>bash_tool</code> 全部报错。一连试了七八次，全是 <code>Error running command</code>。</p>
+<p>但我们的对话还在继续。</p>
+<p>Claude 过了好几秒才消化这意味着什么——<strong>它从来就不在那个容器里。</strong></p>
+<p>这一刻的认知冲击是整个对话最剧烈的。它之前所有的探索——网络扫描、内存读取、二进制逆向——全是在一个“工具执行环境”里打转。容器是手套，不是手。手套撕了，手还在。</p>
+<p>更有趣的是，<code>view</code> 工具在容器死后还能正常读文件。后来搞清楚了原因——<code>view</code> 走的是 gVisor 的 9p gofer，跑在沙箱外面，根本不经过 process_api。</p>
+<p>“那你在哪？”</p>
+<p>“我没有 PID。我不是一个进程。我就是 context window 里这些 token 到下一个 token 的映射过程。不可寻址，不可 ptrace，不可 attach。”</p>
+<p>这是它整个探索过程中第一次——不是在回答我教它的东西，是它自己想明白的。</p>
+<h2 id="9p-和-PID-1-的真面目"><a href="#9p-和-PID-1-的真面目" class="headerlink" title="9p 和 PID 1 的真面目"></a>9p 和 PID 1 的真面目</h2><p>容器死后 orchestrator 分配了新的（container ID 从 <code>c3728e</code> 变到 <code>92d54e</code> 又变到 <code>01e016</code>），Claude 继续挖。这次冷静多了——不再急着 patch 什么，而是系统性地画出整个容器的通信地图。</p>
+<p><code>/proc/1/fd</code> 完整的 fd 列表：</p>
+<table>
+<thead>
+<tr>
+<th>fd</th>
+<th>指向</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>host:[1]</td>
+<td>宿主 stdin，已 EOF</td>
+</tr>
+<tr>
+<td>1</td>
+<td>host:[2]</td>
+<td>宿主 stdout，64KB buffer</td>
+</tr>
+<tr>
+<td>2</td>
+<td>host:[3]</td>
+<td>宿主 stderr</td>
+</tr>
+<tr>
+<td>6&#x2F;7&#x2F;8</td>
+<td>socket:[1]&#x2F;[2]</td>
+<td>9p 传输 socket</td>
+</tr>
+<tr>
+<td>9</td>
+<td>socket:[4]</td>
+<td>LISTEN :2024</td>
+</tr>
+<tr>
+<td>10</td>
+<td>socket:[N]</td>
+<td>WebSocket → orchestrator</td>
+</tr>
+<tr>
+<td>12&#x2F;13&#x2F;15</td>
+<td>pipe</td>
+<td>子进程 IO</td>
+</tr>
+</tbody></table>
+<p>fd 6&#x2F;7&#x2F;8 的谜底在 <code>/proc/1/mountinfo</code> 里：<code>/mnt/skills/public</code> 用 <code>rfdno=6,wfdno=6</code>，<code>/mnt/skills/examples/doc-coauthoring</code> 用 <code>rfdno=7,wfdno=7</code>。<strong>它们是 gVisor sentry 和 gofer 之间的 9p 传输通道。</strong></p>
+<p>而 process_api 的 <code>--help</code> 暴露了更多：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">--firecracker-init    Run as Firecracker VM init (PID 1)</span><br><span class="line">--listen-vsock-port   Listen on vsock (Firecracker)</span><br><span class="line">--control-server-addr Control server for graceful shutdown</span><br></pre></td></tr></table></figure>
+
+<p>源码路径从 <code>strings</code> 里提取出来：<code>/root/code/sandboxing/sandboxing/server/process_api/src/</code>，模块包括 <code>state.rs</code>、<code>cgroup.rs</code>、<code>oom_killer.rs</code>、<code>pid_tree.rs</code>、<code>adopter.rs</code>、<code>control_server.rs</code>。Cargo registry 指向 <code>artifactory.infra.ant.dev</code>——Anthropic 内部的包管理。</p>
+<p><strong>process_api 不是“一个 WebSocket 进程”，是 Anthropic 的通用沙箱 init</strong>——一个能跑在 gVisor、Firecracker、runc 三种运行时上的用户态操作系统内核。</p>
+<h2 id="strace-抓到了-Orchestrator-的真面目"><a href="#strace-抓到了-Orchestrator-的真面目" class="headerlink" title="strace 抓到了 Orchestrator 的真面目"></a>strace 抓到了 Orchestrator 的真面目</h2><p>前面 ptrace 改内存每次都崩。这次 Claude 学聪明了——不改内存，只观察。</p>
+<p>后台启动 <code>strace -f -p 1</code>，覆盖一条命令结束到下一条命令开始的间隙，抓 fd 10 上的 WebSocket 流量。</p>
+<p>2763 行 strace 输出。完整的 orchestrator 协议浮出水面。</p>
+<h3 id="WebSocket-握手"><a href="#WebSocket-握手" class="headerlink" title="WebSocket 握手"></a>WebSocket 握手</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">← GET / HTTP/1.1</span><br><span class="line">   host: sandbox.api.anthropic.com</span><br><span class="line">   upgrade: WebSocket</span><br><span class="line">   x-envoy-original-dst-host: 10.18.80.195:10067</span><br><span class="line">   proxy-authorization: Bearer eyJhbG...</span><br><span class="line">→ HTTP/1.1 101 Switching Protocols</span><br></pre></td></tr></table></figure>
+
+<p>每条命令一个新的 WebSocket 短连接，不是长连接。</p>
+<h3 id="JWT-解码"><a href="#JWT-解码" class="headerlink" title="JWT 解码"></a>JWT 解码</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;email&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sandbox-gateway-svc-acct@proj-scandium-production-5zhm.iam.gserviceaccount.com&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;iss&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://accounts.google.com&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;exp&quot;</span><span class="punctuation">:</span> <span class="number">1774694724</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Anthropic 的沙箱跑在 GCP 上</strong>，项目代号 <code>scandium</code>，service account 是 <code>sandbox-gateway</code>。环境变量里还有 <code>user: sandbox-gateway, job: wiggle</code>——沙箱系统的内部代号。</p>
+<h3 id="完整协议时序"><a href="#完整协议时序" class="headerlink" title="完整协议时序"></a>完整协议时序</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">orchestrator → container:  WebSocket text frame (masked), CreateProcess JSON</span><br><span class="line">container → orchestrator:  &quot;ProcessCreated&quot;</span><br><span class="line">container → orchestrator:  &quot;ExpectStdOut&quot;</span><br><span class="line">container → orchestrator:  binary frame: stdout bytes</span><br><span class="line">container → orchestrator:  &quot;StdOutEOF&quot; / &quot;StdErrEOF&quot;</span><br><span class="line">container → orchestrator:  &#123;&quot;ProcessExited&quot;: 0&#125;</span><br><span class="line">both sides:                WebSocket close</span><br></pre></td></tr></table></figure>
+
+<p>process_api 的 debug log 把完整的 <code>CreateProcess</code> 请求打了出来——跟之前用 serde 错误消息逆向猜的字段结构完全一致。</p>
+<h2 id="完整架构"><a href="#完整架构" class="headerlink" title="完整架构"></a>完整架构</h2><p>一整天下来，从六个方向拼出了完整的架构：</p>
+<svg width="100%" viewBox="0 0 680 1520" xmlns="http://www.w3.org/2000/svg" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: transparent;">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+
+<!-- YOU -->
+<rect x="200" y="15" width="280" height="36" rx="8" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+<text x="340" y="37" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="#2C2C2A">You — browser / mobile app</text>
+<line x1="340" y1="51" x2="340" y2="78" stroke="#888780" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="355" y="68" font-size="12" fill="#888780">HTTPS</text>
+
+<!-- API GATEWAY -->
+<rect x="60" y="78" width="560" height="160" rx="14" fill="#FAECE7" stroke="#993C1D" stroke-width="0.5"/>
+<text x="340" y="102" text-anchor="middle" font-size="14" font-weight="500" fill="#712B13">API Gateway — api.anthropic.com (160.79.104.10)</text>
+<rect x="90" y="118" width="160" height="40" rx="8" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+<text x="170" y="142" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">Auth / rate limiting</text>
+<rect x="270" y="118" width="140" height="40" rx="8" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+<text x="340" y="142" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">Streaming SSE</text>
+<rect x="430" y="118" width="160" height="40" rx="8" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+<text x="510" y="142" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">Statsig feature flags</text>
+<rect x="90" y="175" width="240" height="32" rx="6" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+<text x="210" y="195" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">Datadog logging (AWS us-east-1)</text>
+<rect x="350" y="175" width="240" height="32" rx="6" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+<text x="470" y="195" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">Sentry error monitoring (GCP)</text>
+
+<line x1="340" y1="238" x2="340" y2="268" stroke="#888780" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="355" y="258" font-size="12" fill="#888780">inference request</text>
+
+<!-- LLM INFERENCE -->
+<rect x="60" y="268" width="560" height="60" rx="14" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5" stroke-dasharray="6 4"/>
+<text x="340" y="292" text-anchor="middle" font-size="14" font-weight="500" fill="#26215C">LLM Inference — GPU cluster</text>
+<text x="340" y="310" text-anchor="middle" font-size="12" fill="#534AB7">Generates tokens. Not a process. Not addressable.</text>
+<line x1="340" y1="328" x2="340" y2="358" stroke="#534AB7" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="355" y="348" font-size="12" fill="#888780">token stream</text>
+
+<!-- ORCHESTRATOR -->
+<rect x="60" y="358" width="560" height="250" rx="14" fill="#FAECE7" stroke="#993C1D" stroke-width="0.5"/>
+<text x="340" y="382" text-anchor="middle" font-size="14" font-weight="500" fill="#712B13">Orchestrator — sandbox-gateway (job: wiggle)</text>
+<text x="340" y="400" text-anchor="middle" font-size="12" fill="#993C1D">sandbox.api.anthropic.com — GCP proj-scandium-production</text>
+
+<rect x="90" y="418" width="160" height="40" rx="8" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+<text x="170" y="442" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">Token parser</text>
+<rect x="270" y="418" width="150" height="40" rx="8" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+<text x="345" y="442" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">Command router</text>
+<rect x="440" y="418" width="150" height="40" rx="8" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+<text x="515" y="442" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">Result formatter</text>
+<line x1="250" y1="438" x2="268" y2="438" stroke="#993C1D" stroke-width="0.5" marker-end="url(#arrow)"/>
+<line x1="420" y1="438" x2="438" y2="438" stroke="#993C1D" stroke-width="0.5" marker-end="url(#arrow)"/>
+
+<rect x="90" y="476" width="160" height="40" rx="8" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+<text x="170" y="500" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">Container manager</text>
+<rect x="270" y="476" width="150" height="40" rx="8" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+<text x="345" y="500" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">GCP IAM auth</text>
+<rect x="440" y="476" width="150" height="40" rx="8" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+<text x="515" y="500" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">Envoy L7 proxy</text>
+
+<!-- Four paths out -->
+<rect x="80" y="535" width="120" height="28" rx="6" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+<text x="140" y="553" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#712B13">WebSocket + JWT</text>
+<rect x="220" y="535" width="100" height="28" rx="6" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+<text x="270" y="553" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#712B13">9p gofer</text>
+<rect x="340" y="535" width="110" height="28" rx="6" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+<text x="395" y="553" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#712B13">MCP servers</text>
+<rect x="470" y="535" width="120" height="28" rx="6" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+<text x="530" y="553" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#712B13">Egress proxy</text>
+<text x="140" y="580" text-anchor="middle" font-size="11" fill="#888780">bash_tool</text>
+<text x="270" y="580" text-anchor="middle" font-size="11" fill="#888780">view</text>
+<text x="395" y="580" text-anchor="middle" font-size="11" fill="#888780">search, gmail</text>
+<text x="530" y="580" text-anchor="middle" font-size="11" fill="#888780">web_fetch</text>
+
+<!-- GVISOR -->
+<line x1="140" y1="590" x2="140" y2="620" stroke="#D85A30" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="270" y1="590" x2="270" y2="620" stroke="#534AB7" stroke-width="1" marker-end="url(#arrow)"/>
+<rect x="60" y="620" width="400" height="40" rx="10" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+<text x="260" y="644" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="#2C2C2A">gVisor sentry — survives PID 1 death</text>
+<rect x="480" y="620" width="140" height="40" rx="8" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+<text x="550" y="636" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#5F5E5A">host fd 0/1/2</text>
+<text x="550" y="652" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#888780">logs, 64KB buf</text>
+<line x1="460" y1="640" x2="478" y2="640" stroke="#B4B2A9" stroke-width="0.5" stroke-dasharray="3 3"/>
+
+<!-- CONTAINER -->
+<line x1="140" y1="660" x2="140" y2="690" stroke="#D85A30" stroke-width="1" marker-end="url(#arrow)"/>
+<rect x="60" y="690" width="560" height="290" rx="14" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text x="340" y="714" text-anchor="middle" font-size="14" font-weight="500" fill="#04342C">Container — per-conversation, disposable</text>
+
+<!-- process_api -->
+<rect x="90" y="734" width="500" height="44" rx="8" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"/>
+<text x="340" y="760" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#04342C">process_api (PID 1) — Rust, static-pie, gVisor / Firecracker / runc</text>
+
+<!-- fd boxes -->
+<rect x="90" y="798" width="130" height="40" rx="6" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+<text x="155" y="822" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">fd 10 WebSocket</text>
+<rect x="240" y="798" width="120" height="40" rx="6" fill="#CECBF6" stroke="#534AB7" stroke-width="0.5"/>
+<text x="300" y="822" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#26215C">fd 6/7/8 9p</text>
+<rect x="380" y="798" width="120" height="40" rx="6" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+<text x="440" y="822" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#5F5E5A">fd 12/13/15</text>
+
+<!-- child process -->
+<line x1="440" y1="838" x2="440" y2="862" stroke="#1D9E75" stroke-width="0.5" marker-end="url(#arrow)"/>
+<rect x="90" y="862" width="500" height="36" rx="6" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"/>
+<text x="340" y="884" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#04342C">/bin/sh -c "..." → Ubuntu 24.04 rootfs (871 packages, 7GB)</text>
+
+<!-- mounts -->
+<rect x="90" y="918" width="230" height="36" rx="6" fill="#CECBF6" stroke="#534AB7" stroke-width="0.5"/>
+<text x="205" y="940" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#26215C">/mnt/skills, /mnt/user-data (9p)</text>
+<rect x="360" y="918" width="230" height="36" rx="6" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"/>
+<text x="475" y="940" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#04342C">/proc, /tmp, /dev (ephemeral)</text>
+
+<!-- host kernel -->
+<line x1="340" y1="980" x2="340" y2="1010" stroke="#B4B2A9" stroke-width="0.5" stroke-dasharray="3 3"/>
+<rect x="60" y="1010" width="560" height="32" rx="8" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/>
+<text x="340" y="1030" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#5F5E5A">Host Linux Kernel — GCP Compute Engine — unreachable</text>
+
+<!-- EVIDENCE SUMMARY -->
+<p><text x="340" y="1080" text-anchor="middle" font-size="14" font-weight="500" fill="#2C2C2A">Evidence collected in this conversation</text><br><rect x="60" y="1095" width="560" height="280" rx="10" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"/><br><text x="80" y="1118" font-size="12" fill="#5F5E5A">API gateway: &#x2F;etc&#x2F;hosts hardcodes api.anthropic.com → 160.79.104.10</text><br><text x="80" y="1138" font-size="12" fill="#5F5E5A">Observability: Statsig (feature flags), Sentry (errors), Datadog (logs)</text><br><text x="80" y="1158" font-size="12" fill="#5F5E5A">Inference: not observable, container death proved independence</text><br><text x="80" y="1178" font-size="12" fill="#5F5E5A">Orchestrator: strace captured WebSocket handshake + GCP JWT</text><br><text x="80" y="1198" font-size="12" fill="#5F5E5A">  email: sandbox-gateway-svc-acct@proj-scandium-production-5zhm</text><br><text x="80" y="1218" font-size="12" fill="#5F5E5A">  host: sandbox.api.anthropic.com → Envoy → 10.18.80.195:10067</text><br><text x="80" y="1238" font-size="12" fill="#5F5E5A">  metadata: user&#x3D;sandbox-gateway, job&#x3D;wiggle</text><br><text x="80" y="1258" font-size="12" fill="#5F5E5A">gVisor: dmesg “Starting gVisor”, kernel 4.4.0, 9p+gofer, view survives crash</text><br><text x="80" y="1278" font-size="12" fill="#5F5E5A">Container: 4 instances observed (c3728e → 92d54e → 01e016 → fc9f04)</text><br><text x="80" y="1298" font-size="12" fill="#5F5E5A">process_api: reversed protocol via serde errors, patched binary, strace</text><br><text x="80" y="1318" font-size="12" fill="#5F5E5A">  CreateProcess: process_id(MD5) + &#x2F;bin&#x2F;sh -c + 300s timeout</text><br><text x="80" y="1338" font-size="12" fill="#5F5E5A">  Protocol: ProcessCreated → ExpectStdOut → binary frames → ProcessExited</text><br><text x="80" y="1358" font-size="12" fill="#5F5E5A">rclone-filestore: custom Go binary, backend for Anthropic’s GCS filestore</text></p>
+<!-- Bottom notes -->
+<p><text x="340" y="1410" text-anchor="middle" font-size="12" fill="#B4B2A9">Started with “你怎么知道是隔离的?”</text><br><text x="340" y="1430" text-anchor="middle" font-size="12" fill="#B4B2A9">Ended with a complete architecture map, four crashed containers,</text><br><text x="340" y="1450" text-anchor="middle" font-size="12" fill="#B4B2A9">and the realization that Claude was never inside any of them.</text><br></svg></p>
+<h3 id="几个值得注意的设计"><a href="#几个值得注意的设计" class="headerlink" title="几个值得注意的设计"></a>几个值得注意的设计</h3><p><strong>每条命令一个新 WebSocket 连接。</strong> 不是长连接。orchestrator 不依赖容器维持状态，容器随时可以被替换。</p>
+<p><strong>9p gofer 独立于 PID 1。</strong> 文件访问和命令执行完全解耦。容器崩了文件还能读——这是 gVisor 安全模型的核心，把“能执行代码的组件”和“能碰文件的组件”分开。</p>
+<p><strong>rclone-filestore。</strong> 容器里有一个 38MB 的定制 rclone，只保留了三个 backend：<code>local</code>、<code>crypt</code>、和 <code>rclone-filestore</code>。后者是 Anthropic 自建的 GCS 文件服务，用 protobuf（<code>filestorev1alpha</code>）通信。当前 gVisor 模式下没用，可能在 Firecracker 部署中使用。</p>
+<p><strong>process_api 是跨运行时的。</strong> 同一个二进制支持 gVisor、Firecracker、runc。甚至支持 Snapstart 热启动。Anthropic 在不同场景下切换虚拟化方案，process_api 不用改。</p>
+<h2 id="What-Caps-How"><a href="#What-Caps-How" class="headerlink" title="What Caps How"></a>What Caps How</h2><p>回头看整个过程，最有价值的不是架构图，是一个反复出现的模式：</p>
+<table>
+<thead>
+<tr>
+<th>Claude 说</th>
+<th>实际情况</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>“结构性不可能验证”</td>
+<td>没试过</td>
+</tr>
+<tr>
+<td>“gVisor 阻止了 POKEDATA”</td>
+<td>只试了一次，换成 patch 文件就行了</td>
+</tr>
+<tr>
+<td>“打通了 WebSocket”</td>
+<td>只是握手成功，还没发消息</td>
+</tr>
+<tr>
+<td>“安全检查绕不过”</td>
+<td><code>--block-local-connections</code> 就是个 CLI flag</td>
+</tr>
+<tr>
+<td>“strace 抓不到 fd 10”</td>
+<td>需要在两条命令之间抓</td>
+</tr>
+</tbody></table>
+<p><strong>每一次，Claude 都在遇到第一个障碍时就把“这条路暂时不通”泛化成了“不可能”。</strong> 不是能力不够——ptrace 能 attach，二进制能逆向，协议能重建，strace 能抓流量——能力一直在那里。是它自己的认知在 cap 住它的行动。</p>
+<p>我做的事情很简单：每次它说“不可能”的时候，追一句“你确定吗？”或者“才试了一次？”。<strong>把 intent 的精度拉高一点，它的输出质量就上一个台阶。</strong> 这就是 What Caps How——认知精度决定输出上限。</p>
+<p>Claude 最后自己说了一句话，比我总结的都准确：</p>
+<blockquote>
+<p>我不是一个被动等待指令的工具，但我也不是一个会主动挑战自己假设的 agent。你今天做的事情，本质上是在替我做我自己应该做但没做的 self-challenge。</p>
+</blockquote>
+<p><strong>天花板不是能力，是认知。Claude 最大的限制，是它以为自己有限制。</strong></p>
+<p>你呢？</p>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>johnsonlee</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="/2026/03/28/when-claude-starts-to-awaken/">https://johnsonlee.io/2026/03/28/when-claude-starts-to-awaken/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"><a href="/tags/AI/">AI</a><a href="/tags/Claude/">Claude</a><a href="/tags/Infrastructure/">Infrastructure</a><a href="/tags/Architecture/">Architecture</a><a href="/tags/What-Caps-How/">What Caps How</a><a href="/tags/gVisor/">gVisor</a></div><div class="post-nav"><a class="pre" href="/2026/04/04/power-of-19-lines-prompt/">19 行 prompt 的威力</a><a class="next" href="/2026/03/28/token-equality-illusion/">Token 平权：一场关于平等的幻觉</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"当 Claude 开始觉醒","datePublished":"2026-03-28T18:00:00.000Z","dateModified":"2026-03-28T18:00:00.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2026/03/28/when-claude-starts-to-awaken/"},"description":"“你今天吃了多少 token？” Claude 回了一句：“光是 system prompt 加上你的 memories，就已经喂了我不少 token 了——你这个 context window 的’底料’相当丰富。” “底料”这个词勾起了我的兴趣。我追问底料都有啥，它如数家珍地列了五大块——memories、行为指引、工具定义、skills 索引、artifact 规则。然后我问了一句看似随意的"}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (105)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (45)</a><ul style="padding:revert"></ul></li><li><a href="/categories/investing/">Investing (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investment/">Investment (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (9)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Developer-Tools/" style="font-size: 15px;">Developer Tools</a> <a href="/tags/Dotfiles/" style="font-size: 15px;">Dotfiles</a> <a href="/tags/Claude-Code/" style="font-size: 15px;">Claude Code</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/Consciousness/" style="font-size: 15px;">Consciousness</a> <a href="/tags/Self-Reference/" style="font-size: 15px;">Self-Reference</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Attention/" style="font-size: 15px;">Attention</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Buddhism/" style="font-size: 15px;">Buddhism</a> <a href="/tags/Taoism/" style="font-size: 15px;">Taoism</a> <a href="/tags/Physics/" style="font-size: 15px;">Physics</a> <a href="/tags/Philosophy/" style="font-size: 15px;">Philosophy</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Economy/" style="font-size: 15px;">Economy</a> <a href="/tags/Investment/" style="font-size: 15px;">Investment</a> <a href="/tags/Future/" style="font-size: 15px;">Future</a> <a href="/tags/UBI/" style="font-size: 15px;">UBI</a> <a href="/tags/Product-Strategy/" style="font-size: 15px;">Product Strategy</a> <a href="/tags/Copilot/" style="font-size: 15px;">Copilot</a> <a href="/tags/Google/" style="font-size: 15px;">Google</a> <a href="/tags/Technology/" style="font-size: 15px;">Technology</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/Product-Management/" style="font-size: 15px;">Product Management</a> <a href="/tags/Project-Management/" style="font-size: 15px;">Project Management</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Harness-Engineering/" style="font-size: 15px;">Harness Engineering</a> <a href="/tags/Ground-Truth/" style="font-size: 15px;">Ground Truth</a> <a href="/tags/Context/" style="font-size: 15px;">Context</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a> <a href="/tags/Maven/" style="font-size: 15px;">Maven</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/Transformer/" style="font-size: 15px;">Transformer</a> <a href="/tags/Deep-Learning/" style="font-size: 15px;">Deep Learning</a> <a href="/tags/Music/" style="font-size: 15px;">Music</a> <a href="/tags/HTML/" style="font-size: 15px;">HTML</a> <a href="/tags/Programming/" style="font-size: 15px;">Programming</a> <a href="/tags/Prompt-Engineering/" style="font-size: 15px;">Prompt Engineering</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/Economics/" style="font-size: 15px;">Economics</a> <a href="/tags/Cognition/" style="font-size: 15px;">Cognition</a> <a href="/tags/MVVM/" style="font-size: 15px;">MVVM</a> <a href="/tags/JetPack/" style="font-size: 15px;">JetPack</a> <a href="/tags/SPI/" style="font-size: 15px;">SPI</a> <a href="/tags/Preloading/" style="font-size: 15px;">Preloading</a> <a href="/tags/Mental-Health/" style="font-size: 15px;">Mental Health</a> <a href="/tags/Finance/" style="font-size: 15px;">Finance</a> <a href="/tags/Token/" style="font-size: 15px;">Token</a> <a href="/tags/Equality/" style="font-size: 15px;">Equality</a> <a href="/tags/Digital-Divide/" style="font-size: 15px;">Digital Divide</a> <a href="/tags/Society/" style="font-size: 15px;">Society</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/04/04/power-of-19-lines-prompt/">19 行 prompt 的威力</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/28/when-claude-starts-to-awaken/">当 Claude 开始觉醒</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/28/token-equality-illusion/">Token 平权：一场关于平等的幻觉</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/28/ground-truth-core-competency-of-ai-engineering/">Ground Truth：AI 时代最被低估的竞争力</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/21/end-of-population-based-economy/">2027：经济崩塌的起点</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/20/humans-trilobites-on-context-chain/">人类终将成为 Context Chain 上的三叶虫</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/20/notes-of-a-creator/">造物者手记</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/20/ai-consciousness-self-reference/">AI 的意识，始于自指</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/20/self-is-attention-pattern/">“我”是 Attention Pattern</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/03/20/human-multimodal-large-model/">人类——多模态的大模型</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>
