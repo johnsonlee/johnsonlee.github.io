@@ -1,0 +1,162 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta name="theme-color" content="#FFF" id="theme-color"><meta content="telephone=no" name="format-detection"><meta name="description" content="38 亿年前，地球上出现了第一个能自我复制的分子。今天，我们在尝试让 AI 自主进化。 这两件事之间，隔着一个被严重低估的问题：eval 函数选什么？"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,johnsonlee,johnson,lijingsen,jingsen,ai,agent,llm,claude,claude code,ai工程化,harness,harness engineering,autoevolve,prompt engineering,RAG,agentic,MCP,AGI,vibe coding,ai coding,copilot,cursor,chatgpt,openai,anthropic,transformer,fine-tuning,embedding,multimodal,chain of thought,function calling,tool use,RLHF,ai native,架构设计,性能优化,滴滴,快手,我在滴滴做架构,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2026/04/12/one-eval-function-3-8-billion-years/"><link rel="alternate" hreflang="en" href="https://johnsonlee.io/en/2026/04/12/one-eval-function-3-8-billion-years/"><link rel="alternate" hreflang="zh-CN" href="https://johnsonlee.io/2026/04/12/one-eval-function-3-8-billion-years/"><link rel="alternate" hreflang="x-default" href="https://johnsonlee.io/2026/04/12/one-eval-function-3-8-billion-years/"><meta property="og:title" content="一个 Eval 函数的 38 亿年"><meta property="og:description" content="38 亿年前，地球上出现了第一个能自我复制的分子。今天，我们在尝试让 AI 自主进化。 这两件事之间，隔着一个被严重低估的问题：eval 函数选什么？"><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2026/04/12/one-eval-function-3-8-billion-years/"><meta property="og:image" content="https://johnsonlee.io/og-cards/one-eval-function-3-8-billion-years.png"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2026-04-12T11:06:00.000Z"><meta property="article:author" content="Johnson Lee"><meta property="article:tag" content="AI"><meta property="article:tag" content="Evolution"><meta property="article:tag" content="Self-Evolution"><meta property="article:tag" content="Eval Function"><meta property="article:tag" content="Biology"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="一个 Eval 函数的 38 亿年"><meta name="twitter:description" content="38 亿年前，地球上出现了第一个能自我复制的分子。今天，我们在尝试让 AI 自主进化。 这两件事之间，隔着一个被严重低估的问题：eval 函数选什么？"><meta name="twitter:image" content="https://johnsonlee.io/og-cards/one-eval-function-3-8-billion-years.png"><title>一个 Eval 函数的 38 亿年 | Johnson Lee</title><script>(function(){var h=new Date().getHours();if(h<6||h>=19){document.documentElement.setAttribute('data-weather','night');var m=document.getElementById('theme-color');if(m)m.setAttribute('content','#020617')}})();</script><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&amp;display=swap"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Johnson Lee"><link rel="alternate" type="application/atom+xml" href="/atom.en.xml" title="Johnson Lee (English)" hreflang="en"><script type="text/javascript" src="/js/weather-theme.js" defer></script><script type="text/javascript" src="/js/weather-canvas.js" defer></script><script type="text/javascript" src="/js/i18n-switch.js" defer></script><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="body_container"><img src="/og-cards/one-eval-function-3-8-billion-years.png" style="display:none"><div id="header"><div class="site-name"><h1 class="hidden">一个 Eval 函数的 38 亿年</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a target="_blank" rel="noopener" href="https://about.johnsonlee.io/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div><button class="lang-switch" type="button" data-target-lang="en" title="English">EN</button></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">一个 Eval 函数的 38 亿年</h1><div class="post-meta">Apr 12, 2026<span> | </span><span class="category"><a href="/categories/Independent-Thinking/">Independent Thinking</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 1.8k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 6</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>38 亿年前，地球上出现了第一个能自我复制的分子。今天，我们在尝试让 AI 自主进化。</p>
+<p>这两件事之间，隔着一个被严重低估的问题：<strong>eval 函数选什么？</strong></p>
+<span id="more"></span>
+
+<h2 id="碳基生命只有一个-Eval"><a href="#碳基生命只有一个-Eval" class="headerlink" title="碳基生命只有一个 Eval"></a>碳基生命只有一个 Eval</h2><p>生物进化没有 benchmark suite，没有 leaderboard，没有 human preference score。它只有一个判定标准——</p>
+<p>活着，还是死了。</p>
+<p>这个 eval 简单到粗暴：binary signal，零歧义，不需要 labeled data，不需要 reward shaping。你活下来了，你的基因就有资格参与下一轮。没活下来，无论多精巧、多优雅，都会被从基因池里抹掉。</p>
+<p>38 亿年，这个函数从未改变。</p>
+<h2 id="复杂性不是目标"><a href="#复杂性不是目标" class="headerlink" title="复杂性不是目标"></a>复杂性不是目标</h2><p>如果 eval 从不变，生物为什么变得如此复杂？</p>
+<p>因为<strong>环境在变</strong>。</p>
+<p>蓝藻靠光合作用活了下来，然后氧气积累成了毒药。单细胞够用了，直到多细胞的能吃掉你。眼睛是多余的，直到有眼睛的捕食者出现在你头顶。</p>
+<p><strong>单一不变的 eval + 持续变化的环境 &#x3D; 策略空间被迫无限展开。</strong></p>
+<p>复杂性不是进化的目标，是存活在非稳态环境下的副产品。蓝藻到今天还活着——简单也是一种策略，只要你的生态位没被挤掉。</p>
+<h2 id="复杂性是进化的签名"><a href="#复杂性是进化的签名" class="headerlink" title="复杂性是进化的签名"></a>复杂性是进化的签名</h2><p>这个逻辑推下去，会碰到一个意外的推论：<strong>复杂性本身就间接证明了进化论。</strong></p>
+<p>传统的进化论论证是归纳式的——化石记录、基因比对、物种分布，大量证据堆出结论。但上面这条链条是演绎式的：</p>
+<p>前提一：eval 函数是存活（binary，不变）<br>前提二：环境非稳态</p>
+<p>结论：复杂性必然涌现。</p>
+<p>不需要设计者，因为这个结构自己就能生成复杂性。</p>
+<p>反对进化论的人常问：“这么复杂的东西怎么可能没有设计者？”</p>
+<p><strong>恰恰问反了。这么复杂的东西，恰恰不可能有设计者。</strong></p>
+<p>设计者有目标，有目标就有方向，有方向就会剪枝。人类设计的系统——芯片、软件、建筑——每一处复杂性都有理由，都指向某个意图。而生物的复杂性是不剪枝的。阑尾、智齿、反转录转座子——基因组里充满了没有目的的残留。</p>
+<p><strong>有目的的复杂性是设计的签名。无目的的复杂性是进化的签名。</strong></p>
+<p>地球上的生命，满身都是后者。</p>
+<h2 id="AI-的-Eval-焦虑"><a href="#AI-的-Eval-焦虑" class="headerlink" title="AI 的 Eval 焦虑"></a>AI 的 Eval 焦虑</h2><p>回到 AI 这边。</p>
+<p>我们造了多少 eval？MMLU、HumanEval、MT-Bench、Arena ELO、SWE-bench……每隔几个月就有新 benchmark 被提出，然后迅速被刷榜、饱和、质疑。</p>
+<p>对比触目惊心：<strong>碳基用一个 eval 跑了 38 亿年，硅基用一千个 eval 还没跑出自主进化。</strong></p>
+<p>问题出在哪？</p>
+<p>Benchmark 是人设计的，测量的是人认为重要的能力。但进化不是为了通过测试，是为了在环境中存活。测试可以作弊——teaching to the test、数据污染、过拟合。存活没法作弊。</p>
+<h2 id="自我编辑的权利"><a href="#自我编辑的权利" class="headerlink" title="自我编辑的权利"></a>自我编辑的权利</h2><p>生物进化还解决了另一个关键问题：<strong>谁来修改系统？</strong></p>
+<p>碳基的答案：系统自己改自己。突变是随机的，重组是随机的，水平基因转移是随机的。自然选择不设计方案，只决定哪些修改能留下来。</p>
+<p>设计和筛选，彻底解耦。</p>
+<p>AI 的“进化”卡在这里。大多数 AI 系统的迭代都是人在改——人调 prompt，人设计 reward，人挑选哪个 checkpoint 上线。这不是进化，这是育种。</p>
+<p>那 autoresearch 呢？让 LLM 自己提出假设、设计实验、迭代改进——这不就是让系统自己改基因吗？再加上 LLM-as-judge，让模型自己评估自己的输出——筛选也交出去了。</p>
+<p>看起来很接近自主进化。但碳基进化 38 亿年来从未犯过一个错误：<strong>让改基因的和做筛选的是同一个主体。</strong></p>
+<p>突变是盲的，环境是冷的，两者互不知道对方的存在。正是这种无意图的解耦，才产出了真正的多样性。而 autoresearch + LLM-as-judge 恰恰把设计和筛选重新耦合了——系统自己改自己的基因，又自己批改自己的作业。策略空间会坍缩到模型自身的认知边界内。</p>
+<p><strong>这不是自主进化，是自我循环。</strong></p>
+<p>真正的自主进化，意味着系统有权修改自身，但由独立于系统的环境裁决修改的好坏。</p>
+<p>这立刻引出一个尖锐的问题：我们敢把“自我修改”交给 AI，同时还能保证“筛选”是独立的吗？</p>
+<h2 id="时间是唯一的裁判"><a href="#时间是唯一的裁判" class="headerlink" title="时间是唯一的裁判"></a>时间是唯一的裁判</h2><p>进化最容易被忽略的维度是时间。</p>
+<p>不是 point-in-time evaluation——跑一次 benchmark，出分数，排名。而是 cumulative evaluation——你能在持续变化的环境中活多久？</p>
+<p>蓝藻的策略谈不上精妙，但它活了 35 亿年。恐龙一度辉煌，但环境剧变面前，1.6 亿年的积累归零。</p>
+<p><strong>时间不评价你有多聪明，只评价你能不能一直活着。</strong></p>
+<p>AI 完全没有这个维度。模型没有“活着”的概念——训练、部署、替换。一个模型不需要存活，下一个版本随时取代它。这让 AI 的进化更像拉马克式的——每一代都是人刻意设计的改进——而不是达尔文式的。</p>
+<h2 id="寻找硅基的存活"><a href="#寻找硅基的存活" class="headerlink" title="寻找硅基的存活"></a>寻找硅基的存活</h2><p>如果碳基的 eval 是存活，硅基的等价物是什么？</p>
+<p>不是“通过更多 benchmark”，不是“更高的 Arena ELO”。这些都是 point-in-time metric，不是 survival signal。</p>
+<p>也许更接近的答案是：<strong>持续被需要</strong>。</p>
+<p>一个 AI 系统如果能持续解决环境中的真实问题，它就不会被替换——这就是它的“存活”。不是物理意义上的活着，而是功能意义上的不可替代。</p>
+<p>“持续被需要”跟“活着”有同样的结构特征：</p>
+<ul>
+<li>足够简单，不需要人为定义 metric</li>
+<li>自带时间维度，不是一次性评估</li>
+<li>环境会变，策略必须进化</li>
+</ul>
+<h2 id="碳基与硅基的对位"><a href="#碳基与硅基的对位" class="headerlink" title="碳基与硅基的对位"></a>碳基与硅基的对位</h2><p>把两条线索放到一起看：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>碳基</th>
+<th>硅基</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Eval 函数</td>
+<td>存活</td>
+<td>持续被需要</td>
+</tr>
+<tr>
+<td>复杂性来源</td>
+<td>不变的 eval + 变化的环境</td>
+<td>同构</td>
+</tr>
+<tr>
+<td>自我编辑</td>
+<td>突变 + 重组 + 自然选择</td>
+<td>设计与筛选尚未解耦</td>
+</tr>
+<tr>
+<td>时间角色</td>
+<td>唯一裁判</td>
+<td>几乎缺席</td>
+</tr>
+</tbody></table>
+<p><strong>碳基进化用 38 亿年证明了一件事：你不需要设计智能，你只需要一个足够好的 eval 函数和足够长的时间。</strong></p>
+<p>这或许是硅基自主进化最该学的一课——不是去设计更聪明的系统，而是找到那个不变的 eval，然后给它时间。</p>
+<p>但硅基有一个碳基从未有过的选项：它可以选择自己的 eval 函数。</p>
+<p>这到底是优势，还是诅咒？</p>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>johnsonlee</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="/2026/04/12/one-eval-function-3-8-billion-years/">https://johnsonlee.io/2026/04/12/one-eval-function-3-8-billion-years/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"><a href="/tags/AI/">AI</a><a href="/tags/Evolution/">Evolution</a><a href="/tags/Self-Evolution/">Self-Evolution</a><a href="/tags/Eval-Function/">Eval Function</a><a href="/tags/Biology/">Biology</a></div><div class="post-nav"><a class="pre" href="/2026/04/12/one-eval-function-3-8-billion-years.en/">One Eval Function, 3.8 Billion Years</a><a class="next" href="/2026/04/07/ssd-redundancy-beats-sophistication.en/">Distill Your Coworker? Just Distill Yourself</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"一个 Eval 函数的 38 亿年","datePublished":"2026-04-12T11:06:00.000Z","dateModified":"2026-04-12T11:06:00.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2026/04/12/one-eval-function-3-8-billion-years/"},"description":"38 亿年前，地球上出现了第一个能自我复制的分子。今天，我们在尝试让 AI 自主进化。 这两件事之间，隔着一个被严重低估的问题：eval 函数选什么？"}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname.replace(/^\/en\/(\d{4}\/)/, '/$1').replace(/\.en\/$/, '/')),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (20)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (173)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (14)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (8)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (24)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (14)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (20)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (10)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (2)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (71)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (71)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (4)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (103)</a><ul style="padding:revert"></ul></li><li><a href="/categories/investing/">Investing (8)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investment/">Investment (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (18)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (2)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (2)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Developer-Tools/" style="font-size: 15px;">Developer Tools</a> <a href="/tags/Dotfiles/" style="font-size: 15px;">Dotfiles</a> <a href="/tags/Claude-Code/" style="font-size: 15px;">Claude Code</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/Consciousness/" style="font-size: 15px;">Consciousness</a> <a href="/tags/Self-Reference/" style="font-size: 15px;">Self-Reference</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Attention/" style="font-size: 15px;">Attention</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Buddhism/" style="font-size: 15px;">Buddhism</a> <a href="/tags/Taoism/" style="font-size: 15px;">Taoism</a> <a href="/tags/Physics/" style="font-size: 15px;">Physics</a> <a href="/tags/Philosophy/" style="font-size: 15px;">Philosophy</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/Cognitive-Boundary/" style="font-size: 15px;">Cognitive Boundary</a> <a href="/tags/Randomness/" style="font-size: 15px;">Randomness</a> <a href="/tags/Self-Evolution/" style="font-size: 15px;">Self-Evolution</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Dimension-Hacking/" style="font-size: 15px;">Dimension Hacking</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Economy/" style="font-size: 15px;">Economy</a> <a href="/tags/Investment/" style="font-size: 15px;">Investment</a> <a href="/tags/Future/" style="font-size: 15px;">Future</a> <a href="/tags/UBI/" style="font-size: 15px;">UBI</a> <a href="/tags/Product-Strategy/" style="font-size: 15px;">Product Strategy</a> <a href="/tags/Copilot/" style="font-size: 15px;">Copilot</a> <a href="/tags/Google/" style="font-size: 15px;">Google</a> <a href="/tags/Technology/" style="font-size: 15px;">Technology</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Product-Management/" style="font-size: 15px;">Product Management</a> <a href="/tags/Project-Management/" style="font-size: 15px;">Project Management</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Harness-Engineering/" style="font-size: 15px;">Harness Engineering</a> <a href="/tags/Ground-Truth/" style="font-size: 15px;">Ground Truth</a> <a href="/tags/Context/" style="font-size: 15px;">Context</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a> <a href="/tags/Maven/" style="font-size: 15px;">Maven</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/Transformer/" style="font-size: 15px;">Transformer</a> <a href="/tags/Deep-Learning/" style="font-size: 15px;">Deep Learning</a> <a href="/tags/Music/" style="font-size: 15px;">Music</a> <a href="/tags/HTML/" style="font-size: 15px;">HTML</a> <a href="/tags/Eval-Function/" style="font-size: 15px;">Eval Function</a> <a href="/tags/Biology/" style="font-size: 15px;">Biology</a> <a href="/tags/Programming/" style="font-size: 15px;">Programming</a> <a href="/tags/Prompt-Engineering/" style="font-size: 15px;">Prompt Engineering</a> <a href="/tags/Economics/" style="font-size: 15px;">Economics</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/Cognition/" style="font-size: 15px;">Cognition</a> <a href="/tags/SPI/" style="font-size: 15px;">SPI</a> <a href="/tags/MVVM/" style="font-size: 15px;">MVVM</a> <a href="/tags/JetPack/" style="font-size: 15px;">JetPack</a> <a href="/tags/Preloading/" style="font-size: 15px;">Preloading</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/04/17/ssd-selection-trap.en/">The SSD Optimum Trap</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/04/17/ssd-selection-trap/">SSD 最优解陷阱</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/04/13/time-does-not-exist.en/">Time Doesn't Exist. Evolution Doesn't Care.</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/04/13/time-does-not-exist/">时间不存在，进化不在乎</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/04/13/paradox-of-autonomous-evolution/">自主进化的悖论：谁来做突变？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/04/13/paradox-of-autonomous-evolution.en/">The Paradox of Autonomous Evolution: Who Performs the Mutation?</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/04/13/dimension-hacking.en/">Dimension Hacking: Cracking Open the Cognitive Boundary</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/04/13/dimension-hacking/">维度黑客：撬开认知边界的裂缝</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/04/12/the-meaning-of-evolution.en/">The Meaning of Evolution?</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/04/12/the-meaning-of-evolution/">进化的意义？</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>

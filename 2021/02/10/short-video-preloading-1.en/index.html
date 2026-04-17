@@ -1,0 +1,171 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta name="theme-color" content="#FFF" id="theme-color"><meta content="telephone=no" name="format-detection"><meta name="description" content="In an era where user experience is king, “Video View” count is one of the most important metrics for measuring experience quality in a short video app. From the user’s perspective, smoother playback, "><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,johnsonlee,johnson,lijingsen,jingsen,ai,agent,llm,claude,claude code,ai工程化,harness,harness engineering,autoevolve,prompt engineering,RAG,agentic,MCP,AGI,vibe coding,ai coding,copilot,cursor,chatgpt,openai,anthropic,transformer,fine-tuning,embedding,multimodal,chain of thought,function calling,tool use,RLHF,ai native,架构设计,性能优化,滴滴,快手,我在滴滴做架构,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2021/02/10/short-video-preloading-1.en/"><link rel="alternate" hreflang="en" href="https://johnsonlee.io/en/2021/02/10/short-video-preloading-1/"><link rel="alternate" hreflang="zh-CN" href="https://johnsonlee.io/2021/02/10/short-video-preloading-1/"><link rel="alternate" hreflang="x-default" href="https://johnsonlee.io/2021/02/10/short-video-preloading-1/"><meta property="og:title" content="Short Video Preloading (Part 1)"><meta property="og:description" content="In an era where user experience is king, “Video View” count is one of the most important metrics for measuring experience quality in a short video app. From the user’s perspective, smoother playback, "><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2021/02/10/short-video-preloading-1.en/"><meta property="og:image" content="https://johnsonlee.io/og-cards/short-video-preloading-1.en.png"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="en_US"><meta property="article:published_time" content="2021-02-10T03:00:00.000Z"><meta property="article:author" content="Johnson Lee"><meta property="article:tag" content="Preloading"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Short Video Preloading (Part 1)"><meta name="twitter:description" content="In an era where user experience is king, “Video View” count is one of the most important metrics for measuring experience quality in a short video app. From the user’s perspective, smoother playback, "><meta name="twitter:image" content="https://johnsonlee.io/og-cards/short-video-preloading-1.en.png"><title>Short Video Preloading (Part 1) | Johnson Lee</title><script>(function(){var h=new Date().getHours();if(h<6||h>=19){document.documentElement.setAttribute('data-weather','night');var m=document.getElementById('theme-color');if(m)m.setAttribute('content','#020617')}})();</script><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&amp;display=swap"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Johnson Lee"><link rel="alternate" type="application/atom+xml" href="/atom.en.xml" title="Johnson Lee (English)" hreflang="en"><script type="text/javascript" src="/js/weather-theme.js" defer></script><script type="text/javascript" src="/js/weather-canvas.js" defer></script><script type="text/javascript" src="/js/i18n-switch.js" defer></script><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="body_container"><img src="/og-cards/short-video-preloading-1.en.png" style="display:none"><div id="header"><div class="site-name"><h1 class="hidden">Short Video Preloading (Part 1)</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/tags/"><i class="fa fa-tag"> Tags</i></a><a target="_blank" rel="noopener" href="https://about.johnsonlee.io/"><i class="fa fa-user"> About</i></a><a href="/atom.xml"><i class="fa fa-rss"> RSS</i></a></div><button class="lang-switch" type="button" data-target-lang="en" title="English">EN</button></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Short Video Preloading (Part 1)</h1><div class="post-meta">Feb 10, 2021<span> | </span><span class="category"><a href="/categories/computer-science/">Computer Science</a><a href="/categories/computer-science/mobile/"> / Mobile</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 1.2k</span><span class="post-meta-item-text"> Words</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 7</span><span class="post-meta-item-text"> Minutes</span></span></span></div><div class="post-content"><p>In an era where user experience is king, “Video View” count is one of the most important metrics for measuring experience quality in a short video app. From the user’s perspective, smoother playback, higher video quality, and more precise recommendations all lead to a higher “Average Played Time.” To improve the user experience, the industry pulls out every technical trick in the book. In the video industry, achieving instant playback is considered the bare minimum, and video preloading is one of the most critical techniques for getting there.</p>
+<h2 id="Quality-Metrics"><a href="#Quality-Metrics" class="headerlink" title="Quality Metrics"></a>Quality Metrics</h2><p>Generally, we measure app quality from two dimensions – Quality of Experience (QoE) and Quality of Service (QoS).</p>
+<h3 id="Quality-of-Experience-QoE"><a href="#Quality-of-Experience-QoE" class="headerlink" title="Quality of Experience (QoE)"></a>Quality of Experience (QoE)</h3><p>QoE approaches quality from the end user’s perspective, measuring satisfaction based on subjective perception. Many factors influence user experience, mainly human factors, system factors, and environmental factors. As such, QoE spans emerging multidisciplinary fields including social psychology, cognitive science, economics, and engineering. For short video apps, key QoE metrics include:</p>
+<ul>
+<li>Video View</li>
+<li>Average Played Time</li>
+<li>Play Complete Ratio</li>
+<li>Comment Rate</li>
+<li>Average Stay Duration In Comment</li>
+<li>Like Rate</li>
+<li>Favorite Rate</li>
+<li>Forward Rate</li>
+<li>Follow Rate</li>
+<li>Negative Feedback Rate</li>
+<li>…</li>
+</ul>
+<h3 id="Quality-of-Service-QoS"><a href="#Quality-of-Service-QoS" class="headerlink" title="Quality of Service (QoS)"></a>Quality of Service (QoS)</h3><p>Compared to QoE, QoS takes a more objective approach, using various parameters to measure overall service performance. For short video apps, key QoS metrics include:</p>
+<ul>
+<li>Transport Latency</li>
+<li>Encode Latency</li>
+<li>Decode Latency</li>
+<li>Time to First Frame</li>
+<li>Frame Per Second</li>
+<li>Sec-Opening Rate</li>
+<li>Cache Hit Ratio</li>
+<li>…</li>
+</ul>
+<h2 id="Preloading"><a href="#Preloading" class="headerlink" title="Preloading"></a>Preloading</h2><p>Which metrics does preloading primarily improve? Before answering that, let’s understand the two forms of preloading:</p>
+<ol>
+<li>Pre-download – downloading video resources from CDN to local storage in advance</li>
+<li>Pre-decode – having the player decode the locally cached video file in advance</li>
+</ol>
+<p>Pre-downloading is straightforward – just download from CDN. But for a feed-style short video app, users watch while swiping up and down. This seemingly simple interaction involves complex flows that require tight coordination between pre-downloading and pre-decoding. For pre-downloading, several questions need to be answered:</p>
+<ol>
+<li>When to download?</li>
+<li>How much to download?</li>
+<li>Which CDN to download from?</li>
+<li>Which bitrate to download?</li>
+<li>What’s the download task scheduling strategy?</li>
+<li>What’s the retry strategy for failed downloads?</li>
+<li>How to handle data pagination?</li>
+<li>How to hand off to the player for pre-decoding once downloaded?</li>
+</ol>
+<h3 id="When-to-Download"><a href="#When-to-Download" class="headerlink" title="When to Download"></a>When to Download</h3><p>For a full-screen swipe-style short video app like TikTok, except for the first install, the first video is typically already downloaded and has its first frame buffered before the user even enters the playlist page. Starting from the second video, real-time preloading kicks in. For swipe-based apps, the download timing is: when a video is selected as the currently playing video, start downloading the next video in the list (or the previous one, depending on which direction the user swipes).</p>
+<h3 id="How-Much-to-Download"><a href="#How-Much-to-Download" class="headerlink" title="How Much to Download"></a>How Much to Download</h3><p>Generally, download volume is measured in two units:</p>
+<ol>
+<li>By bytes</li>
+<li>By seconds</li>
+</ol>
+<p>The implementation differs slightly for each. Downloading by bytes is simpler – no additional calculation needed. Downloading by seconds is more involved, as it requires calculation based on bitrate, which comes in two types:</p>
+<ol>
+<li>Constant bitrate</li>
+<li>Variable bitrate</li>
+</ol>
+<p>For constant bitrate, the calculation only needs to be done once. For variable bitrate, real-time calculation based on the video’s metadata is needed, making the implementation more complex than downloading by bytes.</p>
+<h3 id="Choosing-a-CDN"><a href="#Choosing-a-CDN" class="headerlink" title="Choosing a CDN"></a>Choosing a CDN</h3><p>Typically, the same video resource exists on multiple CDNs (poorly built systems aside). This is commonly called multi-source video – the same video has multiple sources. From the client’s perspective, it may only know the video resource ID (or path) and a list of CDN hosts. Before downloading, it needs to combine the CDN host list with the video resource ID. Since there’s usually only one video ID, the number of combinations is simply the size of the CDN host list.</p>
+<p>CDN hosts come in two forms:</p>
+<ol>
+<li>CDN host is an IP address</li>
+<li>CDN host is a domain name</li>
+</ol>
+<p>When the CDN host is an IP address, the client can construct the URL and hand it directly to the download module. For domain names, the client needs to perform DNS resolution to get the IP address first, then construct the URL.</p>
+<h3 id="Choosing-a-Bitrate"><a href="#Choosing-a-Bitrate" class="headerlink" title="Choosing a Bitrate"></a>Choosing a Bitrate</h3><p>Similar to multi-source video, the same video can exist at multiple bitrates – known as multi-bitrate video. Why multiple bitrates? Different video content has different temporal and spatial complexity, and client-side device performance varies widely. To maximize user experience, the system needs to adapt based on network conditions, video content, and device capabilities. The industry calls this Adaptive Bitrate Streaming, and its implementation is significantly more complex than multi-source video.</p>
+<p>Each multi-bitrate video resource has a <em>manifest</em> describing its information across multiple dimensions:</p>
+<ol>
+<li>Bandwidth</li>
+<li>Resolution</li>
+<li>Frame rate</li>
+<li>CDN list</li>
+<li>…</li>
+</ol>
+<p>Assuming <em>M</em> resolutions and <em>N</em> CDNs, these two dimensions alone produce <em>C(M, N)</em> download URLs. With more dimensions, the combinations multiply further.</p>
+<h3 id="Download-Task-Scheduling"><a href="#Download-Task-Scheduling" class="headerlink" title="Download Task Scheduling"></a>Download Task Scheduling</h3><p>For a standalone download module, there are generally two scheduling modes:</p>
+<ol>
+<li>Parallel – downloading multiple resources simultaneously</li>
+<li>Serial – downloading one resource at a time</li>
+</ol>
+<p>Each mode suits different scenarios. For swipe-based short video apps, serial downloading is typically used.</p>
+<h3 id="Download-Failure-Retry"><a href="#Download-Failure-Retry" class="headerlink" title="Download Failure Retry"></a>Download Failure Retry</h3><p>Downloading video resources is inherently simple. But introducing a retry mechanism makes the entire download flow significantly more complex, especially for multi-source and multi-bitrate videos. The key challenges include:</p>
+<ol>
+<li>Downloads are serial and asynchronous; retries are only triggered after failure</li>
+<li>For multi-source and multi-bitrate videos, the retry needs to determine which URL to use</li>
+<li>Each download corresponds to a download task; should all URL combinations be prepared upfront or created on-the-fly during retry?</li>
+<li>If all combinations have been exhausted without success, the system needs to move on to the next video</li>
+</ol>
+<h3 id="Data-Pagination"><a href="#Data-Pagination" class="headerlink" title="Data Pagination"></a>Data Pagination</h3><p>Let’s first define the concept of a data page – a list of video information, where each page contains multiple videos and each video is an item in the list, indexed from 0.</p>
+<p>For the client, the feed requires pagination. The timing of loading the next page is crucial for preloading hit rate. Suppose a page contains 10 videos. If the next page is only loaded when the user reaches video index 9, and the user only glances at that video before swiping to the next one, the next video most likely hasn’t finished preloading. This creates a noticeable pattern – a stutter every 9 videos, which is a terrible experience. To solve this, the next page needs to be loaded ahead of time, typically 3 items early (i.e., load the next page when the user reaches video index 6).</p>
+<h3 id="Coordinating-with-Pre-Decoding"><a href="#Coordinating-with-Pre-Decoding" class="headerlink" title="Coordinating with Pre-Decoding"></a>Coordinating with Pre-Decoding</h3><p>Once a pre-download task completes, the video data is cached locally. How does the player load the locally cached video file? Typically, a cache ID is generated for each video. Unlike the resource ID used for CDN downloads, the cache ID is for local caching. The cache ID can be computed in advance when generating the data model. When the player starts playing a video, it retrieves the cache ID from the data model and looks it up in the cache.</p>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>This article provided a high-level overview of preloading technology from the client’s perspective. Through preloading, we can improve the following QoS metrics:</p>
+<ul>
+<li>Time to First Frame</li>
+<li>Frame Per Second</li>
+<li>Sec-Opening Rate</li>
+<li>Cache Hit Ratio</li>
+</ul>
+<p>However, this is just the beginning. In practice, various strategies are applied to deeply optimize these metrics. The strategy layer will be covered in detail in subsequent posts.</p>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>Author: </strong>johnsonlee</li><li class="post-copyright-link"><strong>Blog Link: </strong><a href="/2021/02/10/short-video-preloading-1.en/">https://johnsonlee.io/2021/02/10/short-video-preloading-1.en/</a></li><li class="post-copyright-license"><strong>Copyright Declaration: </strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"><a href="/tags/Preloading/">Preloading</a></div><div class="post-nav"><a class="pre" href="/2021/02/14/old-friends-and-stories/">重温《故人故事》</a><a class="next" href="/2021/02/10/short-video-preloading-1/">短视频预加载技术（一）</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Short Video Preloading (Part 1)","datePublished":"2021-02-10T03:00:00.000Z","dateModified":"2021-02-10T03:00:00.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2021/02/10/short-video-preloading-1.en/"},"description":"In an era where user experience is king, “Video View” count is one of the most important metrics for measuring experience quality in a short video app. From the user’s perspective, smoother playback, "}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname.replace(/^\/en\/(\d{4}\/)/, '/$1').replace(/\.en\/$/, '/')),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (20)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (173)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (14)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (8)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (24)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (14)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (20)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (10)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (2)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (71)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (71)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (4)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (103)</a><ul style="padding:revert"></ul></li><li><a href="/categories/investing/">Investing (8)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Investment/">Investment (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (18)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (2)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (2)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Developer-Tools/" style="font-size: 15px;">Developer Tools</a> <a href="/tags/Dotfiles/" style="font-size: 15px;">Dotfiles</a> <a href="/tags/Claude-Code/" style="font-size: 15px;">Claude Code</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/Consciousness/" style="font-size: 15px;">Consciousness</a> <a href="/tags/Self-Reference/" style="font-size: 15px;">Self-Reference</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Attention/" style="font-size: 15px;">Attention</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Buddhism/" style="font-size: 15px;">Buddhism</a> <a href="/tags/Taoism/" style="font-size: 15px;">Taoism</a> <a href="/tags/Physics/" style="font-size: 15px;">Physics</a> <a href="/tags/Philosophy/" style="font-size: 15px;">Philosophy</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/Cognitive-Boundary/" style="font-size: 15px;">Cognitive Boundary</a> <a href="/tags/Randomness/" style="font-size: 15px;">Randomness</a> <a href="/tags/Self-Evolution/" style="font-size: 15px;">Self-Evolution</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Dimension-Hacking/" style="font-size: 15px;">Dimension Hacking</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Economy/" style="font-size: 15px;">Economy</a> <a href="/tags/Investment/" style="font-size: 15px;">Investment</a> <a href="/tags/Future/" style="font-size: 15px;">Future</a> <a href="/tags/UBI/" style="font-size: 15px;">UBI</a> <a href="/tags/Product-Strategy/" style="font-size: 15px;">Product Strategy</a> <a href="/tags/Copilot/" style="font-size: 15px;">Copilot</a> <a href="/tags/Google/" style="font-size: 15px;">Google</a> <a href="/tags/Technology/" style="font-size: 15px;">Technology</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Product-Management/" style="font-size: 15px;">Product Management</a> <a href="/tags/Project-Management/" style="font-size: 15px;">Project Management</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Harness-Engineering/" style="font-size: 15px;">Harness Engineering</a> <a href="/tags/Ground-Truth/" style="font-size: 15px;">Ground Truth</a> <a href="/tags/Context/" style="font-size: 15px;">Context</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a> <a href="/tags/Maven/" style="font-size: 15px;">Maven</a> <a href="/tags/Machine-Learning/" style="font-size: 15px;">Machine Learning</a> <a href="/tags/Transformer/" style="font-size: 15px;">Transformer</a> <a href="/tags/Deep-Learning/" style="font-size: 15px;">Deep Learning</a> <a href="/tags/Music/" style="font-size: 15px;">Music</a> <a href="/tags/HTML/" style="font-size: 15px;">HTML</a> <a href="/tags/Eval-Function/" style="font-size: 15px;">Eval Function</a> <a href="/tags/Biology/" style="font-size: 15px;">Biology</a> <a href="/tags/Programming/" style="font-size: 15px;">Programming</a> <a href="/tags/Prompt-Engineering/" style="font-size: 15px;">Prompt Engineering</a> <a href="/tags/Economics/" style="font-size: 15px;">Economics</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/Cognition/" style="font-size: 15px;">Cognition</a> <a href="/tags/SPI/" style="font-size: 15px;">SPI</a> <a href="/tags/MVVM/" style="font-size: 15px;">MVVM</a> <a href="/tags/JetPack/" style="font-size: 15px;">JetPack</a> <a href="/tags/Preloading/" style="font-size: 15px;">Preloading</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/04/17/ssd-selection-trap.en/">The SSD Optimum Trap</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/04/17/ssd-selection-trap/">SSD 最优解陷阱</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/04/13/time-does-not-exist.en/">Time Doesn't Exist. Evolution Doesn't Care.</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/04/13/time-does-not-exist/">时间不存在，进化不在乎</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/04/13/paradox-of-autonomous-evolution/">自主进化的悖论：谁来做突变？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/04/13/paradox-of-autonomous-evolution.en/">The Paradox of Autonomous Evolution: Who Performs the Mutation?</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/04/13/dimension-hacking.en/">Dimension Hacking: Cracking Open the Cognitive Boundary</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/04/13/dimension-hacking/">维度黑客：撬开认知边界的裂缝</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/04/12/the-meaning-of-evolution.en/">The Meaning of Evolution?</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/04/12/the-meaning-of-evolution/">进化的意义？</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>

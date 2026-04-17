@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<title>Donate-Page</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, minimal-ui" /><!--禁止缩放-->
+	<link rel="stylesheet" href="../css/donate.css">
+	<script>
+	(function(){
+		// Sync weather/theme from parent page
+		try {
+			var w = parent.document.documentElement.getAttribute('data-weather');
+			if (w) document.documentElement.setAttribute('data-weather', w);
+			var t = parent.document.documentElement.getAttribute('data-theme');
+			if (t) document.documentElement.setAttribute('data-theme', t);
+		} catch(e) {}
+		// Fallback: check time
+		var h = new Date().getHours();
+		if (h < 6 || h >= 19) document.documentElement.setAttribute('data-weather', 'night');
+		// Watch for parent changes
+		try {
+			new MutationObserver(function(muts) {
+				muts.forEach(function(m) {
+					if (m.attributeName === 'data-weather' || m.attributeName === 'data-theme') {
+						var v = parent.document.documentElement.getAttribute(m.attributeName);
+						if (v) document.documentElement.setAttribute(m.attributeName, v);
+						else document.documentElement.removeAttribute(m.attributeName);
+					}
+				});
+			}).observe(parent.document.documentElement, { attributes: true });
+		} catch(e) {}
+	})();
+	</script>
+	<script src="//lib.baomitu.com/jquery/3.4.0/jquery.min.js"></script>
+	<script src="//lib.baomitu.com/clipboard.js/2.0.4/clipboard.min.js"></script>
+	<!-- clipboard.js 是 JS 复制文本的库 -->
+	<script src="../js/donate.js"></script>
+</head>
+<body>
+	<!--a id="github" href="https://github.com/johnsonlee/donate-page" target="_blank" class="pos-f tr3" title="Github"></a-->
+	<div id="DonateText" class="tr3">Donate</div>
+	<ul id="donateBox" class="list pos-f tr3">
+		<!--li id="PayPal"><a href="" target="_blank">PayPal</a></li>
+		<li id="BTC" data-footnote="Copy address and show QRCode"><button id="BTCBn"  data-clipboard-target="#btc-key" alt="Copy to clipboard">Bitcoin</button></li-->
+		<li id="AliPay">AliPay</li>
+		<li id="WeChat">WeChat</li>
+	</ul>
+	<div id="QRBox" class="pos-f left-100">
+		<img id="MainBox" />
+	</div>
+	<!-- Bitcoin 账号 -->
+	<!--input id="btc-key" type="text" value="" readonly="readonly"-->
+</body>
+</html>
