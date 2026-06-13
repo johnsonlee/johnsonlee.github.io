@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2020/01/23/service-provider-interface-optimization/">
+  <title>SPI Performance Optimization | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">SPI Performance Optimization</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2020-01-23 · Johnson Lee · Computer Science / Open Source / Booster</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Java developers should be familiar with <a href="https://docs.oracle.com/javase/tutorial/ext/basics/spi.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SPI (Service Provider Interface)</a>. Whether it's the JDK, Gradle, or various third-party frameworks, SPI is widely used to provide extensibility. So why is it so rarely seen on the Android platform?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I believe there are two reasons:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Android and Java applications have different distribution models</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"> Java applications are distributed as JARs, making them very easy to extend. But once an Android APK is built, it's essentially frozen. Achieving extensibility requires non-standard approaches.</p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">SPI performance on Android is concerning</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"> Since Android devices generally have lower performance than PCs, combined with Android's ANR mechanism, SPI can easily cause jank or even ANR on Android.</p>
+</li>
+</ol>
+<h2 id="What-Is-SPI" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">What Is SPI</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The official Java definitions are:</p>
+<h3 id="Service" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Service</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">A set of programming interfaces and classes that provide access to specific application functionality and features.</p>
+<h3 id="Service-Provider-Interface-SPI" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Service Provider Interface (SPI)</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">A set of public interfaces and abstract classes defined by the Service.</p>
+<h3 id="Service-Provider" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Service Provider</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">An implementation of the SPI.</p>
+<h2 id="SPI-s-Performance-Deficiency" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">SPI's Performance Deficiency</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Java's native SPI searches for SPI configuration files under <em style="font-style:italic;color:#1f2937;">META-INF/services/</em> through the <em style="font-style:italic;color:#1f2937;">ClassLoader</em> in the <em style="font-style:italic;color:#1f2937;">CLASSPATH</em>, then reads their contents. This requires parsing JAR files (on Android, parsing APK files), which involves iterating through every entry in the entire JAR/APK. This makes it extremely time-consuming (I've been burned by this before).</p>
+<h2 id="Why-Choose-SPI-Anyway" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Why Choose SPI Anyway</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">If SPI performs so poorly on Android, why use it at all?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">During application development, architectural requirements inevitably demand compile-time extensibility -- interface-implementation separation, one interface with multiple implementations that need dynamic discovery, reverse dependencies, and so on. Compared to <a href="https://github.com/google/dagger" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Dagger</a>, SPI is simple, natively supported by the API, and doesn't require any additional third-party libraries.</p>
+<h2 id="How-to-Optimize" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">How to Optimize</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Having chosen SPI, how do we solve its performance bottleneck on Android? The answer is: eliminate I/O.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The approach is straightforward. Let's walk through it using reverse thinking:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Generate a service registry -- <em style="font-style:italic;color:#1f2937;">ServiceRegistry</em> -- during the build phase</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Replace all <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ServiceLoader</code> invocations in the code with calls to a custom <em style="font-style:italic;color:#1f2937;">ShadowServiceLoader</em></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">ShadowServiceLoader</em> retrieves the <em style="font-style:italic;color:#1f2937;">Service Provider Interface</em> to <em style="font-style:italic;color:#1f2937;">Service Provider</em> mappings from <em style="font-style:italic;color:#1f2937;">ServiceRegistry</em></li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">But there are several questions:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Does <em style="font-style:italic;color:#1f2937;">ServiceRegistry</em> store mappings of <em style="font-style:italic;color:#1f2937;">Class&lt;Service&gt;</em> to <em style="font-style:italic;color:#1f2937;">Class&lt;ServiceProvider&gt;</em>, or something else?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"> It could be a <em style="font-style:italic;color:#1f2937;">Class</em> mapping, but instantiating a <em style="font-style:italic;color:#1f2937;">Service Provider</em> would then require reflection.</p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Can <em style="font-style:italic;color:#1f2937;">ServiceLoader</em> completely avoid reflection when loading through <em style="font-style:italic;color:#1f2937;">ServiceRegistry</em>?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"> Yes, it can. In that case, <em style="font-style:italic;color:#1f2937;">ServiceRegistry</em> needs to store mappings from <em style="font-style:italic;color:#1f2937;">Class&lt;Service&gt;</em> to <em style="font-style:italic;color:#1f2937;">Creator&lt;ServiceProvider&gt;</em>. The content looks roughly like this:</p>
+ <pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class ServiceRegistry {
+
+    static final Map&lt;Class&lt;?&gt;, List&lt;Callable&lt;?&gt;&gt;&gt; registry = new HashMap&lt;&gt;();
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"> A <em style="font-style:italic;color:#1f2937;">Creator</em> looks roughly like this:</p>
+ <pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class ServiceProviderCreator implements Callable&lt;ServiceProvider&gt; {
+
+    @Override
+    public ServiceProvider call() {
+        return new ServiceProvider();
+    }
+
+}</code></pre>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">How do we register the mappings into <em style="font-style:italic;color:#1f2937;">ServiceRegistry</em>? Using a static initializer block:</p>
+ <pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class ServiceRegistry {
+
+    static final Map&lt;Class&lt;?&gt;, List&lt;Callable&lt;?&gt;&gt;&gt; registry = new HashMap&lt;&gt;();
+
+    static {
+        register(InterfaceA.class, new InterfaceACreator())
+    }
+
+}</code></pre></li>
+</ol>
+<h2 id="Example" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Example</h2><h3 id="HttpProtocolConfig-kt" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">HttpProtocolConfig.kt</h3><pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">interface HttpProtocolConfig {
+
+    fun getProtocol(): String
+
+}</code></pre>
+
+<h3 id="HttpProtocolConfigProvider-kt" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">HttpProtocolConfigProvider.kt</h3><pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">@Service(HttpProtocolConfig.class)
+class HttpProtocolConfigProvider : HttpProtocolConfig {
+
+    override fun getProtocol() = if (BuildConfig.DEBUG) "http" else "https"
+
+}</code></pre>
+
+<h3 id="HomePresenter-kt" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">HomePresenter.kt</h3><pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">class HomePresenter : Presenter() {
+
+    private val config = ServiceLoader.load(HttpProtocolConfig::class.java).first()
+
+    fun loadConfig() {
+        println(config.getProtocol())
+    }
+
+}</code></pre>
+
+<h2 id="Source-Code" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Source Code</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">This solution is fully open-sourced at: <a href="https://github.com/johnsonlee/service-loader-android" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://github.com/johnsonlee/service-loader-android</a></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Example code: <a href="https://github.com/johnsonlee/service-loader-android/tree/master/example" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://github.com/johnsonlee/service-loader-android/tree/master/example</a></p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2020/01/23/service-provider-interface-optimization/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2020/01/23/service-provider-interface-optimization/</a></p>
+    </section>
+  </main>
+</body>
+</html>

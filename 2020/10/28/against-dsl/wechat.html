@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2020/10/28/against-dsl/">
+  <title>坚决反对 DSL | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">坚决反对 DSL</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2020-10-28 · Johnson Lee · Computer Science / Architecture Design</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">最近在撸一个测试 <em style="font-style:italic;color:#1f2937;">Gradle Plugin</em> 的 <em style="font-style:italic;color:#1f2937;">Plugin</em> -- <a href="https://github.com/bootstage/testkit-gradle-plugin" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">bootstage/testkit-gradle-plugin</a>，由于跑 <em style="font-style:italic;color:#1f2937;">Gradle Plugin</em> 的 <em style="font-style:italic;color:#1f2937;">Unit Test</em> 必须要使用 <em style="font-style:italic;color:#1f2937;">Gradle</em> 的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">plugins</code> DSL 来启用插件，所以，万般无奈之下，只好用了 <em style="font-style:italic;color:#1f2937;">Gradle</em> 官方推荐的最佳实践，结果掉进了坑里。</p>
+<h2 id="Gradle-Plugin-Portal" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  Gradle Plugin Portal</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">Gradle</em> 官方搞了一个 <a href="https://plugins.gradle.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Gradle Plugin Portal</a> ，类似于 <em style="font-style:italic;color:#1f2937;">App Store</em> ，开发者可以通过 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">java-gradle-plugin</code> 直接发布 <em style="font-style:italic;color:#1f2937;">Gradle</em> 插件到 <a href="https://plugins.gradle.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Gradle Plugin Portal</a>，这样方便开发者通过关键字搜索，也利于插件的推广，想法是很不错的，但使用下来，我最终还是放弃了，原因是既不成熟，也不稳定，第一个版本 <a href="https://plugins.gradle.org/plugin/io.bootstage.testkit" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">testkit-gradle-plugin v0.1.0</a> 在 <a href="https://plugins.gradle.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Gradle Plugin Portal</a> 算是发布成功了，但是，在发布 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">1.0.0</code> 是，因为网络超时，发布失败之后，尝试重新发布却报错：<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">1.0.0</code> 版本已经存在了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">之前一直对 <em style="font-style:italic;color:#1f2937;">Sonatype</em> 的控制台加载太慢而耿耿于怀，一度有想换一个 <em style="font-style:italic;color:#1f2937;">maven</em> 托管服务，尝试用了下 <a href="https://bintray.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">bintray</a>，捣鼓了好久也没成功发布成功，最终还是放弃了。经历过一次次的伤害后，终于发现 <em style="font-style:italic;color:#1f2937;">Sonatype</em> 的好了，最终还是选择发布到 <em style="font-style:italic;color:#1f2937;">Sonatype</em> 上，按照常规的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">publishing</code> 配置方式：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">publishing {
+    repositories {
+        maven {
+            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+        }
+    }
+    publications {
+        create&lt;MavenPublication&gt;("mavenJava") {
+            groupId = "${project.group}"
+            artifactId = project.name
+            version = "${project.version}"
+
+            from(components["java"])
+
+            artifact(sourcesJar.get())
+            artifact(generateJavadoc.get())
+
+            pom {
+                ...
+            }
+        }
+    }
+}
+
+signing {
+    sign(publishing.publications["mavenJava"])
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">用 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">publishToMavenLocal</code> 测试了一下本地发布没啥问题，就直接往 <em style="font-style:italic;color:#1f2937;">Sonatype</em> 发布了，结果 <em style="font-style:italic;color:#1f2937;">Sonatype</em> 在校验 <em style="font-style:italic;color:#1f2937;">pom</em> 文件的签名时，报错: <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">BAD Signature</code>，把上传的 <em style="font-style:italic;color:#1f2937;">pom</em> 和 <em style="font-style:italic;color:#1f2937;">pom.asc</em> 文件都下载下来在本地用 <em style="font-style:italic;color:#1f2937;">gpg</em> 校验了一下:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">gpg --verify ~/Downloads/testkit-gradle-plugin-1.0.0.pom.asc</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">果然还是报：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">gpg: BAD signature from "Johnson Lee &lt;g.johnsonlee@gmail.com&gt;" [ultimate]</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">打开 <em style="font-style:italic;color:#1f2937;">pom</em> 文件一看，发现自定义的一些 <em style="font-style:italic;color:#1f2937;">pom</em> 属性一个也没有，看来是被覆盖了，尝试注释掉 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">java-gradle-plugin</code> 这个插件，<em style="font-style:italic;color:#1f2937;">pom</em> 文件就正常了，但带来的问题是——发布的插件不支持 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">plugins</code> DSL ，只好给 <em style="font-style:italic;color:#1f2937;">Gradle</em> 官方提了个 issue: <a href="https://github.com/gradle/gradle/issues/14993" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://github.com/gradle/gradle/issues/14993</a>, 结果第二天就回复了，原来是 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">java-gradle-plugin</code> 会自动生成 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Publication</code> ，所以，用常规的配置方式就不好使了，得用 <em style="font-style:italic;color:#1f2937;">java-gradle-plugin</em> 生成的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Publication</code>，然后改成了这样：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">publishing {
+    repositories {
+        maven {
+            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+        }
+    }
+    publications {
+        withType&lt;MavenPublication&gt;().configureEach {
+            groupId = "${project.group}"
+            artifactId = project.name
+            version = "${project.version}"
+
+            artifact(sourcesJar.get())
+            artifact(javadocJar.get())
+
+            pom {
+                ...
+            }
+
+            signing {
+                sign(this@configureEach)
+            }
+        }
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">本地发布了一把，果然好使了，自定义的 <em style="font-style:italic;color:#1f2937;">pom</em> 属性都有了，再次发布到 <em style="font-style:italic;color:#1f2937;">Sonatype</em> ，结果又报错了：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">Invalid POM: /io/bootstage/testkit/io.bootstage.testkit.gradle.plugin/1.2.0/io.bootstage.testkit.gradle.plugin-1.2.0.pom: Project name missing, Project description missing</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">结果打开本地的 <em style="font-style:italic;color:#1f2937;">pom</em> 一看，<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">java-gradle-plugin</code> 生成的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">io.bootstage.testkit.gradle.plugin</code> 果然没有 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">name</code> 和 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">description</code>，突然想到 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">java-gradle-plugin</code> 的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">gradlePlugin</code> DSL，看了一下 API，发现有个 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">displayName</code> 和 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">description</code>，于是抱着死马当活马医的心态试了一把，结果居然被我蒙对了 🤣</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">gradlePlugin {
+    plugins {
+        create("testkitPlugin") {
+            id = "io.bootstage.testkit"
+            displayName = "${id}.gradle.plugin"
+            description = project.description
+            implementationClass = "io.bootstage.testkit.gradle.TestKitPlugin"
+        }
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">终于可以发布一个完整的插件，心好累。。。最近被 <em style="font-style:italic;color:#1f2937;">Gradle</em> 坑得太惨了。。。</p>
+<h2 id="DSL" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  DSL</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我们在写 <em style="font-style:italic;color:#1f2937;">Gradle</em> 脚本的时候，每集成一个插件，都要或多或少的写一些 DSL 来配置工程，可是对于使用者来说，我怎么知道每个插件都提供了哪些 DSL？难道我用之前要先看一遍 API 文档，我只是想加几行配置而已！</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">而且一旦遇到复杂的情况，插件之间要相互协作的时候，DSL 怎么使用，就只能连蒙带猜了，就像前面的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">java-gradle-plugin</code> 跟 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">maven-publish</code> 之间有冲突问题，要不是 <em style="font-style:italic;color:#1f2937;">Gradle</em> 团队的人，或者之前有遇到过这种问题的人，怎么可能知道解决方案，只能去看源码了。</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">我只是想写个配置脚本而已！！！</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">为了加几行代码要翻一遍源码，我还不如放弃算了。这也是为什么，<a href="https://github.com/didi/booster" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Booster</a> 项目自始至终不支持 DSL 的原因，因为完全没有必要，能一行代码搞定的事情，绝对不用两行，如何让使用者以最低成本上手应该是每个开发者都要思考的问题。</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2020/10/28/against-dsl/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2020/10/28/against-dsl/</a></p>
+    </section>
+  </main>
+</body>
+</html>

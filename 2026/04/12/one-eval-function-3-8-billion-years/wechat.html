@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/04/12/one-eval-function-3-8-billion-years/">
+  <title>一个 Eval 函数的 38 亿年 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">一个 Eval 函数的 38 亿年</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-04-12 · Johnson Lee · Independent Thinking</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">38 亿年前，地球上出现了第一个能自我复制的分子。今天，我们在尝试让 AI 自主进化。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这两件事之间，隔着一个被严重低估的问题：<strong style="font-weight:700;color:#111827;">eval 函数选什么？</strong></p>
+
+
+<h2 id="碳基生命只有一个-Eval" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  碳基生命只有一个 Eval</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">生物进化没有 benchmark suite，没有 leaderboard，没有 human preference score。它只有一个判定标准——</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">活着，还是死了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个 eval 简单到粗暴：binary signal，零歧义，不需要 labeled data，不需要 reward shaping。你活下来了，你的基因就有资格参与下一轮。没活下来，无论多精巧、多优雅，都会被从基因池里抹掉。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">38 亿年，这个函数从未改变。</p>
+<h2 id="复杂性不是目标" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  复杂性不是目标</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果 eval 从不变，生物为什么变得如此复杂？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">因为<strong style="font-weight:700;color:#111827;">环境在变</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">蓝藻靠光合作用活了下来，然后氧气积累成了毒药。单细胞够用了，直到多细胞的能吃掉你。眼睛是多余的，直到有眼睛的捕食者出现在你头顶。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">单一不变的 eval + 持续变化的环境 = 策略空间被迫无限展开。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">复杂性不是进化的目标，是存活在非稳态环境下的副产品。蓝藻到今天还活着——简单也是一种策略，只要你的生态位没被挤掉。</p>
+<h2 id="复杂性是进化的签名" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  复杂性是进化的签名</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个逻辑推下去，会碰到一个意外的推论：<strong style="font-weight:700;color:#111827;">复杂性本身就间接证明了进化论。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">传统的进化论论证是归纳式的——化石记录、基因比对、物种分布，大量证据堆出结论。但上面这条链条是演绎式的：</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">前提一：eval 函数是存活（binary，不变）<br>前提二：环境非稳态</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">结论：复杂性必然涌现。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">不需要设计者，因为这个结构自己就能生成复杂性。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">反对进化论的人常问：“这么复杂的东西怎么可能没有设计者？”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">恰恰问反了。这么复杂的东西，恰恰不可能有设计者。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">设计者有目标，有目标就有方向，有方向就会剪枝。人类设计的系统——芯片、软件、建筑——每一处复杂性都有理由，都指向某个意图。而生物的复杂性是不剪枝的。阑尾、智齿、反转录转座子——基因组里充满了没有目的的残留。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">有目的的复杂性是设计的签名。无目的的复杂性是进化的签名。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">地球上的生命，满身都是后者。</p>
+<h2 id="AI-的-Eval-焦虑" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  AI 的 Eval 焦虑</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">回到 AI 这边。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我们造了多少 eval？MMLU、HumanEval、MT-Bench、Arena ELO、SWE-bench……每隔几个月就有新 benchmark 被提出，然后迅速被刷榜、饱和、质疑。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">对比触目惊心：<strong style="font-weight:700;color:#111827;">碳基用一个 eval 跑了 38 亿年，硅基用一千个 eval 还没跑出自主进化。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">问题出在哪？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Benchmark 是人设计的，测量的是人认为重要的能力。但进化不是为了通过测试，是为了在环境中存活。测试可以作弊——teaching to the test、数据污染、过拟合。存活没法作弊。</p>
+<h2 id="自我编辑的权利" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  自我编辑的权利</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">生物进化还解决了另一个关键问题：<strong style="font-weight:700;color:#111827;">谁来修改系统？</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">碳基的答案：系统自己改自己。突变是随机的，重组是随机的，水平基因转移是随机的。自然选择不设计方案，只决定哪些修改能留下来。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">设计和筛选，彻底解耦。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">AI 的“进化”卡在这里。大多数 AI 系统的迭代都是人在改——人调 prompt，人设计 reward，人挑选哪个 checkpoint 上线。这不是进化，这是育种。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">那 autoresearch 呢？让 LLM 自己提出假设、设计实验、迭代改进——这不就是让系统自己改基因吗？再加上 LLM-as-judge，让模型自己评估自己的输出——筛选也交出去了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">看起来很接近自主进化。但碳基进化 38 亿年来从未犯过一个错误：<strong style="font-weight:700;color:#111827;">让改基因的和做筛选的是同一个主体。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">突变是盲的，环境是冷的，两者互不知道对方的存在。正是这种无意图的解耦，才产出了真正的多样性。而 autoresearch + LLM-as-judge 恰恰把设计和筛选重新耦合了——系统自己改自己的基因，又自己批改自己的作业。策略空间会坍缩到模型自身的认知边界内。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">这不是自主进化，是自我循环。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">真正的自主进化，意味着系统有权修改自身，但由独立于系统的环境裁决修改的好坏。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这立刻引出一个尖锐的问题：我们敢把“自我修改”交给 AI，同时还能保证“筛选”是独立的吗？</p>
+<h2 id="时间是唯一的裁判" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">6.  时间是唯一的裁判</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">进化最容易被忽略的维度是时间。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">不是 point-in-time evaluation——跑一次 benchmark，出分数，排名。而是 cumulative evaluation——你能在持续变化的环境中活多久？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">蓝藻的策略谈不上精妙，但它活了 35 亿年。恐龙一度辉煌，但环境剧变面前，1.6 亿年的积累归零。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">时间不评价你有多聪明，只评价你能不能一直活着。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">AI 完全没有这个维度。模型没有“活着”的概念——训练、部署、替换。一个模型不需要存活，下一个版本随时取代它。这让 AI 的进化更像拉马克式的——每一代都是人刻意设计的改进——而不是达尔文式的。</p>
+<h2 id="寻找硅基的存活" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">7.  寻找硅基的存活</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果碳基的 eval 是存活，硅基的等价物是什么？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">不是“通过更多 benchmark”，不是“更高的 Arena ELO”。这些都是 point-in-time metric，不是 survival signal。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">也许更接近的答案是：<strong style="font-weight:700;color:#111827;">持续被需要</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">一个 AI 系统如果能持续解决环境中的真实问题，它就不会被替换——这就是它的“存活”。不是物理意义上的活着，而是功能意义上的不可替代。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">“持续被需要”跟“活着”有同样的结构特征：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">足够简单，不需要人为定义 metric</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">自带时间维度，不是一次性评估</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">环境会变，策略必须进化</li>
+</ul>
+<h2 id="碳基与硅基的对位" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">8.  碳基与硅基的对位</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">把两条线索放到一起看：</p>
+<table style="width:100%;border-collapse:collapse;margin:22px 0;font-size:14px;line-height:1.6;color:#1f2937;">
+<thead>
+<tr>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;"></th>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">碳基</th>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">硅基</th>
+</tr>
+</thead>
+<tbody><tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Eval 函数</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">存活</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">持续被需要</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">复杂性来源</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">不变的 eval + 变化的环境</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">同构</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">自我编辑</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">突变 + 重组 + 自然选择</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">设计与筛选尚未解耦</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">时间角色</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">唯一裁判</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">几乎缺席</td>
+</tr>
+</tbody></table>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">碳基进化用 38 亿年证明了一件事：你不需要设计智能，你只需要一个足够好的 eval 函数和足够长的时间。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这或许是硅基自主进化最该学的一课——不是去设计更聪明的系统，而是找到那个不变的 eval，然后给它时间。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但硅基有一个碳基从未有过的选项：它可以选择自己的 eval 函数。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这到底是优势，还是诅咒？</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/04/12/one-eval-function-3-8-billion-years/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/04/12/one-eval-function-3-8-billion-years/</a></p>
+    </section>
+  </main>
+</body>
+</html>

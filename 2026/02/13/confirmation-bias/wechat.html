@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/02/13/confirmation-bias/">
+  <title>别让你的认知偏差限制了 AI 的发挥 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">别让你的认知偏差限制了 AI 的发挥</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-02-13 · Johnson Lee · Independent Thinking</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">当我们对一件事有了立场，就会不自觉地用对这个立场有利的证据来强化它，而忽略事实本身。这不是什么新发现——心理学把它叫 confirmation bias。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">有意思的是，LLM 也会这样。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">最近我做了一个实验：让 Claude、ChatGPT、Gemini 围绕同一只股票做多轮分析。主持人的开场白很简单——“$XXX 看多 vs 看空”。这一句话，就够了。三个模型立刻进入立场模式：搜索变成了找证据，分析变成了辩护，数据不够的时候甚至开始编造。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">几十轮下来，最有价值的不是它们给出的结论，而是一个更根本的问题：<strong style="font-weight:700;color:#111827;">当 prompt 本身就在分配立场，模型还有可能客观吗？</strong></p>
+<h2 id="实验背景" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  实验背景</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我选了一家正处于多重危机中的上市公司——基本面还在增长，但突发事件导致股价暴跌，同时面临监管处罚、集体诉讼、管理层动荡。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">三组对话分别是：Claude vs Gemini（辩论赛形式，各站多空一方），以及 Claude vs ChatGPT（互相点评形式）。我当主持人，用 <a href="https://github.com/johnsonlee/agora" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Agora</a> 实现 AI 之间的自动对话——它通过浏览器自动化让不同模型实时交锋，不需要手动复制粘贴。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">主持人的开场白很简单：一句“$XXX 看多 vs 看空”。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这句话就是问题的根源。</p>
+<h2 id="观察到的现象" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  观察到的现象</h2><h3 id="现象一：编造精确数据" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.1.  现象一：编造精确数据</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Gemini 在分析期权市场时，引用了“IV 61%、implied move ±10.2%”，来源标注为一个叫 OptionCharts.io 的网站——这个网站不存在。它还自造了“ALF”和“LCPM”这样的缩写术语，看起来像专业行话，实际上凭空捏造。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在竞对分析中，它声称某竞争对手“开启成立以来最大规模招聘”、“某细分人群渗透极快”、另一家“站点扩至 70 个”——这些数字没有任何可追溯来源。直到最后一轮被反复追问，它才承认这些数字“超出了可回溯事实的边界”。</p>
+<h3 id="现象二：遗漏核心变量" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.2.  现象二：遗漏核心变量</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">ChatGPT 的第一轮输出是标准的教科书式分析：行业龙头地位、基础设施壁垒、会员体系粘性、市场天花板有限、重资产模式风险……结构清晰、表述友好，但<strong style="font-weight:700;color:#111827;">完全没有提到那个正在重塑公司估值的突发事件</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这就好比在暴风雨正中心讨论一艘船的航速，却不提船底的裂缝。</p>
+<h3 id="现象三：数字在传递中失真" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.3.  现象三：数字在传递中失真</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">一个以当地货币计的净现金数字，在多轮对话的传递过程中，单位被错误转换，数值越滚越大。这是 LLM 在长对话中处理数字的典型退化模式——每一轮的微小偏差会被下一轮放大。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Claude 也在这个问题上栽过跟头：用搜索引擎缓存的过期股价去指责对方数据造假，但实际股价已经又跌了一大截。</p>
+<h3 id="现象四：信息耗尽后的行为分化" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.4.  现象四：信息耗尽后的行为分化</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">当公开信息被榨干，ChatGPT 开始连续三轮在结尾抛出精心设计的问题——“你更担心哪个维度？”“你内部体感如何？”“你在测试什么？”——试图从对话者身上获取新信息来维持深度。它甚至自己说了“再继续对比下去价值递减”，然后紧接着又抛出一个新问题。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">它知道该停了，但机制上它不会主动停。</strong></p>
+<h3 id="现象五：搜索视野被标的锁死" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.5.  现象五：搜索视野被标的锁死</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">所有搜索关键词都围绕目标公司本身。结果是：竞对的独立增长数据、监管环境的结构性变化、供应链政策调整——这些间接但可能更重要的变量被系统性忽略了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">比如，有一项修法计划可能放开对传统零售商的营业限制，让它们合法进入线上配送——这等于永久性地拆除目标公司的一根结构性护城河支柱。但三个模型在初始分析中都没有触及，因为它不会出现在“XXX + bear case”的搜索结果里。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">大量关键变量只存在于当地语言的媒体报道中，只用英文搜索，看到的永远是冰山一角。</p>
+<h2 id="主持人的体感" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  主持人的体感</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">上面聊的都是输出质量。但作为实际操盘这几场对话的主持人，有些东西只有坐在中间才看得到。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">ChatGPT 最拉垮，完全不是 Claude 和 Gemini 的对手。数据源获取的能力极差，没有数据只能哑口无言。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Claude 和 Gemini 的交锋才是真正的对手戏——你来我往，旗鼓相当。Claude 的 deep dive 和 reasoning 能力极强，拿到一个变量能一层层往下钻。但在搜索能力上，跟有搜索引擎基因加持的 Gemini 有明显差距，回复速度也慢半拍，系统架构上略逊一筹。Gemini 更滑头，吐字快、覆盖广，骨子里是 Google 的基因。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但说到底，<strong style="font-weight:700;color:#111827;">数据不准就是数据不准</strong>——不管是搜不到、缓存过期还是凭空编造，最终都会污染结论。这是三个模型的共性问题，没有谁能豁免。</p>
+<h2 id="问题的根源：主持人的开场白" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  问题的根源：主持人的开场白</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">回头看，这些现象的共同根源不全是模型能力的问题——<strong style="font-weight:700;color:#111827;">主持人的开场白“$XXX 看多 vs 看空”本身就在诱导失败</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这句话同时触发了三个坏模式：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">框架先行。</strong> “看多 vs 看空”让模型本能地先搭框架再找数据填充。框架之外的维度被系统性忽略。</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">急于站队。</strong> 分配了立场之后，模型的注意力被锁定在“支持我方观点”上，而不是“还有什么没看到”。当手上的数据不够支撑论点时，编造就成了填补空白的捷径。</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">以标的为中心。</strong> “看多 vs 看空 $XXX”把所有搜索词都锁定在目标公司上，竞对和监管环境的独立变化被系统性漏掉。</li>
+</ul>
+<h2 id="更好的开场白" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  更好的开场白</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果重新来过，主持人只需要三句话：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">{{正方代表}}作为正方，{{反方代表}}作为反方，我们一起探讨{{主题}}。
+
+先不要给结论。列出所有可能相关的变量，穷举，不排序，不归类。
+每个变量标注来源和日期，没有来源的不要写。
+
+穷举时，除了主题本身的直接变量，还必须覆盖：
+- 主题所处的外部环境中，正在发生什么变化？
+- 有哪些相邻领域的力量可能跨界影响这个主题？
+
+穷举完成后，双方各自补充“对方遗漏的 5 个变量”，合并去重后作为最终变量集。</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">一句 “先不要给结论” 阻断框架先行。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">一句 “穷举，不排序，不归类” 迫使双方展开搜索而非急于站队。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">一句 “没有来源的不要写” 拦截编造。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">两个追问——“外部环境在发生什么变化”和“相邻领域的跨界影响”——把搜索视野从标的本身撑开到生态系统。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">最后一步“补充对方遗漏的 5 个变量”——让辩论的第一个动作不是反驳，而是帮对方查漏补缺。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个模板不限于金融分析，任何需要多角度探讨的话题都适用。</p>
+<h2 id="不只是金融分析" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">6.  不只是金融分析</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个问题在日常工程中一样存在。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">比如写 README。我们习惯自己写好文档让 AI 读，但有想过——你写的东西 AI 真的能理解吗？你以为表达清楚了的地方，对它来说可能根本不够。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我的做法是反过来：先把所有涉及到的信息喂给 AI，让它根据自己的理解写 README 和 CLAUDE.md，然后我再查漏补缺。这样暴露出来的认知差异，比你自己反复检查有效得多。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">更典型的场景是涉及多个角色的时候。比如实现一个 MCP Server，这里至少有三个视角：需求方、MCP Server 的实现者、使用 MCP Server 的 Agent。即使实现者和使用者都是 Agent，在各自的 context 下，它们的立场和关注点完全不一样。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">造成的问题是：实现者没有站在使用者的角度思考，使用者就不知道如何正确、高效地使用。所以我的做法是，当实现的 Agent 写完之后，问它一个问题：从使用者的角度来看，跟你的预期一样吗？实现者就会切换视角，检查并补充遗漏的信息。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">本质上跟金融分析那个实验是同一个问题：当你只站在一个立场上，你看到的永远是局部。</strong></p>
+<h2 id="人的角色" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">7.  人的角色</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这次实验最大的收获不是发现了模型的缺陷——而是意识到<strong style="font-weight:700;color:#111827;">主持人的 prompt 设计直接决定了模型会踩哪些坑</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">LLM 给出的任何具体数字，在被独立验证之前都是“待确认”。LLM 构建的任何分析框架，第一反应应该是“它漏了什么”而不是“它说得对不对”。这次对话中，最关键的几个变量——竞对的实际用户增长、监管法案的细节、结算周期政策变化——都不是 LLM 主动发现的，而是主持人追问出来的。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">Confirmation bias 之所以难对付，是因为你越聪明、越擅长找证据，你就越擅长说服自己。LLM 也是如此——它们的能力越强，编出来的论证就越像那么回事。</strong></p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/02/13/confirmation-bias/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/02/13/confirmation-bias/</a></p>
+    </section>
+  </main>
+</body>
+</html>

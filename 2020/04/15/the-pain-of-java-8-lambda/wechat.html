@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2020/04/15/the-pain-of-java-8-lambda/">
+  <title>Java 8 Lambda 之殇 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Java 8 Lambda 之殇</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2020-04-15 · Johnson Lee · Computer Science / Java</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">前段时间为 <a href="https://github.com/didi/booster/blob/master/booster-task-analyser" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-task-analyser</a> 做性能优化，不禁开始怀念 <em style="font-style:italic;color:#1f2937;">Java</em> ，于是乎，又尝试用 <em style="font-style:italic;color:#1f2937;">Java</em> 写点东西，但总是感觉很不爽，尤其是在 <em style="font-style:italic;color:#1f2937;">lambda</em> 表达式中 <em style="font-style:italic;color:#1f2937;">try-catch</em> ，太烦人了，本来就一行代码的事情，硬生生写成 6 行（效率就是被这么给降下来的），我当时就想，能不能让 <em style="font-style:italic;color:#1f2937;">Java 8</em> 的 <em style="font-style:italic;color:#1f2937;">lambda</em> 写起来更爽一点？</p>
+<h2 id="Unchecked-Exception" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  Unchecked Exception</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在 <em style="font-style:italic;color:#1f2937;">Java</em> 中，只有两种类型的 <em style="font-style:italic;color:#1f2937;">Throwable</em> 是不必强制 <em style="font-style:italic;color:#1f2937;">try-catch</em> 的：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">RuntimeException</code></li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">  <em style="font-style:italic;color:#1f2937;">Java</em> 的设计者认为 <em style="font-style:italic;color:#1f2937;">RuntimeException</em> 是由于人为的原因引起的 —— 程序员的锅，所以不必 <em style="font-style:italic;color:#1f2937;">catch</em></p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Error</code></li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">  <em style="font-style:italic;color:#1f2937;">Java</em> 的设计者认为 <em style="font-style:italic;color:#1f2937;">Error</em> 是最严重的异常，通常是无法恢复的，也没有别的办法处理 —— <em style="font-style:italic;color:#1f2937;">catch</em> 也没用</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">基于这个理论，我们是否可以让 <em style="font-style:italic;color:#1f2937;">lambda</em> 中需要 <em style="font-style:italic;color:#1f2937;">catch</em> 的地方抛出 <em style="font-style:italic;color:#1f2937;">RuntimeException</em> 呢？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">其实，在 <em style="font-style:italic;color:#1f2937;">Java 8</em> 中，<em style="font-style:italic;color:#1f2937;">JDK</em> 中新增了 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">UncheckedIOException</code> 这个类，为了在 <em style="font-style:italic;color:#1f2937;">Stream API</em> 中更方便的使用 <em style="font-style:italic;color:#1f2937;">Lambda</em> ，例如：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class BufferedReader extends Reader {
+
+    public Stream&lt;String&gt; lines() {
+        Iterator&lt;String&gt; iter = new Iterator&lt;String&gt;() {
+            String nextLine = null;
+
+            @Override
+            public boolean hasNext() {
+                if (nextLine != null) {
+                    return true;
+                } else {
+                    try {
+                        nextLine = readLine();
+                        return (nextLine != null);
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                }
+            }
+
+            @Override
+            public String next() {
+                if (nextLine != null || hasNext()) {
+                    String line = nextLine;
+                    nextLine = null;
+                    return line;
+                } else {
+                    throw new NoSuchElementException();
+                }
+            }
+        };
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(
+                iter, Spliterator.ORDERED | Spliterator.NONNULL), false);
+    }
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">虽然，<em style="font-style:italic;color:#1f2937;">UncheckedIOException</em> 能解决这个问题，但总是感觉用起来还是很傻，所以，我就在想，能不能将这段代码写得更简短呢？</p>
+<h2 id="造轮子" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  造轮子</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如下面这段代码：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public void cat(Collection&lt;File&gt; files) {
+    files.stream().map(file -&gt; {
+        try {
+            return Files.readString(file.toPath());
+        } catch (IOException e) {
+            return "";
+        }
+    }).forEach(System.out::println);
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果能写成下面这样岂不是美哉（即使有一点点细微的差异也能接受）：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public void cat(Collection&lt;File&gt; files) {
+    files.stream()
+            .map(file -&gt; Files.readString(file.toPath()))
+            .forEach(System.out::println);
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">既然是这样，是不是可以把 <em style="font-style:italic;color:#1f2937;">lambda</em> 再包装一层？比如，写成这样也不错：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public void cat(Collection&lt;File&gt; files) {
+    files.stream()
+            .map(file -&gt; unchecked(() -&gt; Files.readString(file.toPath())}))
+            .forEach(System.out::println);
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">虽然上面的代码括号是多少了一点，但是，比起最开始的样子，已经美观了不少，那如何才能做到上面的写法能适应各种情况呢。</p>
+<h3 id="有返回值的方法" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.1.  有返回值的方法</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">由于 <em style="font-style:italic;color:#1f2937;">Java 8</em> 支持 <em style="font-style:italic;color:#1f2937;">Functional Interface</em> ，有返回值的方法可以定义成为：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">@FunctionalInterface
+public interface Procedure&lt;R, E extends Throwable&gt; {
+
+    R invoke() throws E;
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">然后通过下面这个方法，将 <em style="font-style:italic;color:#1f2937;">lambda</em> 包装一下：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public static &lt;R, E extends Throwable&gt; R unchecked(final Procedure&lt;R, E&gt; procedure) {
+    try {
+        return procedure.invoke();
+    } catch (final Error | RuntimeException e) {
+        throw e;
+    } catch (final Throwable e) {
+        throw new UncheckedException(e);
+    }
+}</code></pre>
+
+<h3 id="无返回值的方法" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.2.  无返回值的方法</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">无返回值的方法可以定义成这样：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">@FunctionalInterface
+public interface Block&lt;E extends Throwable&gt; {
+
+    void invoke() throws E;
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">然后通过下面这个方法，将 <em style="font-style:italic;color:#1f2937;">lambda</em> 包装一下：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public static &lt;E extends Throwable&gt; void unchecked(final Block&lt;? super E&gt; block) {
+    try {
+        block.invoke();
+    } catch (final Error | RuntimeException e) {
+        throw e;
+    } catch (final Throwable e) {
+        throw new UncheckedException(e);
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">OK，搞定！这个轮子可还行？</p>
+<h2 id="啰嗦的变量声明" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  啰嗦的变量声明</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">用习惯了 <em style="font-style:italic;color:#1f2937;">Kotlin</em> 再回到 <em style="font-style:italic;color:#1f2937;">Java</em> 的世界，一切都显得很啰嗦，于是，我又想，能不能让 <em style="font-style:italic;color:#1f2937;">Java</em> 的变量声明也能更短一点呢？想想 <em style="font-style:italic;color:#1f2937;">JavaScript</em> 里的 <em style="font-style:italic;color:#1f2937;">jQuery</em> 的 <em style="font-style:italic;color:#1f2937;">$()</em> 的用法，还是挺别致的，正好 <em style="font-style:italic;color:#1f2937;">$</em> 符在 <em style="font-style:italic;color:#1f2937;">Java</em> 中是合法的标识符，那再造个轮子吧：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public static &lt;T&gt; void $(final T object, final Consumer&lt;? super T&gt; consumer) {
+    consumer.accept(object);
+}
+
+public static &lt;T, R&gt; R $(final T object, final Function&lt;T, R&gt; function) {
+    return function.apply(object);
+}
+
+public static &lt;A, B&gt; void with(final A a, final B b, final BiConsumer&lt;A, B&gt; consumer) {
+    consumer.accept(a, b);
+}
+
+public static &lt;A, B, R&gt; R with(final A a, final B b, final BiFunction&lt;A, B, R&gt; function) {
+    return function.apply(a, b);
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">于是，在 <em style="font-style:italic;color:#1f2937;">Java</em> 的世界里，我们可以像 <em style="font-style:italic;color:#1f2937;">JavaScript</em> 一样玩耍了：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">$(new File("..."), (f) -&gt; {
+    
+});</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">对这个轮子感兴趣的同学可以戳这里 👉 <a href="https://github.com/johnsonlee/lambda-support" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">lambda-support</a></p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2020/04/15/the-pain-of-java-8-lambda/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2020/04/15/the-pain-of-java-8-lambda/</a></p>
+    </section>
+  </main>
+</body>
+</html>

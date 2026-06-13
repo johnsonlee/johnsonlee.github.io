@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2019/11/12/booster-transform-shared-preferences/">
+  <title>Booster: SharedPreferences Optimization | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Booster: SharedPreferences Optimization</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2019-11-12 · Johnson Lee · Computer Science / Open Source / Booster</p>
+<h2 id="Background" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Background</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><a href="https://github.com/didi/booster/releases/tag/v0.1.5" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Booster v0.1.5</a> actually already included an optimization for <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SharedPreferences</a>, though the scope was modest. Since <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SharedPreferences</a> is so pervasive in Android, we were extremely cautious with it -- it took several production releases to validate before we rolled out the latest optimization.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">As for why <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SharedPreferences</a> needs optimization at all, anyone who has done Android development knows its design has long been criticized. In truth, <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SharedPreferences</a> was never designed by Google's engineers to be used the way it is today. It simply got pushed far beyond its intended use case, leading to all sorts of jank and ANR issues.</p>
+<h2 id="The-v0-1-5-Optimization" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">The v0.1.5 Optimization</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SharedPreferences</a> optimization in <a href="https://github.com/didi/booster/releases/tag/v0.1.5" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster v0.1.5</a> replaced <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences.Editor.html#apply()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Editor.apply()</a> with <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences.Editor.html#commit()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Editor.commit()</a> executed on a background thread:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class ShadowEditor {
+
+    public static void apply(final SharedPreferences.Editor editor) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            AsyncTask.SERIAL_EXECUTOR.execute(new Runnable() {
+                @Override
+                public void run() {
+                    editor.commit();
+                }
+            });
+        } else {
+            editor.commit();
+        }
+    }
+
+}</code></pre>
+
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">For why we replace <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences.Editor.html#apply()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Editor.apply()</a> with asynchronous <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences.Editor.html#commit()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Editor.commit()</a>, see this article: <a href="http://www.cloudchou.com/android/post-988.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">http://www.cloudchou.com/android/post-988.html</a></p>
+</blockquote>
+<h2 id="The-v0-2-0-Optimization" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">The v0.2.0 Optimization</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><a href="https://github.com/didi/booster/releases/tag/v0.2.0" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Booster v0.2.0</a> took the <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SharedPreferences</a> optimization further. When <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences.Editor.html#commit()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Editor.commit()</a> is called but its return value is unused, the commit is moved to a background thread:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">override fun transform(context: TransformContext, klass: ClassNode): ClassNode {
+    if (klass.name == SHADOW_EDITOR) {
+        return klass
+    }
+
+    klass.methods.forEach { method -&gt;
+        method.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)?.filter {
+            it.opcode == Opcodes.INVOKEINTERFACE &amp;&amp; it.owner == SHARED_PREFERENCES_EDITOR
+        }?.forEach { invoke -&gt;
+            when ("${invoke.name}${invoke.desc}") {
+                "commit()Z" -&gt; if (Opcodes.POP == invoke.next?.opcode) {
+                    // if the return value of commit() does not used
+                    // use asynchronous commit() instead
+                    invoke.optimize(klass, method)
+                    method.instructions.remove(invoke.next)
+                }
+                "apply()V" -&gt; invoke.optimize(klass, method)
+            }
+        }
+    }
+    return klass
+}</code></pre>
+
+<h2 id="The-Data-Consistency-Problem" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">The Data Consistency Problem</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">While the first two optimizations addressed jank and ANR to some extent, they actually introduced a bug. Consider this code:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">SharedPreferences sp = context.getSharedPreferences("config", Context.MODE_PRIVATE);
+Editor editor = sp.edit();
+editor.put("key", "value");
+editor.commit();
+String value = sp.getString("key", null);</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">See the problem? A <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">put</code> followed immediately by a <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">get</code> -- the value might not be there yet, because <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences.Editor.html#commit()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Editor.commit()</a> could still be queued in the thread pool. While code like this is uncommon, it can still happen. So we introduced a new optimization with the following goals:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Fix jank and ANR caused by <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SharedPreferences</a>.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Fix cross-process data sharing for <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SharedPreferences</a>.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Fix the data consistency issue left over from previous versions.</li>
+</ol>
+<h2 id="The-Ultimate-Solution" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">The Ultimate Solution</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">To truly solve the <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SharedPreferences</a> problem, we need to avoid all the pitfalls of the native implementation:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">ANR caused by <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences.Editor.html#apply()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Editor.apply()</a>.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Main thread jank caused by <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences.Editor.html#commit()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Editor.commit()</a>.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Main thread jank or even ANR from frequent asynchronous <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences.Editor.html#commit()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Editor.commit()</a> calls.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Inability to synchronize data across processes in a timely manner.</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Booster's solution is <a href="https://github.com/didi/booster/blob/master/booster-android-instrument-shared-preferences/src/main/java/com/didiglobal/booster/instrument/sharedpreferences/BoosterSharedPreferences.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">BoosterSharedPreferences</a>. Through <a href="https://github.com/didi/booster/blob/master/booster-transform-shared-preferences/src/main/kotlin/com/didiglobal/booster/transform/sharedpreferences/SharedPreferencesTransformer.kt" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SharedPreferencesTransformer</a>, all calls to <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Context.getSharedPreferences(String, int)</code> are replaced with <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ShadowSharedPreferences.getSharedPreferences(Context, String, int)</code>:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class ShadowSharedPreferences {
+
+    public static SharedPreferences getSharedPreferences(final Context context, String name, final int mode) {
+        if (TextUtils.isEmpty(name)) {
+            name = "null";
+        }
+        return BoosterSharedPreferences.getSharedPreferences(name);
+    }
+
+    public static SharedPreferences getPreferences(final Activity activity, final int mode) {
+        return getSharedPreferences(activity.getApplicationContext(), activity.getLocalClassName(), mode);
+    }
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">In <a href="https://github.com/didi/booster/blob/master/booster-android-instrument-shared-preferences/src/main/java/com/didiglobal/booster/instrument/sharedpreferences/BoosterSharedPreferences.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">BoosterSharedPreferences</a>, <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SharedPreferences</a> instances are cached, which significantly improves performance:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public static SharedPreferences getSharedPreferences(final String name) {
+    if (!sSharedPreferencesMap.containsKey(name)) {
+        sSharedPreferencesMap.put(name, new BoosterSharedPreferences(name));
+    }
+    return sSharedPreferencesMap.get(name);
+}</code></pre>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2019/11/12/booster-transform-shared-preferences/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2019/11/12/booster-transform-shared-preferences/</a></p>
+    </section>
+  </main>
+</body>
+</html>

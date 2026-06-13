@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2022/06/08/class-reference-analysis/">
+  <title>Class Reference Analysis? Booster Makes It Easy! | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Class Reference Analysis? Booster Makes It Easy!</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2022-06-08 · Johnson Lee · Computer Science / Open Source / Booster</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">As app architecture evolves, sinking foundational modules is a phase every app goes through -- or will go through. During this process, existing modules often need to be split by functionality. Large-scale refactoring like this inevitably involves untangling dependency relationships between modules, especially class-level reference relationships. Faced with massive legacy codebases, how do you efficiently analyze these tangled dependencies?</p>
+<h2 id="Module-Level-Dependencies" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Module-Level Dependencies</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Most build tools and package managers provide module-level dependency analysis tools and APIs. Take Gradle as an example -- you can output the project's dependency tree with a single command:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">./gradlew dependencies</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Gradle provides not only CLI tools but also Configuration APIs. By writing a custom Gradle Plugin, you can easily retrieve each project's dependency tree:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">project.configurations
+    .getByName(JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME)
+    .resolvedConfiguration
+    .resolvedArtifacts</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">For Android apps, each application may have multiple build variants, making dependency tree retrieval slightly more involved than for Java apps:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">when (val android = project.getAndroid&lt;BaseExtension&gt;()) {
+    is LibraryExtension -&gt; android.libraryVariants
+    is AppExtension -&gt; android.applicationVariants
+    else -&gt; emptyList&lt;BaseVariant&gt;()
+}.asSequence().forEach { variant -&gt;
+    val dependencies = listOf(AndroidArtifacts.ArtifactType.AAR, AndroidArtifacts.ArtifactType.JAR)
+        .asSequence()
+        .map { artifactType -&gt;
+            variant.getArtifactCollection(
+                AndroidArtifacts.ConsumedConfigType.RUNTIME_CLASSPATH,
+                AndroidArtifacts.ArtifactScope.ALL,
+                artifactType
+            )
+        }
+        .map { it.artifacts }
+        .flatten()
+        .distinctBy { it.id.componentIdentifier }
+        .toList()
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Gradle's dependency analysis APIs only go as deep as the module level. If you want to drill down to the class or member level, you need a custom solution.</p>
+<h2 id="Inter-Module-Class-Dependencies" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Inter-Module Class Dependencies</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">To analyze class dependencies across modules, there are generally two approaches:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Analyze source code</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Analyze bytecode</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Obviously, source-code-based analysis is a big question mark in real-world scenarios. In practice, bytecode analysis is far more feasible.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Since we're working at the bytecode level, the first problem to solve is: how to obtain the bytecode of dependent modules.</p>
+<h3 id="Build-Artifacts" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Build Artifacts</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">We discussed earlier how to use Gradle APIs to retrieve dependencies for Java and Android projects. In practice, dependencies come in several forms:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Maven dependencies</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Project dependencies</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">...</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Maven dependencies are pre-compiled packages -- JAR or AAR. Either way, the class files are inside the archive. No surprises there. But for project dependencies, things get interesting -- they could be Java/Kotlin projects or Android projects. How do you get their class files?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">We know that Java and Kotlin projects have different compilation tasks, but as long as they're library projects, they share a common task -- <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">jar</code>, which packages classes into a JAR. What about Android projects?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">As mentioned earlier, we can get the Android project dependency list. If you've looked into it, you'll notice that the dependency list returns <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ResolvedArtifactResult</code> types. Through <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ResolvedArtifactResult.getFile()</code>, you can get file paths for all dependencies. But if you've tried it, you'll find that some dependencies reference a file named <em style="font-style:italic;color:#1f2937;">full.jar</em> that simply doesn't exist. What gives?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Don't panic. Let's look at the Android Gradle Plugin source code to understand what this <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">full.jar</code> actually is. Digging through the source, you'll find this in <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">LibraryTaskManager</code>:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">// Create a jar with both classes and java resources.  This artifact is not
+// used by the Android application plugin and the task usually don't need to
+// be executed.  The artifact is useful for other Gradle users who needs the
+// 'jar' artifact as API dependency.
+File mainFullJar = new File(jarOutputFolder, FN_INTERMEDIATE_FULL_JAR);
+AndroidTask&lt;ZipMergingTask&gt; zipMerger =
+        androidTasks.create(
+                tasks,
+                new ZipMergingTask.ConfigAction(variantScope, mainFullJar));</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The comment tells the whole story. The <em style="font-style:italic;color:#1f2937;">full.jar</em> exists, but the task isn't executed by default. So why not just run it ourselves?</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">./gradlew :mylibrary:createFullJarDebug</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Sure enough, after running the command above, the missing <em style="font-style:italic;color:#1f2937;">full.jar</em> appears. So the solution is straightforward: run these tasks before performing class analysis.</p>
+<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBjb250ZW50U3R5bGVUeXBlPSJ0ZXh0L2NzcyIgZGF0YS1kaWFncmFtLXR5cGU9IkRFU0NSSVBUSU9OIiBoZWlnaHQ9IjE3MHB4IiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIiBzdHlsZT0id2lkdGg6NDA3cHg7aGVpZ2h0OjE3MHB4O2JhY2tncm91bmQ6I0ZGRkZGRjsiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDQwNyAxNzAiIHdpZHRoPSI0MDdweCIgem9vbUFuZFBhbj0ibWFnbmlmeSI+PD9wbGFudHVtbCAxLjIwMjYuN2JldGExPz48ZGVmcy8+PGc+PCEtLWVudGl0eSBhbmFseXNlUmVmZXJlbmNlLS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0iYW5hbHlzZVJlZmVyZW5jZSIgZGF0YS1zb3VyY2UtbGluZT0iMSIgaWQ9ImVudDAwMDEiPjxyZWN0IGZpbGw9IiNCN0VGQ0QiIGhlaWdodD0iMzYuMjk2OSIgcng9IjIuNSIgcnk9IjIuNSIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDowLjU7IiB3aWR0aD0iMjE3LjUzMTMiIHg9IjUyLjAyIiB5PSI3Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTk3LjUzMTMiIHg9IjYyLjAyIiB5PSIyOS45OTUxIj46YW5hbHlzZVJlZmVyZW5jZSR7dmFyaWFudH08L3RleHQ+PC9nPjwhLS1lbnRpdHkgamFyRm9ySmF2YUxpYkEtLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLXF1YWxpZmllZC1uYW1lPSJqYXJGb3JKYXZhTGliQSIgZGF0YS1zb3VyY2UtbGluZT0iMiIgaWQ9ImVudDAwMDIiPjxyZWN0IGZpbGw9IiNGRkJDQkMiIGhlaWdodD0iMzYuMjk2OSIgcng9IjIuNSIgcnk9IjIuNSIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDowLjU7IiB3aWR0aD0iOTcuNTY3NCIgeD0iNyIgeT0iMTIwLjI5Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNzcuNTY3NCIgeD0iMTciIHk9IjE0My4yODUxIj46amF2YUxpYjpqYXI8L3RleHQ+PC9nPjwhLS1lbnRpdHkgZnVsbEphckZvckFuZHJvaWRMaWJCLS0+PGcgY2xhc3M9ImVudGl0eSIgZGF0YS1xdWFsaWZpZWQtbmFtZT0iZnVsbEphckZvckFuZHJvaWRMaWJCIiBkYXRhLXNvdXJjZS1saW5lPSIzIiBpZD0iZW50MDAwMyI+PHJlY3QgZmlsbD0iI0ZGQkNCQyIgaGVpZ2h0PSIzNi4yOTY5IiByeD0iMi41IiByeT0iMi41IiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjAuNTsiIHdpZHRoPSIyNTMuOTEyMSIgeD0iMTM5LjgzIiB5PSIxMjAuMjkiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIyMzMuOTEyMSIgeD0iMTQ5LjgzIiB5PSIxNDMuMjg1MSI+YW5kcm9pZExpYjpjcmVhdGVGdWxsSmFyJHt2YXJpYW50fTwvdGV4dD48L2c+PCEtLWxpbmsgYW5hbHlzZVJlZmVyZW5jZSB0byBqYXJGb3JKYXZhTGliQS0tPjxnIGNsYXNzPSJsaW5rIiBkYXRhLWVudGl0eS0xPSJlbnQwMDAxIiBkYXRhLWVudGl0eS0yPSJlbnQwMDAyIiBkYXRhLWxpbmstdHlwZT0iZGVwZW5kZW5jeSIgZGF0YS1zb3VyY2UtbGluZT0iNSIgaWQ9ImxuazQiPjxwYXRoIGQ9Ik0xNDQuMzgsNDMuNTMgQzEyNC43Nyw2NC4zMiA5NS41NjA1LDk1LjI3MjQgNzUuODUwNSwxMTYuMTcyNCIgZmlsbD0ibm9uZSIgaWQ9ImFuYWx5c2VSZWZlcmVuY2UtdG8tamFyRm9ySmF2YUxpYkEiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiLz48cG9seWdvbiBmaWxsPSIjMTgxODE4IiBwb2ludHM9IjcyLjQyLDExOS44MSw4MS41MDQ5LDExNi4wMDY3LDc1Ljg1MDUsMTE2LjE3MjQsNzUuNjg0OCwxMTAuNTE4LDcyLjQyLDExOS44MSIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxO3N0cm9rZS1saW5lam9pbjptaXRlcjtzdHJva2UtbWl0ZXJsaW1pdDoxMDsiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI3NC4yMzU4IiB4PSIxMTUuNzgiIHk9Ijg2LjM1NjkiPmRlcGVuZHNPbjwvdGV4dD48L2c+PCEtLWxpbmsgYW5hbHlzZVJlZmVyZW5jZSB0byBmdWxsSmFyRm9yQW5kcm9pZExpYkItLT48ZyBjbGFzcz0ibGluayIgZGF0YS1lbnRpdHktMT0iZW50MDAwMSIgZGF0YS1lbnRpdHktMj0iZW50MDAwMyIgZGF0YS1saW5rLXR5cGU9ImRlcGVuZGVuY3kiIGRhdGEtc291cmNlLWxpbmU9IjYiIGlkPSJsbms1Ij48cGF0aCBkPSJNMTc3LjM1LDQzLjUzIEMxOTcuMTQsNjQuMzIgMjI2LjY0MjIsOTUuMjg4OSAyNDYuNTQyMiwxMTYuMTg4OSIgZmlsbD0ibm9uZSIgaWQ9ImFuYWx5c2VSZWZlcmVuY2UtdG8tZnVsbEphckZvckFuZHJvaWRMaWJCIiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7Ii8+PHBvbHlnb24gZmlsbD0iIzE4MTgxOCIgcG9pbnRzPSIyNDkuOTksMTE5LjgxLDI0Ni42ODA4LDExMC41MzM3LDI0Ni41NDIyLDExNi4xODg5LDI0MC44ODcsMTE2LjA1MDMsMjQ5Ljk5LDExOS44MSIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxO3N0cm9rZS1saW5lam9pbjptaXRlcjtzdHJva2UtbWl0ZXJsaW1pdDoxMDsiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI3NC4yMzU4IiB4PSIyMjAuNzgiIHk9Ijg2LjM1NjkiPmRlcGVuZHNPbjwvdGV4dD48L2c+PD9wbGFudHVtbC1zcmMgVE92MTJpOG00NE50RktNZVJoaU1pWDNnZWVpWTJEdldDZmI4SWZaQWYxUDRsQmtYYUxBaGhlT19fRlR2R1pXME5tOGZPMFp0STZUbzlDSU83YjZMVWx0VEZhT0czcG15SXhLbkV0OWUydmF0RWYyY2JuUDZFN2ZKdnVLa2Z0R2I4U3VQREJYMHQyczRUaTlnamo5eGN4ZzdZT0d2UW5JMldQZlNfTDF1eG5MVnpmTWp6Y2lWaEluVFlNcXl5SF9XanlzMlVtNDA/PjwvZz48L3N2Zz4=" style="display:block;max-width:100%;height:auto;margin:24px auto;border-radius:6px;">
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">With that, all classes are at our disposal. Next up: finding the reference relationships.</p>
+<h3 id="Class-References" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Class References</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Static analysis typically uses a DAG (Directed Acyclic Graph). Booster provides <a href="https://github.com/johnsonlee/booster/tree/master/booster-graph" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-graph</a> for convenient DAG construction and visualization.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Additionally, static analysis often employs CHA (Class Hierarchy Analysis). Booster provides <a href="https://github.com/johnsonlee/booster/tree/master/booster-cha" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-cha</a> for class hierarchy analysis. However, class reference analysis doesn't require hierarchy analysis -- we just need to know which classes from each dependency are referenced by our target project. Essentially, this is analyzing each class's <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">import</code> list.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">At the bytecode level, there's no actual <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">import</code> construct. What source-level <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">import</code> statements correspond to in bytecode is an index into the constant pool. So why not just analyze the constant pool directly?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">That's one valid approach. But here I want to show how to do it with ASM. Unfortunately, ASM doesn't provide a direct API for accessing the constant pool. So what do we do?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Although ASM lacks constant pool APIs, we can achieve the same result by analyzing these parts of a <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ClassNode</code>:</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Class annotations</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Superclass</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Interfaces</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Class signature</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Field annotations</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Field types</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Method annotations</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Method parameters</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Method return types</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Method signatures</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Instructions in method bodies<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">INVOKE***</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">{GET/PUT}FIELD</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">{GET/PUT}STATIC</code>,</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">NEW</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ANEWARRAY</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">CHECKCAST</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">INSTANCEOF</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">MULTIANEWARRAY</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">LDC</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ATHROW</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">...</li>
+</ul>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Try-catch blocks in method bodies</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Local variable tables</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">...</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">In Booster, the ASM Tree API is widely used for bytecode manipulation. But for class reference analysis, the ASM Visitor API is more suitable -- you just need to implement the relevant <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">visit</code> methods:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">fun analyse(): Graph&lt;ReferenceNode&gt; {
+    val executor = Executors.newFixedThreadPool(NCPU)
+    val graphs = ConcurrentHashMap&lt;Reference, Graph.Builder&lt;ReferenceNode&gt;&gt;()
+
+    try {
+        project.classSets.map { (variant, classSet) -&gt;
+            classSet.map {
+                it to variant
+            }
+        }.flatten().map { (klass, variant) -&gt;
+            val edge = { to: ReferenceNode -&gt;
+                graphs.getOrPut(Reference(klass.name, variant)) {
+                    Graph.Builder()
+                }.addEdge(ReferenceNode(this.project.name, variant, klass.name), to)
+            }
+            val av = AnnotationAnalyser(edge)
+            val sv = SignatureAnalyser(edge)
+            val fv = FieldAnalyser(av, edge)
+            val mv = MethodAnalyser(av, sv, edge)
+            executor.submit {
+                klass.accept(ClassAnalyser(klass, av, fv, mv, sv, edge))
+            }
+        }.forEach {
+            it.get()
+        }
+    } finally {
+        executor.shutdown()
+        executor.awaitTermination(1, TimeUnit.MINUTES)
+    }
+
+    return graphs.entries.filter {
+        it.key.variant == variant
+    }.fold(Graph.Builder&lt;ReferenceNode&gt;()) { acc, (_, builder) -&gt;
+        builder.build().forEach { edge -&gt;
+            acc.addEdge(edge)
+        }
+        acc
+    }.build()
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">With that, we have the class reference DAG. For visualization, you can use the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">DotGraph</code> from <a href="https://github.com/johnsonlee/booster/tree/master/booster-graph" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-graph</a>, or generate other formats such as HTML.</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2022/06/08/class-reference-analysis/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2022/06/08/class-reference-analysis/</a></p>
+    </section>
+  </main>
+</body>
+</html>

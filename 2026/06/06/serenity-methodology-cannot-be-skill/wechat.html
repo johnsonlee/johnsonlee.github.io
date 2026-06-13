@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/06/06/serenity-methodology-cannot-be-skill/">
+  <title>Serenity，瓶颈猎人 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Serenity，瓶颈猎人</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-06-06 · Johnson Lee · Independent Thinking</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果你最近刷 X 或中文投资圈，应该已经见过 Serenity 这个名字。白发头像，半导体供应链，冷门小盘股，动不动几百 percent 的收益截图，还有一堆人把他称为“AI 供应链侦探”“瓶颈猎人”“白毛女股神”。如果你没见过，也没关系。你只需要知道一件事：这是一个靠研究 AI 基础设施最上游瓶颈，在短时间内被市场封神的人。</p>
+
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">他的传奇，最早要从 Reddit 上那个以暴富和爆仓闻名的 r/wallstreetbets 说起。那时他还叫 AleaBito，发了一篇关于 AXTI / InP 的长帖，说整个 AI buildout 后面会被 InP substrate 和 source material 卡住，而 AXTI 正好站在那个极窄的位置。论坛里很多人第一反应是：这不就是又一个推小票的吗？后来这个账号被封，故事反而更有戏剧性。几年后再看，大家才发现：他当时借 AXTI 讲的，是一条 AI 光子供应链里很少有人看见的物理约束。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">到了 2026 年，Serenity 在 X 上开始真正出圈。AXTI、SIVE、AAOI、RPI、AEHR，一串普通人甚至没听过的 ticker，被他放进 AI photonics、CPO、external light source、testing、robotics supply chain 这些结构里重新解释。别人还在讨论 GPU、云厂商 capex、英伟达订单，他已经在追 InP、CW laser、SiPh、harmonic reducer、rare earth magnet。你可以不同意他的每个结论，但很难否认：他看世界的角度和大多数人不一样。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">所以这两天围绕 Serenity 最有意思的事，已经从某只小票又涨了多少、“白毛女股神”这个外号还能传多远，转向了另一个问题：很多人开始把他的方法论整理成 SKILL。看起来很合理：既然他能从 AXTI、SIVE、AAOI 这类冷门名字里提前看出 AI 供应链的瓶颈，那把他的流程抽象出来，让 Agent 以后照着跑，不就行了吗？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我一开始也这么想。需求浪潮、架构变化、瓶颈材料、市场重估路径、反证检查，一层层写下来，确实很像一个可以复用的 research framework。但读完那些原帖和整理之后，我反而更确定另一件事：<strong style="font-weight:700;color:#111827;">Serenity 的方法论可以写成 SKILL，但 Serenity 的传奇不能。</strong></p>
+<h2 id="Bottleneck-Hunting" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  Bottleneck Hunting</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Serenity 的方法论核心是 bottleneck hunting。大需求只是起点，架构变化只是路径，真正要抓的是那一层短期扩不出来、客户绕不过去、市场还没重新定价的瓶颈。</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 220" role="img" aria-labelledby="serenity-framework-title" style="max-width: 100%; height: auto; margin: 8px 0 14px;">
+  <title id="serenity-framework-title">Serenity 方法论流程图：需求浪潮、架构变化、瓶颈卡点、重估路径</title>
+  <defs>
+    <marker id="serenity-arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#6b7280"></path>
+    </marker>
+    <filter id="serenity-card-shadow" x="-12%" y="-18%" width="124%" height="140%">
+      <fedropshadow dx="0" dy="2" stdDeviation="2" flood-color="#111827" flood-opacity="0.12"></fedropshadow>
+    </filter>
+  </defs>
+  <rect x="1" y="1" width="918" height="218" rx="8" fill="#000000" fill-opacity="0.08" stroke="#9ca3af" stroke-opacity="0.45"></rect>
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+    <g filter="url(#serenity-card-shadow)">
+      <rect x="40" y="64" width="170" height="92" rx="6" fill="#ffffff" stroke="#7aa7d9" stroke-width="2"></rect>
+      <rect x="260" y="64" width="170" height="92" rx="6" fill="#ffffff" stroke="#82b366" stroke-width="2"></rect>
+      <rect x="490" y="64" width="170" height="92" rx="6" fill="#ffffff" stroke="#d6b656" stroke-width="2"></rect>
+      <rect x="710" y="64" width="170" height="92" rx="6" fill="#ffffff" stroke="#b85450" stroke-width="2"></rect>
+    </g>
+    <g stroke="#6b7280" stroke-width="2.2" fill="none" marker-end="url(#serenity-arrow)">
+      <path d="M210 110 H248"></path>
+      <path d="M430 110 H478"></path>
+      <path d="M660 110 H698"></path>
+    </g>
+    <g text-anchor="middle">
+      <text x="125" y="104" font-size="22" font-weight="700" fill="#1f2937">需求浪潮</text>
+      <text x="125" y="132" font-size="14" fill="#6b7280">为什么现在</text>
+      <text x="345" y="104" font-size="22" font-weight="700" fill="#1f2937">架构变化</text>
+      <text x="345" y="132" font-size="14" fill="#6b7280">系统怎么变</text>
+      <text x="575" y="104" font-size="22" font-weight="700" fill="#1f2937">瓶颈 / 卡点</text>
+      <text x="575" y="132" font-size="14" fill="#6b7280">哪一层会卡</text>
+      <text x="795" y="104" font-size="22" font-weight="700" fill="#1f2937">重估路径</text>
+      <text x="795" y="132" font-size="14" fill="#6b7280">市场如何改价</text>
+    </g>
+  </g>
+</svg>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这套方法看起来像供应链研究，其实先问的是系统问题。AI 算力增长会不会迫使互连从电走向光？CPO 起来之后，哪种激光器、代工产能、认证周期会变成卡点？机器人放量后，执行机构、减速器、稀土磁材哪一层先紧？换到 RDDT、HIMS 这类非硬件例子，材料会消失，约束会变成数据、分发、监管或用户关系。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">真正落笔前，这套方法至少要问 10 个问题：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">哪个需求浪潮正在逼迫系统变化？</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">旧架构哪里开始不够用？</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">哪个组件、材料、工艺、产能、认证、数据或分发点会变稀缺？</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">这个稀缺层是瓶颈、卡点，还是普通受益者？</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">替代方案有多少，切换需要多久？</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">什么证据证明客户现在就需要它？</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">公司能不能捕获经济利益，还是利润会被客户、晶圆厂、供应商、资本方或竞争对手拿走？</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">市场还在用旧业务或旧收入口径给它定价吗？</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">哪个事实会最快证明这个投资假设错了？</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">下一步最该查哪份一手资料？</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这 10 问一写，方法论就从“找冷门小盘股”变成了一个完整研究流程：从需求到结构，从结构到约束，从约束到证据，再从证据回到定价。问题也在这里：流程可以写成 SKILL，答案质量不能靠 SKILL 保证。</p>
+<h2 id="动作可以排队，判断无法外包" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  动作可以排队，判断无法外包</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Serenity 最经典的 AXTI thesis，表面上是一篇小盘股 DD，实际结构很清楚：AI buildout 从电互连走向光互连，光子学需要 InP substrate 和 source material，而 AXT 在这两个层面都可能占据关键位置。换成人话就是：别盯着 GPU，去看 GPU 后面那条供应链里最窄的地方。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">到这里，你会发现它确实适合写成清单。需求、架构、稀缺、估值、反证，每一步都可以交给 Agent 排队执行。听起来不难。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">沿供应链往上游追并不难。难的是，你追到一堆名字之后，怎么知道哪一个是噪音，哪一个是约束。InP、CW laser、CPO、SiPh、ELS、harmonic reducer、rare earth magnet，这些词念出来不会自动变成 alpha。它们只是入口。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">大多数人看完 Serenity 的方法论，只会学到“去找小盘瓶颈股”。这很危险。因为小盘股天然盛产故事，任何公司都能把自己包装成未来巨浪里的关键零件。你如果没有能力判断“这个零件到底能不能被绕开”，最后抱住的是瓶子，错过的是瓶颈。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">方法论告诉你往哪里看，判断力决定你看到了什么。</strong></p>
+<h2 id="系统里的不可绕行点" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  系统里的不可绕行点</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Serenity 的框架最值得学的地方，和“冷门小盘”关系没那么大。核心在于那个系统问题：如果未来真的按这个方向展开，哪一层会先卡住？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">AXTI 是材料层。SIVE 是光源和生态适配层。LeaderDrive 那类 robotics 线索则是执行机构和稀土磁材层。换到 RDDT、HIMS 这类非硬件例子，约束从材料切换成数据、分发、监管、用户关系。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">前面那张图里的四层，缺一层都不够。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">只有需求浪潮，没有架构变化，那只是宏观叙事。只有架构变化，没有关键约束，那只是行业受益。只有关键约束，没有公司掌控力，那只是供应链知识。只有公司掌控力，没有重估路径，那只是“这家公司很重要”，不代表股票有吸引力。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这里还有一个细节：bottleneck 和 chokepoint 要分开看。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Bottleneck 是产能或输出控制。比如某个材料、工艺、fab allocation 让整个链条放量受限。Chokepoint 是架构依赖。即使别人也能生产类似东西，但系统、reference design、qualification cycle、客户路线已经围绕某个方案展开，短期不能热插拔替换。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个区分很关键。很多所谓“瓶颈股”其实只是 beneficiary。需求来了它会受益，但客户可以绕开它，竞争对手可以扩产，价格可能被压回去。Serenity 反复强调的恰恰是“不能绕开”的结构。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">真正的卡点，关键在于不可替代，而且来不及替代。</strong></p>
+<h2 id="SKILL-写不出判断手感" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  SKILL 写不出判断手感</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">现在网上那些 Serenity SKILL，大概率都会把上面 10 问整理成固定流程：先找需求，再画架构，定位稀缺，验证公司到底卡在哪一层，检查估值差，最后写反证。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这套东西有用，我也会用。但它解决动作编排，解决不了判断手感。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">判断手感是什么？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">判断手感是你看到一段 earnings call 里 CFO 随口提到"qualification cycle"时，知道这句话可能比营收数字更重要。判断手感是你读到一个政府 grant、一个 reference design、一个供应商页面更新时，知道它指向产业链位置变化，普通 PR 该直接排除。判断手感是你能分清“公司讲故事”和“客户被迫排队”的差别。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这些东西很难写进 SKILL。当然可以硬写。问题在于，一旦写进去，它们就会变成静态规则。静态规则最怕的就是动态世界。今天“政府补贴”是战略信号，明天可能只是过气概念的续命针；今天“客户认证”是拐点，明天可能只是没有量产意义的 design win。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">SKILL 可以告诉 Agent 去读 10-K、transcript、grant notice、technical program、customer reference。它不能保证 Agent 知道哪一行值得停下来，哪一行应该当作噪音删掉。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这和我之前写 Harness Engineering 时讲过的东西是同一个问题。SKILL 是输入约束层，它提高正确动作出现的概率，但判断本身仍然要另算。你可以把 Serenity 的流程塞进 Agent，但如果没有证据门槛、信源边界、反证检查、一手资料核验，它只会更流畅地生产一堆看起来像 Serenity 的幻觉。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">最危险的状态，是拿着方法论，以为自己拥有了判断力。</strong></p>
+<h2 id="传奇里还有一个不可复制变量：反身性" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  传奇里还有一个不可复制变量：反身性</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Serenity 早期的价值在于提前看见别人没看见的东西。但当一个人从几万粉丝涨到几十万粉丝，甚至开始成为 X 上订阅量最高的一批账号之一，他就会同时观察市场和影响市场。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">他开始成为市场的一部分。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这句话不等于指控他操纵价格。更准确地说，他的研究、持仓、语言风格、粉丝结构、媒体引用和小盘股流动性共同构成了一个反馈系统。他发一篇研究，价格动；价格动，更多人关注；更多人关注，下一篇研究的价格影响更大。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个变量，普通人复制不了。一个 Serenity SKILL 更复制不了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">同样一句“这家公司可能是 CPO 的 upstream laser chokepoint”，Serenity 说出来，和一个刚装完 SKILL 的账号说出来，已经是两种市场事件。前者带着历史战绩、社交传播、粉丝资金、媒体放大器；后者只是一个 prompt 的输出。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">所以普通人跟着学时，必须把“研究 alpha”和“传播 alpha”分开。Serenity 早期靠的是前者。现在外界看到的很多神迹，可能已经混入了后者。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果你把这两者混在一起，就会得出一个很危险的结论：只要我也找到小盘瓶颈股，就能复刻收益。现实更残酷：等你看到他的帖子，价格、流动性、叙事和风险已经和他建仓时不在同一个状态。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">你复制到的是截图，错过的是现场。</strong></p>
+<h2 id="证据阶梯比-ticker-list-更重要" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">6.  证据阶梯比 ticker list 更重要</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Serenity 这件事里，最该被复用的东西叫证据阶梯，ticker list 排在很后面。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">最弱的是社交帖子、镜像文本、匿名客户传闻、粉丝数、收益截图、帖子发出后的价格变化。这些只能当 lead，不能当 proof。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">中等强度的是客户网站、供应商页面、产业蓝图、政府 grant、相邻公司 earnings call、可信行业媒体。这些能说明“方向可能存在”，但还不能证明经济利益会流向某家公司。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">强证据是公司 filing、named contract、purchase agreement、exchange announcement、official grant award、具体产能和时间节点、财报里可见的收入、毛利、backlog 或现金流变化。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个阶梯比任何 SKILL 都重要。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">因为它逼你承认：Serenity 的很多帖子，本质上仍然是研究线索。他厉害的地方，是能比别人更早、更深、更准确地生成线索，并把多个弱中强信号串成一个结构。但如果你跳过验证，直接把线索当结论，你学到的会滑向 FOMO，离 Serenity 越来越远。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">好的研究要做的，远不止“找到一个激动人心的故事”。它还要知道这个故事现在站在哪一级证据上，以及下一步最该验证什么。</p>
+<h2 id="普通人应该怎么学" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">7.  普通人应该怎么学</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果真要把 Serenity 的方法变成自己的能力，我会保留四个动作。</p>
+<h3 id="从需求往物理世界翻译" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">7.1.  从需求往物理世界翻译</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">不要停在“AI 会增长”“机器人会增长”“数据中心会增长”。往下问：增长之后，哪种架构会变？架构变了之后，哪种材料、器件、工艺、产能、认证、数据、分发会变得稀缺？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">宏大叙事只有翻译成具体约束，才有研究价值。</p>
+<h3 id="区分受益者、瓶颈和卡点" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">7.2.  区分受益者、瓶颈和卡点</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">受益者会随行业上涨。瓶颈能影响供需。卡点会让系统短期无法绕行。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这三者的估值逻辑完全不同。把 beneficiary 当 chokepoint，是散户最容易交学费的地方。</p>
+<h3 id="每个-thesis-都要写反证" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">7.3.  每个 thesis 都要写反证</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">什么会最快证明你错了？客户找到了替代方案？产能扩得比预期快？价格被长协锁死？公司无法捕获 economics？新业务永远停留在 design win，没有进入 revenue？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果一个 thesis 写不出反证，通常说明它已经从研究滑进信仰。</p>
+<h3 id="把交易和-thesis-分开" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">7.4.  把交易和 thesis 分开</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Serenity 的原帖里其实常常有风险意识：方向对，不代表短期 timing 对；公司重要，不代表股权便宜；产业链位置关键，不代表不会被稀释、融资、治理问题、流动性和波动率打爆。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这点很多跟风者会故意忽略。因为风险意识不性感，不如“下一个 10 倍股”传播得快。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但真正能活下来的研究者，靠的是知道自己在哪些地方可能死。</p>
+<h2 id="一个-SKILL-能做到什么" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">8.  一个 SKILL 能做到什么</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我并不反对把 Serenity 的框架写成 SKILL。恰恰相反，我觉得这很有价值。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">一个好的 Serenity-style SKILL，至少可以逼 Agent 做几件事：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">先写需求浪潮，再回到 ticker；</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">不把“公司相关”当成“公司受益”，必须写出关键约束；</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">不把社交帖子当事实，必须标注证据等级；</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">不输出买卖建议，只输出待验证 thesis；</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">每个 thesis 都必须附上反证；</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">下一步必须列出一手资料检查项。</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这已经比大多数“帮我分析一下这只股票”的输出强太多。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但它仍然只是脚手架。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">SKILL 能让低水平输出变得不那么糟。它能减少遗漏，压住幻觉，逼模型走完整流程。可它不能凭空制造领域判断手感，不能替你读十年半导体供应链，不能替你承担波动，不能替你分辨“这句话是产业信号”还是“这句话只是公司 IR 的漂亮话”。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">SKILL 复刻路线图，复刻不了驾驶能力。</strong></p>
+<h2 id="传奇不能被安装" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">9.  传奇不能被安装</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Serenity 这个案例让我想到很多 AI 圈现在的冲动：看到一个高手，就想把他的流程拆成 prompt；看到一个系统，就想把它打包成 SKILL；看到一段成功，就想把它压缩成可复用指令。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这当然有价值。人类文明本来就是靠把经验外化成工具、文档、制度和协议往前走。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但压缩总会丢信息。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Serenity 的传奇里，有工程背景，有供应链直觉，有对冷门材料的长期关注，有对不完整证据的容忍，有承受剧烈波动的心理结构，有早期不被理解时还敢继续押注的性格，还有后来社交网络带来的反身性。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">你可以把其中一部分写成 SKILL。你不能把这些东西一键安装进自己身上。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">所以我更愿意把 Serenity 当成一个提醒：未来的 alpha 来自“把增长翻译成世界的物理约束”。但这件事的门槛在于，你有没有足够深的感官，能在噪音里闻到真正的约束。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">方法论可以共享。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">感官只能自己长出来。</p>
+<h2 id="Sources" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">10.  Sources</h2><ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://www.reddit.com/r/wallstreetbets/comments/1pyghud/the_entire_ai_buildout_google_nvda_msft_is/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Reddit AXTI / InP thesis</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://twiscan.com/en/x/aleabitoreddit" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Twiscan mirror of @aleabitoreddit public X posts</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://x-thread.org/api/get-thread/2013133037408805375" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Hidden Gold Rush / bottleneck hunting thread mirror</a></li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">注：本文只讨论公开社交帖里体现的方法论，不构成投资建议。社交帖、X 镜像和第三方整理都只能作为研究线索，不能替代公司披露文件、财报、电话会文字稿、合同、公告和其他一手资料。</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/06/06/serenity-methodology-cannot-be-skill/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/06/06/serenity-methodology-cannot-be-skill/</a></p>
+    </section>
+  </main>
+</body>
+</html>

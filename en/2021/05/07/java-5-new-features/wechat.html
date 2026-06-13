@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2021/05/07/java-5-new-features/">
+  <title>What&#39;s New in Java 5 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">What&#39;s New in Java 5</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2021-05-07 · Johnson Lee · Computer Science / Java</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">J2SE 5.0, codenamed <em style="font-style:italic;color:#1f2937;">Tiger</em>, was released on September 30, 2004. Originally numbered 1.5 following the internal versioning scheme, the number was changed to "better reflect the maturity, stability, scalability, and security level of J2SE." This release introduced several significant new language features, developed under <em style="font-style:italic;color:#1f2937;">JSR 176</em>.</p>
+<h2 id="Generic" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Generic</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Using generics in code brings many benefits:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Strong type checking at compile time</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Elimination of type casts<br> Without generics: <pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">List list = new ArrayList();
+list.add("hello");
+String s = (String) list.get(0);</code></pre>
+ With generics: <pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">List&lt;String&gt; list = new ArrayList&lt;String&gt;();
+list.add("hello");
+String s = list.get(0);</code></pre></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Implementation of generic algorithms, reducing code redundancy</li>
+</ol>
+<h2 id="Enhanced-for-Loop" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Enhanced for Loop</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Before Java 5.0, iterating over arrays required a traditional <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">for</code> loop:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">for (int i = 0; i &lt; array.length; i++) {
+    item = array[i]
+}</code></pre>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">or</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">for (int i = 0; i &lt; list.size(); i++) {
+    item = list.get(i)
+}</code></pre>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">or</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">for (Iterator&lt;Object&gt; it = list.iterator(); it.hasNext();) {
+    item = it.next()
+}</code></pre>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Starting from Java 5.0, both arrays and collections can be iterated using a unified <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">for-each</code> loop:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">for (item : arrayOrList) {
+    // ...
+}</code></pre>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The benefit of <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">for-each</code> is that without JIT enabled, <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">for-each</code> offers noticeable performance improvements over a traditional <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">for</code> loop. With JIT enabled, the difference is negligible. But as Java developers, we use Java to eliminate platform differences. Unless there are special performance requirements, we should prefer <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">for-each</code>. So how does <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">for-each</code> unify the iteration of arrays and collections?</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public static void main(String[] args) {
+    for (String arg : args) {
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The compiler generates the following bytecode:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;"> 0: aload_0
+ 1: astore_1
+ 2: aload_1
+ 3: arraylength
+ 4: istore_2
+ 5: iconst_0
+ 6: istore_3
+ 7: iload_3
+ 8: iload_2
+ 9: if_icmpge     23
+12: aload_1
+13: iload_3
+14: aaload
+15: astore        4
+17: iinc          3, 1
+20: goto          7
+23: return</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Decompiling the generated bytecode gives us:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public static void main(String[] var0) {
+    String[] var1 = var0;
+    int var2 = var0.length;
+
+    for(int var3 = 0; var3 &lt; var2; ++var3) {
+        String var10000 = var1[var3];
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">As we can see, the compiler optimized the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">for</code> loop by extracting the array <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">length</code> access into a variable outside the loop body. So what about iterating collections with <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">for-each</code>? Take this code as an example:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public static void main(String[] args) {
+    for (String arg : Arrays.asList(args)) {
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The compiler generates the following bytecode:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;"> 0: aload_0
+ 1: invokestatic  #2                  // Method java/util/Arrays.asList:([Ljava/lang/Object;)Ljava/util/List;
+ 4: invokeinterface #3,  1            // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+ 9: astore_1
+10: aload_1
+11: invokeinterface #4,  1            // InterfaceMethod java/util/Iterator.hasNext:()Z
+16: ifeq          32
+19: aload_1
+20: invokeinterface #5,  1            // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+25: checkcast     #6                  // class java/lang/String
+28: astore_2
+29: goto          10
+32: return</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Decompiled:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public static void main(String[] var0) {
+    String var2;
+    for(Iterator var1 = Arrays.asList(var0).iterator(); var1.hasNext(); var2 = (String)var1.next()) {
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">So <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">for-each</code> uses <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Iterator</code> when iterating collections, and an optimized traditional <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">for</code> loop when iterating arrays.</p>
+<h3 id="Autoboxing-Unboxing" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Autoboxing / Unboxing</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Autoboxing &amp; Unboxing automatically performs implicit conversions between primitive types and their corresponding wrapper classes, eliminating redundant code. For example:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">Integer a = 100;</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The compiler automatically generates the following bytecode:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">   bipush        100
+-&gt; invokestatic  #2                  // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+   astore_1</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">From the bytecode, we can see that autoboxing is essentially the compiler converting <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">100</code> to <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Integer.valueOf(100)</code>. Unboxing automatically calls <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Integer.intValue()</code>. For example:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">int a = new Integer(100);</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The compiler generates:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">   new           #2                  // class java/lang/Integer
+   dup
+   bipush        100
+   invokespecial #3                  // Method java/lang/Integer."&lt;init&gt;":(I)V
+-&gt; invokevirtual #4                  // Method java/lang/Integer.intValue:()I
+   istore_1</code></pre>
+
+<h2 id="Typesafe-Enum" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Typesafe Enum</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Before Java 5.0, there was no real enum class. Enumerations were typically represented using <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">int</code> values, which brought several problems:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Not type-safe -- any <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">int</code> value could be used as a parameter, and the compiler had no way to validate it</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">No namespace -- only variable prefixes could distinguish enums, easily leading to naming conflicts</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Fragile references -- since <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">int</code> enums are typically constants inlined by the compiler, changing enum values or inserting new ones would require recompilation of all code using them</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Log-unfriendly -- <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">int</code> values printed in logs convey no meaning</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Starting from Java 5.0, you can define typesafe enums with the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">enum</code> keyword:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public enum Color {
+    RED, GREEN, BLUE
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Long ago, the official <em style="font-style:italic;color:#1f2937;">Android</em> <a href="https://developer.android.com/training/articles/perf-tips" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Performance Tips</a> had a section called <em style="font-style:italic;color:#1f2937;">Avoid Enums Where You Only Need Ints</em>, recommending against using <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Enum</code> because it consumed more memory. This section was later removed. The reason was tied to <em style="font-style:italic;color:#1f2937;">Android</em>'s <em style="font-style:italic;color:#1f2937;">Runtime</em> -- early <em style="font-style:italic;color:#1f2937;">Android</em> used <em style="font-style:italic;color:#1f2937;">Dalvik</em>, which was weak in memory allocation, hence the recommendation. Starting from <em style="font-style:italic;color:#1f2937;">Android</em> <em style="font-style:italic;color:#1f2937;">5.0</em>, which uses <em style="font-style:italic;color:#1f2937;">ART</em>, the memory overhead of <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Enum</code> became negligible.</p>
+<h2 id="Varargs" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Varargs</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Varargs must be the last parameter of a method:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public void printf(String format, Object... args) {
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">What's the difference between <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Object...</code> and <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Object[]</code>? Let's look at the bytecode:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public void printf(java.lang.String, java.lang.Object...);
+    descriptor: (Ljava/lang/String;[Ljava/lang/Object;)V
+    flags: ACC_PUBLIC, ACC_VARARGS
+    Code:
+      stack=0, locals=3, args_size=3
+         0: return
+      LineNumberTable:
+        line 11: 0</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">It turns out <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">args</code> is actually <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Object[]</code> -- <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Object...</code> is merely syntactic sugar. What happens if we declare another method with the same name but <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Object[]</code> as the last parameter?</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">class VarArgs {
+    public void printf(String format, Object... args) {
+    }
+
+    public void printf(String format, Object[] args) {
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">As expected, the compiler throws an error:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">VarArgs.java:5: error: cannot declare both printf(String,Object[]) and printf(String,Object...) in VarArgs
+    public void printf(String format, Object[] args) {
+                ^
+1 error</code></pre>
+
+<h2 id="Static-Import" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Static Import</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Before Java 5.0, accessing static members of a class required qualifying them with the class name:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">double r = Math.cos(Math.PI * theta);</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">A common workaround was defining static members in an interface and inheriting from it, but this was never a good idea. A class's use of another class's static members is an implementation detail. When a class implements an interface, the interface's members become part of that class's public API -- implementation details should not leak into the public API. To properly solve this, Java 5.0 introduced static imports:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">import static java.lang.Math.PI;
+import static java.lang.Math.cos;
+
+double r = cos(PI * theta);</code></pre>
+
+<h2 id="Annotation" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Annotation</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Many APIs require substantial boilerplate code. For example, writing a <em style="font-style:italic;color:#1f2937;">JAX-RPC web service</em> requires both an interface and its implementation class, leading to redundant boilerplate. Before <em style="font-style:italic;color:#1f2937;">Java 5.0</em>, Java only provided limited ad-hoc annotations such as <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">@deprecated</code>. Starting from <em style="font-style:italic;color:#1f2937;">1.5</em>, Java added the ability to define custom annotations and provided <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/apt/index.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">APT</a> for compile-time annotation processing.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">How did Java support <em style="font-style:italic;color:#1f2937;">Annotation</em> without changing the <em style="font-style:italic;color:#1f2937;">class</em> file structure? It comes down to the <em style="font-style:italic;color:#1f2937;">ClassFile</em> structure:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">ClassFile {
+    u4             magic;
+    u2             minor_version;
+    u2             major_version;
+    u2             constant_pool_count;
+    cp_info        constant_pool[constant_pool_count-1];
+    u2             access_flags;
+    u2             this_class;
+    u2             super_class;
+    u2             interfaces_count;
+    u2             interfaces[interfaces_count];
+    u2             fields_count;
+    field_info     fields[fields_count];
+    u2             methods_count;
+    method_info    methods[methods_count];
+    u2             attributes_count;
+    attribute_info attributes[attributes_count];
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The <em style="font-style:italic;color:#1f2937;">ClassFile</em> structure ends with an <em style="font-style:italic;color:#1f2937;">attribute_info</em> array. See the <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JVM specification</a>. <em style="font-style:italic;color:#1f2937;">Annotation</em> exists in the <em style="font-style:italic;color:#1f2937;">class</em> file as a form of <em style="font-style:italic;color:#1f2937;">attribute_info</em>. According to the JVM specification, <em style="font-style:italic;color:#1f2937;">Java 5.0</em> supports the following forms:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">RuntimeVisibleAnnotations</code> - annotations visible at runtime</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">RuntimeInvisibleAnnotations</code> - annotations invisible at runtime</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">RuntimeVisibleParameterAnnotations</code> - parameter annotations visible at runtime</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">RuntimeInvisibleParameterAnnotations</code> - parameter annotations invisible at runtime</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">AnnotationDefault</code> - default values for annotation methods</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Whether an annotation is visible at runtime depends on its <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">@RetentionPolicy</code>. From the Java source code, <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">@RetentionPolicy</code> has three values:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">SOURCE</code> - retain the annotation in source code only</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">CLASS</code> - retain the annotation in the <em style="font-style:italic;color:#1f2937;">class</em> file</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">RUNTIME</code> - retain the annotation at runtime</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The mapping between <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">RetentionPolicy</code> and annotation visibility:</p>
+<table style="width:100%;border-collapse:collapse;margin:22px 0;font-size:14px;line-height:1.6;color:#1f2937;">
+<thead>
+<tr>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">RetentionPolicy</code></th>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Visibility</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">SOURCE</code></td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">RuntimeInvisible</code></td>
+</tr>
+<tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">CLASS</code></td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">RuntimeInvisible</code></td>
+</tr>
+<tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">RUNTIME</code></td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">RuntimeVisible</code></td>
+</tr>
+</tbody></table>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">So if you want to access a custom <em style="font-style:italic;color:#1f2937;">Annotation</em> at runtime, you must declare its <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">RetentionPolicy</code> as <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">RetentionPolicy.RUNTIME</code>. Otherwise, it will not be accessible at runtime.</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">For more details, see: <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/language/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://docs.oracle.com/javase/1.5.0/docs/guide/language/</a></p>
+</blockquote>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2021/05/07/java-5-new-features/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2021/05/07/java-5-new-features/</a></p>
+    </section>
+  </main>
+</body>
+</html>

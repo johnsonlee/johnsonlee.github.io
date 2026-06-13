@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2019/12/24/booster-roadmap-2020/">
+  <title>Booster 2020 年规划 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Booster 2020 年规划</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2019-12-24 · Johnson Lee · Computer Science / Open Source / Booster</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">2019 年 4 月 23 日 Booster 正式开源，短短一半年不到的时间，star 数已经 2.3k 了，说实话，还真有点超出预期，也给自己无限的动力，不断的完善它，希望能真的能帮助大家解决实实在在的问题，而不是为了开源吸粉赚 star，无奈下半年忙着车载的业务，也只有周末的时候偶尔提交几个 commit 和处理志国提交的 PR，还得抽空写写 Booster 项目中的一些想法、实现思路和细节，如果多抽点时间来完善 Booster 的话，估计现在已经 3k 以上的 star 了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">最近终于有精力来想想明年 Booster 该做些什么了，从自己了解到的一些信息和反馈来看，目前 Booster 除了框架本身比较稳定，其实很多优化 feature 可能或多或少的存一些不适用的情况，所以，接下来，想把一个 feature 拆得更细，更好的适应各种情况，做到开箱即用，而且用起来还很香。</p>
+<h2 id="资源" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  资源</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">针对资源的优化是最能体现收益的，比什么字节码、指令优化对于包体积的减少要来得快，而且相对更容易一些，所以，想把原来资源优化分成以下几个模块：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">pngquant</em> 压缩 resource</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">pngquant</em> 压缩 assets</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">webp</em> 压缩 resource</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">webp</em> 压缩 assets</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">去重复 resource</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">去重复 assets</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">资源索引内联</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">ButterKnife</em> 资源索引内联</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">由于 <em style="font-style:italic;color:#1f2937;">pngquant</em> 的 <em style="font-style:italic;color:#1f2937;">license</em> 问题，所以，跟 <em style="font-style:italic;color:#1f2937;">pngquant</em> 相关的模块都得采用 <em style="font-style:italic;color:#1f2937;">GPL License</em> 跟 <em style="font-style:italic;color:#1f2937;">Apache License</em> 分开，将 <em style="font-style:italic;color:#1f2937;">pngquant</em> 内置到 <em style="font-style:italic;color:#1f2937;">JAR</em> 包中。</p>
+<h2 id="线程" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  线程</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">针对线程的优化容易踩坑，所以，把重命名单独抽出来，毕竟重命名对于 APM 采样是非常有价值的，所以，拆成以下两个模块：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">线程重命名</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">线程池优化</li>
+</ol>
+<h2 id="性能瓶颈检测" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  性能瓶颈检测</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">静态分析技术算是最难的一部分了，所以放到了最后，先把容易的事情做了（万一太难搞不定），Booster 目前的性能瓶颈检测做得比较简陋，对 <em style="font-style:italic;color:#1f2937;">Handler</em> 、多线程、接口等一些复杂的情况支持得不是很好，所以，这块的思路是引入 <em style="font-style:italic;color:#1f2937;">IR</em> 来解决</p>
+<h2 id="功能服务化" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  功能服务化</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">将性能分析与检测的能力部署到服务端，上传 APK 进行分析，然后得出分析报告，报告中包含几个部分：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">现存的问题</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">可以优化项及预期收益</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">...</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">感觉这些已经够折腾一年了（可能还不够），如果能有志同道合的小伙伴一起为开源社区贡献一份力量，是最好不过的了，如果您有兴趣的话，可以在评论区留言或者直接联系我，期待更多的小伙伴的加入...</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2019/12/24/booster-roadmap-2020/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2019/12/24/booster-roadmap-2020/</a></p>
+    </section>
+  </main>
+</body>
+</html>

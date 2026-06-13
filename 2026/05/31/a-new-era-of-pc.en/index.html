@@ -1,0 +1,322 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta name="theme-color" content="#FFF" id="theme-color"><meta content="telephone=no" name="format-detection"><meta name="description" content="Over the past two days, several giants posted almost the same sentence at almost the same time: &quot;A new era of PC.&quot; NVIDIA posted it. Windows posted it. Arm followed. Behind the line was a set of coord"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,johnsonlee,johnson,lijingsen,jingsen,ai,agent,llm,claude,claude code,ai工程化,harness,harness engineering,autoevolve,prompt engineering,RAG,agentic,MCP,AGI,vibe coding,ai coding,copilot,cursor,chatgpt,openai,anthropic,transformer,fine-tuning,embedding,multimodal,chain of thought,function calling,tool use,RLHF,ai native,架构设计,性能优化,滴滴,快手,我在滴滴做架构,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2026/05/31/a-new-era-of-pc.en/"><link rel="alternate" hreflang="zh-CN" href="https://johnsonlee.io/2026/05/31/a-new-era-of-pc/"><link rel="alternate" hreflang="en" href="https://johnsonlee.io/en/2026/05/31/a-new-era-of-pc/"><link rel="alternate" hreflang="x-default" href="https://johnsonlee.io/2026/05/31/a-new-era-of-pc/"><meta property="og:title" content="The Wintel Era Is Over"><meta property="og:description" content="Over the past two days, several giants posted almost the same sentence at almost the same time: &quot;A new era of PC.&quot; NVIDIA posted it. Windows posted it. Arm followed. Behind the line was a set of coord"><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2026/05/31/a-new-era-of-pc.en/"><meta property="og:image" content="https://johnsonlee.io/og-cards/a-new-era-of-pc.en.png"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="en_US"><meta property="article:published_time" content="2026-05-31T00:00:00.000Z"><meta property="article:author" content="Johnson Lee"><meta property="article:tag" content="AI PC"><meta property="article:tag" content="Wintel"><meta property="article:tag" content="NVIDIA"><meta property="article:tag" content="Microsoft"><meta property="article:tag" content="Local LLM"><meta property="article:tag" content="Token"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="The Wintel Era Is Over"><meta name="twitter:description" content="Over the past two days, several giants posted almost the same sentence at almost the same time: &quot;A new era of PC.&quot; NVIDIA posted it. Windows posted it. Arm followed. Behind the line was a set of coord"><meta name="twitter:image" content="https://johnsonlee.io/og-cards/a-new-era-of-pc.en.png"><title>The Wintel Era Is Over | Johnson Lee</title><script>(function(){var h=new Date().getHours();if(h<6||h>=19){document.documentElement.setAttribute('data-weather','night');var m=document.getElementById('theme-color');if(m)m.setAttribute('content','#020617')}})();</script><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&amp;display=swap"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Johnson Lee"><link rel="alternate" type="application/atom+xml" href="/atom.en.xml" title="Johnson Lee (English)" hreflang="en"><script type="text/javascript" src="/js/weather-theme.js" defer></script><script type="text/javascript" src="/js/weather-canvas.js" defer></script><script type="text/javascript" src="/js/i18n-switch.js" defer></script><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="body_container"><img src="/og-cards/a-new-era-of-pc.en.png" style="display:none"><div id="header"><div class="site-name"><h1 class="hidden">The Wintel Era Is Over</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/tags/"><i class="fa fa-tag"> Tags</i></a><a target="_blank" rel="noopener" href="https://about.johnsonlee.io/"><i class="fa fa-user"> About</i></a><a href="/atom.xml"><i class="fa fa-rss"> RSS</i></a></div><button class="lang-switch" type="button" data-target-lang="en" title="English">EN</button></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">The Wintel Era Is Over</h1><div class="post-meta">May 31, 2026<span> | </span><span class="category"><a href="/categories/Independent-Thinking/">Independent Thinking</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 3.7k</span><span class="post-meta-item-text"> Words</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 23</span><span class="post-meta-item-text"> Minutes</span></span></span></div><div class="post-content"><p>Over the past two days, several giants posted almost the same sentence at almost the same time: &quot;A new era of PC.&quot; NVIDIA posted it. Windows posted it. Arm followed. Behind the line was a set of coordinates pointing to Taipei. Tech companies declare new eras every day. That is not interesting. What is interesting is that they rarely do it together. What is even more interesting is that this time, they are all talking about the PC.</p>
+<p>An old thing that had lost its spotlight to mobile for more than a decade suddenly returned to the center of the table.</p>
+<span id="more"></span>
+
+<p>Many people&#39;s first reaction was: AI PCs are coming again.</p>
+<p>I think that is too shallow.</p>
+<p>The PC is not becoming a hot topic again because it suddenly became sexy, nor because the giants want to give laptops a new marketing name. The real reason is more practical, and more uncomfortable:</p>
+<p>Cloud AI is too expensive.</p>
+<p>Over the past two years, companies buying AI often ended up realizing they were not buying efficiency. They were working for model vendors. Tokens kept burning. Bills kept rising. Bosses kept asking about ROI. Teams kept tuning prompts. In the end, the only thing that looked more futuristic was the bill. Productivity was still stuck in the past.</p>
+<p>Especially with Agentic Coding.</p>
+<p>It has already proven useful. Writing code, changing code, running tests, reading repos, doing migrations, cleaning up technical debt. These are not tricks. They are real needs. The problem is that once something is truly useful, usage explodes. Once usage explodes, token cost becomes a tax.</p>
+<p>The paradox of AI is this: the more useful it is, the more expensive it becomes; the more automated it is, the less controllable it becomes.</p>
+<p>That is why the PC is back.</p>
+<p>Not the old PC used to open Excel, browse the web, and plug into a monitor. A new thing:</p>
+<p>A personal AI compute node.</p>
+<p>The Wintel era is over.</p>
+<p>Not because Intel will collapse tomorrow. Not because x86 will suddenly leave the stage. An architecture that ruled the PC for forty years will not be buried by a few tweets.</p>
+<p>But the value anchor of the PC has changed.</p>
+<p>In the past, the default answer for a PC was Windows + Intel&#x2F;x86. Next, the core question for a PC will become: can this machine handle enough local intelligence work at a lower cost?</p>
+<p>Whoever can answer that question stands at the center of the new era.</p>
+<h2 id="Why-Is-The-PC-Hot-Again"><a href="#Why-Is-The-PC-Hot-Again" class="headerlink" title="Why Is The PC Hot Again?"></a>Why Is The PC Hot Again?</h2><p>For more than a decade, the PC has felt like an old friend left behind by the times.</p>
+<p>It is still there. We still use it every day. Work depends on it. Code is written on it. Documents are edited on it. Meetings happen on it. Financial reports are read on it.</p>
+<p>But it is no longer sexy.</p>
+<p>What is sexy is mobile, apps, Feed, short video, super apps, always-online everything. The PC is more like an office desk: important, but not imaginative.</p>
+<p>Because for more than a decade, the most valuable computing left the PC.</p>
+<p>Storage moved to the cloud. Applications moved to SaaS. Consumption moved to mobile. Collaboration moved to the browser. Compute became something you buy on demand. The PC slowly became a terminal, a screen, a keyboard, a browser container.</p>
+<p>It did not need to be that powerful.</p>
+<p>The valuable things were in the cloud.</p>
+<p>That logic worked in the past. Companies bought SaaS. Users opened browsers. Data lived in the cloud. Collaboration happened in the cloud. The local machine only needed to be smooth enough not to get in the way.</p>
+<p>So PCs became cheaper, and more boring.</p>
+<p>But AI reversed this.</p>
+<p>AI is not just another SaaS. The core cost of AI is not the page, the account, permissions, or the database. It is every inference. Every prompt, every context expansion, every tool call, every detour an Agent takes in the background, is token spend.</p>
+<p>The PC lost imagination in the past because local compute no longer determined productivity.</p>
+<p>Local compute matters again because intelligence itself has become productivity.</p>
+<p>That is why the PC is back at the table.</p>
+<p>It is not a PC revival.</p>
+<p>It is the cost structure of cloud AI pushing the PC back.</p>
+<h2 id="The-SaaS-Math-Does-Not-Apply-To-AI"><a href="#The-SaaS-Math-Does-Not-Apply-To-AI" class="headerlink" title="The SaaS Math Does Not Apply To AI"></a>The SaaS Math Does Not Apply To AI</h2><p>Many people misread AI because they are still using a SaaS framework to understand it.</p>
+<p>What is SaaS?</p>
+<p>You buy a seat and pay monthly. The more users use it, the happier the vendor is. The software has already been written, server costs are relatively controllable, and marginal costs are diluted by scale.</p>
+<p>For companies, SaaS is also easy to calculate.</p>
+<p>One person pays 30 dollars a month. You can roughly estimate how much time it saves, how many processes it removes, and how much manual coordination it replaces. Even if the estimate is imperfect, at least the bill is stable.</p>
+<p>AI is not like that.</p>
+<p>AI billing is not seat-based. It is usage-based. You are not paying to &quot;own a capability.&quot; You are paying for &quot;each use of that capability.&quot;</p>
+<p>The more you use it, the higher the bill.</p>
+<p>The more successful the automation, the more frequent the calls.</p>
+<p>The harder the Agent works, the faster tokens burn.</p>
+<p>This is the opposite of the SaaS economic model.</p>
+<p>The best part of SaaS is that marginal cost is hidden by the vendor. Companies buy certainty: fixed subscription, continuous usage, and better economics as usage rises.</p>
+<p>The worst part of token pricing is that marginal cost is thrown back in the company&#39;s face. Companies buy uncertainty: nobody knows how much they will spend today, how much they will spend tomorrow, or how many steps an Agent took in the background.</p>
+<p>SaaS sells efficiency certainty. Tokens sell cost uncertainty.</p>
+<p>That is why many AI projects produce awkward expressions once they land.</p>
+<p>The demo is stunning.</p>
+<p>The POC looks promising.</p>
+<p>Everyone in the weekly meeting feels the future has arrived.</p>
+<p>Then the bill arrives.</p>
+<p>Once the bill arrives, many things start to look wrong.</p>
+<p>It turns out a simple task made the Agent read more than a dozen files, open dozens of context rounds, call several tools, and reflect on itself several times in the middle. It looked very intelligent. The bill was also very intelligent.</p>
+<p>More awkwardly, the result was not stable.</p>
+<p>Human employees may be expensive, but at least the cost is fixed. How much an engineer costs per month is basically clear. An Agent is different. It is like an intern paid by mileage: the harder it runs, the more expensive it becomes, and it may not know when it has gone off track.</p>
+<p>So the first-principles question for enterprise AI is not &quot;is the model strong enough?&quot;</p>
+<p>It is:</p>
+<p>Does this make economic sense?</p>
+<h2 id="Agentic-Coding-Breaks-The-Contradiction-Open"><a href="#Agentic-Coding-Breaks-The-Contradiction-Open" class="headerlink" title="Agentic Coding Breaks The Contradiction Open"></a>Agentic Coding Breaks The Contradiction Open</h2><p>Why does this contradiction show up first in Agentic Coding?</p>
+<p>Because coding is one of the few AI use cases that has already proven useful.</p>
+<p>Using AI to write ad copy is often just a bonus. Using AI to summarize meetings may be useful, or may never be read. Using AI to generate images is more often entertainment or an assistant inside a design workflow.</p>
+<p>Agentic Coding is different.</p>
+<p>Code is structured. Feedback is clear. Tasks are high-frequency. Value is measurable. It can read repos, change code, generate diffs, run tests, explain errors, do migrations, and clean up technical debt.</p>
+<p>It is not &quot;possibly useful.&quot;</p>
+<p>It is actually useful.</p>
+<p>That is also what makes it dangerous.</p>
+<p>If something is useless, nobody burns much money on it. The things that truly burn money are always useful things.</p>
+<p>Once Agentic Coding enters the workflow, it becomes a necessity. Engineers want to use it every day. Teams want to use it every day. Bosses also want everyone to use it more, because it really does work.</p>
+<p>But the way it works is expensive.</p>
+<p>Writing one line of code is not expensive. Understanding a repo is expensive.</p>
+<p>Changing one function is not expensive. Figuring out where to change is expensive.</p>
+<p>Generating a diff is not expensive. Repeatedly verifying it, running tests, fixing errors, and running tests again is expensive.</p>
+<p>The core consumption of Agentic Coding is often not in the final lines of code. It is in all the exploration, reading, reasoning, trial and error, rollback, and retry before that.</p>
+<p>This is very similar to how humans write code.</p>
+<p>The difference is that human exploration cost is already packaged into salary. An Agent&#39;s exploration cost appears line by line on the token bill.</p>
+<p>That is why Agentic Coding will become a necessity while forcing companies to rethink their cost structure.</p>
+<p>Agentic Coding proves that AI is useful, and also proves that all-cloud AI is too expensive.</p>
+<p>That sounds contradictory, but it is not.</p>
+<p>Precisely because it is useful, it becomes high-frequency.</p>
+<p>Precisely because it is high-frequency, it cannot stay expensive forever.</p>
+<h2 id="The-Value-Of-Local-LLMs-Is-Not-Being-Smarter-But-Being-Cheaper"><a href="#The-Value-Of-Local-LLMs-Is-Not-Being-Smarter-But-Being-Cheaper" class="headerlink" title="The Value Of Local LLMs Is Not Being Smarter, But Being Cheaper"></a>The Value Of Local LLMs Is Not Being Smarter, But Being Cheaper</h2><p>When people discuss local LLMs, they often ask one question:</p>
+<p>Can a local model beat Claude? Can it beat GPT? Can it beat Gemini?</p>
+<p>That is the wrong question.</p>
+<p>In the short to medium term, local LLMs do not need to beat frontier models.</p>
+<p>They only need to absorb enough low- and medium-complexity tasks.</p>
+<p>That is enough.</p>
+<p>What companies really need is not to call the strongest model for every request, but to stratify intelligence.</p>
+<p>Simple tasks go to the local model.</p>
+<p>Medium tasks go to an internal company model.</p>
+<p>Complex tasks, key decisions, and hard reasoning go to a cloud frontier model.</p>
+<p>That is a normal cost structure.</p>
+<p>Many teams are using AI in an extravagant way today. Completion, summarization, search, simple refactoring, script writing, log explanation, test generation. Everything goes to the most expensive cloud model.</p>
+<p>That is like delivering takeout in first class.</p>
+<p>It can be done.</p>
+<p>The math is wrong.</p>
+<p>The value of local LLMs is not turning every computer into AGI. Their real value is absorbing a large volume of tasks that are not worth calling a frontier model for, leaving cloud tokens for the places where they are truly needed.</p>
+<p>The value of local LLMs is not being smarter. It is being cheaper.</p>
+<p>More precisely, it is having a healthier cost structure.</p>
+<p>Buying tokens is opex: continuous spend, pay per use.</p>
+<p>Buying hardware is capex: one-time spend, with depreciation. Spread over three or five years, as long as usage frequency is high enough, local compute becomes cheaper than cloud tokens.</p>
+<p>This may not be that sensitive for individual users.</p>
+<p>But companies are very sensitive to it.</p>
+<p>One engineer calls an Agent dozens of times a day. A whole team calls it thousands of times a day. Add CI, code review, automated testing, knowledge-base Q&amp;A, document generation, and log analysis, and token spend quickly stops being &quot;small money.&quot;</p>
+<p>When AI moves from toy to infrastructure, cost structure moves from &quot;experience issue&quot; to &quot;life-or-death issue.&quot;</p>
+<p>So local LLMs are not a belief system.</p>
+<p>They are accounting.</p>
+<h2 id="The-PC-Becomes-A-Compute-Asset-Again"><a href="#The-PC-Becomes-A-Compute-Asset-Again" class="headerlink" title="The PC Becomes A Compute Asset Again"></a>The PC Becomes A Compute Asset Again</h2><p>This is where the PC becomes important again.</p>
+<p>Phones are important, of course. But phones are more like attention devices. They handle messages, consumption, photos, payments, social interaction, and instant response.</p>
+<p>The PC is different.</p>
+<p>The PC is a productivity device. It has a keyboard, a large screen, a file system, an IDE, a terminal, a browser, enterprise software, local data, development environments, repos, scripts, logs, and permission boundaries.</p>
+<p>If an Agent is going to do real work, it is not swiping around on a phone.</p>
+<p>It needs to read files, change code, run tests, look things up, call tools, connect to enterprise systems, and execute tasks across applications.</p>
+<p>These things naturally happen on the PC.</p>
+<p>Phones consume intelligence. PCs produce intelligence.</p>
+<p>That is why an AI PC cannot be understood merely as &quot;a laptop with an extra NPU.&quot;</p>
+<p>That is too narrow.</p>
+<p>The real new PC is not an extra Copilot key, nor a system assistant that can chat. It is a local intelligent work node.</p>
+<p>It needs to handle part of model inference.</p>
+<p>It needs to process private context.</p>
+<p>It needs to finish low-latency tasks locally.</p>
+<p>When cloud tokens are too expensive, it needs to intercept enough intelligent work.</p>
+<p>When necessary, it routes complex tasks to the cloud.</p>
+<p>In other words, the PC is no longer just a terminal for accessing cloud services.</p>
+<p>The PC becomes a compute asset again.</p>
+<p>That is what is really worth watching behind &quot;A new era of PC.&quot;</p>
+<p>Not that the PC is suddenly going back to the center of the 2000s.</p>
+<p>But that AI&#39;s cost structure is forcing part of computing back from the cloud to local machines.</p>
+<h2 id="Wintel-Is-Just-The-Name-Of-The-Old-Order"><a href="#Wintel-Is-Just-The-Name-Of-The-Old-Order" class="headerlink" title="Wintel Is Just The Name Of The Old Order"></a>Wintel Is Just The Name Of The Old Order</h2><p>Intel is still at the table. x86 will certainly not disappear overnight. If the only goal is running local models, CPU architecture itself may not even be the most important variable.</p>
+<p>What really matters is memory bandwidth, GPU&#x2F;NPU throughput, software stack, model scheduling, power, thermals, developer ecosystem, and the stratified experience across cloud &#x2F; local &#x2F; edge.</p>
+<p>Intel has cards.</p>
+<p>AMD has cards.</p>
+<p>Qualcomm has cards.</p>
+<p>Apple has already proven another path can work.</p>
+<p>But the word &quot;Wintel&quot; still matters.</p>
+<p>Because it is not a technical term. It is the name of the old PC order.</p>
+<p>The old default understanding of the PC was simple:</p>
+<p>Windows + x86 + OEM + local applications + cloud SaaS.</p>
+<p>Users did not need to understand that combination when buying a computer. The industry arranged it for them. Intel defined the hardware rhythm. Microsoft defined the operating system. OEMs shipped the machines. NVIDIA and AMD added weight in graphics or high-performance scenarios.</p>
+<p>That order ran for decades.</p>
+<p>Its core question was: can this machine run Windows software smoothly?</p>
+<p>But the core question for the next PC has changed:</p>
+<p>Can this machine run enough local intelligence tasks at a lower cost?</p>
+<p>These are questions from two different eras.</p>
+<p>For the first question, Wintel was the answer.</p>
+<p>For the second question, Wintel is not necessarily the answer.</p>
+<p>That is what it means for the Wintel era to be over.</p>
+<p>Not that Intel disappears.</p>
+<p>Not that Windows disappears.</p>
+<p>Not that x86 disappears.</p>
+<p>But that the default understanding of &quot;PC &#x3D; Windows + x86&quot; is no longer enough to explain the next generation of PCs.</p>
+<h2 id="Who-Is-Calling-For-The-New-PC"><a href="#Who-Is-Calling-For-The-New-PC" class="headerlink" title="Who Is Calling For The New PC?"></a>Who Is Calling For The New PC?</h2><p>Now look back at those &quot;A new era of PC&quot; posts, and it gets interesting.</p>
+<p>Why is NVIDIA saying it?</p>
+<p>Because it cannot stay only in the data center.</p>
+<p>If all AI happens in the cloud, NVIDIA has already won one round. But if companies start pushing a large amount of inference down to local machines for token efficiency, NVIDIA must enter the PC.</p>
+<p>It needs to bring GPU, CUDA, local inference, developer ecosystem, and AI runtime back to personal devices.</p>
+<p>It is not just selling chips.</p>
+<p>It is selling the intelligence foundation of the next PC.</p>
+<p>Why is Microsoft saying it?</p>
+<p>Because Windows is the entry point for enterprise workflows.</p>
+<p>If AI Agents are really going to land, Windows cannot remain a shell for opening cloud services. It has to become the operating system for local intelligent workflows: able to call models, manage permissions, connect applications, understand files, and route between local and cloud.</p>
+<p>What Microsoft fears most is not that the PC market stops growing.</p>
+<p>It fears that the workflow entry point of the AI era no longer belongs to Windows.</p>
+<p>Why is Arm saying it?</p>
+<p>Because local intelligence needs performance per watt.</p>
+<p>Apple Silicon has already taught the market that laptops can be both powerful and efficient. If the Windows camp wants to catch up in AI PCs, it cannot keep relying only on the traditional path.</p>
+<p>This time Arm is not saying &quot;I can run Windows.&quot;</p>
+<p>It is saying: the hardware form of the next PC no longer has to revolve around the old architecture.</p>
+<p>So who is still using old language to talk about new PCs?</p>
+<p>Many traditional players are still talking about CPU, frequency, core count, benchmarks, AI TOPS, and product-line updates.</p>
+<p>These all matter, but they are not enough.</p>
+<p>The real question for the new era is not &quot;are the specs stronger?&quot; It is &quot;is the cost structure better?&quot;</p>
+<p>Can this machine burn fewer tokens?</p>
+<p>Can it keep low-value requests local?</p>
+<p>Can it make companies pay less tax to model vendors?</p>
+<p>Can it turn Agentic Coding from an expensive toy into everyday infrastructure?</p>
+<p>Whoever can answer those questions deserves to talk about the new PC.</p>
+<h2 id="The-Cloud-AI-Tax"><a href="#The-Cloud-AI-Tax" class="headerlink" title="The Cloud AI Tax"></a>The Cloud AI Tax</h2><p>Over the past two years, AI companies have told many grand narratives.</p>
+<p>AGI, agent, copilot, automation, super intelligence.</p>
+<p>These words are sexy.</p>
+<p>But companies eventually face another table: the bill.</p>
+<p>That table is not sexy, but it is real.</p>
+<p>When all intelligence is priced through cloud tokens, AI becomes a new tax. Every step you automate, you pay a tax. Every time you let an Agent think one more round, you pay a tax. Every time you connect a workflow, you pay a tax.</p>
+<p>This is not to say model vendors are bad.</p>
+<p>Training models, deploying models, and maintaining inference clusters are expensive. If someone provides a capability, of course they should charge for it.</p>
+<p>But companies cannot build their automation forever on intelligence that someone else bills per call.</p>
+<p>Especially for high-frequency, necessary, low- and medium-complexity tasks.</p>
+<p>Once all these tasks move to the cloud, a company&#39;s cost structure increasingly looks like working for model vendors. Business growth may not be obvious. Bill growth definitely will be.</p>
+<p>So local LLMs are not just a technical path.</p>
+<p>They are bargaining power.</p>
+<p>When a company has no local intelligence capability, every request can only go to the cloud. The model vendor names the price.</p>
+<p>When a company has local intelligence capability, it at least has a choice.</p>
+<p>Simple tasks run locally.</p>
+<p>Sensitive data runs locally.</p>
+<p>High-frequency tasks run locally.</p>
+<p>Complex tasks go to the cloud.</p>
+<p>This is not full replacement. It is redistribution.</p>
+<p>The greatest value of local intelligence is giving companies back part of their cost control.</p>
+<p>That is also why the PC becomes an asset again.</p>
+<p>In the past, buying a high-performance PC often looked like a consumer electronics upgrade.</p>
+<p>Now, buying an AI PC that can run local models looks more like buying a small compute node. It is not for making fans spin louder, nor for making spec sheets prettier. It is for continuously reducing token spend over the next few years.</p>
+<p>Companies will do that math.</p>
+<h2 id="A-New-Era-Is-Not-Created-By-A-Launch-Event"><a href="#A-New-Era-Is-Not-Created-By-A-Launch-Event" class="headerlink" title="A New Era Is Not Created By A Launch Event"></a>A New Era Is Not Created By A Launch Event</h2><p>Of course, saying &quot;A new era of PC&quot; does not mean the new era has truly arrived.</p>
+<p>There are still many traps.</p>
+<p>Are local models good enough?</p>
+<p>Can Windows make the local AI runtime smooth?</p>
+<p>Will developers adapt?</p>
+<p>Can enterprise IT manage these local models?</p>
+<p>How should security and permissions work?</p>
+<p>How should model updates work?</p>
+<p>How should local and cloud routing work?</p>
+<p>Who schedules the NPU, GPU, and CPU?</p>
+<p>None of these questions is simple.</p>
+<p>And the biggest problem of the PC camp has not changed: it is not Apple.</p>
+<p>Apple can decide chips, operating system, developer tools, hardware form factor, and user experience as one company. Windows PCs are an alliance. Microsoft, NVIDIA, Arm, Intel, AMD, Qualcomm, OEMs, and developers all want to win, and each controls only one part.</p>
+<p>The advantage of an alliance is openness.</p>
+<p>The disadvantage of an alliance is that nobody is fully in charge.</p>
+<p>So whether this new PC narrative works does not depend on a launch event, or on a few tweets. It depends on whether it can hide the complexity.</p>
+<p>Users do not care what architecture you use.</p>
+<p>Companies do not care how many TOPS you have.</p>
+<p>Engineers also do not want to study every day which task should use which model, runtime, or backend.</p>
+<p>Everyone cares about one thing:</p>
+<p>Can the work be done more cheaply?</p>
+<p>If the answer is yes, the new PC is real.</p>
+<p>If the answer is no, it is just another round of AI PC marketing.</p>
+<h2 id="The-Unspoken-Name-After-PC"><a href="#The-Unspoken-Name-After-PC" class="headerlink" title="The Unspoken Name After PC"></a>The Unspoken Name After PC</h2><p>So when several giants simultaneously say &quot;A new era of PC,&quot; I do not think the point is PC.</p>
+<p>The point is new era.</p>
+<p>In the old era, the PC was the default combination of Windows + x86, the terminal for accessing SaaS and cloud services, the office device that kept working quietly after mobile took away the spotlight.</p>
+<p>In the new era, the PC may become something else:</p>
+<p>A personal AI compute node.</p>
+<p>It does not necessarily handle the strongest reasoning, but it must handle the highest-frequency reasoning.</p>
+<p>It does not necessarily replace cloud models, but it must reduce dependence on cloud tokens.</p>
+<p>It does not necessarily give everyone AGI, but it must prevent companies from paying model vendors a tax on every automation.</p>
+<p>The Wintel era is over, not because Intel has failed.</p>
+<p>It is because the core question for the next PC is no longer &quot;can it run Windows?&quot;</p>
+<p>It is:</p>
+<p>Can it afford to run intelligence?</p>
+<p>For the past forty years, the default answer for the PC was Wintel.</p>
+<p>Over the next few years, that default answer will be taken apart and recombined. Windows is still here. Intel is still here. x86 is still here. OEMs are still here.</p>
+<p>But the era in which everyone played around the same hardware rhythm is over.</p>
+<p>So the sharp part of &quot;A new era of PC&quot; is not &quot;new era.&quot;</p>
+<p>It is the unspoken question after PC:</p>
+<p>When tokens become expensive enough that everyone starts buying local compute again, who still gets to define the PC?</p>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>Author: </strong>johnsonlee</li><li class="post-copyright-link"><strong>Blog Link: </strong><a href="/2026/05/31/a-new-era-of-pc.en/">https://johnsonlee.io/2026/05/31/a-new-era-of-pc.en/</a></li><li class="post-copyright-license"><strong>Copyright Declaration: </strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"><a href="/tags/AI-PC/">AI PC</a><a href="/tags/Wintel/">Wintel</a><a href="/tags/NVIDIA/">NVIDIA</a><a href="/tags/Microsoft/">Microsoft</a><a href="/tags/Local-LLM/">Local LLM</a><a href="/tags/Token/">Token</a></div><div class="post-nav"><a class="pre" href="/en/2026/05/31/ai-pc-real-opportunity/">When AI PCs Become the Next Boom, Where Is the Real Opportunity?</a><a class="next" href="/en/2026/05/30/saas-value-return-token-burning/">The Era of Burning Tokens Wildly Is Coming to an End</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"The Wintel Era Is Over","datePublished":"2026-05-31T00:00:00.000Z","dateModified":"2026-05-31T00:00:00.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2026/05/31/a-new-era-of-pc.en/"},"description":"Over the past two days, several giants posted almost the same sentence at almost the same time: &quot;A new era of PC.&quot; NVIDIA posted it. Windows posted it. Arm followed. Behind the line was a se"}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname.replace(/^\/en\/(\d{4}\/)/, '/$1').replace(/\.en\/$/, '/')),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (107)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Harness-Engineering/">Harness Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (62)</a><ul style="padding:revert"></ul></li><li><a href="/categories/investing/">Investing (5)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Developer-Tools/" style="font-size: 15px;">Developer Tools</a> <a href="/tags/Dotfiles/" style="font-size: 15px;">Dotfiles</a> <a href="/tags/Claude-Code/" style="font-size: 15px;">Claude Code</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/AI-PC/" style="font-size: 15px;">AI PC</a> <a href="/tags/Wintel/" style="font-size: 15px;">Wintel</a> <a href="/tags/NVIDIA/" style="font-size: 15px;">NVIDIA</a> <a href="/tags/Microsoft/" style="font-size: 15px;">Microsoft</a> <a href="/tags/Local-LLM/" style="font-size: 15px;">Local LLM</a> <a href="/tags/Token/" style="font-size: 15px;">Token</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/Consciousness/" style="font-size: 15px;">Consciousness</a> <a href="/tags/Self-Reference/" style="font-size: 15px;">Self-Reference</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Attention/" style="font-size: 15px;">Attention</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Apple/" style="font-size: 15px;">Apple</a> <a href="/tags/WWDC/" style="font-size: 15px;">WWDC</a> <a href="/tags/Apple-Silicon/" style="font-size: 15px;">Apple Silicon</a> <a href="/tags/Agentic-Coding/" style="font-size: 15px;">Agentic Coding</a> <a href="/tags/Enterprise/" style="font-size: 15px;">Enterprise</a> <a href="/tags/Buddhism/" style="font-size: 15px;">Buddhism</a> <a href="/tags/Taoism/" style="font-size: 15px;">Taoism</a> <a href="/tags/Physics/" style="font-size: 15px;">Physics</a> <a href="/tags/Philosophy/" style="font-size: 15px;">Philosophy</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/Automation/" style="font-size: 15px;">Automation</a> <a href="/tags/Testing/" style="font-size: 15px;">Testing</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/Cognitive-Boundary/" style="font-size: 15px;">Cognitive Boundary</a> <a href="/tags/Randomness/" style="font-size: 15px;">Randomness</a> <a href="/tags/Self-Evolution/" style="font-size: 15px;">Self-Evolution</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Dimension-Hacking/" style="font-size: 15px;">Dimension Hacking</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Economy/" style="font-size: 15px;">Economy</a> <a href="/tags/Future/" style="font-size: 15px;">Future</a> <a href="/tags/UBI/" style="font-size: 15px;">UBI</a> <a href="/tags/Product-Strategy/" style="font-size: 15px;">Product Strategy</a> <a href="/tags/Copilot/" style="font-size: 15px;">Copilot</a> <a href="/tags/Google/" style="font-size: 15px;">Google</a> <a href="/tags/Technology/" style="font-size: 15px;">Technology</a> <a href="/tags/AI-Agent/" style="font-size: 15px;">AI Agent</a> <a href="/tags/Memory/" style="font-size: 15px;">Memory</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Product-Management/" style="font-size: 15px;">Product Management</a> <a href="/tags/Project-Management/" style="font-size: 15px;">Project Management</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/Harness-Engineering/" style="font-size: 15px;">Harness Engineering</a> <a href="/tags/Prompt-Engineering/" style="font-size: 15px;">Prompt Engineering</a> <a href="/tags/Eval/" style="font-size: 15px;">Eval</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Graphite/" style="font-size: 15px;">Graphite</a> <a href="/tags/MCP/" style="font-size: 15px;">MCP</a> <a href="/tags/Bytecode/" style="font-size: 15px;">Bytecode</a> <a href="/tags/Static-Analysis/" style="font-size: 15px;">Static Analysis</a> <a href="/tags/Ground-Truth/" style="font-size: 15px;">Ground Truth</a> <a href="/tags/Context/" style="font-size: 15px;">Context</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/06/13/ai-pc-local-inference.en/">After Years Behind in AI, Apple Finally Bet Right</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/13/ai-pc-local-inference/">掉队 AI 多年的苹果，这回终于押对了</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/06/serenity-methodology-cannot-be-skill/">Serenity，瓶颈猎人</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/06/serenity-methodology-cannot-be-skill.en/">Serenity, the Bottleneck Hunter</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/05/31/ai-pc-real-opportunity/">当 AI PC 成为新的风口，真正的机会在哪里？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/05/31/ai-pc-real-opportunity.en/">When AI PCs Become the Next Boom, Where Is the Real Opportunity?</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/05/31/a-new-era-of-pc/">Wintel 时代结束了</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/05/31/a-new-era-of-pc.en/">The Wintel Era Is Over</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/05/30/saas-value-return-token-burning.en/">The Era of Burning Tokens Wildly Is Coming to an End</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/05/30/saas-value-return-token-burning/">疯狂烧 Token 的日子要结束了</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>

@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2021/05/07/java-8-new-features/">
+  <title>What&#39;s New in Java 8 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">What&#39;s New in Java 8</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2021-05-07 · Johnson Lee · Computer Science / Java</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Java 8 was released on March 18, 2014, incorporating features originally planned for Java 7 but postponed. Java 8 dropped support for <em style="font-style:italic;color:#1f2937;">Windows XP</em>, though <em style="font-style:italic;color:#1f2937;">JDK 8</em> update 25 could still be installed and run on <em style="font-style:italic;color:#1f2937;">Windows XP</em>. Earlier <em style="font-style:italic;color:#1f2937;">JDK 8</em> updates could run on <em style="font-style:italic;color:#1f2937;">Windows XP</em> but required force-extracting the installer. After October 2014, Java 8 became the default download version on the official website.</p>
+<h2 id="Lambda-Expressions" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Lambda Expressions</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Lambda expressions are arguably the biggest highlight of Java 8. They provide a clear and concise way to represent single-method interfaces using expressions. Lambda expressions also come with corresponding collection library support to simplify traversal, filtering, and data extraction operations. The new concurrency features significantly improve performance in multi-threaded environments.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Here is an example of a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Runnable</a> lambda expression:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class RunnableLambda {
+    public static void main(String[] args) {
+        Runnable runnable = () -&gt; System.out.println("Hello, world");
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">When the body contains only a single statement, <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">{}</code> and <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">return</code> can be omitted.</p>
+<h2 id="Method-References" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Method References</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">To enable the use of existing JDK APIs in lambda expressions without re-implementing them as lambdas, Java 8 introduced method references, giving Java functional programming capabilities.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Static method reference syntax:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">Class::staticMethod</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Instance method reference syntax:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">object::instanceMethod</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Here is a simple example:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class MethodReferenceTest1 {
+    public static void main(String[] args) {
+    	Consumer&lt;String&gt; echo = s -&gt; System.out.println(s);
+    	echo("Hello, world!");
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The above can also be written using a method reference:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class MethodReferenceTest2 {
+    public static void main(String[] args) {
+    	Consumer&lt;String&gt; echo = System.out::println;
+    	echo("Hello, world!");
+    }
+}</code></pre>
+
+<h2 id="Default-Methods" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Default Methods</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Default methods were introduced in Java 8 to allow existing interfaces to add new methods without requiring any changes to classes that already implement them -- not even recompilation. This also addresses Java's shortcomings in functional programming. For example, JavaScript-style <em style="font-style:italic;color:#1f2937;">for-each</em> loops are now available in Java 8 through the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html#forEach-java.util.function.Consumer-" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">forEach</a> default method added to <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Iterable</a>:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class ForEachTest {
+    public static void main(String[] args) {
+        Arrays.asList(args).forEach(System.out::println);
+    }
+}</code></pre>
+
+<h3 id="Stream-API" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Stream API</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The Stream API is another major highlight of Java 8, designed to provide a more efficient way to process data streams, rather than relying entirely on relational databases for aggregation and batch operations as in J2EE. It offers both serial and parallel modes. The parallel mode is built on Java 7's <a href="https://johnsonlee.io/en/2021/05/07/java-8-new-features/#Fork-Join-Framework" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Fork/Join Framework</a>, taking full advantage of multi-core processors, making it easy to write high-performance concurrent programs in Java 8.</p>
+<h3 id="filter" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">filter</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Filter a data stream:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">Integer[] nums = {1, 2, 3, 4, 5, 6};
+Integer[] evens = Stream.of(nums).filter(n -&gt; n % 2 == 0).toArray(Integer[]::new);</code></pre>
+
+<h3 id="map" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">map</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Map a data stream into a new data stream:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">String[] words = { "hello", "java 8", "world" };
+List&lt;String&gt; output = Arrays.stream(words)
+		.map(String::toUpperCase)
+		.collect(Collectors.toList());</code></pre>
+
+<h3 id="flatMap" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">flatMap</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Flatten a nested data stream:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">List&lt;List&lt;Integer&gt;&gt; numbers = Arrays.asList(
+	Arrays.asList(1),
+	Arrays.asList(2, 3),
+	Arrays.asList(4, 5, 6)
+);
+List&lt;Integer&gt; list = numbers.stream()
+		.flatMap(Collection::stream)
+		.collect(Collectors.toList());</code></pre>
+
+<h3 id="findAny" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">findAny</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Find an element from a data stream:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">String[] words = { "hello", "java 8", "world" };
+Optinal&lt;String&gt; result = Arrays.stream(words)
+		.filter(it -&gt; it.contains("java"))
+		.findAny();</code></pre>
+
+<h3 id="parallelStream" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">parallelStream</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Extract emails from a <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Person</code> stream in parallel:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">List&lt;Person&gt; roaster = ...;
+
+List&lt;String&gt; emails = roaster.parallelStream()
+		.filter(it -&gt; it.age &gt; 20)
+		.map(it -&gt; it.email)
+		.collect(Collectors.toList());</code></pre>
+
+<h2 id="Annotations-Improvement" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Annotations Improvement</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Since JDK 1.5, Java has provided the <em style="font-style:italic;color:#1f2937;">Annotation</em> feature, allowing developers to define and use custom <em style="font-style:italic;color:#1f2937;">Annotation</em> types and implement richer functionality through the <em style="font-style:italic;color:#1f2937;">Annotation Processing Tool (APT)</em>. For example, the popular <em style="font-style:italic;color:#1f2937;">Spring</em> framework uses annotations for dependency injection, aspect-oriented programming, and more. To help developers improve code quality, readability, and automated code analysis accuracy, Java 8 introduced <em style="font-style:italic;color:#1f2937;">Type Annotation</em> and <em style="font-style:italic;color:#1f2937;">Repeating Annotation</em>.</p>
+<h3 id="Type-Annotation" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Type Annotation</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">In Java 8, <em style="font-style:italic;color:#1f2937;">Annotations</em> can be used anywhere a type is used:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">@NonNull Map&lt;String, Node&gt; nodes = createNodes();
+
+TreeNode node = (@NonNull TreeNode) nodes.get("root");</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Defining a custom <em style="font-style:italic;color:#1f2937;">Type Annotation</em>:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">@Target({ElementType.TYPE_PARAMETER, ElementType.TYPE_USE})
+public  @interface MyAnnotation {
+}</code></pre>
+
+<h3 id="Repeating-Annotation" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Repeating Annotation</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Before Java 8, the same <em style="font-style:italic;color:#1f2937;">Annotation</em> could only be applied once at the same location. In Java 8, repeating <em style="font-style:italic;color:#1f2937;">Annotations</em> are supported:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">@Schedule(dayOfMonth="last")
+@Schedule(dayOfWeek="Fri", hour="23")
+public void doPeriodicCleanup() { ... }</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Defining a custom <em style="font-style:italic;color:#1f2937;">Repeating Annotation</em>:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">@Repeatable(Schedules.class)
+public @interface Schedule {
+    String dayOfMonth() default "first";
+    String dayOfWeek() default "Mon";
+    int hour() default 12;
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Declaring the container for the <em style="font-style:italic;color:#1f2937;">Repeating Annotation</em>:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public @interface Schedules {
+    Schedule[] value();
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">With <em style="font-style:italic;color:#1f2937;">Type Annotations</em> and pluggable type checkers, developers can write more robust and less error-prone code.</p>
+<h2 id="Type-Inference" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Type Inference</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Type inference improvements in Java 8's compiler mainly relate to generics.</p>
+<h3 id="Generic-Methods" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Generic Methods</h3><pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class BoxDemo {
+
+    public static &lt;U&gt; void addBox(U u, List&lt;Box&lt;U&gt;&gt; boxes) {
+        Box&lt;U&gt; box = new Box&lt;&gt;();
+        box.set(u);
+        boxes.add(box);
+    }
+
+    public static &lt;U&gt; void outputBoxes(java.util.List&lt;Box&lt;U&gt;&gt; boxes) {
+        int counter = 0;
+        for (Box&lt;U&gt; box: boxes) {
+            U content = box.get();
+            System.out.println("Box #" + counter + " contains [" + content.toString() + "]");
+            counter++;
+        }
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">With type inference, generic methods can be called like regular methods:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">BoxDemo.addBox(Integer.valueOf(10), listOfIntegerBoxes);</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Instead of having to specify the type in angle brackets as required before Java 8:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">BoxDemo.&lt;Integer&gt;addBox(Integer.valueOf(10), listOfIntegerBoxes);</code></pre>
+
+<h3 id="Target-Types" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Target Types</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Java 7's compiler already supported using target types to infer type arguments for generic method invocations:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">List&lt;String&gt; empty = Collections.emptyList();</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">However, passing the return value of a generic method directly as a generic argument to another method was not supported before Java 8. Given this method:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">void processStringList(List&lt;String&gt; stringList) {
+    ...
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">In Java 7, you had to call it like this:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">processStringList(Collections.&lt;String&gt;emptyList());</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">In Java 8, you can call it like a regular method:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">processStringList(Collections.emptyList());</code></pre>
+
+<h2 id="Method-Parameter-Reflection" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Method Parameter Reflection</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">In Java 8, formal parameter names of any method or constructor can be obtained via <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Executable.html#getParameters--" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">java.lang.reflect.Executable.getParameters</a>. However, by default, <em style="font-style:italic;color:#1f2937;">.class</em> files do not store formal parameter names, because many tools prefer not to have <em style="font-style:italic;color:#1f2937;">.class</em> files that take up more static and dynamic space. In particular, the <em style="font-style:italic;color:#1f2937;">.class</em> files processed by these tools would become larger, and the JVM would need more memory to load them.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">To retain formal parameter names in <em style="font-style:italic;color:#1f2937;">.class</em> files and allow the <em style="font-style:italic;color:#1f2937;">Reflection API</em> to retrieve them, you must specify the <em style="font-style:italic;color:#1f2937;">-parameter</em> option to the <em style="font-style:italic;color:#1f2937;">javac</em> compiler when compiling source code.</p>
+<h2 id="Nashorn-JavaScript-Engine" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Nashorn JavaScript Engine</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Before Java 7, the JDK shipped with a <em style="font-style:italic;color:#1f2937;">JavaScript</em> engine based on <em style="font-style:italic;color:#1f2937;">Mozilla Rhino</em>. Java 8 ships with a new engine named <em style="font-style:italic;color:#1f2937;">Oracle Nashorn</em>, which is based on <em style="font-style:italic;color:#1f2937;">JSR 292</em> and <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">invokedynamic</code>, providing better compliance with the <em style="font-style:italic;color:#1f2937;">ECMA Script</em> specification and improved runtime performance. For a deep dive into <em style="font-style:italic;color:#1f2937;">Nashorn</em>, see: <a href="https://www.oracle.com/technetwork/articles/java/jf14-nashorn-2126515.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Oracle Nashorn: A Next-Generation JavaScript Engine for the JVM</a></p>
+<h2 id="Concurrent-Accumulators" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Concurrent Accumulators</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Concurrent accumulators were introduced in Java 8 primarily to address throughput issues with <em style="font-style:italic;color:#1f2937;">Atomic Numbers</em> under high contention. Under low contention, concurrent accumulators behave almost identically to <em style="font-style:italic;color:#1f2937;">Atomic Numbers</em>. Concurrent accumulators are typically used alongside the <em style="font-style:italic;color:#1f2937;">Stream API</em> for collecting statistics, rather than for fine-grained synchronization control.</p>
+<h2 id="Parallel-Operations" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Parallel Operations</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Java 8 provides many parallel operation APIs, such as <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Collection.parallelStream()</code> and <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Arrays.parallelSort()</code>, all built on top of the <a href="https://johnsonlee.io/en/2021/05/07/java-8-new-features/#Fork-Join-Framework" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Fork/Join Framework</a> introduced in Java 7.</p>
+<h2 id="Date-and-Time-API" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Date and Time API</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The <em style="font-style:italic;color:#1f2937;">java.time</em> package introduced in Java 8 provides a comprehensive date and time model, developed under <a href="http://jcp.org/en/jsr/detail?id=310" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JSR 310: Date and Time API</a>. While based on the ISO calendar system, it also supports commonly used global calendars.</p>
+<h2 id="PermGen-and-Metaspace" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">PermGen and Metaspace</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">To resolve <em style="font-style:italic;color:#1f2937;">java.lang.OutOfMemoryError: PermGen space ...</em> issues, Java 8 completely removed the permanent generation and moved class metadata to <em style="font-style:italic;color:#1f2937;">Metaspace</em>. The classes used to represent class metadata were also removed. The old <em style="font-style:italic;color:#1f2937;">PermSize</em> and <em style="font-style:italic;color:#1f2937;">MaxPermSize</em> options were removed from JDK 8, replaced by <em style="font-style:italic;color:#1f2937;">MaxMetaspaceSize</em>, which sets the native memory limit for class metadata. By default, <em style="font-style:italic;color:#1f2937;">Metaspace</em> size adjusts dynamically based on runtime needs. When class metadata usage reaches <em style="font-style:italic;color:#1f2937;">MaxMetaspaceSize</em>, garbage collection of dead classes and class loaders is triggered. To limit the frequency and latency of this garbage collection, proper monitoring and tuning are needed. Excessive <em style="font-style:italic;color:#1f2937;">Metaspace</em> garbage collection may indicate class or class loader memory leaks.</p>
+<h2 id="Security-Enhancement" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Security Enhancement</h2><ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">TLS 1.1 and TLS 1.2 enabled by default</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">New <a href="https://docs.oracle.com/javase/8/docs/api/java/security/AccessController.html#doPrivileged-java.security.PrivilegedAction-java.security.AccessControlContext-java.security.Permission...-" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">AccessController.doPrivileged</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Stronger AES-based encryption algorithms<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">PBEWithSHA256AndAES_128</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">PBEWithSHA512AndAES_256</li>
+</ul>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">SSL/TLS Server Name Indication (SNI)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">AEAD algorithm support</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Enhanced keystore</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">SHA-224 Message Digests</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Enhanced support for NSA Suite B</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Better support for high entropy random number generation</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">64-bit PKCS11 for Windows</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Weak encryption disabled by default</li>
+</ul>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">For more details, see: <a href="https://www.oracle.com/java/technologies/javase/8-whats-new.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://www.oracle.com/java/technologies/javase/8-whats-new.html</a></p>
+</blockquote>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2021/05/07/java-8-new-features/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2021/05/07/java-8-new-features/</a></p>
+    </section>
+  </main>
+</body>
+</html>

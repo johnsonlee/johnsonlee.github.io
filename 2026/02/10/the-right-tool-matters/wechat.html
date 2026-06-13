@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/02/10/the-right-tool-matters/">
+  <title>阅尽繁华，粗粝难欢 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">阅尽繁华，粗粝难欢</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-02-10 · Johnson Lee · Independent Thinking</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">前几天提了一个 PR，是一个 MCP Server 的实现，从设计到编码到测试，前后大概花了 1 小时。同事看到 PR 后，在 Slack 上 @我说：“这也太快了吧？我研究了好几天都没搞明白 MCP 的 transport 怎么接。”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我有点好奇，就走过去看了一眼他的 Windsurf。一看模型配置，差点没绷住 —— ChatGPT。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我说哥们儿，你选错模型了，应该选 Opus 4.6 —— The Best AI in the world!</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">他一脸困惑，说 ChatGPT 不是也挺好的吗？我说，对于日常聊天是够用的，但写工程代码，尤其是涉及到协议理解、上下文推理和代码架构的场景，这东西的差距是肉眼可见的。Claude 理解你给它的 spec，能把 JSON-RPC 的 transport 层、tool registration 的生命周期、error handling 的边界情况都一次性考虑到位，而且生成的代码风格跟你项目里的代码高度一致，不需要你再花时间去 reformat 或者 adapt。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">他半信半疑地换了模型，试了一下，沉默了大概五秒钟，然后说了句：“卧槽。”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我笑了笑，没说话。</p>
+<h2 id="哥们儿，你选错工具了" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  哥们儿，你选错工具了</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这让我想起更早之前的一次。也是这哥们儿，拿着笔记本电脑过来找我，说他写了一个 Spring Boot 的 demo，但在 VS Code 里怎么都跑不起来，一直报依赖解析的错误。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我看了一眼他的 VS Code，extension 装了一大堆，Java 的、Kotlin 的、Spring 的，花花绿绿的。<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">.gradle</code> 文件里红线满天飞，LSP 的诊断信息跟源码完全对不上。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我说哥们儿，你选错工具了，IntelliJ IDEA is the best one for Spring Project.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">他说 VS Code 不是万能的吗？我说 VS Code 对前端和轻量级项目确实好用，但对 Spring 这种重量级的 JVM 项目来说，它的 Java 支持本质上是靠插件堆砌出来的，Gradle 同步、依赖注入的导航、Bean 的自动发现、Spring Boot 的 auto-configuration 的智能提示 —— 这些能力 IntelliJ 是从底层就原生支持的，不是靠几个插件能补齐的。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">后来他装了 IntelliJ，同样的代码，打开就能跑。他又沉默了。</p>
+<h2 id="选择，才是最大的变量" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  选择，才是最大的变量</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这两件事看似不相关，但本质上是同一个问题 —— <strong style="font-weight:700;color:#111827;">选择</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">做了这么多年工程师，我越来越觉得，一个人的工程效率，表面上看是技术能力的差异，实际上很大程度取决于他在关键节点上的选择。选什么语言，选什么框架，选什么工具，选什么模型 —— 这些选择看似微小，累积起来却能造成数量级的差距。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">就像吃惯了好东西的人，再回去吃粗粝的食物，是很难咽得下去的。这不是矫情，而是你的味觉已经被校准了，你知道什么是好的，自然就无法忍受将就。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">用过 Claude Opus 的人再回去用其他模型写工程代码，会觉得哪里都不对劲；用过 IntelliJ 写 Spring 项目的人再回去用 VS Code，会觉得处处掣肘。不是其他工具不好，而是你已经见过更好的了。</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">Once You've Tasted the Best, There's No Going Back</p>
+</blockquote>
+<h2 id="100-刀" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  100 刀</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">后来有一次跟同事闲聊，我问他，既然都知道 Claude 好用，那为什么还是有很多人不用呢？是什么阻碍大家做更好的选择？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">他想了想，冒出俩字：</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">100 刀</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我一下子就理解了。平时连个视频会员都要跟人共享账号的人，你让他每个月掏 100 刀订阅一个 AI 工具，那不跟割肉一样吗？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我想了想，他说的也没错，100 刀确实不便宜，尤其对于还没体验过效率差距的人来说，这笔钱看起来就是纯消费。但反过来想，100 刀换来 10x 的效率，真的贵吗？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">一个 MCP Server，我 1 小时搞定，他花了好几天还在挣扎。几天的时间差，折算成工时，恐怕早就不止 100 刀了。更别提这中间的挫败感、反复试错的精力消耗，以及在 deadline 面前那种焦头烂额的状态 —— 这些隐性成本，才是真正昂贵的。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">很多时候，阻碍我们做出更好选择的，不是选择本身的成本，而是我们对成本的感知方式。人天生对「看得见的支出」敏感，却对「看不见的损失」迟钝。100 刀的订阅费是实实在在从账户里扣掉的，但每天多花两三个小时在低效工具上磨洋工，这笔账却很少有人去算。</p>
+<h2 id="好刀还得看谁用" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  好刀还得看谁用</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">当然，工具终归是工具，再好的模型也需要会用的人来驾驭。Claude 之所以在我手上能发挥出 10x 的效果，不仅仅是因为它足够聪明，更因为我知道怎么给它提需求、怎么拆解任务、怎么 review 它的输出。就像一把好刀，还是得看谁在用。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">所以，不要吝啬在工具上投资，也不要停止打磨自己用工具的手艺。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但前提是 —— 你得先拿到那把好刀。</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/02/10/the-right-tool-matters/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/02/10/the-right-tool-matters/</a></p>
+    </section>
+  </main>
+</body>
+</html>

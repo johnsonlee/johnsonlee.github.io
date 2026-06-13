@@ -1,0 +1,322 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta name="theme-color" content="#FFF" id="theme-color"><meta content="telephone=no" name="format-detection"><meta name="description" content="过去两天，几家巨头几乎同时发了一句话：&quot;A new era of PC.&quot; NVIDIA 发了。Windows 发了。Arm 也跟了。后面还带着一串坐标，指向台北。科技公司天天喊新时代，这没什么稀奇。稀奇的是，它们很少一起喊。更稀奇的是，这一次大家都在谈 PC。 一个被 mobile 抢走十几年光环的老东西，突然又回到了牌桌中央。"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,johnsonlee,johnson,lijingsen,jingsen,ai,agent,llm,claude,claude code,ai工程化,harness,harness engineering,autoevolve,prompt engineering,RAG,agentic,MCP,AGI,vibe coding,ai coding,copilot,cursor,chatgpt,openai,anthropic,transformer,fine-tuning,embedding,multimodal,chain of thought,function calling,tool use,RLHF,ai native,架构设计,性能优化,滴滴,快手,我在滴滴做架构,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2026/05/31/a-new-era-of-pc/"><link rel="alternate" hreflang="zh-CN" href="https://johnsonlee.io/2026/05/31/a-new-era-of-pc/"><link rel="alternate" hreflang="en" href="https://johnsonlee.io/en/2026/05/31/a-new-era-of-pc/"><link rel="alternate" hreflang="x-default" href="https://johnsonlee.io/2026/05/31/a-new-era-of-pc/"><meta property="og:title" content="Wintel 时代结束了"><meta property="og:description" content="过去两天，几家巨头几乎同时发了一句话：&quot;A new era of PC.&quot; NVIDIA 发了。Windows 发了。Arm 也跟了。后面还带着一串坐标，指向台北。科技公司天天喊新时代，这没什么稀奇。稀奇的是，它们很少一起喊。更稀奇的是，这一次大家都在谈 PC。 一个被 mobile 抢走十几年光环的老东西，突然又回到了牌桌中央。"><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2026/05/31/a-new-era-of-pc/"><meta property="og:image" content="https://johnsonlee.io/og-cards/a-new-era-of-pc.png"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2026-05-31T00:00:00.000Z"><meta property="article:author" content="Johnson Lee"><meta property="article:tag" content="AI PC"><meta property="article:tag" content="Wintel"><meta property="article:tag" content="NVIDIA"><meta property="article:tag" content="Microsoft"><meta property="article:tag" content="Local LLM"><meta property="article:tag" content="Token"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Wintel 时代结束了"><meta name="twitter:description" content="过去两天，几家巨头几乎同时发了一句话：&quot;A new era of PC.&quot; NVIDIA 发了。Windows 发了。Arm 也跟了。后面还带着一串坐标，指向台北。科技公司天天喊新时代，这没什么稀奇。稀奇的是，它们很少一起喊。更稀奇的是，这一次大家都在谈 PC。 一个被 mobile 抢走十几年光环的老东西，突然又回到了牌桌中央。"><meta name="twitter:image" content="https://johnsonlee.io/og-cards/a-new-era-of-pc.png"><title>Wintel 时代结束了 | Johnson Lee</title><script>(function(){var h=new Date().getHours();if(h<6||h>=19){document.documentElement.setAttribute('data-weather','night');var m=document.getElementById('theme-color');if(m)m.setAttribute('content','#020617')}})();</script><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&amp;display=swap"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Johnson Lee"><link rel="alternate" type="application/atom+xml" href="/atom.en.xml" title="Johnson Lee (English)" hreflang="en"><script type="text/javascript" src="/js/weather-theme.js" defer></script><script type="text/javascript" src="/js/weather-canvas.js" defer></script><script type="text/javascript" src="/js/i18n-switch.js" defer></script><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="body_container"><img src="/og-cards/a-new-era-of-pc.png" style="display:none"><div id="header"><div class="site-name"><h1 class="hidden">Wintel 时代结束了</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a target="_blank" rel="noopener" href="https://about.johnsonlee.io/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div><button class="lang-switch" type="button" data-target-lang="en" title="English">EN</button></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Wintel 时代结束了</h1><div class="post-meta">May 31, 2026<span> | </span><span class="category"><a href="/categories/Independent-Thinking/">Independent Thinking</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 5k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 17</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>过去两天，几家巨头几乎同时发了一句话：&quot;A new era of PC.&quot; NVIDIA 发了。Windows 发了。Arm 也跟了。后面还带着一串坐标，指向台北。科技公司天天喊新时代，这没什么稀奇。稀奇的是，它们很少一起喊。更稀奇的是，这一次大家都在谈 PC。</p>
+<p>一个被 mobile 抢走十几年光环的老东西，突然又回到了牌桌中央。</p>
+<span id="more"></span>
+
+<p>很多人第一反应是：AI PC 又要来了。</p>
+<p>我觉得这说浅了。</p>
+<p>PC 重新成为热点，不是因为 PC 突然性感了，也不是因为巨头们想给笔记本换一个新的 marketing name。真正的原因更现实，也更难听：</p>
+<p>云端 AI 太贵了。</p>
+<p>过去两年，企业买 AI，买到最后常常发现自己不是在买效率，而是在给模型厂商打工。Token 一路烧，账单一路涨，老板天天问 ROI，团队天天调 prompt，最后除了账单更像未来，人效还停在过去。</p>
+<p>尤其是 Agentic Coding。</p>
+<p>它已经被证明有用。写代码、改代码、跑测试、读 repo、做 migration、清理技术债，这些都不是花活，而是刚需。问题是，只要它真的有用，使用频率就会暴涨；使用频率一暴涨，token 成本就会变成税。</p>
+<p>AI 的悖论是：越有用，越贵；越自动化，越不可控。</p>
+<p>这就是为什么 PC 又回来了。</p>
+<p>不是那个用来打开 Excel、刷网页、接显示器的旧 PC，而是一个新的东西：</p>
+<p>个人 AI 算力节点。</p>
+<p>Wintel 时代结束了。</p>
+<p>不是 Intel 明天倒闭，也不是 x86 突然退场。一个统治了 PC 四十年的架构，不会被几条 tweet 埋掉。</p>
+<p>但 PC 的价值锚点变了。</p>
+<p>过去 PC 的默认答案是 Windows + Intel&#x2F;x86。接下来，PC 的核心问题会变成：这台机器能不能用更低成本吃掉足够多的本地智能任务？</p>
+<p>谁能回答这个问题，谁就站在新时代中心。</p>
+<h2 id="PC-为什么又热了？"><a href="#PC-为什么又热了？" class="headerlink" title="PC 为什么又热了？"></a>PC 为什么又热了？</h2><p>过去十几年，PC 一直像一个被时代落下的老朋友。</p>
+<p>它还在。每天都用。工作离不开它。代码要在上面写，文档要在上面改，会议要在上面开，财报要在上面看。</p>
+<p>但它不再性感。</p>
+<p>性感的是 mobile，是 App，是 Feed，是短视频，是 super app，是随时随地在线。PC 更像一张办公桌，很重要，但没什么想象力。</p>
+<p>因为过去十几年，最值钱的计算都离开了 PC。</p>
+<p>存储去了云端，应用去了 SaaS，消费去了 mobile，协作去了浏览器，算力变成按需购买。PC 慢慢变成一个终端，一个屏幕，一个键盘，一个浏览器容器。</p>
+<p>它不需要太强。</p>
+<p>真正值钱的东西在云上。</p>
+<p>这套逻辑在过去是 work 的。企业买 SaaS，用户打开浏览器，数据放在云端，协作在云端完成，本地机器只要足够流畅，别拖后腿就行。</p>
+<p>所以 PC 变便宜了，也变无聊了。</p>
+<p>但 AI 把这件事反过来了。</p>
+<p>AI 不是又一个 SaaS。AI 的核心成本不在页面，不在账号，不在权限，也不在数据库，而在每一次推理。每一次 prompt，每一次上下文扩展，每一次工具调用，每一次 Agent 自己在后台绕路，都是 token。</p>
+<p>过去 PC 失去想象力，是因为本地算力不再决定生产力。</p>
+<p>现在本地算力重新重要，是因为智能本身变成了生产力。</p>
+<p>这就是 PC 回到牌桌的原因。</p>
+<p>不是 PC 复兴了。</p>
+<p>是云端 AI 的成本结构，把 PC 又推了回来。</p>
+<h2 id="SaaS-的账，不能套在-AI-上"><a href="#SaaS-的账，不能套在-AI-上" class="headerlink" title="SaaS 的账，不能套在 AI 上"></a>SaaS 的账，不能套在 AI 上</h2><p>很多人误判 AI，是因为他们还在用 SaaS 的框架看 AI。</p>
+<p>SaaS 是什么？</p>
+<p>你买一个 seat，按月付费。用户用得越多，供应商越开心。因为软件已经写好了，服务器成本相对可控，边际成本会被规模摊薄。</p>
+<p>对企业来说，SaaS 的账也好算。</p>
+<p>一个人一个月花 30 美元，省了多少时间，减少多少流程，替代多少人肉协作，大致能估出来。哪怕估不准，至少账单是稳定的。</p>
+<p>AI 不是这样。</p>
+<p>AI 的账单不是 seat-based，而是 usage-based。你不是为“拥有能力”付费，而是为“每一次使用能力”付费。</p>
+<p>用得越多，账单越高。</p>
+<p>自动化越成功，调用越频繁。</p>
+<p>Agent 越勤奋，token 烧得越快。</p>
+<p>这跟 SaaS 的经济模型是反的。</p>
+<p>SaaS 最爽的地方，是边际成本被供应商藏起来。企业买到的是确定性：固定订阅，持续使用，效率越高越划算。</p>
+<p>Token 最痛的地方，是边际成本被重新塞回企业脸上。企业买到的是不确定性：今天花多少不知道，明天花多少不知道，Agent 在后台跑了多少步也不知道。</p>
+<p>SaaS 卖的是效率确定性，token 卖的是成本不确定性。</p>
+<p>这就是为什么很多 AI 项目落地之后，老板的表情会很微妙。</p>
+<p>Demo 很惊艳。</p>
+<p>POC 很有希望。</p>
+<p>周会上大家都觉得未来来了。</p>
+<p>然后账单来了。</p>
+<p>账单一来，很多事就不对劲了。</p>
+<p>原来一次简单任务，Agent 读了十几个文件，开了几十轮上下文，调用了好几个工具，中间还自我反思了几次。看起来很智能，账单也很智能。</p>
+<p>更尴尬的是，效果还不稳定。</p>
+<p>人类员工再贵，至少成本是固定的。一个工程师一个月多少钱，基本清楚。Agent 不一样，它像一个按里程收费的实习生，跑得越勤快越贵，还不一定知道自己跑偏了。</p>
+<p>所以企业 AI 的第一性问题，不是“模型够不够强”。</p>
+<p>而是：</p>
+<p>这件事能不能在经济上成立？</p>
+<h2 id="Agentic-Coding-把矛盾打穿了"><a href="#Agentic-Coding-把矛盾打穿了" class="headerlink" title="Agentic Coding 把矛盾打穿了"></a>Agentic Coding 把矛盾打穿了</h2><p>为什么这轮矛盾会先在 Agentic Coding 上爆出来？</p>
+<p>因为 coding 是少数已经证明 AI 有用的场景。</p>
+<p>让 AI 写广告文案，很多时候是锦上添花。让 AI 总结会议，也许有用，也许没人看。让 AI 画图，更多是娱乐或设计流程里的辅助。</p>
+<p>但 Agentic Coding 不一样。</p>
+<p>代码是结构化的，反馈是明确的，任务是高频的，价值是可衡量的。它能读 repo，能改代码，能生成 diff，能跑测试，能解释错误，能做 migration，能清理技术债。</p>
+<p>它不是“可能有用”。</p>
+<p>它是真有用。</p>
+<p>这也是它危险的地方。</p>
+<p>一个东西没用，没人会烧太多钱。真正烧钱的东西，一定是有用的东西。</p>
+<p>Agentic Coding 一旦进入工作流，就会变成刚需。工程师每天都想用，团队每天都想用，老板也会希望大家多用。因为它真的能干活。</p>
+<p>但它干活的方式很贵。</p>
+<p>写一句代码不贵，理解一个 repo 很贵。</p>
+<p>改一个函数不贵，找出应该改哪里很贵。</p>
+<p>生成一个 diff 不贵，反复验证、跑测试、修错误、再跑测试很贵。</p>
+<p>Agentic Coding 的核心消耗，往往不在最后那几行代码，而在前面大量探索、读取、推理、试错、回滚和重试。</p>
+<p>这跟人写代码很像。</p>
+<p>区别是，人类的探索成本已经被工资打包了。Agent 的探索成本会逐次出现在 token 账单里。</p>
+<p>这就是为什么 Agentic Coding 一方面会成为刚需，另一方面又会逼着企业重新思考成本结构。</p>
+<p>Agentic Coding 证明了 AI 有用，也证明了全云端 AI 太贵。</p>
+<p>这句话听起来矛盾，其实一点都不矛盾。</p>
+<p>正因为它有用，所以它会高频。</p>
+<p>正因为它高频，所以它不能一直贵。</p>
+<h2 id="本地-LLM-的价值不是更聪明，而是更便宜"><a href="#本地-LLM-的价值不是更聪明，而是更便宜" class="headerlink" title="本地 LLM 的价值不是更聪明，而是更便宜"></a>本地 LLM 的价值不是更聪明，而是更便宜</h2><p>很多人讨论本地 LLM，会问一个问题：</p>
+<p>本地模型能不能打过 Claude？能不能打过 GPT？能不能打过 Gemini？</p>
+<p>这个问题问错了。</p>
+<p>短中期内，本地 LLM 不需要打败 frontier model。</p>
+<p>它只需要吃掉足够多的低中复杂度任务。</p>
+<p>这就够了。</p>
+<p>企业真正需要的不是每一次请求都调用最强模型，而是把智能分层。</p>
+<p>简单任务交给本地模型。</p>
+<p>中等任务交给公司内部模型。</p>
+<p>复杂任务、关键决策、高难推理，再交给云端 frontier model。</p>
+<p>这才是正常的成本结构。</p>
+<p>现在很多团队的 AI 使用方式太奢侈了。无论是补全、摘要、搜索、简单重构、写脚本、解释日志，还是生成测试，全部往最贵的云端模型上打。</p>
+<p>这就像拿头等舱送外卖。</p>
+<p>不是不能送。</p>
+<p>是账不对。</p>
+<p>本地 LLM 的价值，不是让每台电脑都变成 AGI。它真正的价值，是把大量不值得调用 frontier model 的任务吃掉，把云端 token 留给真正需要的地方。</p>
+<p>本地 LLM 的价值不是更聪明，而是更便宜。</p>
+<p>更准确地说，是成本结构更健康。</p>
+<p>买 token 是 opex，持续支出，用一次付一次。</p>
+<p>买硬件是 capex，一次性支出，还有折旧期。三年、五年摊下来，只要使用频率足够高，本地算力就会比云端 token 划算。</p>
+<p>这件事对个人用户可能没那么敏感。</p>
+<p>但对企业很敏感。</p>
+<p>一个工程师每天调用几十次 Agent，整个团队每天调用几千次。再加上 CI、code review、自动化测试、知识库问答、文档生成、日志分析，token 很快就不是“小钱”。</p>
+<p>当 AI 从玩具变成基础设施，成本结构就会从“体验问题”变成“生死问题”。</p>
+<p>所以本地 LLM 不是信仰。</p>
+<p>是会计。</p>
+<h2 id="PC-重新成为算力资产"><a href="#PC-重新成为算力资产" class="headerlink" title="PC 重新成为算力资产"></a>PC 重新成为算力资产</h2><p>这就是 PC 重新重要的地方。</p>
+<p>手机当然重要，但手机更像注意力设备。它负责消息、消费、拍摄、支付、社交、即时响应。</p>
+<p>PC 不一样。</p>
+<p>PC 是生产力设备。它有键盘，有大屏，有文件系统，有 IDE，有 terminal，有浏览器，有企业软件，有本地数据，有开发环境，有 repo，有脚本，有日志，有权限边界。</p>
+<p>Agent 真要干活，不是在手机上刷来刷去。</p>
+<p>它要读文件，改代码，跑测试，查资料，调工具，连企业系统，跨应用执行任务。</p>
+<p>这些东西天然发生在 PC 上。</p>
+<p>手机负责消费智能，PC 负责生产智能。</p>
+<p>这就是为什么 AI PC 不能只理解成“笔记本里多了一个 NPU”。</p>
+<p>那太窄了。</p>
+<p>真正的新 PC，不是多一个 Copilot 按键，也不是多一个会聊天的系统助手，而是一个本地智能工作节点。</p>
+<p>它要承担一部分模型推理。</p>
+<p>它要处理私人上下文。</p>
+<p>它要在本地完成低延迟任务。</p>
+<p>它要在云端 token 太贵的时候，把足够多的智能任务拦下来。</p>
+<p>它要在必要时再把复杂任务路由到云端。</p>
+<p>换句话说，PC 不再只是访问云服务的终端。</p>
+<p>PC 重新变成算力资产。</p>
+<p>这才是&quot;A new era of PC&quot;背后真正值得看的东西。</p>
+<p>不是 PC 突然要重回 2000 年代的中心。</p>
+<p>而是 AI 的成本结构，把一部分计算从云端逼回了本地。</p>
+<h2 id="Wintel-只是旧秩序的名字"><a href="#Wintel-只是旧秩序的名字" class="headerlink" title="Wintel 只是旧秩序的名字"></a>Wintel 只是旧秩序的名字</h2><p>Intel 当然还在牌桌上。x86 当然也不会突然消失。如果只是跑本地模型，CPU 架构本身甚至不是最关键变量。</p>
+<p>真正关键的是 memory bandwidth、GPU&#x2F;NPU 吞吐、软件栈、模型调度、功耗、散热、开发者生态，以及 cloud &#x2F; local &#x2F; edge 之间的分层体验。</p>
+<p>Intel 有牌。</p>
+<p>AMD 有牌。</p>
+<p>Qualcomm 有牌。</p>
+<p>Apple 也早就证明了另一条路能打。</p>
+<p>但&quot;Wintel&quot;这个词仍然有意义。</p>
+<p>因为它不是一个技术名词，而是旧 PC 时代的秩序名词。</p>
+<p>过去 PC 的默认理解很简单：</p>
+<p>Windows + x86 + OEM + 本地应用 + 云端 SaaS。</p>
+<p>用户买电脑，不需要理解这些组合。行业自然会替你安排好。Intel 定义硬件节奏，Microsoft 定义操作系统，OEM 负责出货，NVIDIA 和 AMD 在图形或高性能场景里加码。</p>
+<p>这套秩序运行了几十年。</p>
+<p>它的核心问题是：这台机器能不能流畅运行 Windows 软件？</p>
+<p>但下一代 PC 的核心问题变了：</p>
+<p>这台机器能不能用更低成本跑足够多的本地智能任务？</p>
+<p>这是两个时代的问题。</p>
+<p>前一个问题，Wintel 是答案。</p>
+<p>后一个问题，Wintel 不一定是答案。</p>
+<p>这才是 Wintel 时代结束的含义。</p>
+<p>不是 Intel 消失。</p>
+<p>不是 Windows 消失。</p>
+<p>不是 x86 消失。</p>
+<p>而是&quot;PC &#x3D; Windows + x86&quot;这个默认理解，不够解释下一代 PC 了。</p>
+<h2 id="谁在喊新-PC？"><a href="#谁在喊新-PC？" class="headerlink" title="谁在喊新 PC？"></a>谁在喊新 PC？</h2><p>这时候再回头看那几条&quot;A new era of PC&quot;，就有意思了。</p>
+<p>NVIDIA 为什么喊？</p>
+<p>因为它不能只守在 data center。</p>
+<p>如果所有 AI 都发生在云端，NVIDIA 已经赢了一轮。但如果企业为了 token efficiency，开始把大量推理任务下沉到本地，NVIDIA 就必须进入 PC。</p>
+<p>它要把 GPU、CUDA、local inference、开发者生态和 AI runtime 带回个人设备。</p>
+<p>它卖的不只是芯片。</p>
+<p>它卖的是下一代 PC 的智能底座。</p>
+<p>Microsoft 为什么喊？</p>
+<p>因为 Windows 是企业工作流入口。</p>
+<p>如果 AI Agent 真要落地，Windows 不能只是打开云服务的壳。它必须变成本地智能工作流的操作系统：能调模型，能管权限，能接应用，能理解文件，能在本地和云端之间做路由。</p>
+<p>Microsoft 最怕的不是 PC 市场不增长。</p>
+<p>它最怕的是，AI 时代的工作流入口不再属于 Windows。</p>
+<p>Arm 为什么喊？</p>
+<p>因为本地智能需要性能功耗比。</p>
+<p>Apple Silicon 已经教育了整个市场：笔记本不是不能既强又省电。Windows 阵营如果要在 AI PC 上追，就不能继续只靠传统路径。</p>
+<p>Arm 这次喊的不是“我能跑 Windows”。</p>
+<p>它喊的是：下一代 PC 的硬件形态，可以不再围着旧架构转。</p>
+<p>那谁还在用旧语言讲新 PC？</p>
+<p>很多传统玩家还在讲 CPU、频率、核数、benchmark、AI TOPS、产品线更新。</p>
+<p>这些都重要，但不够。</p>
+<p>新时代真正要回答的问题不是“参数更强了吗”，而是“成本结构变好吗”。</p>
+<p>这台机器能不能少烧 token？</p>
+<p>能不能把低价值请求留在本地？</p>
+<p>能不能让企业少给模型厂商交税？</p>
+<p>能不能让 Agentic Coding 从一个昂贵玩具，变成日常基础设施？</p>
+<p>谁能回答这些问题，谁才配谈新 PC。</p>
+<h2 id="云端-AI-的税"><a href="#云端-AI-的税" class="headerlink" title="云端 AI 的税"></a>云端 AI 的税</h2><p>过去两年，AI 公司讲了很多宏大叙事。</p>
+<p>AGI、agent、copilot、automation、super intelligence。</p>
+<p>这些词都很性感。</p>
+<p>但企业最后面对的是另一张表：账单。</p>
+<p>这张表不性感，但真实。</p>
+<p>当所有智能都通过云端 token 计价，AI 就像一种新税。你每自动化一步，就交一次税。你每让 Agent 多思考一轮，就交一次税。你每把工作流接进去，就交一次税。</p>
+<p>这不是说模型厂商坏。</p>
+<p>训练模型、部署模型、维护推理集群，本来就贵。别人提供能力，当然要收费。</p>
+<p>问题在于，企业不能永远把自己的自动化建立在别人按次计费的智能上。</p>
+<p>尤其是高频、刚需、低中复杂度任务。</p>
+<p>这些任务一旦全部云端化，企业的成本结构会越来越像给模型厂商打工。业务增长未必明显，账单增长一定明显。</p>
+<p>所以本地 LLM 不只是技术路线。</p>
+<p>它是一种议价权。</p>
+<p>当企业没有本地智能能力时，所有请求都只能上云。模型厂商说多少钱，就是多少钱。</p>
+<p>当企业有本地智能能力时，它至少可以选择。</p>
+<p>简单任务本地跑。</p>
+<p>敏感数据本地跑。</p>
+<p>高频任务本地跑。</p>
+<p>复杂任务再上云。</p>
+<p>这不是完全替代，而是重新分配。</p>
+<p>本地智能最大的价值，是让企业重新拿回一部分成本控制权。</p>
+<p>这也是 PC 重新变成资产的原因。</p>
+<p>过去买一台高性能 PC，很多时候像消费电子升级。</p>
+<p>现在买一台能跑本地模型的 AI PC，更像买一个小型算力节点。它不是为了让风扇转得更响，也不是为了让参数更好看，而是为了在未来几年持续减少 token 支出。</p>
+<p>这笔账，企业会算。</p>
+<h2 id="新时代不是发布会喊出来的"><a href="#新时代不是发布会喊出来的" class="headerlink" title="新时代不是发布会喊出来的"></a>新时代不是发布会喊出来的</h2><p>当然，喊&quot;A new era of PC&quot;不代表新时代真的来了。</p>
+<p>这里面还有很多坑。</p>
+<p>本地模型能力够不够？</p>
+<p>Windows 能不能把 local AI runtime 做顺？</p>
+<p>开发者愿不愿意适配？</p>
+<p>企业 IT 能不能管理这些本地模型？</p>
+<p>安全和权限怎么处理？</p>
+<p>模型更新怎么做？</p>
+<p>本地和云端怎么路由？</p>
+<p>NPU、GPU、CPU 谁来调度？</p>
+<p>这些问题一个都不简单。</p>
+<p>而且 PC 阵营最大的问题一直没变：它不是 Apple。</p>
+<p>Apple 可以一家公司决定芯片、系统、开发工具、硬件形态和用户体验。Windows PC 是一个联盟。Microsoft、NVIDIA、Arm、Intel、AMD、Qualcomm、OEM、开发者，每个人都想赢，每个人都只控制一部分。</p>
+<p>联盟的好处是开放。</p>
+<p>联盟的坏处是没人真正说了算。</p>
+<p>所以这场新 PC 叙事能不能成，最后不取决于发布会，也不取决于几条 tweet，而取决于它能不能把复杂性藏起来。</p>
+<p>用户不关心你用了什么架构。</p>
+<p>企业不关心你有多少 TOPS。</p>
+<p>工程师也不想每天研究哪种任务该用哪个模型、哪个 runtime、哪个后端。</p>
+<p>大家只关心一件事：</p>
+<p>能不能更便宜地把活干完？</p>
+<p>如果答案是能，新 PC 就真的成立。</p>
+<p>如果答案是不能，那它就只是又一次 AI PC 营销。</p>
+<h2 id="结尾：PC-后面那个没说出口的名字"><a href="#结尾：PC-后面那个没说出口的名字" class="headerlink" title="结尾：PC 后面那个没说出口的名字"></a>结尾：PC 后面那个没说出口的名字</h2><p>所以，当几家巨头同时喊出&quot;A new era of PC&quot;，我不觉得重点是 PC。</p>
+<p>重点是 new era。</p>
+<p>旧时代里，PC 是 Windows + x86 的默认组合，是访问 SaaS 和云服务的终端，是被 mobile 抢走光环之后仍然默默工作的办公设备。</p>
+<p>新时代里，PC 可能变成另一种东西：</p>
+<p>个人 AI 算力节点。</p>
+<p>它不一定承担最强推理，但要承担最高频的推理。</p>
+<p>它不一定替代云端模型，但要减少对云端 token 的依赖。</p>
+<p>它不一定让每个人拥有 AGI，但要让企业别在每一次自动化里都给模型厂商交税。</p>
+<p>Wintel 时代结束，不是因为 Intel 不行了。</p>
+<p>而是因为下一代 PC 的核心问题，已经不再是“能不能跑 Windows”。</p>
+<p>而是：</p>
+<p>能不能跑得起智能？</p>
+<p>过去四十年，PC 的默认答案是 Wintel。</p>
+<p>接下来几年，默认答案会被拆开，重新组合。Windows 还在，Intel 还在，x86 还在，OEM 还在。</p>
+<p>但那个所有人默认围着同一套硬件节奏出牌的时代，结束了。</p>
+<p>所以&quot;A new era of PC&quot;这句话真正刺耳的地方，不是 new era。</p>
+<p>是 PC 后面那个没有说出口的问题：</p>
+<p>当 token 贵到所有人都开始重新购买本地算力时，谁还配定义 PC？</p>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>johnsonlee</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="/2026/05/31/a-new-era-of-pc/">https://johnsonlee.io/2026/05/31/a-new-era-of-pc/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"><a href="/tags/AI-PC/">AI PC</a><a href="/tags/Wintel/">Wintel</a><a href="/tags/NVIDIA/">NVIDIA</a><a href="/tags/Microsoft/">Microsoft</a><a href="/tags/Local-LLM/">Local LLM</a><a href="/tags/Token/">Token</a></div><div class="post-nav"><a class="pre" href="/2026/05/31/ai-pc-real-opportunity/">当 AI PC 成为新的风口，真正的机会在哪里？</a><a class="next" href="/2026/05/30/saas-value-return-token-burning/">疯狂烧 Token 的日子要结束了</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Wintel 时代结束了","datePublished":"2026-05-31T00:00:00.000Z","dateModified":"2026-05-31T00:00:00.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2026/05/31/a-new-era-of-pc/"},"description":"过去两天，几家巨头几乎同时发了一句话：&quot;A new era of PC.&quot; NVIDIA 发了。Windows 发了。Arm 也跟了。后面还带着一串坐标，指向台北。科技公司天天喊新时代，这没什么稀奇。稀奇的是，它们很少一起喊。更稀奇的是，这一次大家都在谈 PC。 一个被 mobile 抢走十几年光环的老东西，突然又回到了牌桌中央。"}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname.replace(/^\/en\/(\d{4}\/)/, '/$1').replace(/\.en\/$/, '/')),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (107)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Harness-Engineering/">Harness Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (62)</a><ul style="padding:revert"></ul></li><li><a href="/categories/investing/">Investing (5)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Developer-Tools/" style="font-size: 15px;">Developer Tools</a> <a href="/tags/Dotfiles/" style="font-size: 15px;">Dotfiles</a> <a href="/tags/Claude-Code/" style="font-size: 15px;">Claude Code</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/AI-PC/" style="font-size: 15px;">AI PC</a> <a href="/tags/Wintel/" style="font-size: 15px;">Wintel</a> <a href="/tags/NVIDIA/" style="font-size: 15px;">NVIDIA</a> <a href="/tags/Microsoft/" style="font-size: 15px;">Microsoft</a> <a href="/tags/Local-LLM/" style="font-size: 15px;">Local LLM</a> <a href="/tags/Token/" style="font-size: 15px;">Token</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/Consciousness/" style="font-size: 15px;">Consciousness</a> <a href="/tags/Self-Reference/" style="font-size: 15px;">Self-Reference</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Attention/" style="font-size: 15px;">Attention</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Apple/" style="font-size: 15px;">Apple</a> <a href="/tags/WWDC/" style="font-size: 15px;">WWDC</a> <a href="/tags/Apple-Silicon/" style="font-size: 15px;">Apple Silicon</a> <a href="/tags/Agentic-Coding/" style="font-size: 15px;">Agentic Coding</a> <a href="/tags/Enterprise/" style="font-size: 15px;">Enterprise</a> <a href="/tags/Buddhism/" style="font-size: 15px;">Buddhism</a> <a href="/tags/Taoism/" style="font-size: 15px;">Taoism</a> <a href="/tags/Physics/" style="font-size: 15px;">Physics</a> <a href="/tags/Philosophy/" style="font-size: 15px;">Philosophy</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/Automation/" style="font-size: 15px;">Automation</a> <a href="/tags/Testing/" style="font-size: 15px;">Testing</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/Cognitive-Boundary/" style="font-size: 15px;">Cognitive Boundary</a> <a href="/tags/Randomness/" style="font-size: 15px;">Randomness</a> <a href="/tags/Self-Evolution/" style="font-size: 15px;">Self-Evolution</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Dimension-Hacking/" style="font-size: 15px;">Dimension Hacking</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Economy/" style="font-size: 15px;">Economy</a> <a href="/tags/Future/" style="font-size: 15px;">Future</a> <a href="/tags/UBI/" style="font-size: 15px;">UBI</a> <a href="/tags/Product-Strategy/" style="font-size: 15px;">Product Strategy</a> <a href="/tags/Copilot/" style="font-size: 15px;">Copilot</a> <a href="/tags/Google/" style="font-size: 15px;">Google</a> <a href="/tags/Technology/" style="font-size: 15px;">Technology</a> <a href="/tags/AI-Agent/" style="font-size: 15px;">AI Agent</a> <a href="/tags/Memory/" style="font-size: 15px;">Memory</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Product-Management/" style="font-size: 15px;">Product Management</a> <a href="/tags/Project-Management/" style="font-size: 15px;">Project Management</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/Harness-Engineering/" style="font-size: 15px;">Harness Engineering</a> <a href="/tags/Prompt-Engineering/" style="font-size: 15px;">Prompt Engineering</a> <a href="/tags/Eval/" style="font-size: 15px;">Eval</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Graphite/" style="font-size: 15px;">Graphite</a> <a href="/tags/MCP/" style="font-size: 15px;">MCP</a> <a href="/tags/Bytecode/" style="font-size: 15px;">Bytecode</a> <a href="/tags/Static-Analysis/" style="font-size: 15px;">Static Analysis</a> <a href="/tags/Ground-Truth/" style="font-size: 15px;">Ground Truth</a> <a href="/tags/Context/" style="font-size: 15px;">Context</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/06/13/ai-pc-local-inference.en/">After Years Behind in AI, Apple Finally Bet Right</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/13/ai-pc-local-inference/">掉队 AI 多年的苹果，这回终于押对了</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/06/serenity-methodology-cannot-be-skill/">Serenity，瓶颈猎人</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/06/serenity-methodology-cannot-be-skill.en/">Serenity, the Bottleneck Hunter</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/05/31/ai-pc-real-opportunity/">当 AI PC 成为新的风口，真正的机会在哪里？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/05/31/ai-pc-real-opportunity.en/">When AI PCs Become the Next Boom, Where Is the Real Opportunity?</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/05/31/a-new-era-of-pc/">Wintel 时代结束了</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/05/31/a-new-era-of-pc.en/">The Wintel Era Is Over</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/05/30/saas-value-return-token-burning.en/">The Era of Burning Tokens Wildly Is Coming to an End</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/05/30/saas-value-return-token-burning/">疯狂烧 Token 的日子要结束了</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>
