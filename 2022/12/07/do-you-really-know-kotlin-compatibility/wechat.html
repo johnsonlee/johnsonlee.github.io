@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2022/12/07/do-you-really-know-kotlin-compatibility/">
+  <title>Kotlin 填坑记之 Compatibility | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Kotlin 填坑记之 Compatibility</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2022-12-07 · Johnson Lee · Computer Science / Kotlin</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在前一篇 <a href="https://johnsonlee.io/2022/12/03/do-you-really-know-kotlin-function/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Kotlin 填坑记之 FunctionReference</a> 中有提到关于如何解决 Kotlin 从 1.3 升级到 1.5 时由 <a href="https://github.com/JetBrains/kotlin/blob/master/libraries/stdlib/jvm/runtime/kotlin/jvm/internal/FunctionReference.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">FunctionReference</a> 引发的兼容性问题，其实，Kotlin 的兼容性问题远不只这一个，如何系统性的解决 Kotlin 的兼容性问题呢？</p>
+<h2 id="什么是兼容性问题" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  什么是兼容性问题</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">软件的兼容性问题大致可以分为两类：API 兼容性和 ABI 兼容性。</p>
+<h3 id="API-Application-Programming-Interface-兼容性" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">1.1.  API (Application Programming Interface) 兼容性</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">简而言之，就是接口的兼容性，大致也分为两类：</p>
+<h4 id="API-废弃-Deprecation" style="margin:24px 0 12px;font-size:17px;line-height:1.5;font-weight:700;color:#111827;">1.1.1.  API 废弃 (Deprecation)</h4><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">比如：Kotlin 1.5 废弃了 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">String.toUpperCase()</code> API，由 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">String.uppercase()</code> 替代。尽管 API 废弃了，要用还是可以继续用的，只不过编译器会有警告，但不会中断编译过程。</p>
+<h4 id="API-删除-Removal" style="margin:24px 0 12px;font-size:17px;line-height:1.5;font-weight:700;color:#111827;">1.1.2.  API 删除 (Removal)</h4><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">比如：JDK 11 删除了 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Thread.destroy()</code> 和 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Thread.stop(Throwable)</code> API，如果工程里用了 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Thread.destroy()</code> API 的话，升级到 JDK 11 就编译不过了，要么选择替代方案，要么换其他的实现方式。</p>
+<h3 id="ABI-Application-Binary-Interface-兼容性" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">1.2.  ABI (Application Binary Interface) 兼容性</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">简而言之，就是二进制的兼容性。对于运行在 JVM 上的语言而言，二进制的兼容性主要是字节码的兼容性，这里也可以分为两类：</p>
+<h4 id="JVM-字节码的版本兼容性" style="margin:24px 0 12px;font-size:17px;line-height:1.5;font-weight:700;color:#111827;">1.2.1.  JVM 字节码的版本兼容性</h4><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">比较典型的例子是 class 文件的 major version</p>
+<h4 id="语言本身的-Runtime-版本兼容性" style="margin:24px 0 12px;font-size:17px;line-height:1.5;font-weight:700;color:#111827;">1.2.2.  语言本身的 Runtime 版本兼容性</h4><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Kotlin 的一些语言特性是在编译器层面实现的，不同版本的 Kotlin 编译器的实现方式可能有些不一样，虽然对于使用 Kotlin 进行开发的工程师而言，都是调用 Kotlin 标准库，但是 Kotlin 编译器会生成一些字节码甚至 class 来实现让工程师看起来很酷的语法糖，比如：随处可见的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Function</code></p>
+<h2 id="真正头疼的问题" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  真正头疼的问题</h2><h3 id="不兼容的字节码" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.1.  不兼容的字节码</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">还记得 <a href="https://johnsonlee.io/2022/12/03/do-you-really-know-kotlin-function/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Kotlin 填坑记之 FunctionReference</a> 中遇到的问题吗？</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">fun f(fn: (Any) -&gt; Unit) {}
+
+fun ff() {
+    f(::println)
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果我们用 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31</code> 来编译以上代码，就会得到下面的字节码：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">final synthetic class io/johnsonlee/kotlin/TestKt$ff$1 extends kotlin/jvm/internal/FunctionReferenceImpl implements kotlin/jvm/functions/Function1 {
+
+  // access flags 0x0
+  &lt;init&gt;()V
+    ALOAD 0
+    ICONST_1
+    LDC Lkotlin/io/ConsoleKt;.class
+    LDC "println"
+    LDC "println(Ljava/lang/Object;)V"
+    LDC 1
+    INVOKESPECIAL kotlin/jvm/internal/FunctionReferenceImpl.&lt;init&gt; (ILjava/lang/Class;Ljava/lang/String;Ljava/lang/String;I)V
+    RETURN
+    MAXSTACK = 6
+    MAXLOCALS = 1
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">也就是说，Kotlin 编译器生成的字节码中包含了低版本中不存在的内容，从而导致其它的 Kotlin 低于 1.4 的工程在使用了该字节码后，运行时报错 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">NoSuchMethodError</code>。</p>
+<h3 id="不兼容的元数据" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.2.  不兼容的元数据</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Kotlin 除了生成 class 字节码，还会生成其它的二进制内容：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Metadata (<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">@Metadata</code>)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Module mapping (<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">*.kotlin_module</code>)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">......</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">以上这些二进制内容都包含有版本信息以及版本兼容性约束信息。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">以 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">@Metadata</code> 为例，默认的兼容策略是 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">x.y</code> 兼容 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">x.{y + 1}</code>，除非版本有严格的语义。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">那这些二进制内容的版本信息是如何确定的呢？</p>
+<h4 id="Metadata-Version" style="margin:24px 0 12px;font-size:17px;line-height:1.5;font-weight:700;color:#111827;">2.2.1.  Metadata Version</h4><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">@Metadata</code> 的版本信息默认是由 Kotlin Compiler 的版本决定的，对于 Gradle 工程来说，其实就是由 <em style="font-style:italic;color:#1f2937;">kotlin-gradle-plugin</em> 的版本决定。修改 <em style="font-style:italic;color:#1f2937;">kotlin-gradle-plugin</em> 的版本就会影响到 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">@Metadata</code> 的版本。</p>
+<h4 id="Module-Mapping-Version" style="margin:24px 0 12px;font-size:17px;line-height:1.5;font-weight:700;color:#111827;">2.2.2.  Module Mapping Version</h4><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">*.kotlin_module</code> 的版本同样也是由 Kotlin Compiler 的版本决定，而且跟 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">@Metadata</code> 的版本是一致，如果出现版本不兼容的情况，编译就会报：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">Module was compiled with an incompatible version of Kotlin. The binary version of its metadata is a.b.c, expected version is x.y.z.</code></pre>
+
+<h2 id="Java-的解决方案" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  Java 的解决方案</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">针对兼容性问题，Java 是有系统性的解决方案的，用过 Gradle 的同学应该都记得，Java 编译任务可以配置这两个参数：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">sourceCompatibility</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">targetCompatibility</code></li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">示例如下：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetComaptibility = JavaVersion.VERSION_1_8
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">正是前面提到的 <em style="font-style:italic;color:#1f2937;">API</em> 与 <em style="font-style:italic;color:#1f2937;">ABI</em> 两个层面来进行兼容性管理：</p>
+<table style="width:100%;border-collapse:collapse;margin:22px 0;font-size:14px;line-height:1.6;color:#1f2937;">
+<thead>
+<tr>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">#</th>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Java Compiler Options</th>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Gradle Compiler Task Options</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">API</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-source</code></td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">sourceCompatibility</code></td>
+</tr>
+<tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">ABI</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-target</code></td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">targetCompatibility</code></td>
+</tr>
+</tbody></table>
+<h2 id="Kotlin-的解决方案" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  Kotlin 的解决方案</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Kotlin 也提供编译选项来指定版本：</p>
+<table style="width:100%;border-collapse:collapse;margin:22px 0;font-size:14px;line-height:1.6;color:#1f2937;">
+<thead>
+<tr>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">#</th>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Kotlin Compiler Options</th>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Gradle Compiler Task Options</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">API</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-api-version</code></td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">apiVersion</code></td>
+</tr>
+<tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">ABI</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version</code></td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">languageVersion</code></td>
+</tr>
+</tbody></table>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如下所示：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">tasks.withType&lt;KotlinCompile&gt; {
+    kotlinOptions {
+        apiVersion = "1.5"
+        languageVersion = "1.5"
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">值得注意的是：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-api-version</code> 不能大于 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">限制 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version</code> 就等于同时限制了 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-api-version</code></li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Kotlin 与 Java 编译选项的对应关系如下：</p>
+<table style="width:100%;border-collapse:collapse;margin:22px 0;font-size:14px;line-height:1.6;color:#1f2937;">
+<thead>
+<tr>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">#</th>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Kotlin Compiler Options</th>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Java Compiler Options</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">API</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-api-version</code></td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-source</code></td>
+</tr>
+<tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">ABI</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version</code></td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-target</code></td>
+</tr>
+</tbody></table>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">啊哈，原来 Kotlin 的兼容性管理跟 Java 一样如此简单，那么到底怎么使用这两个编译选项呢？</p>
+<h2 id="最佳实践" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  最佳实践</h2><h3 id="统一-Kotlin-版本" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">5.1.  统一 Kotlin 版本</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">工程中的 Kotlin 版本最好是使用 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">embeddedKotlinVersion</code> (Gradle 内嵌的 Kotlin 版本)，例如：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${embeddedKotlinVersion}")
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">或者：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">plugins {
+    kotlin("jvm") version embeddedKotlinVersion
+}</code></pre>
+
+<h3 id="指定-language-version-或-api-version" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">5.2.  指定 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version</code> 或 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-api-version</code></h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">以前面 <a href="https://github.com/JetBrains/kotlin/blob/master/libraries/stdlib/jvm/runtime/kotlin/jvm/internal/FunctionReference.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">FunctionReference</a> 的问题为例，我们的目标是要在字节码层面向下兼容，也就是 <em style="font-style:italic;color:#1f2937;">ABI</em> 层面，如果要让生成的字节码不包含 1.4 的内容（向下兼容 Kotlin 1.3），则指定 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version</code> 或者 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-api-version</code> 都可以：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">tasks.withType&lt;KotlinCompile&gt; {
+    kotlinOptions {
+        languageVersion = "1.3"
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">或者：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">tasks.withType&lt;KotlinCompile&gt; {
+    kotlinOptions {
+        apiVersion = "1.3"
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">无论是 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-api-version</code> 还是 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version</code> 编译后的字节码都是：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">io.johnsonlee.kotlin.TestKt$ff$1();
+    descriptor: ()V
+    flags: (0x0000)
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: iconst_1
+         2: invokespecial #57 // Method kotlin/jvm/internal/FunctionReference."&lt;init&gt;":(I)V
+         5: return</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">不难发现，<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">FunctionReference</code> 的字节码表示方式变了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">既然都可以，那用 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version</code> 和用<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-api-version</code> 到底有什么区别呢？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">区别在于：</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">用 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version</code> 编译出的字节码的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">@Metadata</code> 版本则为 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">1.1.18</code> 而用 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-api-version</code> 编译出的字节码的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">@Metadata</code> 版本还是 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">1.5.1</code></p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这说明，<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-api-version</code> 并不能在 <em style="font-style:italic;color:#1f2937;">ABI</em> 层面做到完全的兼容性，而 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version</code> 的影响范围更大，不仅限制了不同版本的语言特性，同时还限制了包括 metadata 在内的二进制的版本。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">尽管 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version</code> 和 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-api-version</code> 会影响编译出的字节码的内容，但是，它们并不能改变工程依赖的 Kotlin <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">stdlib</code> 的版本，即使使用了 1.5 的 <em style="font-style:italic;color:#1f2937;">kotlin-gradle-plugin</em>，如果将 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version</code> 或者 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-api-version</code> 设置为 1.3，工程的依赖也不会发生变化，这也是为什么 Kotlin 能做向下兼兼容的原因，即使有些 API 在高版本不让用了，比如 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">toLowerCase()</code> 在 1.5 以上就不让用了，并不是这个 API 真的删除了，而只是编译器不让用了：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">@DeprecatedSinceKotlin(
+    warningSince = "1.3",
+    errorSince = "1.5"
+)</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果对于已经用 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version="1.3"</code> 编译好的 class，用 1.5 的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">stdlib</code> 也是没有问题的。</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2022/12/07/do-you-really-know-kotlin-compatibility/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2022/12/07/do-you-really-know-kotlin-compatibility/</a></p>
+    </section>
+  </main>
+</body>
+</html>

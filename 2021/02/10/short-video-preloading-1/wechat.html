@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2021/02/10/short-video-preloading-1/">
+  <title>短视频预加载技术（一） | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">短视频预加载技术（一）</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2021-02-10 · Johnson Lee · Computer Science / Mobile</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在用户体验为王的时代，对于短视频 App 来说，视频的「观看次数」（Video View) 是衡量用户体验质量的重要指标之一，从用户体感上，播放越流畅，视频质量越好，推荐越精准，相应的，另一个指标 —— 「人均观看时长」指标就会越高，所以，为了提升用户的体感，在技术上也是无所不用其及，而在视频行业中，做到秒开才算是及格，为了达到这一标准，视频的预加载是提升用户体验的最重要的技术之一。</p>
+<h2 id="质量指标" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  质量指标</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">一般来说，我们主要从两个维度来衡量 App（产品）的质量 —— 体验质量 (QoE, Quality of Experience) 和服务质量 (QoS, Quality of Service)。</p>
+<h3 id="体验质量-QoE-Quality-of-Experience" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">1.1.  体验质量 (QoE, Quality of Experience)</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">QoE 主要是从终端用户的角度出发，以用户对 App （产品）的主观感受来衡量其满意程度，影响用户体验的因素有很多，主要表现在人为因素，系统因素和环境因素，因此 QoE 涉及到社会心理学、认知科学、经济学及工程科学等新兴的多学科领域。对于短视频而言，QoE 指标主要有：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">观看次数 (Video View)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">人均观看时长 (Average Played Time)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">完播率 (Play Complete Ratio)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">评论率 (Comment Rate)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">人均评论停留时长 (Average Stay Duration In Comment)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">点赞率 (Like Rate)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">收藏率 (Favorite Rate)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">转发率 (Forward Rate)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">加粉率 (Follow Rate)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">负反馈率 (Negative Feedback Rate)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">...</li>
+</ul>
+<h3 id="服务质量-QoS-Quality-of-Service" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">1.2.  服务质量 (QoS, Quality of Service)</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">相对于 QoE 而言，QoS 是更偏向于客观地角度出发，通过各种参数来衡量服务的整体性能。对于短视频而言，QoS 指标主要有：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">传输延时 (Transport Latency)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">编码延时 (Encode Latency)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">解码延时 (Decode Latency)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">首帧时间 (Time to First Frame)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">帧率 (Frame Per Second)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">秒开率 (Sec-Opening Rate)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">缓存命中率 (Cache Hit Ratio)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">...</li>
+</ul>
+<h2 id="预加载" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  预加载</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">那对于预加载而言，主要是提升哪些指标呢？在回答这个问题之前，我们先了解一下预加载的形式：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">预下载 - 预先将视频资源从 CDN 下载到本地</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">预解码 - 预先让播放器对下载到本地的视频文件进行解码</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">对于预下载，这个很好理解，无非就是从 CDN 去下载就好了，对于 <em style="font-style:italic;color:#1f2937;">feed</em> 流形式的短视频 App 来说，用户会一边观看，一边上下来回滑动，看似很简单的一个动作，里面却包含了复杂的流程，这就需要预下载跟预解码进行紧密的配合，对于预下载来说，首先需要弄清楚几个问题：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">什么时机去下载？</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">下载多少？</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">从哪个 CDN 去下?</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">下载哪个码率?</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">下载任务的调度策略？</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">下载失败的重试策略？</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">如何处理数据翻页问题？</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">下载完了怎么给播放器去预解码？</li>
+</ol>
+<h3 id="下载时机" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.1.  下载时机</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">对于像抖音那种全屏上下滑的短视频 APP 来说，除了首次安装，首个视频的下载一般都是在进入播放列表页之前就已经下载到本地，并且首帧已经缓冲好了的，而从第 2 个视频开始，才是真正需要实时进行预加载的，所以，对于 上下滑交互方式的 <em style="font-style:italic;color:#1f2937;">APP</em> 来说，下载的时机是 —— 当列表中的某个视频被选中为当前播放的视频时，开始下载当前视频位置的下一个视频（或上一个，取决于用户滑的方向）。</p>
+<h3 id="下载多少" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.2.  下载多少</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">一般来说，下载量有两种单位：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">按字节数下载</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">按秒数下载</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">对于两种单位，实现方式上稍微有所区别，当然，「按字节数下载」实现起来更简单，完全不需要额外的计算，但是，「按秒数下载」就稍微麻烦一点，需要根据码率来计算，而码率又分为两类：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">固定码率</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">可变码率</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">码率是固定的话，只需要计算一次就行了，如果码率是可变的，那就需要根据视频的原信息实时计算，相对于「按字节数下载」来说，实现会更复杂。</p>
+<h3 id="选择-CDN" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.3.  选择 CDN</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">一般来说，同一个视频资源会存在于多个 CDN 上（做得挫的就不说了），一般将这种称之为多源视频（即同一个视频有多个来源），对于客户端来说，可能只知道视频资源 ID （或者 path）和一组 CDN host 列表，在下载之前，需要根据 CDN host 列表和视频资源 ID 进行排列组合，一般视频 ID 只有一个，那这个组合数量其实就是 CDN host 列表的 size</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">根据 CDN host 的形式，又分为两种情况：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">CDN host 是 IP</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">CDN host 是域名</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">对于 CDN host 是 IP 的情况下，客户端构建好 URL 直接就可以扔给下载模块去下载了，而对于第 2 种情况，客户端需要先进行 DNS 解析拿到 IP 后再构建 URL 去下载。</p>
+<h3 id="选择码率" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.4.  选择码率</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">与「多源视频」类似，同一个视频会存在多个码率的，一般将这种称之为多码率视频。为什么会存在多码率呢？对于不同的视频内容，时间复杂度和空间复杂度都不一样，而于对客户端来说，用户的设备性能也各不一样，为了最大限度的提升用户体验，需要根据网络环境、视频内容、设备性能进行自适应，业内称之为 —— 码率自适应技术 (Adaptive Bitrate Streaming)，相对于多源视频而言，码率自适应的实现更为复杂。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">每个多码率视频资源会有一个 <em style="font-style:italic;color:#1f2937;">manifest</em> 来描述其信息，一般有多个维度：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">带宽</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">分辨率</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">帧率</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">CDN 列表</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">...</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">假设分辨率有 <em style="font-style:italic;color:#1f2937;">M</em> 种，<em style="font-style:italic;color:#1f2937;">CDN</em> 有 <em style="font-style:italic;color:#1f2937;">N</em> 个，通过这两个维度，我们就可以组合出 <em style="font-style:italic;color:#1f2937;">C(M, N)</em> 个下载的 URL，如果有更多维度，那这个组合就更多。</p>
+<h3 id="下载任务调度" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.5.  下载任务调度</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">对于单纯的下载模块来说，一般有两种调试模式：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">并行 - 同时下载多个资源</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">串行 - 一次只下载一个资源</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">两种模式分别应用于不同场景，对于上下滑交互方式的短视频 APP 来说，一般采用串行的下载模式。</p>
+<h3 id="下载失败重试" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.6.  下载失败重试</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">视频资源下载本身是一个很简单的事情，但是，如果要引入失败重试机制，就会让整个下载变得异常复杂，尤其是「多源视频」和「多码率视频」的失败重试，这里面涉及到几个难点：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">下载本身是串行，而且异步，重试只在失败后才触发</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">对于「多源视频」和「多码率视频」，在重试的时候需要确定用哪个 URL 来重试</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">每一次下载对应一个下载任务，下载任务是重试前将所有的组合提前准备好还是在重试的时候临时创建</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">如何所有的组合都重试了依然无法成功下载，就需要切到下一个视频</li>
+</ol>
+<h3 id="数据翻页问题" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.7.  数据翻页问题</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这里先定义一下数据页的概念 —— 多个视频信息的数据列表，即一页数据中包含多个视频，每个视频为列表中的其中一项，索引从 0 开始。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">对于客户端来说，<em style="font-style:italic;color:#1f2937;">feed</em> 流是需要翻页的，下一页数据的加载时机对于预加载的复用率来说就相当的重要了，假设一页有 10 个视频，如果是滑到索引为 9 的视频的时候才开始加载第 2 页的数据，如果第 9 个视频用户只是瞟了一眼然后要看下一个视频的话，这时候下一个视频很大概率没有预加载完成，这样就会导致一个现象 —— 每隔 9 个视频就会卡一下，体验是相当的糟糕。为了解决这个问题，就需要提前加载下一页数据，一般是提前 3 个（即滑到索引为 6 的视频的时候去加载下一页数据）</p>
+<h3 id="配合预解码" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.8.  配合预解码</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">当预下载任务完成后，视频数据就已经被缓存到本地了，那怎么让播放器能加载到已经缓存到本地的视频文件呢？一般会为每个视频生成一个缓存 ID，与资源 ID 不同，资源 ID 是从 CDN 下载时用的，而缓存 ID 是给本地缓存用的。缓存 ID 可以在生成数据模型前就提前计算好，当播放器开始播放某个视频时，从数据模型里拿到缓存 ID 去缓存里找就可以了。</p>
+<h2 id="总结" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  总结</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">前面从客户端的角度整体介绍了预加载技术的整体框架，通过预加载技术，我们便可以提升以下几个 QoS 指标：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">首帧时间 (Time to First Frame)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">帧率 (Frame Per Second)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">秒开率 (Sec-Opening Rate)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">缓存命中率 (Cache Hit Ratio)</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">不过，这只是一个开始，在实际应用的过程中还会通过一些策略来对这些指标进行深度优化，关于策略部分，会留在后续的章节中详细分享。</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2021/02/10/short-video-preloading-1/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2021/02/10/short-video-preloading-1/</a></p>
+    </section>
+  </main>
+</body>
+</html>

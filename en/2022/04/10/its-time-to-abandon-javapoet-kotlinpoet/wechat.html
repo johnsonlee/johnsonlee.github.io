@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2022/04/10/its-time-to-abandon-javapoet-kotlinpoet/">
+  <title>It&#39;s Time to Abandon JavaPoet/KotlinPoet | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">It&#39;s Time to Abandon JavaPoet/KotlinPoet</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2022-04-10 · Johnson Lee · Computer Science / Architecture Design</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Most Android developers are familiar with <a href="https://github.com/square/javapoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaPoet</a> and <a href="https://github.com/square/kotlinpoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KotlinPoet</a>, both from the well-known <a href="https://square.github.io/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Square</a>. Typically, when generating source code at compile time using <a href="https://docs.oracle.com/javase/7/docs/technotes/guides/apt/index.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">APT (Annotation Processing Toolkit)</a> or <a href="https://kotlinlang.org/docs/kapt.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KAPT</a>, developers use <a href="https://github.com/square/javapoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaPoet</a> for Java and <a href="https://github.com/square/kotlinpoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KotlinPoet</a> for Kotlin. At first glance, it seems pretty cool and sophisticated.</p>
+<h2 id="Generating-Code-with-JavaPoet" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Generating Code with JavaPoet</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">As <a href="https://github.com/square/javapoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaPoet</a>'s introduction shows, to generate this code:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">package com.example.helloworld;
+
+public final class HelloWorld {
+  public static void main(String[] args) {
+    System.out.println("Hello, JavaPoet!");
+  }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">You would write this with <a href="https://github.com/square/javapoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaPoet</a>:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">MethodSpec main = MethodSpec.methodBuilder("main")
+    .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+    .returns(void.class)
+    .addParameter(String[].class, "args")
+    .addStatement("$T.out.println($S)", System.class, "Hello, JavaPoet!")
+    .build();
+
+TypeSpec helloWorld = TypeSpec.classBuilder("HelloWorld")
+    .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+    .addMethod(main)
+    .build();
+
+JavaFile javaFile = JavaFile.builder("com.example.helloworld", helloWorld)
+    .build();
+
+javaFile.writeTo(System.out);</code></pre>
+
+<h2 id="Generating-Code-with-KotlinPoet" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Generating Code with KotlinPoet</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Similar to <a href="https://github.com/square/javapoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaPoet</a>, to generate this code:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">class Greeter(val name: String) {
+  fun greet() {
+    println("""Hello, $name""")
+  }
+}
+
+fun main(vararg args: String) {
+  Greeter(args[0]).greet()
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">You would write this with <a href="https://github.com/square/kotlinpoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KotlinPoet</a>:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">val greeterClass = ClassName("", "Greeter")
+val file = FileSpec.builder("", "HelloWorld")
+  .addType(
+    TypeSpec.classBuilder("Greeter")
+      .primaryConstructor(
+        FunSpec.constructorBuilder()
+          .addParameter("name", String::class)
+          .build()
+      )
+      .addProperty(
+        PropertySpec.builder("name", String::class)
+          .initializer("name")
+          .build()
+      )
+      .addFunction(
+        FunSpec.builder("greet")
+          .addStatement("println(%P)", "Hello, \$name")
+          .build()
+      )
+      .build()
+  )
+  .addFunction(
+    FunSpec.builder("main")
+      .addParameter("args", String::class, VARARG)
+      .addStatement("%T(args[0]).greet()", greeterClass)
+      .build()
+  )
+  .build()
+
+file.writeTo(System.out)</code></pre>
+
+<h2 id="Readability-and-Maintainability" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Readability and Maintainability</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The two examples above are about as simple as it gets -- fewer than 10 lines of source code including braces -- yet the <a href="https://github.com/square/javapoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaPoet</a> and <a href="https://github.com/square/kotlinpoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KotlinPoet</a> implementations are already lengthy. Without seeing the target output, figuring out what the generated code looks like from the builder calls alone takes real effort. If examples this trivial are already hard to read, imagine real-world complex projects. Even with code you wrote yourself, come back three months later and you will wonder if it was really you. And if the unlucky task of modifying someone else's code falls on you, most people will read it while muttering:</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">What idiot wrote this garbage!</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">You will debug and curse your way through it, finally finishing after great effort. Months later, someone else takes over, and the scene replays with a different protagonist.</p>
+<h2 id="Template-Engines" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Template Engines</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Frontend developers are likely familiar with template engines -- for example, <a href="https://ejs.co/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">EJS (Embedded JavaScript template engine)</a>. The template engines <a href="https://freemarker.apache.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Freemarker</a> and <a href="https://velocity.apache.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Velocity</a> used in early JSP technology both come from the renowned Apache Foundation. You might ask: what do template engines have to do with <a href="https://github.com/square/javapoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaPoet</a> and <a href="https://github.com/square/kotlinpoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KotlinPoet</a>?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">To be clear, template engines have no direct relationship with <a href="https://github.com/square/javapoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaPoet</a> and <a href="https://github.com/square/kotlinpoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KotlinPoet</a>, but they are related to the problem we are solving. For code generation, the ultimate goal is "generating source code." How is that fundamentally different from using a template engine to generate <em style="font-style:italic;color:#1f2937;">HTML</em>? <em style="font-style:italic;color:#1f2937;">HTML</em> is itself source code. If a template engine can generate <em style="font-style:italic;color:#1f2937;">HTML</em>, why not use it to generate <em style="font-style:italic;color:#1f2937;">Java</em>, <em style="font-style:italic;color:#1f2937;">Kotlin</em>, <em style="font-style:italic;color:#1f2937;">Swift</em>, and so on?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">You might think of another question:</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">Why do template engines exist in the first place?</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">As a veteran in the industry, my first exposure to <em style="font-style:italic;color:#1f2937;">Web</em> technology was <em style="font-style:italic;color:#1f2937;">ASP</em>, then <em style="font-style:italic;color:#1f2937;">JSP</em>, and I used <em style="font-style:italic;color:#1f2937;">PHP</em> too. Early <em style="font-style:italic;color:#1f2937;">Web</em> development did not separate frontend and backend -- the source code was tightly coupled. Given the limited framework capabilities, frontend UI development meant embedding scripts in <em style="font-style:italic;color:#1f2937;">ASP/JSP/PHP</em>. Taking <em style="font-style:italic;color:#1f2937;">JSP</em> as an example, to generate <em style="font-style:italic;color:#1f2937;">HTML</em> with a <em style="font-style:italic;color:#1f2937;">JSP</em> script:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">&lt;%
+  out.println("&lt;p&gt;Hello, world!&lt;/p&gt;")
+%&gt;</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">If the page had complex business logic, it would be full of <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">&lt;% %&gt;</code> fragments, severely hurting readability. To make page code closer to <em style="font-style:italic;color:#1f2937;">HTML</em>, <a href="https://www.oracle.com/java/technologies/java-server-tag-library.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaServer Pages Standard Tag Library (JSTL)</a> was created. The famous <a href="https://struts.apache.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Struts</a> framework was built on this technology. With <em style="font-style:italic;color:#1f2937;">JSTL</em>, the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">&lt;% %&gt;</code> blocks were replaced by custom tags:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">&lt;%@ taglib prefix="s" uri="/struts-tags" %&gt;
+
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Hello&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+Hello, &lt;s:property value="name"/&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Even now with frontend-backend separation as the standard architecture, template engines remain popular. Take <a href="https://vuejs.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Vue.js</a>, one of the most popular <em style="font-style:italic;color:#1f2937;">Web</em> frameworks today:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">&lt;script&gt;
+export default {
+  data() {
+    return {
+      count: 0
+    }
+  }
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;button @click="count++"&gt;Count is: {{ count }}&lt;/button&gt;
+&lt;/template&gt;
+
+&lt;style scoped&gt;
+button {
+  font-weight: bold;
+}
+&lt;/style&gt;</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">From these examples, we can see that template engines decouple the final output from business logic through templates. With a template, we can easily see what the output will look like, without mentally simulating code execution to deduce the generated source code.</p>
+<h2 id="Code-Reusability" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Code Reusability</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">With <a href="https://github.com/square/javapoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaPoet</a> and <a href="https://github.com/square/kotlinpoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KotlinPoet</a>, you will notice that even across different projects, much of the code is similar -- defining an <em style="font-style:italic;color:#1f2937;">AnnotationProcessor</em>, overriding <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">init</code> and <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">process</code> methods, handling <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">multi-round</code> issues, and so on.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Furthermore, once you commit to <a href="https://github.com/square/javapoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaPoet</a> for generating <em style="font-style:italic;color:#1f2937;">Java</em> source code, switching to <em style="font-style:italic;color:#1f2937;">Kotlin</em> later means reimplementing everything with <a href="https://github.com/square/kotlinpoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KotlinPoet</a>. The same applies in reverse. This is completely unreasonable for developers -- the logic is the same; only the target language differs. If switching the target language requires a full reimplementation, the architecture is fundamentally wrong.</p>
+<h2 id="Template-Engine-Based-Code-Generation-Framework" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Template-Engine-Based Code Generation Framework</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">To address the problems above:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Code maintainability</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Code readability</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Code reusability</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">We can fully separate the code generation logic from the source code content -- that is, <em style="font-style:italic;color:#1f2937;">template</em> + <em style="font-style:italic;color:#1f2937;">data model</em>:</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Template - defines the source code to generate</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Data model - the data needed to render the template</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">This way, when generating source code at compile time, the main focus is on "how to build the data model." With a template engine, as long as the data model is correct, we can switch target languages just by switching templates without rewriting any logic. This is the design philosophy behind <a href="https://github.com/johnsonlee/codegen" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">codegen</a>, which supports both <a href="https://mustache.github.io/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Mustache</a> and <a href="https://velocity.apache.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Velocity</a>. For example, to generate a <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Factory</code> class for a given type:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">interface Factory&lt;T&gt; {
+
+    val type: Class&lt;T&gt;
+
+    fun newInstance(pool: ObjectPool): T
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">To generate <em style="font-style:italic;color:#1f2937;">Java</em> source code, the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">mustache</code> template looks like:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">package io.johnsonlee.codegen.generated;
+
+import io.johnsonlee.codegen.example.Factory;
+import io.johnsonlee.codegen.example.ObjectPool;
+
+class {{simpleName}} implements Factory&lt;{{implementation}}&gt; {
+    @Override
+    public Class&lt;{{implementation}}&gt; getType() {
+        return {{implementation}}.class;
+    }
+
+    @Override
+    public {{implementation}} newInstance(final ObjectPool pool) {
+        return new {{implementation}}(
+        {{#args}}
+            pool.get({{typeErasure}}.class) {{^isLast}},{{/isLast}}
+        {{/args}}
+        );
+    }
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">To generate <em style="font-style:italic;color:#1f2937;">Kotlin</em> source code, the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">mustache</code> template looks like:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">package io.johnsonlee.codegen.generated
+
+import io.johnsonlee.codegen.example.Factory
+import io.johnsonlee.codegen.example.ObjectPool
+
+class {{simpleName}} : Factory&lt;{{implementation}}&gt; {
+    override val type = {{implementation}}::class.java
+
+    override fun newInstance(pool: ObjectPool) = {{implementation}}(
+        {{#args}}
+            pool.get&lt;{{type}}&gt;() {{^isLast}},{{/isLast}}
+        {{/args}}
+    );
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Both templates can reuse the same data model:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">data class AutoFactoryModel(
+    val implementation: String,
+    val args: List&lt;Map&lt;String, Any?&gt;&gt; = emptyList()
+) : Model {</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">For developers, all you need to do is build the data model and call the framework's <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">generate</code> method:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">generate(
+    "template/AutoFactory", // template name
+    AutoFactoryModel(implementation.qualifiedName.toString(), args), // data model
+    Language.KOTLIN // target language
+)</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">After seeing this, do you still think <a href="https://github.com/square/javapoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaPoet</a> and <a href="https://github.com/square/kotlinpoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KotlinPoet</a> are the way to go?</p>
+<h2 id="Codegen" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Codegen</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Project repository: <a href="https://github.com/johnsonlee/codegen" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://github.com/johnsonlee/codegen</a> -- don't forget to star it!</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2022/04/10/its-time-to-abandon-javapoet-kotlinpoet/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2022/04/10/its-time-to-abandon-javapoet-kotlinpoet/</a></p>
+    </section>
+  </main>
+</body>
+</html>

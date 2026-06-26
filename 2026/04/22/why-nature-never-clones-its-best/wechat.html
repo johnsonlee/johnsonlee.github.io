@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/04/22/why-nature-never-clones-its-best/">
+  <title>为什么自然界从不复制最优 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">为什么自然界从不复制最优</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-04-22 · Johnson Lee · Independent Thinking</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">设计自主进化系统时，会遇到一个看似简单的选择。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">每一轮挑出 best sample，但 best 还没 pass 的时候，下一轮怎么办？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">方案 A：把 best 作为下一轮的 base，所有 sample 基于 best 继续进化。<br>方案 B：每个 sample 保持独立 lineage，best 不影响任何人。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">A 看起来天经地义——站在巨人肩膀上，没理由从头来过。这个直觉是错的，错的代价比你想象的大。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但在拆 A 之前，必须先讲清楚一件事。</p>
+<h2 id="先看任务的形状" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  先看任务的形状</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">策略选择不是普世问题，是任务相关的。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果你的任务是单峰的——比如高维布尔覆盖网格，目标是把一堆 flag 全部置 1——那 A 没毛病。单峰意味着只有一个最优解所在的方向，"基于当前 best 推进"就是直接朝山顶走，多样性是浪费。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但如果你的任务是多峰的——比如生成代码、写策略、设计架构——那 fitness landscape 上分布着多个 basin，你不知道当前 best 在哪个 basin，更不知道这个 basin 是不是全局最优所在的那个。这种情况下 A 是灾难。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">第一步永远是判断你在哪种 landscape 上</strong>。判断错了，后面所有讨论都是空的。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">下面所有论证默认你是在多峰任务上。AI agent 进化、LLM-based 系统、开放式问题求解——基本都是多峰的。如果你确定自己在做单峰任务，可以关掉这篇文章了。</p>
+<h2 id="best-的传播是一种基因瓶颈" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  best 的传播是一种基因瓶颈</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">把 best 复制给所有 sample，本质上是把整个 population 的基因池压缩到一个个体。遗传学里这叫 genetic bottleneck，自然界中通常发生在物种灭绝边缘。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">猎豹经历过严重的基因瓶颈，今天所有现存个体的基因相似度高到像克隆，导致整个物种对疾病极度脆弱——一场流行病就可能让它们全部灭绝。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这不是个比喻，是结构上的同构。当你的 population 在每一代都被一个个体的基因重置，你就是在主动制造一个猎豹种群。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">更要命的是，自然界从不采用这种策略。即使是最适应的个体也不会让所有后代都是它的克隆。<strong style="font-weight:700;color:#111827;">性别繁殖本身就是反 best-takes-all 的机制</strong>，强制基因重组以维持多样性。背后的进化压力很简单：环境会变，今天的 best 可能是明天的 worst。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">恐龙就是经典反例。在它们存在的 1.6 亿年里，每一个时刻都是当时最优解。</p>
+<h2 id="eval-信号的噪声会被放大" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  eval 信号的噪声会被放大</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">放下生物学，回到工程。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">best 之所以是 best，是因为它在当前 eval 标准下分数最高。但 eval 本身可能错——它可能漏掉了某个维度，可能引入了 spurious correlation，可能就是噪声大。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果 eval 信号有噪声，best 可能只是"被高估的样本"。把它复制到下一代，意味着你不是在优化真实目标，你是在优化"eval 当前的 proxy"。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这就是 Goodhart's Law 的入口。当 measure 变成 target，measure 就不再是好的 measure。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">最近一篇研究 LLM 自蒸馏的论文给出了实证支持。研究者发现，self-distillation 在小而同质的任务集上效果显著，但当任务覆盖变广（比如从化学切换到数学），自蒸馏对不确定性的压制反而损害了模型恢复或适应未见结构的能力。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">更具体的机制：self-distillation 会激进地移除 epistemic markers——那些 "wait"、"hmm"、"perhaps"、"maybe" 这类表达不确定性的 token。这些 token 不是冗余，它们是模型用来维持替代假设、逐步收敛不确定性的功能性计算步骤。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">被剥离这些机制后，模型在 out-of-distribution 任务上的表现下降高达 40%。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">把这个翻译回进化系统：当你用"best 给所有"的策略时，best 的"自信"被复制给了所有后代。population 失去了表达"我不确定"的能力，也就失去了在错误方向上回头的能力。</p>
+<h2 id="独立进化是-Goodhart-的解药" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  独立进化是 Goodhart 的解药</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">所以更好的选择是独立进化——每个 lineage 各走各路，best 不影响任何人。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这看起来低效，但它在做一件 best-sharing 做不到的事：<strong style="font-weight:700;color:#111827;">保留多个 basin 的可能性</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">fitness landscape 在 AI agent 进化里几乎一定是高度多峰的。你不知道当前的 best 处在哪个 basin，更不知道这个 basin 是不是全局最优所在的那个。多个独立 lineage 等于在不同的 basin 里同时挖坑，哪怕只有一个最终挖到金子，整个系统也是赢的。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这种思路在 evolutionary algorithms 里早有名字——island model，多个亚种群地理隔离独立演化，最终可能演化出完全不同的物种。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但更深的理由不是算法层面，是认识论层面。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果你的 eval 可能错（它一定会错，只是程度问题），那么"基于当前 best 推进"等于把当前的认知错误硬编码进未来。独立进化保留了让后续校准时<strong style="font-weight:700;color:#111827;">推翻当前判断</strong>的可能性。这不是性能优化，是给系统留一条后悔的路。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这背后有一条不应该被破坏的不变量：<strong style="font-weight:700;color:#111827;">Centralize feedback, decentralize exploration</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">反馈集中——全局 best、archive、eval 信号，这些是收敛性的来源，必须共享。探索分散——具体的演化路径、采样的方向、对 archive 的解读，这些是多样性的来源，必须独立。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">把这两件事搞混的代价非常大：反馈不集中，系统失去收敛能力，每个 lineage 各自瞎走；探索不分散，系统失去找到全局最优的可能性，全员朝同一个 local optimum 冲刺。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">后面所有的工程决策——preseed 怎么做、archive 怎么用、淘汰怎么定——都是这条不变量的具体落地。</p>
+<h2 id="但独立进化有它自己的陷阱" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  但独立进化有它自己的陷阱</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">讲到这里，看起来独立进化是免费的午餐。不是。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">最大的陷阱叫<strong style="font-weight:700;color:#111827;">隐性同质化</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果你的所有 lineage 共享同一个初始 prompt、同一个 base model、同一份 eval 规则，它们的"独立"只是表面的。实际上它们会被相同的 attractor 拉向同一个区域——就像几只看起来独立飞行的鸟，其实都被同一阵风吹着。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">LLM-based agent 上这个问题尤其严重。LLM 本身有强烈的 mode collapse 倾向——给同样的上下文，不同 lineage 的 reasoning 会高度相似。你看到的"多个 lineage"，可能在 behavior space 上其实只有一个。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">更隐蔽的情况是：你以为通过引入随机种子保住了多样性，但所有 lineage 的输出仍然集中在 base model 的 high-likelihood region。Verbalized Sampling 那篇论文揭示了根源——LLM 的 mode collapse 根本上由人类偏好数据中的 "typicality bias" 驱动。这种 bias 已经烤进了 base model，单纯靠采样温度调不出来。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">所以"独立进化"如果不配套其他机制，会退化成"看起来独立、其实并行的同一个进化"。</p>
+<h2 id="多样性必须可观测" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">6.  多样性必须可观测</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">独立进化最违反直觉的一点是：<strong style="font-weight:700;color:#111827;">它的"慢"是肉眼可见的</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">任何一个 lineage 单独看，都不如共享 best 的方案进步快。如果你只盯着 best score 曲线，会反复怀疑自己的选择，最终回到 best-sharing。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">唯一的应对是把多样性作为一等公民暴露出来。lineage 之间的 behavioral distance、population entropy、basin coverage 估计——这些必须和 best score 并列展示，让"多样性在涨"成为和"分数在涨"同等重要的信号。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这里有个微妙的区分：多样性不等于随机性。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">为了保多样性而引入大量噪声，结果 population 里大部分是低质量噪音样本，有效的"不同方向"反而很少——这是一种伪多样性。真正要保的是<strong style="font-weight:700;color:#111827;">有意义的差异</strong>：不同的解题策略、不同的抽象层次、不同的 trade-off 选择，而不是同一个解的扰动版本。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">判断"这两个 sample 是不是真的不同"，可能比 eval 本身还难设计。这是个未解的工程问题。</p>
+<h2 id="淘汰机制要克制" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">7.  淘汰机制要克制</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">独立进化下，会出现大量"看起来很烂但其实在憋大招"的 lineage——它们前期分数低，但走的方向其实是对的，只是需要更多代才能开花。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">aggressive early stopping 会杀掉这些 late bloomer。但你怎么区分"真的是 dead end"和"暂时没出成果"？这个问题没有便宜的答案。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">可行的做法是把淘汰阈值设得宽松，并引入"复活机制"：被暂停的 lineage 保留 checkpoint，未来校准之后如果发现它的方向其实对，可以重新激活。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">底层教训是：<strong style="font-weight:700;color:#111827;">不要让有价值的旧状态在你不知道的情况下消失</strong>。</p>
+<h2 id="主动注入差异，而不是被动等待多样性" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">8.  主动注入差异，而不是被动等待多样性</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">光"不淘汰"还不够。如果 population 自然塌缩到几个相似的方向，光保留它们也救不回来。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">island model / deme-based GA 里有两个对应的成熟做法，可以直接搬过来。</p>
+<h3 id="preseed-worst" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">8.1.  preseed worst</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">定期把表现最差的 lineage 替换成一个<strong style="font-weight:700;color:#111827;">预设种子</strong>——可能来自历史 archive 里被淘汰但走过不同方向的样本，可能来自人工构造的、明确不同 basin 的初始状态。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这是<strong style="font-weight:700;color:#111827;">定向注入差异</strong>。不是引入随机噪声，而是引入<strong style="font-weight:700;color:#111827;">已知的不同</strong>。和"伪多样性"那节呼应：noise 谁都能给，难的是给得有方向。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">具体到 LLM-based 进化，preseed 可以是不同 reasoning 风格的种子 prompt、不同温度采样的样本、甚至不同 base model 的输出。关键是这些种子之间的差异是<strong style="font-weight:700;color:#111827;">结构性的</strong>，不是统计涨落。</p>
+<h3 id="restart-worst-deme" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">8.2.  restart worst deme</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">把表现最差的 deme（亚种群）整体清零，用随机或扰动状态重启。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这针对的不是"个体不行"，而是"整个方向不行"。当一个 deme 已经集体陷在 local optimum 里，再保留它只是浪费算力——还不如让位给新的探索。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">restart 的成本是显性的（损失了几代积累），但它的收益是<strong style="font-weight:700;color:#111827;">算力配置的再平衡</strong>。固定算力下，给死掉的方向留位置，等于剥夺了活的方向获得更多资源的机会。</p>
+<h3 id="两者解决的不是同一个问题" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">8.3.  两者解决的不是同一个问题</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">preseed 解决的是"diversity 不够"。restart 解决的是"算力锁死"。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果只 preseed 不 restart，最差的 lineage 不停被换种，但整个 population 的 capacity 没腾出来——你只是在浪费的方向上不停浇水。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果只 restart 不 preseed，新生成的 deme 仍然来自同样的初始分布，撞进同一个 attractor 的概率很高——你只是周期性地把同一个错误重做了一遍。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">两者配套使用，才能形成闭环：preseed 保证新血是真的"新"，restart 保证新血有空间长出来。</p>
+<h2 id="best-在独立进化下还有用吗" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">9.  best 在独立进化下还有用吗</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">讨论到这里，自然会问：既然 best 不能用来繁衍，它还有什么价值？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">第一个用法是参考信号。每个 lineage 进化时可以"看到"当前 best 的分数和关键特征，但不继承其结构。类似 NSGA-II 里的 archive——保留但不污染 population。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">第二个用法是 trigger。如果 best 连续 N 轮没 pass，这本身就是该介入校准的信号——可能 eval 标准本身需要重新审视，而不是再多进化几轮。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">第三个用法是诊断。best 没 pass 时，分析它"差在哪个维度"比"它是什么样子"更有价值，这个 gap 信息可以喂回 eval 规则的细化。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但这里立刻冒出新问题：如果 archive 是 lineage 可以查询的，所有 lineage 看到同一份 archive，会不会还是导致"独立思考"高度相关化？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">答案大概率是会的。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">那要不要让 archive 变成"按需查询"——只有 lineage 自己判断需要时才去看？要不要让"什么时候查 archive"本身成为可演化的元能力？要不要给不同 lineage 分配不同的 archive view？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我现在没有答案。</p>
+<h2 id="留给自己的问题" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">10.  留给自己的问题</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">一开始我以为"独立进化 vs 共享 best"是一个二选一的开关。讨论到这里发现远远不是。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">下面这些问题我是<strong style="font-weight:700;color:#111827;">故意没决定</strong>的，不是疏忽。区别很重要——故意未决意味着我意识到了这是个开放空间，需要等真实运行数据来收敛；疏忽未决意味着我根本没看到这是个问题。前者是 deliberate hold，后者是 bug。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">真正的问题是：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">你怎么定义"独立"？基因独立（不共享 base）？信息独立（不共享 archive）？还是行为独立（不被相同 attractor 拉走）？</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">你怎么测量多样性？不是输出 diff，而是 behavioral distance——但 behavioral distance 怎么算？</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">当 base model 本身就有 mode collapse 倾向时，lineage 层面的"独立"还有意义吗？还是说必须从 base model 多样化做起？</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">校准机制的角色是不是被低估了？独立进化下不再做"选 best 来繁衍"这种集中决策，权力下放给了每个 lineage 的 local eval——校准是否需要负责发现"哪些 lineage 的 local eval 已经偏了"？</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这些问题没有标准答案，也不应该在没有运行数据的时候硬给答案。但有一点可以确定：<strong style="font-weight:700;color:#111827;">任何让你觉得"很简单，复制 best 就行了"的瞬间，都是 Goodhart 在敲门</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">进化不是优化，是在不确定的环境里保留可能性。当你为了效率牺牲多样性的那一刻，你赢了眼前的这一代，输的是所有未来的代。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">值得吗？</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/04/22/why-nature-never-clones-its-best/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/04/22/why-nature-never-clones-its-best/</a></p>
+    </section>
+  </main>
+</body>
+</html>

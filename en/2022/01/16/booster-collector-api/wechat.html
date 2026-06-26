@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2022/01/16/booster-collector-api/">
+  <title>Booster Collector API | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Booster Collector API</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2022-01-16 · Johnson Lee · Computer Science / Open Source / Booster</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Booster maintains its high performance through two key mechanisms: parallel I/O and single-pass I/O. What does "single-pass I/O" mean? During the Transform process, Booster reads and writes each input (JAR/DIR) exactly once, processing the entire app's bytecode through a pipeline -- the <em style="font-style:italic;color:#1f2937;">Bytecode Transform Pipeline</em>. This means each <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Transformer</code> gets only one chance to process a <em style="font-style:italic;color:#1f2937;">class</em>. But what if a <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Transformer</code> needs to first collect some information and then write that information as bytecode into a specific <em style="font-style:italic;color:#1f2937;">class</em> during the Transform? That becomes difficult. A classic example is <em style="font-style:italic;color:#1f2937;">SPI</em> optimization. While <em style="font-style:italic;color:#1f2937;">R8</em> can optimize <em style="font-style:italic;color:#1f2937;">SPI</em>, it imposes certain constraints on how code must be written.</p>
+<h2 id="R8-s-SPI-Optimization" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">R8's SPI Optimization</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Starting from version <em style="font-style:italic;color:#1f2937;">1.5.68</em>, R8 added optimization for <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ServiceLoader</code>. Why? Primarily to address a performance issue in <em style="font-style:italic;color:#1f2937;">Kotlin Coroutines</em> -- <a href="https://github.com/Kotlin/kotlinx.coroutines/issues/878" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Slow android Dispatchers.Main init</a>. For more details, see: <a href="https://issuetracker.google.com/issues/120436373" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://issuetracker.google.com/issues/120436373</a></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">Kotlin Coroutines</em> uses <em style="font-style:italic;color:#1f2937;">SPI</em> to run different API implementations on different JVM platforms -- for instance, the <em style="font-style:italic;color:#1f2937;">Android</em> implementation differs from the <em style="font-style:italic;color:#1f2937;">Java</em> one since Android needs the <em style="font-style:italic;color:#1f2937;">Main Looper</em>, which doesn't exist in plain <em style="font-style:italic;color:#1f2937;">Java</em>. The Kotlin Coroutines solution was a bit clunky, so R8 introduced an optimization targeting this specific pattern:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">ServiceLoader.load(X.class, X.class.getClassLoader()).iterator();</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">After optimization, the code becomes:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">Arrays.asList(new X[] { new Y(), ..., new Z() }).iterator()</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Here, <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Y</code> and <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Z</code> are all implementations of <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">X</code> discovered at compile time. For implementation details, see: <a href="https://r8.googlesource.com/r8/+/refs/heads/main/src/main/java/com/android/tools/r8/ir/optimize/ServiceLoaderRewriter.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">ServiceLoaderRewriter.java</a></p>
+<h2 id="Limitations-of-Single-Pass-I-O" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Limitations of Single-Pass I/O</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">For this kind of scenario, Booster's single-pass I/O falls short. Modifying <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ServiceLoader</code> calls requires first discovering all implementation classes for each <em style="font-style:italic;color:#1f2937;">Service</em>, which means at least two read passes -- but a <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Transformer</code> only gets one.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">There's another problem: during incremental builds, if <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">X</code>'s implementations change from <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Y</code> and <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Z</code> to just <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Y</code> (i.e., <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Z</code> is deleted), how does the class that calls <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ServiceLoader</code> detect this change and remove <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Z</code> from the already-optimized code? In other words, transforming:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">Arrays.asList(new X[] { new Y(), new Z() }).iterator()</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">into:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">Arrays.asList(new X[] { new Y() }).iterator()</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The first problem -- needing an extra read pass -- is relatively straightforward. The second problem is harder: during incremental builds, the scope of changes extends beyond what AGP considers incremental, because some <em style="font-style:italic;color:#1f2937;">JAR/DIR</em> files haven't changed but were modified by the optimization and need to be re-optimized. This requires yet another read pass. Three reads plus one write versus the original one read and one write -- for a framework obsessed with performance like Booster, that's unacceptable. How can we reduce the unnecessary I/O overhead?</p>
+<h2 id="Booster-Collector-API" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Booster Collector API</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">To thoroughly solve these problems, starting from version 4.3.0, Booster provides the <a href="https://github.com/didi/booster/blob/master/booster-transform-spi/src/main/kotlin/com/didiglobal/booster/transform/Collector.kt" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Collector API</a> to merge those two extra read operations. In most cases, you don't need to re-parse <em style="font-style:italic;color:#1f2937;">class</em> files to collect information -- simply iterating over all filenames in the <em style="font-style:italic;color:#1f2937;">JAR/DIR</em> entries is sufficient.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Additionally, Booster provides a <a href="https://github.com/didi/booster/blob/master/booster-transform-spi/src/main/kotlin/com/didiglobal/booster/transform/Collector.kt#L23" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Supervisor API</a> similar to the <a href="https://github.com/didi/booster/blob/master/booster-transform-spi/src/main/kotlin/com/didiglobal/booster/transform/Collector.kt" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Collector API</a>. The only difference: the <a href="https://github.com/didi/booster/blob/master/booster-transform-spi/src/main/kotlin/com/didiglobal/booster/transform/Collector.kt#L7" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Collector API</a> results affect the incremental <em style="font-style:italic;color:#1f2937;">Transform</em> scope, while the <a href="https://github.com/didi/booster/blob/master/booster-transform-spi/src/main/kotlin/com/didiglobal/booster/transform/Collector.kt#L23" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Supervisor API</a> does not.</p>
+<h3 id="Collecting-SPI-Services" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Collecting SPI Services</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">For <em style="font-style:italic;color:#1f2937;">SPI</em> information gathering, Booster provides a built-in implementation -- <a href="https://github.com/didi/booster/blob/master/booster-transform-util/src/main/kotlin/com/didiglobal/booster/transform/util/Supervisors.kt#L55" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">ServiceSupervisor</a>. Here's how to use it:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">@AutoService(ClassTransformer::class)
+class ServiceRegistryTransformer : ClassTransformer {
+
+    val services = mutableListOf&lt;Pair&lt;String, Collection&lt;String&gt;&gt;&gt;()
+
+    override fun onPreTransform(context: TransformContext) {
+        context.registerCollector(ServiceSupervisor() {
+            services += it
+        })
+    }
+
+    override fun transform(context: TransformContext, klass: ClassNode) = klass.apply {
+        // TODO ...
+    }
+
+}</code></pre>
+
+<h3 id="Generating-Updating-ServiceRegistry" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Generating/Updating ServiceRegistry</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Many frameworks generate a service registry at compile time for service registration and discovery. During full builds, <a href="https://github.com/didi/booster/blob/master/booster-transform-util/src/main/kotlin/com/didiglobal/booster/transform/util/Supervisors.kt#L55" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">ServiceSupervisor</a> handles this well. But during incremental builds, the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ServiceRegistry</code> class -- typically baked into framework code as a <em style="font-style:italic;color:#1f2937;">JAR/AAR</em> -- never changes before the <em style="font-style:italic;color:#1f2937;">Transform</em> phase. For the framework to support incremental builds, it needs to update <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ServiceRegistry</code> whenever a <em style="font-style:italic;color:#1f2937;">Service</em> changes. This is where <a href="https://github.com/didi/booster/blob/master/booster-transform-util/src/main/kotlin/com/didiglobal/booster/transform/util/Collectors.kt#L53" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">NameCollector</a> comes in, forcing an update on the <em style="font-style:italic;color:#1f2937;">JAR</em> containing <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ServiceRegistry</code>:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">@AutoService(ClassTransformer::class)
+class ServiceRegistryTransformer : ClassTransformer {
+
+    val services = mutableListOf&lt;Pair&lt;String, Collection&lt;String&gt;&gt;&gt;()
+
+    override fun onPreTransform(context: TransformContext) {
+        context.registerCollector(ServiceSupervisor() {
+            services += it
+        })
+
+        // Once a JAR/DIR contains ${SERVICE_REGISTRY},
+        // force the transform flow regardless of full or incremental build
+        context.registerCollector(NameCollector(SERVICE_REGISTRY))
+    }
+
+    override fun transform(context: TransformContext, klass: ClassNode) = klass.apply {
+        when (klass.name) {
+            SERVICE_REGISTRY -&gt; {
+                val init = methods.find {
+                    it.name == "&lt;init&gt;" &amp;&amp; it.desc == "()V"
+                } ?: defaultInit.apply {
+                    methods.add(this)
+                }
+
+                init.instructions = InstList().apply {
+                    services.forEach { (api, implementations) -&gt;
+                        implementations.forEach { implementation -&gt;
+                            // class of api
+                            add(LdcInsnNode(Type.getObjectType(api)))
+                            // class of implementation
+                            add(LdcInsnNode(Type.getObjectType(implementation)))
+                            // ServiceRegistry.register(interface, implementation)
+                            add(MethodInsnNode(Opcodes.INVOKEVIRTUAL, SERVICE_REGISTRY, "register", "(Ljava/lang/Class;Ljava/lang/Class;)"))
+                        }
+                    }
+                    add(InsnNode(Opcodes.RETURN))
+                }
+            }
+        }
+    }
+}
+
+private const val SERVICE_REGISTRY = "com/your/package/ServiceRegistry.class"</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The final decompiled code would look something like this:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">class ServiceRegistry {
+
+    private static final Map&lt;Class&lt;?&gt;, List&lt;Class&lt;?&gt;&gt; mapping = new HashMap&lt;&gt;();
+
+    private void &lt;T&gt; register(Class&lt;T&gt; api, Class&lt;? extends T&gt; implementation) {
+        ...
+    }
+
+    private ServiceRegistry() {
+        register(A.class, AImpl.class);
+        register(B.class, BImpl.class);
+        register(C.class, CImpl.class);
+        ...
+    }
+
+}</code></pre>
+
+<h2 id="References" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">References</h2><ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://johnsonlee.io/2020/01/23/service-provider-interface-optimization/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SPI Performance Optimization</a></li>
+</ol>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2022/01/16/booster-collector-api/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2022/01/16/booster-collector-api/</a></p>
+    </section>
+  </main>
+</body>
+</html>

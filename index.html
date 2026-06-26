@@ -1,0 +1,185 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta name="theme-color" content="#FFF" id="theme-color"><meta content="telephone=no" name="format-detection"><meta name="description" content="AI 原生工程实践 — Agent 架构、LLM 工程化、Harness Engineering"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,johnsonlee,johnson,lijingsen,jingsen,ai,agent,llm,claude,claude code,ai工程化,harness,harness engineering,autoevolve,prompt engineering,RAG,agentic,MCP,AGI,vibe coding,ai coding,copilot,cursor,chatgpt,openai,anthropic,transformer,fine-tuning,embedding,multimodal,chain of thought,function calling,tool use,RLHF,ai native,架构设计,性能优化,滴滴,快手,我在滴滴做架构,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/index.html"><meta property="og:title" content="Johnson Lee"><meta property="og:description" content="AI 原生工程实践 — Agent 架构、LLM 工程化、Harness Engineering"><meta property="og:type" content="website"><meta property="og:url" content="https://johnsonlee.io/index.html"><meta property="og:image" content="https://johnsonlee.io/logo.png"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Johnson Lee"><meta name="twitter:description" content="AI 原生工程实践 — Agent 架构、LLM 工程化、Harness Engineering"><meta name="twitter:image" content="https://johnsonlee.io/logo.png"><title>Johnson Lee | Get into trouble, make mistakes, fight, love, live</title><script>(function(){var h=new Date().getHours();if(h<6||h>=19){document.documentElement.setAttribute('data-weather','night');var m=document.getElementById('theme-color');if(m)m.setAttribute('content','#020617')}})();</script><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&amp;display=swap"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Johnson Lee"><link rel="alternate" type="application/atom+xml" href="/atom.en.xml" title="Johnson Lee (English)" hreflang="en"><script type="text/javascript" src="/js/weather-theme.js" defer></script><script type="text/javascript" src="/js/weather-canvas.js" defer></script><script type="text/javascript" src="/js/i18n-switch.js" defer></script><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 8.1.1"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head><body><div class="body_container"><img src="/logo.png" style="display:none"><div id="header"><div class="site-name"><h1 class="hidden">Johnson Lee</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a target="_blank" rel="noopener" href="https://about.johnsonlee.io/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div><button class="lang-switch" type="button" data-target-lang="en" title="English">EN</button></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title"><a href="/2026/06/26/fooled-by-loop-engineering/">别被 Loop Engineering 忽悠瘸了</a></h1><div class="post-meta">2026-06-26</div><div class="post-content"><p>硅谷发明新词的速度，已经快过 Agent 写代码的速度。<a target="_blank" rel="noopener" href="https://openai.com/index/harness-engineering/">Harness Engineering</a> 还没捂热，前段时间 Addy Osmani 又发了一篇 <a target="_blank" rel="noopener" href="https://addyosmani.com/blog/loop-engineering/">《Loop Engineering》</a>。</p>
+<p>所谓 Loop Engineering，是把 automation、worktree、Skill、connector、sub-agent 和外部状态拼成一个闭环：系统自己找活、派活、执行、检查、记录，再进入下一轮。听起来很完整，零件也都能用。</p>
+<p>原文其实没回避风险。Addy 明说 verification 仍然落在人身上，loop 跑偏会越挖越深。可这个名字依然危险：它把一种调度结构包装成了能力跃迁，仿佛把 Agent 塞进 <code>while (true)</code>，持续运行便会自然变成持续进步。</p>
+<p>当然不会。<strong>Loop 能增加尝试次数，不能增加正确答案的密度。</strong></p>
+<p>Agentic Coding 最难的，从来不是让 Agent 继续跑。真正卡住它的，是每一轮结束后，谁能证明结果更接近正确。</p></div><p class="readmore"><a href="/2026/06/26/fooled-by-loop-engineering/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2026/06/21/token-efficiency-way-forward/">Token Efficiency 的出路在哪里？</a></h1><div class="post-meta">2026-06-21</div><div class="post-content"><p>想象一下这个场景：工程师把一次 Agent 任务从 10 万 Token 压到 4 万，仪表盘绿了六成。月底账单到了，云成本一分钱没少。公司租了 8 张 GPU，包月。模型少说了 6 万 Token，机器照样开着，合同照样付钱。</p>
+<p>工程师优化出一大片空闲算力，财务却找不到一美元 Savings。Token Efficiency 的问题就这样暴露了：<strong>它从来不是一个孤立的技术指标，计费方式一变，财务含义就跟着变。</strong></p></div><p class="readmore"><a href="/2026/06/21/token-efficiency-way-forward/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2026/06/21/smart-money-after-memory/">存储之后，聪明钱会流向哪里？</a></h1><div class="post-meta">2026-06-21</div><div class="post-content"><p>前几天，国内一个朋友拿我开涮：“你们韩国现在是不是人均资产都翻了三倍？”他当然在开玩笑，但这个玩笑在韩国已经有了一整套民间叙事。</p>
+<p>最出名的叫“传说中的海力士员工”。2008 年前后，公司里的人觉得买自家股票是疯了，他却拿 4,446 万韩元，以 7,800 韩元买下 5,700 股。如果一直没卖，到 2026 年 1 月已经值 41 亿韩元。</p></div><p class="readmore"><a href="/2026/06/21/smart-money-after-memory/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2026/06/20/on-device-ai-next-wave/">AI 的下一个风口——端侧智能</a></h1><div class="post-meta">2026-06-20</div><div class="post-content"><p>5 月底，Windows、NVIDIA 和 Arm 几乎同时喊出一句话：&quot;A new era of PC.&quot; 我已经用两篇文章拆过这句话：<a href="https://johnsonlee.io/2026/05/31/a-new-era-of-pc/">《Wintel 时代结束了》</a>讲 PC 为什么重新变成算力资产，<a href="https://johnsonlee.io/2026/05/31/ai-pc-real-opportunity/">《当 AI PC 成为新的风口，真正的机会在哪里？》</a>讲 local runtime、context layer 和 cost-aware execution。</p>
+<p>那两篇关心的是一台 PC 如何接住从云端下沉的智能。一周多后，苹果在 WWDC 2026 发布新一代 Siri AI，强调 personal context understanding、on-screen awareness、app actions 和 across apps，还把同一段对话接进 iPhone、iPad、Mac、Apple Watch 和 Vision Pro。</p></div><p class="readmore"><a href="/2026/06/20/on-device-ai-next-wave/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2026/06/20/schools-of-trading/">股票交易的流派</a></h1><div class="post-meta">2026-06-20</div><div class="post-content"><p>早上 9:35，你买了一张当天到期的 SPY 末日期权。理由很清楚：开盘强，成交量跟上，指数站上关键位。十分钟后，价格掉头，原来的突破失效。按进场计划，这时候该走了。可手指放到平仓按钮上，大脑突然开始工作：美国经济还行，AI Capex 还在增长，Microsoft 有定价权，长期看大盘总会回来。</p>
+<p>于是，一笔计划持有十几分钟的交易，瞬间拥有了十年投资逻辑。再跌一点，你开始研究市场是不是错杀；反弹一点，又觉得 Soros 说得对，市场具有反身性。你下单时是 Livermore，亏损后变成 Buffett，扛不住时再请 Burry 出来证明市场有问题。</p>
+<p>这不叫融会贯通，叫没有交易计划。</p></div><p class="readmore"><a href="/2026/06/20/schools-of-trading/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2026/06/06/serenity-methodology-cannot-be-skill/">Serenity——传说中的白毛股神</a></h1><div class="post-meta">2026-06-06</div><div class="post-content"><p>如果你最近刷 X 或中文投资圈，应该已经见过 Serenity 这个名字。白发头像，半导体供应链，冷门小盘股，动不动几百 percent 的收益截图，还有一堆人把他称为“AI 供应链侦探”“瓶颈猎人”“白毛女股神”。如果你没见过，也没关系。你只需要知道一件事：这是一个靠研究 AI 基础设施最上游瓶颈，在短时间内被市场封神的人。</p></div><p class="readmore"><a href="/2026/06/06/serenity-methodology-cannot-be-skill/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2026/05/31/ai-pc-real-opportunity/">当 AI PC 成为新的风口，真正的机会在哪里？</a></h1><div class="post-meta">2026-05-31</div><div class="post-content"><p>这几个月，很多工程师还沉浸在 Agentic Coding 的兴奋里。它是真的有用：读 repo、改代码、跑测试、解释错误、做 migration、清理技术债，过去很多懒得动的活，现在终于可以动了。</p>
+<p>AI 现在有点像鸡肋：不用不行，用了看到账单又肉疼。</p>
+<p>但真正危险的不是贵，而是它越有用，大家越会用；大家越用，账单越不像工具费，越像税。这才是上一篇《Wintel 时代结束了》没说完的部分。</p></div><p class="readmore"><a href="/2026/05/31/ai-pc-real-opportunity/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2026/05/31/a-new-era-of-pc/">Wintel 时代结束了</a></h1><div class="post-meta">2026-05-31</div><div class="post-content"><p>过去两天，几家巨头几乎同时发了一句话：&quot;A new era of PC.&quot; NVIDIA 发了。Windows 发了。Arm 也跟了。后面还带着一串坐标，指向台北。科技公司天天喊新时代，这没什么稀奇。稀奇的是，它们很少一起喊。更稀奇的是，这一次大家都在谈 PC。</p>
+<p>一个被 mobile 抢走十几年光环的老东西，突然又回到了牌桌中央。</p></div><p class="readmore"><a href="/2026/05/31/a-new-era-of-pc/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2026/05/30/saas-value-return-token-burning/">疯狂烧 Token 的日子要结束了</a></h1><div class="post-meta">2026-05-30</div><div class="post-content"><p>这几天美股软件板块很热闹。</p>
+<p>Snowflake 财报一出，市场像突然松了一口气。不是那种“AI 要颠覆一切”的亢奋，而是另一种更现实的情绪：原来 SaaS 还没死，原来软件公司还能在 AI 时代继续增长，原来投资人还愿意为确定的收入、利润率和现金流买单。</p>
+<p>过去半年，SaaS 股一直被一个问题压着：如果 AI 能直接完成工作，传统软件还有没有价值？更狠一点说，如果 Agent 变成新的入口，SaaS 会不会从操作系统退化成数据库？Snowflake 这次给市场续了一口命。Product revenue 继续高增长，全年指引上调，AI 需求没有把它的商业模型拖垮，反而让市场重新相信 data infrastructure 仍然是 AI 时代的核心资产。</p></div><p class="readmore"><a href="/2026/05/30/saas-value-return-token-burning/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2026/05/29/anthropic-promises-vs-enterprise-bills/">A 社画的饼，正在变成企业的账单</a></h1><div class="post-meta">2026-05-29</div><div class="post-content"><p>老板问：&quot;我们 AI 自动化测试做得怎么样了？&quot;会议室里没人说话。一个月前，有人提醒过：AI 不可靠，自动化测试不能这么搞，测试系统最怕的不是不会做，而是不稳定。但那个时候，这句话听起来很像借口——站在老板的位置，也很难判断，到底是 AI 不可靠，还是你人不行？</p></div><p class="readmore"><a href="/2026/05/29/anthropic-promises-vs-enterprise-bills/">阅读全文</a></p></div><nav class="page-navigator"><span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/2/">下一页</a></nav><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+</script><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML" async></script></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (107)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Harness-Engineering/">Harness Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (64)</a><ul style="padding:revert"></ul></li><li><a href="/categories/investing/">Investing (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Developer-Tools/" style="font-size: 15px;">Developer Tools</a> <a href="/tags/Dotfiles/" style="font-size: 15px;">Dotfiles</a> <a href="/tags/Claude-Code/" style="font-size: 15px;">Claude Code</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/AI-PC/" style="font-size: 15px;">AI PC</a> <a href="/tags/Wintel/" style="font-size: 15px;">Wintel</a> <a href="/tags/NVIDIA/" style="font-size: 15px;">NVIDIA</a> <a href="/tags/Microsoft/" style="font-size: 15px;">Microsoft</a> <a href="/tags/Local-LLM/" style="font-size: 15px;">Local LLM</a> <a href="/tags/Token/" style="font-size: 15px;">Token</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/Consciousness/" style="font-size: 15px;">Consciousness</a> <a href="/tags/Self-Reference/" style="font-size: 15px;">Self-Reference</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Attention/" style="font-size: 15px;">Attention</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Agentic-Coding/" style="font-size: 15px;">Agentic Coding</a> <a href="/tags/Enterprise/" style="font-size: 15px;">Enterprise</a> <a href="/tags/Buddhism/" style="font-size: 15px;">Buddhism</a> <a href="/tags/Taoism/" style="font-size: 15px;">Taoism</a> <a href="/tags/Physics/" style="font-size: 15px;">Physics</a> <a href="/tags/Philosophy/" style="font-size: 15px;">Philosophy</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/Automation/" style="font-size: 15px;">Automation</a> <a href="/tags/Testing/" style="font-size: 15px;">Testing</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/Cognitive-Boundary/" style="font-size: 15px;">Cognitive Boundary</a> <a href="/tags/Randomness/" style="font-size: 15px;">Randomness</a> <a href="/tags/Self-Evolution/" style="font-size: 15px;">Self-Evolution</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Dimension-Hacking/" style="font-size: 15px;">Dimension Hacking</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Economy/" style="font-size: 15px;">Economy</a> <a href="/tags/Future/" style="font-size: 15px;">Future</a> <a href="/tags/UBI/" style="font-size: 15px;">UBI</a> <a href="/tags/Product-Strategy/" style="font-size: 15px;">Product Strategy</a> <a href="/tags/Copilot/" style="font-size: 15px;">Copilot</a> <a href="/tags/Google/" style="font-size: 15px;">Google</a> <a href="/tags/Technology/" style="font-size: 15px;">Technology</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Product-Management/" style="font-size: 15px;">Product Management</a> <a href="/tags/Project-Management/" style="font-size: 15px;">Project Management</a> <a href="/tags/AI-Agent/" style="font-size: 15px;">AI Agent</a> <a href="/tags/Memory/" style="font-size: 15px;">Memory</a> <a href="/tags/Loop-Engineering/" style="font-size: 15px;">Loop Engineering</a> <a href="/tags/Harness-Engineering/" style="font-size: 15px;">Harness Engineering</a> <a href="/tags/Eval/" style="font-size: 15px;">Eval</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/Prompt-Engineering/" style="font-size: 15px;">Prompt Engineering</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Graphite/" style="font-size: 15px;">Graphite</a> <a href="/tags/MCP/" style="font-size: 15px;">MCP</a> <a href="/tags/Bytecode/" style="font-size: 15px;">Bytecode</a> <a href="/tags/Static-Analysis/" style="font-size: 15px;">Static Analysis</a> <a href="/tags/Ground-Truth/" style="font-size: 15px;">Ground Truth</a> <a href="/tags/Context/" style="font-size: 15px;">Context</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/06/26/fooled-by-loop-engineering.en/">Don't Let Loop Engineering Fool You</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/26/fooled-by-loop-engineering/">别被 Loop Engineering 忽悠瘸了</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/21/token-efficiency-way-forward.en/">Where Is the Way Forward for Token Efficiency?</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/21/token-efficiency-way-forward/">Token Efficiency 的出路在哪里？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/21/smart-money-after-memory/">存储之后，聪明钱会流向哪里？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/21/smart-money-after-memory.en/">After Memory, Where Will Smart Money Flow?</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/20/on-device-ai-next-wave/">AI 的下一个风口——端侧智能</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/20/on-device-ai-next-wave.en/">AI's Next Wave: On-Device Intelligence</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/20/schools-of-trading.en/">The Schools of Trading</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/20/schools-of-trading/">股票交易的流派</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>

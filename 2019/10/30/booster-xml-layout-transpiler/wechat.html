@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2019/10/30/booster-xml-layout-transpiler/">
+  <title>Booster 布局转译器 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Booster 布局转译器</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2019-10-30 · Johnson Lee · Computer Science / Open Source / Booster</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在上一篇文章中已经介绍过 booster 正在做的 <em style="font-style:italic;color:#1f2937;">Layout Transpiler</em> —— 将 XML 布局文件翻译成 <em style="font-style:italic;color:#1f2937;">class</em> 的转译器，在实现的过程中发现了 Android 系统在设计上的各种坑，而且是天坑，几乎是绕不过去了，最近 Android 官方发布了 <em style="font-style:italic;color:#1f2937;">JetPack Compose</em> 让我眼前一亮，这不就是我想要达到的效果么，只不过是换了一种形式罢了。</p>
+<h2 id="布局转译器" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  布局转译器</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在前面的文章中只是大致提了一下实现 XML 转 class 的思路，很多人看了文章之后反馈说没看懂，所以在这里深入介绍一下实现的细节。</p>
+<h3 id="§-Booster-的方案最最核心的部分是构建-AttributeSet，为什么呢？" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">1.1.  § Booster 的方案最最核心的部分是构建 <a href="https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/util/AttributeSet.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">AttributeSet</a>，为什么呢？</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">因为 View 的构造方法需要它</p>
+<h3 id="§-Android-系统是如何构建-AttributeSet-的呢？" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">1.2.  § Android 系统是如何构建 <a href="https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/util/AttributeSet.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">AttributeSet</a> 的呢？</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Android 在运行时调用 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">View</code> 的构造方法时，传递的 <a href="https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/util/AttributeSet.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">AttributeSet</a> 其实是 <a href="https://android.googlesource.com/platform/libcore/+/master/xml/src/main/java/org/xmlpull/v1/XmlPullParser.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">XmlPullParser</a> 的子类，如： <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/core/java/android/content/res/XmlBlock.java#91" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">XmlBlock.Parser</a>，所以，Android 在运行时是边解析 XML 边实例化 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">View</code>。</p>
+<h3 id="§-Booster-是如何构建-AttributeSet-的呢？" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">1.3.  § Booster 是如何构建 <a href="https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/util/AttributeSet.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">AttributeSet</a> 的呢？</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">主要有以下几个步骤：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">在构建期间通过 <a href="https://android.googlesource.com/platform/libcore/+/master/xml/src/main/java/org/xmlpull/v1/XmlPullParser.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">XmlPullParser</a> 解析 XML；</li>
+</ol>
+  <pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.didiglobal.booster.app.MainActivity"&gt;
+
+    &lt;TextView
+        android:id="@+id/activity_main_greeting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!"
+        android:layout_constraintBottom_toBottomOf="parent"
+        android:layout_constraintLeft_toLeftOf="parent"
+        android:layout_constraintRight_toRightOf="parent"
+        android:layout_constraintTop_toTopOf="parent" /&gt;
+&lt;/ConstraintLayout&gt;</code></pre>
+
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">根据 <a href="https://android.googlesource.com/platform/libcore/+/master/xml/src/main/java/org/xmlpull/v1/XmlPullParser.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">XmlPullParser</a> 的解析结果生成 Java 代码；</li>
+</ol>
+  <pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class Layout7f0b0000 {
+
+    public static View inflate(Context context) {
+        final List&lt;String&gt; nameList1833697623 = new ArrayList&lt;&gt;();
+        nameList1833697623.add("layout_width");
+        nameList1833697623.add("layout_height");
+        nameList1833697623.add("context");
+
+        final List&lt;String&gt; valueList1833697623 = new ArrayList&lt;&gt;();
+        valueList1833697623.add("match_parent");
+        valueList1833697623.add("match_parent");
+        valueList1833697623.add("context", "com.didiglobal.booster.app.MainActivity");
+
+        final List&lt;Integer&gt; nameResourceList1833697623 = new ArrayList&lt;&gt;();
+        nameResourceList1833697623.add(16842996);
+        nameResourceList1833697623.add(16842997);
+        nameResourceList1833697623.add(0);
+
+        final List&lt;String&gt; namespaceList1833697623 = new ArrayList&lt;&gt;();
+        namespaceList1833697623.add("http://schemas.android.com/apk/res/android");
+        namespaceList1833697623.add("http://schemas.android.com/apk/res/android");
+        namespaceList1833697623.add("http://schemas.android.com/tools");
+
+        final Map&lt;String, Map&lt;String, String&gt;&gt; namespaceValueMap1833697623 = new HashMap&lt;&gt;();
+        final Map&lt;String, String&gt; namespaceValueMapItem322693759 = new HashMap&lt;&gt;();
+        namespaceValueMapItem322693759.put("layout_width", "match_parent");
+        namespaceValueMapItem322693759.put("layout_height", "match_parent");
+        namespaceValueMap1833697623.put("http://schemas.android.com/apk/res/android", namespaceValueMapItem322693759);
+
+        final Map&lt;String, String&gt; namespaceValueMapItem1238245197 = new HashMap&lt;&gt;();
+        namespaceValueMapItem1238245197.put("context", "com.didiglobal.booster.app.MainActivity");
+        namespaceValueMap1833697623.put("http://schemas.android.com/tools", namespaceValueMapItem1238245197);
+
+        final Map&lt;String, Object&gt; resourcesValueMap1833697623 = new HashMap&lt;&gt;();
+        final AttributeSet attributeSet1833697623 = new AttrtibuteSetImpl(3, nameList1833697623, valueList1833697623, nameResourceList1833697623, namespaceList1833697623, namespaceValueMap1833697623, resourcesValueMap1833697623);
+        final android.support.constraint.ConstraintLayout view1833697623 = new android.support.constraint.ConstraintLayout(context, attributeSet1833697623);
+        view1833697623.setVisibility(0);
+
+        final List&lt;String&gt; nameList777448400 = new ArrayList&lt;&gt;();
+        nameList777448400.add("layout_width");
+        nameList777448400.add("layout_height");
+        nameList777448400.add("text");
+        nameList777448400.add("layout_constraintBottom_toBottomOf");
+        nameList777448400.add("layout_constraintLeft_toLeftOf");
+        nameList777448400.add("layout_constraintRight_toRightOf");
+        nameList777448400.add("layout_constraintTop_toTopOf");
+
+        final List&lt;String&gt; valueList777448400 = new ArrayList&lt;&gt;();
+        valueList777448400.add("wrap_content");
+        valueList777448400.add("wrap_content");
+        valueList777448400.add("Hello World!");
+        valueList777448400.add("parent");
+        valueList777448400.add("parent");
+        valueList777448400.add("parent");
+        valueList777448400.add("parent");
+
+        final List&lt;Integer&gt; nameResourceList777448400 = new ArrayList&lt;&gt;();
+        nameResourceList777448400.add(16842996);
+        nameResourceList777448400.add(16842997);
+        nameResourceList777448400.add(16843087);
+        nameResourceList777448400.add(0);
+        nameResourceList777448400.add(0);
+        nameResourceList777448400.add(0);
+        nameResourceList777448400.add(0);
+
+        final List&lt;String&gt; namespaceList777448400 = new ArrayList&lt;&gt;();
+        namespaceList777448400.add("http://schemas.android.com/apk/res/android");
+        namespaceList777448400.add("http://schemas.android.com/apk/res/android");
+        namespaceList777448400.add("http://schemas.android.com/apk/res/android");
+        namespaceList777448400.add("http://schemas.android.com/apk/res-auto");
+        namespaceList777448400.add("http://schemas.android.com/apk/res-auto");
+        namespaceList777448400.add("http://schemas.android.com/apk/res-auto");
+        namespaceList777448400.add("http://schemas.android.com/apk/res-auto");
+
+        final Map&lt;String, Map&lt;String, String&gt;&gt; namespaceValueMap777448400 = new HashMap&lt;&gt;();
+        final Map&lt;String, String&gt; namespaceValueMapItem1412384463 = new HashMap&lt;&gt;();
+        namespaceValueMapItem1412384463.put("layout_width", "wrap_content");
+        namespaceValueMapItem1412384463.put("layout_height", "wrap_content");
+        namespaceValueMapItem1412384463.put("text", "Hello World!");
+        namespaceValueMap777448400.put("http://schemas.android.com/apk/res/android", namespaceValueMapItem1412384463);
+
+        final Map&lt;String, String&gt; namespaceValueMapItem1690180792 = new HashMap&lt;&gt;();
+        namespaceValueMapItem1690180792.put("layout_constraintBottom_toBottomOf", "parent");
+        namespaceValueMapItem1690180792.put("layout_constraintLeft_toLeftOf", "parent");
+        namespaceValueMapItem1690180792.put("layout_constraintRight_toRightOf", "parent");
+        namespaceValueMapItem1690180792.put("layout_constraintTop_toTopOf", "parent");
+        namespaceValueMap777448400.put("http://schemas.android.com/apk/res-auto", namespaceValueMapItem1690180792);
+
+        final Map&lt;String, Object&gt; resourcesValueMap777448400 = new HashMap&lt;&gt;();
+        final AttributeSet attributeSet777448400 = new AttrtibuteSetImpl(7, nameList777448400, valueList777448400, nameResourceList777448400, namespaceList777448400, namespaceValueMap777448400,  resourcesValueMap777448400);
+        final android.widget.TextView view777448400 = new android.widget.TextView(context, attributeSet777448400);
+        view777448400.setVisibility(0);
+
+        final android.view.ViewGroup.LayoutParams layoutParams944291586 = new android.view.ViewGroup.LayoutParams(-2, -2);
+        view1833697623.addView(view777448400, layoutParams944291586);
+        return view1833697623;
+    }
+}</code></pre>
+
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">将生成的 Java 代码编译成 class；</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">通过 <em style="font-style:italic;color:#1f2937;">Transformer</em> 替换所有 class 中访问 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">R.layout.${resId}</code> 的指令</li>
+</ol>
+<h2 id="Android-Framework-的天坑" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  Android Framework 的天坑</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">上面的实现方案几乎是完美的，然而，我们却低估了 Android 系统的设计，在 <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/core/java/android/content/res/ResourcesImpl.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">ResourcesImpl</a> 中，居然有两处把 <a href="https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/util/AttributeSet.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">AttributeSet</a> 强转成 <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/core/java/android/content/res/XmlBlock.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">XmlBlock.Parser</a>，为什么要把一个接口强制转换成一个只有包可见而且还是 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">final</code> 的类呢？我也不知道啊。。。</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class ResourcesImpl {
+
+    TypedArray obtainStyledAttributes(@NonNull Resources.Theme wrapper,
+            AttributeSet set,
+            @StyleableRes int[] attrs,
+            @AttrRes int defStyleAttr,
+            @StyleRes int defStyleRes) {
+        synchronized (mKey) {
+            final int len = attrs.length;
+            final TypedArray array = TypedArray.obtain(wrapper.getResources(), len);
+            // XXX note that for now we only work with compiled XML files.
+            // To support generic XML files we will need to manually parse
+            // out the attributes from the XML file (applying type information
+            // contained in the resources and such).
+            final XmlBlock.Parser parser = (XmlBlock.Parser) set; // &lt;&lt;&lt;=== 看这里
+            mAssets.applyStyle(mTheme, defStyleAttr, defStyleRes, parser, attrs,
+                    array.mDataAddress, array.mIndicesAddress);
+            array.mTheme = wrapper;
+            array.mXml = parser;
+            return array;
+        }
+    }
+
+    static int getAttributeSetSourceResId(@Nullable AttributeSet set) {
+        if (set == null || !(set instanceof XmlBlock.Parser)) { // &lt;&lt;&lt;=== 看这里
+            return ID_NULL;
+        }
+        return ((XmlBlock.Parser) set).getSourceResId(); // &lt;&lt;&lt;=== 看这里
+    }
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">可能有人会问了，强制将 <a href="https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/util/AttributeSet.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">AttributeSet</a> 转换成 <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/core/java/android/content/res/XmlBlock.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">XmlBlock.Parser</a> 到底是个什么样的坑？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这得从上面生成的代码说起，细心的读者可能发现了 <em style="font-style:italic;color:#1f2937;">AttributeSetImpl</em> 这个类：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">final AttributeSet attributeSet777448400 = new AttrtibuteSetImpl(
+        7,
+        nameList777448400,
+        valueList777448400,
+        nameResourceList777448400,
+        namespaceList777448400,
+        namespaceValueMap777448400, 
+        resourcesValueMap777448400);</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">没错，<em style="font-style:italic;color:#1f2937;">AttributeSetImpl</em> 就是由 Booster 定义的，大致代码如下：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class AttributeSetImpl implements AttributeSet {
+    
+    private final int mAttributeCount;
+    private final List&lt;String&gt; mNameList;
+    private final List&lt;Integer&gt; mValueList;
+    private final List&lt;Integer&gt; mNameResourceList;
+    private final List&lt;String&gt; mNamespaceList;
+    private final Map&lt;String, Map&lt;String, String&gt;&gt; mNamespaceValueMap;
+    private final Map&lt;String, Object&gt; mResourcesValueMap;
+
+    public AttributeSetImpl(
+            int attributeCount,
+            List&lt;String&gt; nameList,
+            List&lt;Integer&gt; valueList,
+            List&lt;Integer&gt; nameResourceList,
+            List&lt;String&gt; namespaceList,
+            Map&lt;String, Map&lt;String, String&gt;&gt; namespaceValueMap,
+            Map&lt;String, Object&gt; resourcesValueMap) {
+        this.mAttributeCount = attributeCount;
+        this.mNameList = nameList;
+        this.mValueList = valueList;
+        this.mNameResourceList = nameResourceList;
+        this.mNamespaceList = namespaceList;
+        this.mNamespaceValueMap = namespaceValueMap;
+        this.mResourcesValueMap = resourcesValueMap;
+    }
+
+    // ...
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">把 <em style="font-style:italic;color:#1f2937;">Android Framework</em> 原生构造 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">View</code> 的过程简化一下：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">XmlBlock.Parser parser = new XmlBlock.Parser();
+parser.parse(R.layout.main);
+...
+TextView txt = new TextView(context, parser); // 注意这里，parser 作为 AttributSet 传递</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">那么经过 Booster 优化后，构造 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">View</code> 的过程则是这样的：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">...
+AttributeSetImpl attrs = new AttributeSetImpl(...);
+TextView txt = new TextView(context, attrs); // 注意这里，跟原生的区别</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">所以，<em style="font-style:italic;color:#1f2937;">Android Framework</em> 要强制将 <em style="font-style:italic;color:#1f2937;">AttributeSetImpl</em> 转换成 <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/core/java/android/content/res/XmlBlock.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">XmlBlock.Parser</a> 是转不成功的，因为 <em style="font-style:italic;color:#1f2937;">AttributeSetImpl</em> 本身就不会是 <a href="https://android.googlesource.com/platform/libcore/+/master/xml/src/main/java/org/xmlpull/v1/XmlPullParser.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">XmlPullParser</a> 的子类，更不可能继承 Framework 中只有包可见而且还是 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">final</code> 的 <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/core/java/android/content/res/XmlBlock.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">XmlBlock.Parser</a>。</p>
+<h2 id="JetPack-Compose" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  JetPack Compose</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">掉到了 <em style="font-style:italic;color:#1f2937;">Android Framework</em> 的天坑里一直没爬出来，正在我心灰意冷的时候， <em style="font-style:italic;color:#1f2937;">JetPack Compose</em> 让我眼前一亮，以下是官方的示例。</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">class MainActivity : AppCompatActivity() {
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContent {
+      Greeting("Android")
+    }
+  }
+}
+
+@Composable
+fun Greeting(name: String) {
+    Text (text = "Hello $name!")
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">JetPack Compose</em> 跟 <em style="font-style:italic;color:#1f2937;">Anko</em> 以及 <em style="font-style:italic;color:#1f2937;">iOS SwiftUI</em> 有点类似，之所以 <em style="font-style:italic;color:#1f2937;">JetPack Compose</em> 的体验如此之好主要得益于两点：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Kotlin 强大的语法<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">与生俱来的 DSL</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">扩展方法和属性</li>
+</ul>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">IDE 强力支持，能够做到所见即所得</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">至于 Android Studio 是如何做到所见即所得，我大胆推测一下，应该跟 <a href="https://johnsonlee.io/2019/07/13/booster-xml-layout-to-code/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">布局：XML vs 代码</a> 这篇文章提到的 <em style="font-style:italic;color:#1f2937;">Layout Lib</em> 原理类似，只不过由原来解析 XML 变成了解析 Kotlin 代码或者字节码，至于实际的实现，还得细细研究一下 Android Studio 的源码。</p>
+<h2 id="总结" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  总结</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">所以，有了 <em style="font-style:italic;color:#1f2937;">JetPack Compose</em> ，通过 XML 描述布局的时代即将成为历史，而用代码直接描述布局才是未来，这样，因为 XML 而导致的性能问题也就不复存在了。</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2019/10/30/booster-xml-layout-transpiler/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2019/10/30/booster-xml-layout-transpiler/</a></p>
+    </section>
+  </main>
+</body>
+</html>

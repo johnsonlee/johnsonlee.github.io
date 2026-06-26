@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2019/11/12/booster-transform-shared-preferences/">
+  <title>Booster Shared Preferences 优化 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Booster Shared Preferences 优化</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2019-11-12 · Johnson Lee · Computer Science / Open Source / Booster</p>
+<h2 id="背景" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  背景</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在 <a href="https://github.com/didi/booster/releases/tag/v0.1.5" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster v0.1.5</a> 版本其实就已经提供了针对 <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SharedPreferences</a> 的优化，只不过优化的幅度比较小，毕竟 <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SharedPreferences</a> 在 Android 中应用得过于广泛，所以，对它的优化非常非常谨慎，以至于我们经过了线上好几个版本的验证，才推出最新的优化方案。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">至于为什么要对 <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SharedPreferences</a> 做优化，我想做过 Android 开发的同学都清楚 <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SharedPreferences</a> 的设计一直为人所诟病，其实，<a href="https://developer.android.google.cn/reference/android/content/SharedPreferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SharedPreferences</a> 从一开始被 Google 的工程师设计出来并不是像现在这样用的，只不过后来被大家玩儿坏了，以至于出现了各种卡顿、ANR。</p>
+<h2 id="booster-v0-1-5-的优化方案" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  booster v0.1.5 的优化方案</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><a href="https://github.com/didi/booster/releases/tag/v0.1.5" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster v0.1.5</a> 推出的针对 <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SharedPreferences</a> 的优化，主要是将 <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences.Editor.html#apply()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Editor.apply()</a> 替换成 <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences.Editor.html#commit()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Editor.commit()</a> 并在子线程中执行，代码如下：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class ShadowEditor {
+
+    public static void apply(final SharedPreferences.Editor editor) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            AsyncTask.SERIAL_EXECUTOR.execute(new Runnable() {
+                @Override
+                public void run() {
+                    editor.commit();
+                }
+            });
+        } else {
+            editor.commit();
+        }
+    }
+
+}</code></pre>
+
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">至于为什么要将 <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences.Editor.html#apply()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Editor.apply()</a> 替换成异步 <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences.Editor.html#commit()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Editor.commit()</a>，可以看看这篇文章：<a href="http://www.cloudchou.com/android/post-988.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">http://www.cloudchou.com/android/post-988.html</a></p>
+</blockquote>
+<h2 id="booster-v0-2-0-的优化方案" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  booster v0.2.0 的优化方案</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><a href="https://github.com/didi/booster/releases/tag/v0.2.0" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster v0.2.0</a> 又进一步对 <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SharedPreferences</a> 做了优化，当调用了 <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences.Editor.html#commit()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Editor.commit()</a> 但是其返回值如果没使用，就将 <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences.Editor.html#commit()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Editor.commit()</a> 放到子线程中执行，代码如下：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">override fun transform(context: TransformContext, klass: ClassNode): ClassNode {
+    if (klass.name == SHADOW_EDITOR) {
+        return klass
+    }
+
+    klass.methods.forEach { method -&gt;
+        method.instructions?.iterator()?.asIterable()?.filterIsInstance(MethodInsnNode::class.java)?.filter {
+            it.opcode == Opcodes.INVOKEINTERFACE &amp;&amp; it.owner == SHARED_PREFERENCES_EDITOR
+        }?.forEach { invoke -&gt;
+            when ("${invoke.name}${invoke.desc}") {
+                "commit()Z" -&gt; if (Opcodes.POP == invoke.next?.opcode) {
+                    // if the return value of commit() does not used
+                    // use asynchronous commit() instead
+                    invoke.optimize(klass, method)
+                    method.instructions.remove(invoke.next)
+                }
+                "apply()V" -&gt; invoke.optimize(klass, method)
+            }
+        }
+    }
+    return klass
+}</code></pre>
+
+<h2 id="数据一致性问题" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  数据一致性问题</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">前两种优化方案虽然能一定程度上解决卡顿和 ANR 的问题，但其实是有 bug 的，比如像下面这段代码：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">SharedPreferences sp = context.getSharedPreferences("config", Context.MODE_PRIVATE);
+Editor editor = sp.edit();
+editor.put("key", "value");
+editor.commit();
+String value = sp.getString("key", null);</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">大家有没有发现？刚 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">put</code> 完，立即 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">get</code>，这时候很有可能是取不到 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">put</code> 的值的，因为 <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences.Editor.html#commit()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Editor.commit()</a> 很有可能还在线程池中排队，只不过一般很少有代码写成这样，但是还是避免不了这样的情况会发生，所以，我们推出了新的优化方案，目的有以下几点：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">解决 <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SharedPreferences</a> 引起的卡顿和 ANR；</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">解决 <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SharedPreferences</a> 在进程间的数据共享问题；</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">修复之前的版本中遗留的数据一致性问题；</li>
+</ol>
+<h2 id="终极方案" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  终极方案</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">想要彻底解决 <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SharedPreferences</a> 问题，就需要避开原生实现的各种坑，如：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://developer.android.google.cn/reference/android/content/SharedPreferences.Editor.html#apply()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Editor.apply()</a> 导致的 ANR；</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://developer.android.google.cn/reference/android/content/SharedPreferences.Editor.html#commit()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Editor.commit()</a> 导致主线程卡顿；</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">频繁异步 <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences.Editor.html#commit()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Editor.commit()</a> 导致主线程卡顿甚至 ANR；</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">进程间无法及时同步数据；</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">所以，针对此问题 booster 的解决方案是—— <a href="https://github.com/didi/booster/blob/master/booster-android-instrument-shared-preferences/src/main/java/com/didiglobal/booster/instrument/sharedpreferences/BoosterSharedPreferences.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">BoosterSharedPreferences</a>，通过 <a href="https://github.com/didi/booster/blob/master/booster-transform-shared-preferences/src/main/kotlin/com/didiglobal/booster/transform/sharedpreferences/SharedPreferencesTransformer.kt" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SharedPreferencesTransformer</a> 将所有调用 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Context.getSharedPreferences(String, int)</code> 的指令替换成 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ShadowSharedPreferences.getSharedPreferences(Context, String, int)</code>，代码如下：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class ShadowSharedPreferences {
+
+    public static SharedPreferences getSharedPreferences(final Context context, String name, final int mode) {
+        if (TextUtils.isEmpty(name)) {
+            name = "null";
+        }
+        return BoosterSharedPreferences.getSharedPreferences(name);
+    }
+
+    public static SharedPreferences getPreferences(final Activity activity, final int mode) {
+        return getSharedPreferences(activity.getApplicationContext(), activity.getLocalClassName(), mode);
+    }
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在 <a href="https://github.com/didi/booster/blob/master/booster-android-instrument-shared-preferences/src/main/java/com/didiglobal/booster/instrument/sharedpreferences/BoosterSharedPreferences.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">BoosterSharedPreferences</a> 中，对 <a href="https://developer.android.google.cn/reference/android/content/SharedPreferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SharedPreferences</a> 进行了缓存，这样能够大幅的提升性能。</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public static SharedPreferences getSharedPreferences(final String name) {
+    if (!sSharedPreferencesMap.containsKey(name)) {
+        sSharedPreferencesMap.put(name, new BoosterSharedPreferences(name));
+    }
+    return sSharedPreferencesMap.get(name);
+}</code></pre>
+
+
+
+
+
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2019/11/12/booster-transform-shared-preferences/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2019/11/12/booster-transform-shared-preferences/</a></p>
+    </section>
+  </main>
+</body>
+</html>

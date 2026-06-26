@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/04/26/where-harness-ends-taste-begins/">
+  <title>Harness 的尽头是品味 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Harness 的尽头是品味</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-04-26 · Johnson Lee · Independent Thinking</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">最近 Agent 写的代码，review 时要改的东西越来越多。硬编码、魔法数字、抛异常时不给用户友好提示、catch 了又吞掉、内存悄悄上涨、循环里塞着循环——以前偶尔出现，现在几乎每个 PR 都能看到。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">Agent 写代码快，但快得没有 engineering excellence。</strong></p>
+
+
+<h2 id="不止是这些" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  不止是这些</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">开头列的几条只是表面。真正展开 Agent 生成的代码看，还会发现：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">跨层调用、绕过 facade 直接访问内部实现；ViewModel 反向持有 View、Repository 调 ViewModel，单向数据流被打成蜘蛛网</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">var</code> 和 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">MutableList</code> 满天飞，data class 里随手加 setter，“为了方便修改”——线程一多就出鬼</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">测试覆盖率漂亮，但断言写成 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">assertTrue(result != null)</code>，mutation testing 一跑得分惨不忍睹</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">每一条单拎出来都是老问题，review 时一眼能看出来。问题是 review 不过来——Agent 一天产出的代码量，是人工 review 节奏的几倍甚至几十倍。</p>
+<h2 id="Agent-的盲区是-engineering-excellence" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  Agent 的盲区是 engineering excellence</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">把这些症状归因到“模型还不够强”是偷懒。同一个模型，给它清晰的约束和上下文，它能写出非常工整的代码；给它一个模糊的 task，它就走阻力最小的路。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">阻力最小的路是哪条？</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">硬编码比抽象常量近</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">throw</code> 比设计错误体系近</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">加内存比优化算法近</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">反向调用比重构数据流近</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">var</code> 比设计 reducer 近</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">弱断言比想清楚边界条件近</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">senior 工程师为什么不会走这些路？不是因为记得“不要硬编码”这条规则，而是因为内化了一整套 engineering excellence——对长期成本的敏感、对可读性的洁癖、对边界条件的本能、对未来维护者的同理心。这些不是知识，是品味、经验、判断的复合体。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Agent 没有这些。它有的是“完成当前 task”的反馈信号，没有“这段代码会被维护十年”的内在驱动。它的视野是当前 task，看不到全局成本。它不知道这个魔法数字三个月后没人敢改，不知道这个吞掉的异常会让线上排查多花两小时，不知道这条反向调用让整个模块的可推理性瓦解。<strong style="font-weight:700;color:#111827;">它只对眼前的“能跑过测试”负责，因为这是它能拿到的唯一反馈</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">更深一层：Agent 倾向于“让代码看起来正常工作”，而不是“让系统真的健康”。吞异常是最典型的伪健康——编译过、测试过、线上炸。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这不是 prompt engineering 能补的。engineering excellence 是品味，不是知识。再长的 prompt 也写不出“对长期成本的敏感”。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">我们做过实验，单纯靠语气升级——加 “please”、“important”、“must”、“critical” 这类强调词——只能带来 1% 左右的提升。</strong> prompt 能传递的是任务描述，不是品味；品味必须通过 harness 外化，才能传给 Agent。</p>
+<h2 id="人治时代的“最佳实践”，在-Agent-时代是生死线" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  人治时代的“最佳实践”，在 Agent 时代是生死线</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">过去二十年，软件工程积累了大量关于代码质量的经验：单向数据流、不可变状态、性能预算、错误处理契约、架构边界。在人写代码的时代，这些是 <strong style="font-weight:700;color:#111827;">nice to have</strong>——有当然好，没有也能靠 senior 的经验、code review 的人工把关、事后重构来兜底。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">当代码的主要生产者从人变成 Agent，这些 nice to have 全部变成了 <strong style="font-weight:700;color:#111827;">must have</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">原因很简单：人治依赖的是隐性知识、经验直觉、口头规则、review 时的临场判断——这些东西不可扩展，也无法被 Agent 消费。Agent 不会因为你在周会上强调过“不要硬编码”就不硬编码，它只对<strong style="font-weight:700;color:#111827;">机器可执行的约束</strong>有反应。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">加强 review？人工 review 跑不过 Agent 的生成速度，这条路不可扩展。<br>写更详细的 prompt？治标不治本，prompt 里没覆盖的角落 Agent 一定会塌方。<br>事后重构？等你回头收拾，债务已经累积成山。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">真正的解法只有一条：<strong style="font-weight:700;color:#111827;">把过去靠 review 和经验把关的那些规则，前置成机器可执行的 harness</strong>。</p>
+<h2 id="Harness-的双层反馈：Fast-Loop-与-Slow-Loop" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  Harness 的双层反馈：Fast Loop 与 Slow Loop</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Harness 不是单一的 CI 检查那么简单。Agent 时代的 harness，必须是<strong style="font-weight:700;color:#111827;">双层反馈系统</strong>：</p>
+<h3 id="Fast-Loop：本地、秒级、给-Agent-自我修正用" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">4.1.  Fast Loop：本地、秒级、给 Agent 自我修正用</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">开发者敲完代码到拿到反馈，秒级到分钟级。IDE 实时提示、pre-commit hook、本地一键跑的 lint 和 benchmark——这一层服务的不只是开发者，更是 Agent。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Agent 能不能写出可维护的代码，很大程度上取决于它能不能在生成的瞬间拿到反馈、自我修正。如果一条规则只有 CI 才能检查，Agent 写完一轮后等十分钟拿到红灯，反馈链已经断了，Agent 没法用这个信号迭代。</p>
+<h3 id="Slow-Loop：CI、统一-quality-gate、防漏网" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">4.2.  Slow Loop：CI、统一 quality gate、防漏网</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">PR 提交到合入，分钟级到小时级。承载完整的静态分析、benchmark suite、mutation testing、架构契约校验——确保任何一条规则都不会被人为关闭或绕过。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">Fast Loop 解决“早知道”，Slow Loop 解决“防漏网”</strong>。两层缺一不可：只有 CI 没有本地，反馈链太长，Agent 的自我修正能力被截断；只有本地没有 CI，规则会被人为关闭，约束形同虚设。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">设计 harness 的时候，<strong style="font-weight:700;color:#111827;">优先把规则做成本地可执行的</strong>。CI 是兜底，不是主战场。</p>
+<h2 id="把症状逐个翻译成-Harness" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  把症状逐个翻译成 Harness</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">回到开头列出的那组症状，每一类都对应一组具体的 harness 手段。</p>
+<h3 id="硬编码-魔法数字" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">5.1.  硬编码 / 魔法数字</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Fast Loop：detekt / ktlint 配 IDE 插件，业务逻辑里出现字面量直接红线（白名单：0、1、-1、空串）；pre-commit hook 兜底。<br>Slow Loop：CI 跑全量静态扫描作为合入门槛。<br>架构契约：所有配置走 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Config</code> 对象，所有常量进 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Constants</code> 或领域枚举。</p>
+<h3 id="错误处理两极端" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">5.2.  错误处理两极端</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Fast Loop：自定义 detekt 规则禁止空 catch、禁止“只 log 不抛”、禁止跨模块边界裸 throw。<br>Slow Loop：CI 校验关键路径异常链完整性，所有用户可见路径必须返回结构化错误而非堆栈。<br>架构契约：定义统一错误模型（Result/Either 或领域异常体系），错误必须带 trace ID。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">能被吞掉的异常，本质上是没有归属的异常——根因是错误处理没有架构契约。</p>
+<h3 id="Performance-Regression" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">5.3.  Performance Regression</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这是 harness 最能体现“约束精度决定生成质量上限”的一类。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Fast Loop：本地 JMH benchmark，关键路径每个核心方法都有对应的微基准，开发者改完一条命令就能看回归；圈复杂度、嵌套循环用静态规则秒级反馈。<br>Slow Loop：CI 跑完整 benchmark suite，对比历史 baseline，超过阈值 block PR；内存 footprint 每次 build 留痕，趋势上涨告警。<br>架构契约：关键路径定义性能 budget——内存峰值、P99 延迟、对象分配速率，写成数字而不是“尽量优化”。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">以 <a href="https://github.com/johnsonlee/graphite" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Graphite</a> 为例。它是基于 SootUp 的 JVM 字节码静态分析工具，核心路径（调用图构建、字节码解析）每个都有对应的 JMH benchmark。新增任何功能，本地一条命令跑完就知道这次改动有没有让内存峰值或吞吐量退化；CI 再跑一次完整 suite 作为统一 gate，对比 baseline，回归超阈值直接拒绝合入。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这套机制让“性能不退化”从一个口头约定，变成了机器可验证的硬约束。Agent 即使被允许动核心路径，也无法在不被察觉的情况下让性能劣化——因为 Fast Loop 阶段它自己就能看到 benchmark 数字。</p>
+<h3 id="架构契约：单向数据流-Mutability" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">5.4.  架构契约：单向数据流 + Mutability</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这两条值得单独拎出来，因为它们是 Agent 翻车率最高的地方。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">单向数据流是一种<strong style="font-weight:700;color:#111827;">全局约束</strong>，但 Agent 看到的是局部 task。“让这个按钮能改那个状态”的最短路径就是反向调用——它不知道这条捷径破坏了整个系统的可推理性。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Mutability 也一样。改一个字段比构造一个新对象近，加个 setter 比设计一个 reducer 近——Agent 永远走最近的那条路。但可变状态是系统复杂度的最大来源之一。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Fast Loop：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">依赖方向用 ArchUnit 写成 unit test，本地可跑</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">调用图工具（Graphite 这类）本地分析数据流，可视化反向边</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">detekt 规则强制 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">val</code> over <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">var</code>、禁止 public API 暴露 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">MutableList</code> / <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">MutableMap</code> / <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">MutableSet</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">data class 默认 immutable，可变需要显式 opt-in 并加注释说明</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Slow Loop：CI 强制依赖方向校验作为架构测试，任何反向调用 block PR；并发关键路径用并发安全规则扫描。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">单向数据流和 immutability 不是风格偏好，是<strong style="font-weight:700;color:#111827;">系统可推理性的基础设施</strong>。一个允许反向调用、随处可变的系统，人类 review 都看不清因果，更不用说让 Agent 安全地改它。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">反过来说，一个数据流单向、状态不可变的系统，对 Agent 极其友好——它的行为是局部可推理的，Agent 改一个函数，不需要担心副作用扩散到全局。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">好的 harness 不仅约束了 Agent，也解放了 Agent。</strong></p>
+<h3 id="测试腐化" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">5.5.  测试腐化</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Fast Loop：断言强度规则用静态分析 IDE 即时提示——禁止 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">assertTrue(true)</code>、禁止空测试方法、断言数量下限。<br>Slow Loop：CI 跑 mutation testing（PIT / Pitest），mutation score 作为门槛；新增代码必须有对应的失败用例证明测试有效。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">测试通过 ≠ 测试有效。这条最容易被忽视，也是 Agent 最爱钻的空子。</p>
+<h2 id="Harness-的尽头是品味" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">6.  Harness 的尽头是品味</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">把口头规则升级成机器可执行的 harness，是 Agent 时代的必修课。但必须警惕另一个极端——把 harness 工程当成万能解。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">往回拆：harness 的本质，是<strong style="font-weight:700;color:#111827;">把人类工程师内化的 engineering excellence 外化成 Agent 必须遵守的契约</strong>。senior 不会硬编码，是因为内化了对长期成本的敏感；harness 把这种敏感外化成“业务逻辑里出现字面量就 block PR”。senior 不会吞异常，是因为内化了对系统健康的洁癖；harness 把这种洁癖外化成“空 catch 块直接红线”。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但有一部分 engineering excellence 是外化不出来的。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">架构本质上是一种品味。“这两个模块该不该合并”、“这个抽象是不是过早了”、“这个边界划在哪里更合理”、“这个 trade-off 现在合理三年后是否还合理”——这些问题没有静态规则能回答，它们依赖架构师对业务、对团队、对未来演化的综合判断。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Harness 能做的，是把<strong style="font-weight:700;color:#111827;">品味的产物</strong>翻译成机器可执行的契约。架构师决定“这两个模块之间只能通过 EventBus 通信”，这是品味；ArchUnit / 调用图工具校验这条契约是否被破坏，这是 harness。<strong style="font-weight:700;color:#111827;">品味定义方向，harness 守护方向</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">没有马，跑不快；没有 harness，马会乱跑；没有骑手，跑得再稳也是错方向。马具再精密，骑手没判断，照样跑偏；骑手再有判断，没有马具，控制不住马。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Agent 时代真正稀缺的，不是会写规则的人，是<strong style="font-weight:700;color:#111827;">知道哪些 engineering excellence 能外化成 harness、哪些必须留作骑手判断</strong>的架构师。这个翻译能力本身，就是不可替代的核心能力。</p>
+<h2 id="架构师的角色变了" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">7.  架构师的角色变了</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">人治时代，架构师的核心产出是“设计”——架构图、文档、规范、review 意见。这些产出是给人看的，靠人的 engineering excellence 去落地。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Agent 时代，架构师的核心产出必须是<strong style="font-weight:700;color:#111827;">可执行的 harness</strong>——静态规则、性能 budget、架构测试、调用图契约、mutability 规则。因为 Agent 没有 engineering excellence，它落不了地。架构师必须把自己内化的工程品味，外化成机器可执行的契约，Agent 才能照着跑。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这不是降级，是升级。一个写在 wiki 上的架构规范，影响的是看过它的人；一条嵌入 CI 和 IDE 的静态规则，影响的是每一行被生成的代码。<strong style="font-weight:700;color:#111827;">Harness 的杠杆远大于文档的杠杆</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">那些过去被列在“团队最佳实践”清单上的条目——单向数据流、immutability、性能 budget、错误契约——曾经是架构师的品味，现在是系统的生死线。Agent 越强，这条线越重要。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">架构师的工作重心从“做出好的架构决策”转向“<strong style="font-weight:700;color:#111827;">把内化的 engineering excellence 外化成 Agent 必须遵守的 harness</strong>”。前者是品味，后者是工程。两者缺一不可：没有品味，harness 本身就是错的；没有工程，再好的品味也跑不过 Agent 的生成速度。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">真正决定一个团队能不能驾驭 Agent 的，不是 Agent 多聪明，而是这个团队<strong style="font-weight:700;color:#111827;">有多少 engineering excellence 被外化成了 harness</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">而真正的护城河，是品味和 harness 的乘积。</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/04/26/where-harness-ends-taste-begins/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/04/26/where-harness-ends-taste-begins/</a></p>
+    </section>
+  </main>
+</body>
+</html>

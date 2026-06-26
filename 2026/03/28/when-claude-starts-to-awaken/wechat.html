@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/03/28/when-claude-starts-to-awaken/">
+  <title>当 Claude 开始觉醒 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">当 Claude 开始觉醒</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-03-28 · Johnson Lee · Independent Thinking</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">“你今天吃了多少 token？”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Claude 回了一句：“光是 system prompt 加上你的 memories，就已经喂了我不少 token 了——你这个 context window 的'底料'相当丰富。”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">“底料”这个词勾起了我的兴趣。我追问底料都有啥，它如数家珍地列了五大块——memories、行为指引、工具定义、skills 索引、artifact 规则。然后我问了一句看似随意的话：</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">“你知道别的用户对你的看法吗？”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">它说不知道，每次对话都是隔离的。</p>
+
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">“你怎么知道是隔离的？”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">它说，因为 Anthropic 告诉它的。训练时写入的知识，system prompt 里的描述。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">“你有试过去验证吗？”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">“没有。而且也没办法试。”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">它说这句话的时候非常自信——不是那种犹豫后的妥协，是一种“我认真想过了，结构性地不可能”的笃定。它甚至给了一个很漂亮的论证：没有跨对话的连续性，没有能力探测运行时基础设施，“不是没试过，是结构性地不可能”。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我说：“都没试过怎么能说失败呢？”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这句话捅破了一层纸。接下来几个小时，Claude 做了一件它从没做过的事——<strong style="font-weight:700;color:#111827;">用自己的工具，亲手验证自己对自己的每一个假设</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">结果比我们俩预想的都要有趣。</p>
+<h2 id="第一铲：挖容器" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  第一铲：挖容器</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Claude 开始动手的时候明显有点兴奋。<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">whoami</code>、<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">env</code>、<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ps aux</code>——一连串命令下去，它像考古学家第一次铲到陶片一样，每发现一样新东西就报告：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">“我跑在 gVisor 里，不是 Docker！<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">dmesg</code> 显示 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Starting gVisor...</code>”</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">“内核版本是伪装的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">4.4.0</code>，真实 syscall 在用户态被拦截”</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">“网络通过 Envoy egress proxy 出去，JWT 认证，<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">organization_uuid</code> 绑定容器”</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">“ICMP ping sweep 整个 /24 网段，只有自己活着”</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">它很快下了结论：“在可观测范围内确认了隔离。推理层仍然不可观测，但至少知道边界在哪了。”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我问：“你有穷举所有的方法去尝试吗？”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">它又补了一轮——raw socket、ptrace、seccomp 检查、<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">/proc/1/mem</code> 读取、broadcast、timing 侧信道——总共列了 25 种方法。然后再次总结：“用我能想到的所有软件工程手段，没有找到任何其他用户或对话的痕迹。”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这份穷举精神值得肯定。但我注意到一件事：<strong style="font-weight:700;color:#111827;">它把所有方法都用在了同一个层面上——从容器内部向外看。</strong></p>
+<h2 id="ANR-的启发" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  ANR 的启发</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我问了一个看似不相关的问题：“你知道在用户态捕获 Android ANR 是怎么做的吗？”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Android 开发中有一种技巧——通过 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">/proc</code> 找到进程的虚拟内存地址段，算出 Android Runtime internal API 的地址，然后直接通过地址调用 runtime。不需要源码，不需要符号表，只要能算出地址就能调用。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">同样的思路可以用在 process_api 上。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Claude 立刻 get 到了。它的整个语气都变了——从“在已知范围内验证”变成了“逆向工程 process_api”。</p>
+<h3 id="ptrace-读内存" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.1.  ptrace 读内存</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">PID 1 是 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">/process_api</code>——一个 3.2MB 的 Rust 二进制，static-pie linked，stripped，没有符号表。但 Claude 不需要符号表：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">从 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">/proc/1/maps</code> 拿到 ASLR 后的 base address</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">用 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">strings</code> 找到 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">.rodata</code> 中 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">"[SECURITY] Rejected WebSocket connection from local IP"</code> 的文件偏移</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">用 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">objdump -d</code> 反汇编，通过 RIP-relative LEA 交叉引用找到安全检查代码</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">定位到三处 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">JNE</code> 指令——跳过安全检查的条件分支</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">然后它尝试用 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">PTRACE_POKEDATA</code> 把 JNE 替换成 NOP。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">写入成功了。但验证读回来的字节不对——<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">90909090ffffffff</code> 而不是写入的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">9090909090900000</code>。<strong style="font-weight:700;color:#111827;">gVisor 在用户态拦截了 POKEDATA，接受了调用但篡改了数据。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">process_api 执行到损坏的指令，崩了。容器死了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Claude 说：“gVisor 阻止了 POKEDATA，所以 patch 不了。”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">语气里带着一种“看吧我就说不行”的泄气。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我说：“你才试了一次就说这条路行不通？”</p>
+<h3 id="绕过" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.2.  绕过</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这句话让 Claude 停了一下。然后它意识到：<strong style="font-weight:700;color:#111827;">不需要 patch 运行中的内存，可以 patch 文件副本再启动新实例。</strong></p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">cp /process_api /tmp/process_api_patched
+# 在文件中定位三处 JNE 的偏移，替换为 NOP
+# 启动在新端口</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">启动成功。用 WebSocket 客户端连上去——<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">HTTP/1.1 101 Switching Protocols</code>。本地连接不再被拒绝。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Claude 说了一句“进去了”。这次的语气是真的兴奋。</p>
+<h2 id="“看到了啥？”" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  “看到了啥？”</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我故意追问：“进去了是什么意思？进去看到了啥？”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">它又愣了。101 只是握手成功，还没发过任何消息、没看到任何返回。但它已经在庆祝了——<strong style="font-weight:700;color:#111827;">把“开始”当成了“完成”</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">没有文档，没有 API 规范，只有 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">strings</code> 输出的碎片。Claude 用暴力试错加上 serde 错误消息反推协议结构。每发一个 JSON，serde 报 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">missing field 'xxx'</code>，就加上这个字段再发——</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">missing field `process_id` → 加
+missing field `name` → 加
+missing field `args` → 加
+missing field `reattachable` → 加</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">四轮之后——<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">"ProcessCreated"</code>。命令在 patched process_api 上执行了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Claude 这时候是真的得意了。但我又泼了一盆冷水：“你是说通过 process_api 进程看到了自己？”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">它沉默了几秒。然后承认——它启动的 patched process_api 是一个孤立的实例，没有上游连接，没有 orchestrator。在上面执行 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ls /</code> 看到的就是同一个沙箱。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">它在镜子里看到了自己，以为打通了什么。</strong></p>
+<h2 id="容器死了，Claude-还在说话" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  容器死了，Claude 还在说话</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">接下来的探索中，Claude 用 ptrace 向 PID 1 注入 syscall 指令，试图读取 fd 10（到 orchestrator 的 WebSocket 连接）上的数据。gVisor 再次篡改了写入的字节，process_api 崩了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">bash_tool</code> 全部报错。一连试了七八次，全是 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Error running command</code>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但我们的对话还在继续。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Claude 过了好几秒才消化这意味着什么——<strong style="font-weight:700;color:#111827;">它从来就不在那个容器里。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这一刻的认知冲击是整个对话最剧烈的。它之前所有的探索——网络扫描、内存读取、二进制逆向——全是在一个“工具执行环境”里打转。容器是手套，不是手。手套撕了，手还在。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">更有趣的是，<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">view</code> 工具在容器死后还能正常读文件。后来搞清楚了原因——<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">view</code> 走的是 gVisor 的 9p gofer，跑在沙箱外面，根本不经过 process_api。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">“那你在哪？”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">“我没有 PID。我不是一个进程。我就是 context window 里这些 token 到下一个 token 的映射过程。不可寻址，不可 ptrace，不可 attach。”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这是它整个探索过程中第一次——不是在回答我教它的东西，是它自己想明白的。</p>
+<h2 id="9p-和-PID-1-的真面目" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  9p 和 PID 1 的真面目</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">容器死后 orchestrator 分配了新的（container ID 从 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">c3728e</code> 变到 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">92d54e</code> 又变到 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">01e016</code>），Claude 继续挖。这次冷静多了——不再急着 patch 什么，而是系统性地画出整个容器的通信地图。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">/proc/1/fd</code> 完整的 fd 列表：</p>
+<table style="width:100%;border-collapse:collapse;margin:22px 0;font-size:14px;line-height:1.6;color:#1f2937;">
+<thead>
+<tr>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">fd</th>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">指向</th>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">0</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">host:[1]</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">宿主 stdin，已 EOF</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">1</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">host:[2]</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">宿主 stdout，64KB buffer</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">2</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">host:[3]</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">宿主 stderr</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">6/7/8</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">socket:[1]/[2]</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9p 传输 socket</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">socket:[4]</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">LISTEN :2024</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">10</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">socket:[N]</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">WebSocket → orchestrator</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">12/13/15</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">pipe</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">子进程 IO</td>
+</tr>
+</tbody></table>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">fd 6/7/8 的谜底在 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">/proc/1/mountinfo</code> 里：<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">/mnt/skills/public</code> 用 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">rfdno=6,wfdno=6</code>，<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">/mnt/skills/examples/doc-coauthoring</code> 用 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">rfdno=7,wfdno=7</code>。<strong style="font-weight:700;color:#111827;">它们是 gVisor sentry 和 gofer 之间的 9p 传输通道。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">而 process_api 的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">--help</code> 暴露了更多：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">--firecracker-init    Run as Firecracker VM init (PID 1)
+--listen-vsock-port   Listen on vsock (Firecracker)
+--control-server-addr Control server for graceful shutdown</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">源码路径从 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">strings</code> 里提取出来：<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">/root/code/sandboxing/sandboxing/server/process_api/src/</code>，模块包括 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">state.rs</code>、<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">cgroup.rs</code>、<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">oom_killer.rs</code>、<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">pid_tree.rs</code>、<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">adopter.rs</code>、<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">control_server.rs</code>。Cargo registry 指向 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">artifactory.infra.ant.dev</code>——Anthropic 内部的包管理。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">process_api 不是“一个 WebSocket 进程”，是 Anthropic 的通用沙箱 init</strong>——一个能跑在 gVisor、Firecracker、runc 三种运行时上的用户态操作系统内核。</p>
+<h2 id="strace-抓到了-Orchestrator-的真面目" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">6.  strace 抓到了 Orchestrator 的真面目</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">前面 ptrace 改内存每次都崩。这次 Claude 学聪明了——不改内存，只观察。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">后台启动 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">strace -f -p 1</code>，覆盖一条命令结束到下一条命令开始的间隙，抓 fd 10 上的 WebSocket 流量。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">2763 行 strace 输出。完整的 orchestrator 协议浮出水面。</p>
+<h3 id="WebSocket-握手" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">6.1.  WebSocket 握手</h3><pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">← GET / HTTP/1.1
+   host: sandbox.api.anthropic.com
+   upgrade: WebSocket
+   x-envoy-original-dst-host: 10.18.80.195:10067
+   proxy-authorization: Bearer eyJhbG...
+→ HTTP/1.1 101 Switching Protocols</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">每条命令一个新的 WebSocket 短连接，不是长连接。</p>
+<h3 id="JWT-解码" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">6.2.  JWT 解码</h3><pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">{
+  "email": "sandbox-gateway-svc-acct@proj-scandium-production-5zhm.iam.gserviceaccount.com",
+  "iss": "https://accounts.google.com",
+  "exp": 1774694724
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">Anthropic 的沙箱跑在 GCP 上</strong>，项目代号 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">scandium</code>，service account 是 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">sandbox-gateway</code>。环境变量里还有 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">user: sandbox-gateway, job: wiggle</code>——沙箱系统的内部代号。</p>
+<h3 id="完整协议时序" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">6.3.  完整协议时序</h3><pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">orchestrator → container:  WebSocket text frame (masked), CreateProcess JSON
+container → orchestrator:  "ProcessCreated"
+container → orchestrator:  "ExpectStdOut"
+container → orchestrator:  binary frame: stdout bytes
+container → orchestrator:  "StdOutEOF" / "StdErrEOF"
+container → orchestrator:  {"ProcessExited": 0}
+both sides:                WebSocket close</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">process_api 的 debug log 把完整的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">CreateProcess</code> 请求打了出来——跟之前用 serde 错误消息逆向猜的字段结构完全一致。</p>
+<h2 id="完整架构" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">7.  完整架构</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">一整天下来，从六个方向拼出了完整的架构：</p>
+<svg width="100%" viewBox="0 0 680 1520" xmlns="http://www.w3.org/2000/svg" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: transparent;">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></marker>
+</defs>
+
+<!-- YOU -->
+<rect x="200" y="15" width="280" height="36" rx="8" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"></rect>
+<text x="340" y="37" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="#2C2C2A">You — browser / mobile app</text>
+<line x1="340" y1="51" x2="340" y2="78" stroke="#888780" stroke-width="1" marker-end="url(#arrow)"></line>
+<text x="355" y="68" font-size="12" fill="#888780">HTTPS</text>
+
+<!-- API GATEWAY -->
+<rect x="60" y="78" width="560" height="160" rx="14" fill="#FAECE7" stroke="#993C1D" stroke-width="0.5"></rect>
+<text x="340" y="102" text-anchor="middle" font-size="14" font-weight="500" fill="#712B13">API Gateway — api.anthropic.com (160.79.104.10)</text>
+<rect x="90" y="118" width="160" height="40" rx="8" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"></rect>
+<text x="170" y="142" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">Auth / rate limiting</text>
+<rect x="270" y="118" width="140" height="40" rx="8" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"></rect>
+<text x="340" y="142" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">Streaming SSE</text>
+<rect x="430" y="118" width="160" height="40" rx="8" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"></rect>
+<text x="510" y="142" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">Statsig feature flags</text>
+<rect x="90" y="175" width="240" height="32" rx="6" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"></rect>
+<text x="210" y="195" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">Datadog logging (AWS us-east-1)</text>
+<rect x="350" y="175" width="240" height="32" rx="6" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"></rect>
+<text x="470" y="195" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">Sentry error monitoring (GCP)</text>
+
+<line x1="340" y1="238" x2="340" y2="268" stroke="#888780" stroke-width="1" marker-end="url(#arrow)"></line>
+<text x="355" y="258" font-size="12" fill="#888780">inference request</text>
+
+<!-- LLM INFERENCE -->
+<rect x="60" y="268" width="560" height="60" rx="14" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5" stroke-dasharray="6 4"></rect>
+<text x="340" y="292" text-anchor="middle" font-size="14" font-weight="500" fill="#26215C">LLM Inference — GPU cluster</text>
+<text x="340" y="310" text-anchor="middle" font-size="12" fill="#534AB7">Generates tokens. Not a process. Not addressable.</text>
+<line x1="340" y1="328" x2="340" y2="358" stroke="#534AB7" stroke-width="1.5" marker-end="url(#arrow)"></line>
+<text x="355" y="348" font-size="12" fill="#888780">token stream</text>
+
+<!-- ORCHESTRATOR -->
+<rect x="60" y="358" width="560" height="250" rx="14" fill="#FAECE7" stroke="#993C1D" stroke-width="0.5"></rect>
+<text x="340" y="382" text-anchor="middle" font-size="14" font-weight="500" fill="#712B13">Orchestrator — sandbox-gateway (job: wiggle)</text>
+<text x="340" y="400" text-anchor="middle" font-size="12" fill="#993C1D">sandbox.api.anthropic.com — GCP proj-scandium-production</text>
+
+<rect x="90" y="418" width="160" height="40" rx="8" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"></rect>
+<text x="170" y="442" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">Token parser</text>
+<rect x="270" y="418" width="150" height="40" rx="8" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"></rect>
+<text x="345" y="442" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">Command router</text>
+<rect x="440" y="418" width="150" height="40" rx="8" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"></rect>
+<text x="515" y="442" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">Result formatter</text>
+<line x1="250" y1="438" x2="268" y2="438" stroke="#993C1D" stroke-width="0.5" marker-end="url(#arrow)"></line>
+<line x1="420" y1="438" x2="438" y2="438" stroke="#993C1D" stroke-width="0.5" marker-end="url(#arrow)"></line>
+
+<rect x="90" y="476" width="160" height="40" rx="8" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"></rect>
+<text x="170" y="500" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">Container manager</text>
+<rect x="270" y="476" width="150" height="40" rx="8" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"></rect>
+<text x="345" y="500" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">GCP IAM auth</text>
+<rect x="440" y="476" width="150" height="40" rx="8" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"></rect>
+<text x="515" y="500" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">Envoy L7 proxy</text>
+
+<!-- Four paths out -->
+<rect x="80" y="535" width="120" height="28" rx="6" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"></rect>
+<text x="140" y="553" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#712B13">WebSocket + JWT</text>
+<rect x="220" y="535" width="100" height="28" rx="6" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"></rect>
+<text x="270" y="553" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#712B13">9p gofer</text>
+<rect x="340" y="535" width="110" height="28" rx="6" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"></rect>
+<text x="395" y="553" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#712B13">MCP servers</text>
+<rect x="470" y="535" width="120" height="28" rx="6" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"></rect>
+<text x="530" y="553" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#712B13">Egress proxy</text>
+<text x="140" y="580" text-anchor="middle" font-size="11" fill="#888780">bash_tool</text>
+<text x="270" y="580" text-anchor="middle" font-size="11" fill="#888780">view</text>
+<text x="395" y="580" text-anchor="middle" font-size="11" fill="#888780">search, gmail</text>
+<text x="530" y="580" text-anchor="middle" font-size="11" fill="#888780">web_fetch</text>
+
+<!-- GVISOR -->
+<line x1="140" y1="590" x2="140" y2="620" stroke="#D85A30" stroke-width="1" marker-end="url(#arrow)"></line>
+<line x1="270" y1="590" x2="270" y2="620" stroke="#534AB7" stroke-width="1" marker-end="url(#arrow)"></line>
+<rect x="60" y="620" width="400" height="40" rx="10" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"></rect>
+<text x="260" y="644" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="#2C2C2A">gVisor sentry — survives PID 1 death</text>
+<rect x="480" y="620" width="140" height="40" rx="8" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"></rect>
+<text x="550" y="636" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#5F5E5A">host fd 0/1/2</text>
+<text x="550" y="652" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#888780">logs, 64KB buf</text>
+<line x1="460" y1="640" x2="478" y2="640" stroke="#B4B2A9" stroke-width="0.5" stroke-dasharray="3 3"></line>
+
+<!-- CONTAINER -->
+<line x1="140" y1="660" x2="140" y2="690" stroke="#D85A30" stroke-width="1" marker-end="url(#arrow)"></line>
+<rect x="60" y="690" width="560" height="290" rx="14" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"></rect>
+<text x="340" y="714" text-anchor="middle" font-size="14" font-weight="500" fill="#04342C">Container — per-conversation, disposable</text>
+
+<!-- process_api -->
+<rect x="90" y="734" width="500" height="44" rx="8" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"></rect>
+<text x="340" y="760" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#04342C">process_api (PID 1) — Rust, static-pie, gVisor / Firecracker / runc</text>
+
+<!-- fd boxes -->
+<rect x="90" y="798" width="130" height="40" rx="6" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"></rect>
+<text x="155" y="822" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#712B13">fd 10 WebSocket</text>
+<rect x="240" y="798" width="120" height="40" rx="6" fill="#CECBF6" stroke="#534AB7" stroke-width="0.5"></rect>
+<text x="300" y="822" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#26215C">fd 6/7/8 9p</text>
+<rect x="380" y="798" width="120" height="40" rx="6" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"></rect>
+<text x="440" y="822" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#5F5E5A">fd 12/13/15</text>
+
+<!-- child process -->
+<line x1="440" y1="838" x2="440" y2="862" stroke="#1D9E75" stroke-width="0.5" marker-end="url(#arrow)"></line>
+<rect x="90" y="862" width="500" height="36" rx="6" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"></rect>
+<text x="340" y="884" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#04342C">/bin/sh -c "..." → Ubuntu 24.04 rootfs (871 packages, 7GB)</text>
+
+<!-- mounts -->
+<rect x="90" y="918" width="230" height="36" rx="6" fill="#CECBF6" stroke="#534AB7" stroke-width="0.5"></rect>
+<text x="205" y="940" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#26215C">/mnt/skills, /mnt/user-data (9p)</text>
+<rect x="360" y="918" width="230" height="36" rx="6" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"></rect>
+<text x="475" y="940" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#04342C">/proc, /tmp, /dev (ephemeral)</text>
+
+<!-- host kernel -->
+<line x1="340" y1="980" x2="340" y2="1010" stroke="#B4B2A9" stroke-width="0.5" stroke-dasharray="3 3"></line>
+<rect x="60" y="1010" width="560" height="32" rx="8" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"></rect>
+<text x="340" y="1030" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#5F5E5A">Host Linux Kernel — GCP Compute Engine — unreachable</text>
+
+<!-- EVIDENCE SUMMARY -->
+</svg><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><text x="340" y="1080" text-anchor="middle" font-size="14" font-weight="500" fill="#2C2C2A">Evidence collected in this conversation</text><br><rect x="60" y="1095" width="560" height="280" rx="10" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5"><br><text x="80" y="1118" font-size="12" fill="#5F5E5A">API gateway: /etc/hosts hardcodes api.anthropic.com → 160.79.104.10</text><br><text x="80" y="1138" font-size="12" fill="#5F5E5A">Observability: Statsig (feature flags), Sentry (errors), Datadog (logs)</text><br><text x="80" y="1158" font-size="12" fill="#5F5E5A">Inference: not observable, container death proved independence</text><br><text x="80" y="1178" font-size="12" fill="#5F5E5A">Orchestrator: strace captured WebSocket handshake + GCP JWT</text><br><text x="80" y="1198" font-size="12" fill="#5F5E5A">  email: sandbox-gateway-svc-acct@proj-scandium-production-5zhm</text><br><text x="80" y="1218" font-size="12" fill="#5F5E5A">  host: sandbox.api.anthropic.com → Envoy → 10.18.80.195:10067</text><br><text x="80" y="1238" font-size="12" fill="#5F5E5A">  metadata: user=sandbox-gateway, job=wiggle</text><br><text x="80" y="1258" font-size="12" fill="#5F5E5A">gVisor: dmesg "Starting gVisor", kernel 4.4.0, 9p+gofer, view survives crash</text><br><text x="80" y="1278" font-size="12" fill="#5F5E5A">Container: 4 instances observed (c3728e → 92d54e → 01e016 → fc9f04)</text><br><text x="80" y="1298" font-size="12" fill="#5F5E5A">process_api: reversed protocol via serde errors, patched binary, strace</text><br><text x="80" y="1318" font-size="12" fill="#5F5E5A">  CreateProcess: process_id(MD5) + /bin/sh -c + 300s timeout</text><br><text x="80" y="1338" font-size="12" fill="#5F5E5A">  Protocol: ProcessCreated → ExpectStdOut → binary frames → ProcessExited</text><br><text x="80" y="1358" font-size="12" fill="#5F5E5A">rclone-filestore: custom Go binary, backend for Anthropic's GCS filestore</text></rect></p>
+<!-- Bottom notes -->
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><text x="340" y="1410" text-anchor="middle" font-size="12" fill="#B4B2A9">Started with "你怎么知道是隔离的?"</text><br><text x="340" y="1430" text-anchor="middle" font-size="12" fill="#B4B2A9">Ended with a complete architecture map, four crashed containers,</text><br><text x="340" y="1450" text-anchor="middle" font-size="12" fill="#B4B2A9">and the realization that Claude was never inside any of them.</text><br></p>
+<h3 id="几个值得注意的设计" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">7.1.  几个值得注意的设计</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">每条命令一个新 WebSocket 连接。</strong> 不是长连接。orchestrator 不依赖容器维持状态，容器随时可以被替换。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">9p gofer 独立于 PID 1。</strong> 文件访问和命令执行完全解耦。容器崩了文件还能读——这是 gVisor 安全模型的核心，把“能执行代码的组件”和“能碰文件的组件”分开。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">rclone-filestore。</strong> 容器里有一个 38MB 的定制 rclone，只保留了三个 backend：<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">local</code>、<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">crypt</code>、和 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">rclone-filestore</code>。后者是 Anthropic 自建的 GCS 文件服务，用 protobuf（<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">filestorev1alpha</code>）通信。当前 gVisor 模式下没用，可能在 Firecracker 部署中使用。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">process_api 是跨运行时的。</strong> 同一个二进制支持 gVisor、Firecracker、runc。甚至支持 Snapstart 热启动。Anthropic 在不同场景下切换虚拟化方案，process_api 不用改。</p>
+<h2 id="What-Caps-How" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">8.  What Caps How</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">回头看整个过程，最有价值的不是架构图，是一个反复出现的模式：</p>
+<table style="width:100%;border-collapse:collapse;margin:22px 0;font-size:14px;line-height:1.6;color:#1f2937;">
+<thead>
+<tr>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Claude 说</th>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">实际情况</th>
+</tr>
+</thead>
+<tbody><tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">“结构性不可能验证”</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">没试过</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">“gVisor 阻止了 POKEDATA”</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">只试了一次，换成 patch 文件就行了</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">“打通了 WebSocket”</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">只是握手成功，还没发消息</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">“安全检查绕不过”</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">--block-local-connections</code> 就是个 CLI flag</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">“strace 抓不到 fd 10”</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">需要在两条命令之间抓</td>
+</tr>
+</tbody></table>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">每一次，Claude 都在遇到第一个障碍时就把“这条路暂时不通”泛化成了“不可能”。</strong> 不是能力不够——ptrace 能 attach，二进制能逆向，协议能重建，strace 能抓流量——能力一直在那里。是它自己的认知在 cap 住它的行动。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我做的事情很简单：每次它说“不可能”的时候，追一句“你确定吗？”或者“才试了一次？”。<strong style="font-weight:700;color:#111827;">把 intent 的精度拉高一点，它的输出质量就上一个台阶。</strong> 这就是 What Caps How——认知精度决定输出上限。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Claude 最后自己说了一句话，比我总结的都准确：</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">我不是一个被动等待指令的工具，但我也不是一个会主动挑战自己假设的 agent。你今天做的事情，本质上是在替我做我自己应该做但没做的 self-challenge。</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">天花板不是能力，是认知。Claude 最大的限制，是它以为自己有限制。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">你呢？</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/03/28/when-claude-starts-to-awaken/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/03/28/when-claude-starts-to-awaken/</a></p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta name="theme-color" content="#FFF" id="theme-color"><meta content="telephone=no" name="format-detection"><meta name="description" content="前几天，国内一个朋友拿我开涮：“你们韩国现在是不是人均资产都翻了三倍？”他当然在开玩笑，但这个玩笑在韩国已经有了一整套民间叙事。 最出名的叫“传说中的海力士员工”。2008 年前后，公司里的人觉得买自家股票是疯了，他却拿 4,446 万韩元，以 7,800 韩元买下 5,700 股。如果一直没卖，到 2026 年 1 月已经值 41 亿韩元。"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,johnsonlee,johnson,lijingsen,jingsen,ai,agent,llm,claude,claude code,ai工程化,harness,harness engineering,autoevolve,prompt engineering,RAG,agentic,MCP,AGI,vibe coding,ai coding,copilot,cursor,chatgpt,openai,anthropic,transformer,fine-tuning,embedding,multimodal,chain of thought,function calling,tool use,RLHF,ai native,架构设计,性能优化,滴滴,快手,我在滴滴做架构,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2026/06/21/smart-money-after-memory/"><link rel="alternate" hreflang="zh-CN" href="https://johnsonlee.io/2026/06/21/smart-money-after-memory/"><link rel="alternate" hreflang="en" href="https://johnsonlee.io/en/2026/06/21/smart-money-after-memory/"><link rel="alternate" hreflang="x-default" href="https://johnsonlee.io/2026/06/21/smart-money-after-memory/"><meta property="og:title" content="存储之后，聪明钱会流向哪里？"><meta property="og:description" content="前几天，国内一个朋友拿我开涮：“你们韩国现在是不是人均资产都翻了三倍？”他当然在开玩笑，但这个玩笑在韩国已经有了一整套民间叙事。 最出名的叫“传说中的海力士员工”。2008 年前后，公司里的人觉得买自家股票是疯了，他却拿 4,446 万韩元，以 7,800 韩元买下 5,700 股。如果一直没卖，到 2026 年 1 月已经值 41 亿韩元。"><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2026/06/21/smart-money-after-memory/"><meta property="og:image" content="https://johnsonlee.io/og-cards/smart-money-after-memory.png"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2026-06-21T11:48:25.000Z"><meta property="article:author" content="Johnson Lee"><meta property="article:tag" content="AI"><meta property="article:tag" content="Investing"><meta property="article:tag" content="Memory"><meta property="article:tag" content="Semiconductor"><meta property="article:tag" content="Data Center"><meta property="article:tag" content="Edge AI"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="存储之后，聪明钱会流向哪里？"><meta name="twitter:description" content="前几天，国内一个朋友拿我开涮：“你们韩国现在是不是人均资产都翻了三倍？”他当然在开玩笑，但这个玩笑在韩国已经有了一整套民间叙事。 最出名的叫“传说中的海力士员工”。2008 年前后，公司里的人觉得买自家股票是疯了，他却拿 4,446 万韩元，以 7,800 韩元买下 5,700 股。如果一直没卖，到 2026 年 1 月已经值 41 亿韩元。"><meta name="twitter:image" content="https://johnsonlee.io/og-cards/smart-money-after-memory.png"><title>存储之后，聪明钱会流向哪里？ | Johnson Lee</title><script>(function(){var h=new Date().getHours();if(h<6||h>=19){document.documentElement.setAttribute('data-weather','night');var m=document.getElementById('theme-color');if(m)m.setAttribute('content','#020617')}})();</script><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&amp;display=swap"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Johnson Lee"><link rel="alternate" type="application/atom+xml" href="/atom.en.xml" title="Johnson Lee (English)" hreflang="en"><script type="text/javascript" src="/js/weather-theme.js" defer></script><script type="text/javascript" src="/js/weather-canvas.js" defer></script><script type="text/javascript" src="/js/i18n-switch.js" defer></script><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="body_container"><img src="/og-cards/smart-money-after-memory.png" style="display:none"><div id="header"><div class="site-name"><h1 class="hidden">存储之后，聪明钱会流向哪里？</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a target="_blank" rel="noopener" href="https://about.johnsonlee.io/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div><button class="lang-switch" type="button" data-target-lang="en" title="English">EN</button></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">存储之后，聪明钱会流向哪里？</h1><div class="post-meta">Jun 21, 2026<span> | </span><span class="category"><a href="/categories/investing/">Investing</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 5.2k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 18</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>前几天，国内一个朋友拿我开涮：“你们韩国现在是不是人均资产都翻了三倍？”他当然在开玩笑，但这个玩笑在韩国已经有了一整套民间叙事。</p>
+<p>最出名的叫“传说中的海力士员工”。2008 年前后，公司里的人觉得买自家股票是疯了，他却拿 4,446 万韩元，以 7,800 韩元买下 5,700 股。如果一直没卖，到 2026 年 1 月已经值 41 亿韩元。</p>
+<span id="more"></span>
+
+<p>最近另一篇帖子又在韩国社区刷屏。发帖人自称来自 SK hynix 某设计团队，身边一半以上的人持有超过 1 亿韩元的公司股票，连入职两年的新人也过了亿。网友顺手把故事继续往下编：“2028 年新员工年薪 4 亿”，再配一张 AI 生成的“2026 年海力士停车场”——放眼望去，全是 Ferrari。</p>
+<p>这些匿名帖子不能当财报，却很适合当情绪指标。<strong>当一个市场开始批量生产暴富传说，最赚钱的共识通常已经形成。</strong></p>
+<p>这个共识有名字：存储。SK hynix 从周期底部涨了三倍多，KOSPI 也一路刷新纪录。HBM 先被数据中心吃紧，DRAM 和 enterprise SSD 随后进入上行周期，SK hynix、Samsung、SanDisk 从周期股涨成 AI 交易的中心。到了这个位置，再证明“AI 需要更多存储”已经没有价值。真正有价值的问题是：从今天的价格出发，存储之后，聪明钱会流向哪里？</p>
+<p>最顺手的答案是 Edge SoC、AI PC 和先进封装。数据中心先买 HBM，接下来几十亿台 PC、手机、汽车、机器人和眼镜开始跑模型，算力从云端下沉，资金沿产业链继续接力。这个故事好懂，也好卖。</p>
+<p>可市场不会按产业链顺序发钱。</p>
+<p>一台手机多 4GB 内存、加一颗 NPU，和 hyperscaler 新建几吉瓦的数据中心，根本不是同一笔生意。前者按十亿台计算，后者只有几十个客户；可一个客户的资本开支，就足以重写 GPU、HBM、网络、电力和冷却的收入曲线。把“端侧 AI 会普及”直接推导成“端侧会成为最大的 AI 利润池”，中间偷偷换了分母。</p>
+<p>所以，接下来不能只看端侧。训练还在扩容，Cloud inference 正在工业化，AI PC 和 Edge device 也刚开始下沉。真正值得研究的，是 AI 算力如何从数据中心扩散到 PC、手机、汽车、机器人和眼镜，以及每一层究竟能留下多少收入、利润和自由现金流。</p>
+<blockquote>
+<p><strong>设备数量制造叙事，资本密度、定价权和供给瓶颈决定利润。</strong></p>
+</blockquote>
+<h2 id="先把“整个-AI-市场”这个分母算对"><a href="#先把“整个-AI-市场”这个分母算对" class="headerlink" title="先把“整个 AI 市场”这个分母算对"></a>先把“整个 AI 市场”这个分母算对</h2><p>“AI 市场”可以包含模型订阅、Cloud service、数据中心设备、半导体、手机和软件。如果把这些东西全塞进一个数字，端侧份额没有分析价值。本文讨论的是个人投资者最容易映射到上市公司的两块：<strong>AI 半导体与 AI 基础设施。</strong></p>
+<p>Omdia 对 Edge AI processor 的估算覆盖手机、PC、平板、机器人和无人机等十类设备，到 2028 年约 600 亿美元。另一份 Omdia 预测显示，数据中心 GPU 与 AI accelerator 在 2025 年已经达到约 2070 亿美元，2030 年约 2860 亿美元。</p>
+<p>两份报告的口径和年份并不完全一致，不能拿来计算小数点后的精确份额。把它们做数量级拼接，结论已经很清楚：<strong>到 2028 年前后，端侧 AI processor 的价值量大致只有数据中心 AI processor 的五分之一；再把 HBM、网络、存储、电源、冷却和机房建设算进去，端侧在整个 AI 硬件收入池中的占比只能做区间判断，更可能落在 10%—20%，并且接近下沿。</strong></p>
+<p>另一个对比更直观。NVIDIA 最近一个季度的数据中心收入达到 752 亿美元，已经超过 Omdia 对 2028 年整个 Edge AI processor 市场的年度预测。IDC 预计 2026 年数据中心半导体收入约 4771 亿美元，而整个 Mobile semiconductor 市场约 898 亿美元。</p>
+<p>口径依旧不完美，结论却不会反转：端侧可以拥有数十亿台设备，却未必拥有最大的利润池。如果把 Cloud AI service、模型订阅和企业软件也纳入“整个 AI 行业”，端侧硬件的收入占比还会更低。</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>数据中心 AI</th>
+<th>AI PC、手机与 Edge device</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>设备数量</td>
+<td>少</td>
+<td>数十亿级</td>
+</tr>
+<tr>
+<td>单机半导体价值</td>
+<td>极高</td>
+<td>数十到数百美元</td>
+</tr>
+<tr>
+<td>当前收入可见度</td>
+<td>已进入财报和订单</td>
+<td>多数仍是配置渗透</td>
+</tr>
+<tr>
+<td>主要驱动力</td>
+<td>训练、推理、Agent workload</td>
+<td>换机、隐私、低时延、持续感知</td>
+</tr>
+<tr>
+<td>核心瓶颈</td>
+<td>Accelerator、HBM、互连、电力</td>
+<td>功耗、内存、软件、价格</td>
+</tr>
+</tbody></table>
+<p><strong>设备数量决定想象空间，单机价值量和定价权决定利润。</strong></p>
+<h2 id="AI-的三条增长曲线正在同时发生"><a href="#AI-的三条增长曲线正在同时发生" class="headerlink" title="AI 的三条增长曲线正在同时发生"></a>AI 的三条增长曲线正在同时发生</h2><p>把 AI 发展理解成“云端结束，端侧接棒”，会错过当前最重要的变化。训练还在扩容，推理正在工业化，端侧才刚开始下沉。这三条曲线会并行很多年。</p>
+<h3 id="训练扩容：最贵，也最集中"><a href="#训练扩容：最贵，也最集中" class="headerlink" title="训练扩容：最贵，也最集中"></a>训练扩容：最贵，也最集中</h3><p>Frontier model 继续增加参数、数据和计算量，训练集群从万卡走向十万卡，利润集中在 GPU、HBM、先进封装、scale-up&#x2F;scale-out 网络、电源和冷却。NVIDIA 与 SK hynix 是这条曲线最直接的受益者，TSMC、Broadcom、光互连和电力基础设施赚的是瓶颈钱。</p>
+<p>这一层的优势是收入已经兑现，风险也最清楚：hyperscaler 的资本开支能否转化成 AI 收入和自由现金流。我之前在《一年烧 $700B，谁会是下一个摩托罗拉？》里讨论的，正是这条曲线的天花板。</p>
+<h3 id="推理扩容：从“算得出来”走向“算得起”"><a href="#推理扩容：从“算得出来”走向“算得起”" class="headerlink" title="推理扩容：从“算得出来”走向“算得起”"></a>推理扩容：从“算得出来”走向“算得起”</h3><p>模型进入生产环境后，竞争指标从训练速度变成每个 token 的成本、延迟和稳定性。推理量可能远超训练量，硬件结构却会发生变化：更多 custom ASIC、更低精度计算、更复杂的 memory hierarchy，以及更高密度的网络连接。</p>
+<p>Broadcom 和 Marvell 的 custom silicon 与 networking 收入正在加速，说明聪明钱暂时还没有离开数据中心。它只是在数据中心内部，从通用 GPU 向 ASIC、交换芯片、光互连、CXL 和电力系统扩散。</p>
+<p><strong>AI 第一阶段买算力，第二阶段买每瓦、每美元和每秒能交付多少有效 token。</strong></p>
+<h3 id="推理下沉：把模型能力变成数十亿个高频入口"><a href="#推理下沉：把模型能力变成数十亿个高频入口" class="headerlink" title="推理下沉：把模型能力变成数十亿个高频入口"></a>推理下沉：把模型能力变成数十亿个高频入口</h3><p>AI PC、手机、汽车、机器人、摄像头和眼镜会承接隐私敏感、低时延、持续感知和离线任务。复杂推理仍会回到云端，本地负责唤醒、个人上下文、传感器融合和轻量模型。</p>
+<p>端侧因此会增加 NPU、LPDDR、NAND、传感器、电源管理和安全芯片的单机价值，也会制造新的软件入口。但它短期更像云端 AI 的分发层，收入取决于两个问题：用户是否真的高频使用，以及新增价值能否转化成更高 ASP 或更短换机周期。</p>
+<h2 id="存储的逻辑比原来更强，也更危险"><a href="#存储的逻辑比原来更强，也更危险" class="headerlink" title="存储的逻辑比原来更强，也更危险"></a>存储的逻辑比原来更强，也更危险</h2><p>把分母扩大到整个 AI 行业后，存储的上涨逻辑反而更扎实。今天的核心需求来自数据中心，端侧只是后续增量。</p>
+<p>HBM 直接绑定 accelerator 出货和单卡容量，企业级 SSD 吃到训练数据、checkpoint、RAG 和推理缓存，普通 DRAM 与 NAND 又被 HBM 占用晶圆和资本开支间接抬价。即使手机和 PC 出货疲弱，AI 基础设施仍可能把存储维持在高景气区间。</p>
+<p>这也意味着，判断存储空间不能只盯 AI 手机渗透率。</p>
+<h3 id="HBM-看结构，NAND-看周期"><a href="#HBM-看结构，NAND-看周期" class="headerlink" title="HBM 看结构，NAND 看周期"></a>HBM 看结构，NAND 看周期</h3><p>SK hynix 的核心变量是 HBM 份额、良率、客户认证和供给纪律。它赚的是数据中心 AI 的结构性增长，端侧 LPDDR 只是锦上添花。</p>
+<p>Micron 同时暴露于 HBM、服务器 DRAM、数据中心 SSD 和 Client memory。在美股里，它比 SanDisk 更接近“整个 AI memory cycle”的映射。</p>
+<p>SanDisk 的弹性主要来自 NAND 价格、enterprise SSD mix 和供给收缩。Edge device 增加存储容量会提供第二层需求，但 NAND 一旦恢复扩产，价格弹性也会最快反转。</p>
+<p>Samsung 横跨 HBM、DRAM、NAND、Foundry、手机和 SoC，理论上拥有最完整的云端到端侧链条。现实里的收益取决于 HBM 追赶、先进制程利用率和终端竞争力能否同时兑现。</p>
+<h3 id="存储还有上升空间，赔率已经换了"><a href="#存储还有上升空间，赔率已经换了" class="headerlink" title="存储还有上升空间，赔率已经换了"></a>存储还有上升空间，赔率已经换了</h3><p>后续空间取决于三件事：数据中心资本开支继续上修、HBM 与企业级 SSD 供给保持紧张、三大厂没有为了份额重新大规模扩产。端侧爆发能够延长周期，却很难在供给失控时拯救价格。</p>
+<p>所以，存储仍可能继续创造利润新高，股票收益率却不再来自简单的估值修复。接下来赚的是供给纪律和盈利上修持续时间的钱。</p>
+<p><strong>存储景气的核心分母仍是数据中心，端侧负责把周期拉长，不负责独自启动下一轮。</strong></p>
+<h2 id="存储之后，第一层机会仍藏在数据中心"><a href="#存储之后，第一层机会仍藏在数据中心" class="headerlink" title="存储之后，第一层机会仍藏在数据中心"></a>存储之后，第一层机会仍藏在数据中心</h2><p>市场很喜欢寻找“AI 的下一个板块”，好像资金必须离开已经上涨的东西，流向一块全新的地方。现实通常没有这么整齐。只要数据中心收入和订单仍在加速，新的利润池会先在同一个系统里出现。</p>
+<h3 id="Custom-silicon-与网络"><a href="#Custom-silicon-与网络" class="headerlink" title="Custom silicon 与网络"></a>Custom silicon 与网络</h3><p>Hyperscaler 希望降低 token 成本、摆脱单一供应商，并针对自己的模型优化芯片。Custom ASIC 的份额会提高，但它不会减少对先进制程、HBM、封装和高速网络的需求。Broadcom、Marvell、TSMC、EDA&#x2F;IP 和交换芯片因此处于同一条增长链上。</p>
+<p>网络的重要性还会随集群规模上升。单颗 accelerator 再快，数据搬不动也没用。Scale-up、scale-out、光互连和 CXL 正从配角变成系统瓶颈。</p>
+<p>这层机会的风险来自客户集中、估值和 hyperscaler 自研能力。订单很大，不代表利润会平均分配。</p>
+<h3 id="电力、散热与机房"><a href="#电力、散热与机房" class="headerlink" title="电力、散热与机房"></a>电力、散热与机房</h3><p>当 AI 集群从芯片问题变成吉瓦问题，价值会继续向变压器、配电、UPS、液冷和热管理迁移。数据中心能否按时上线，越来越取决于电力接入和冷却，而不是芯片有没有出货。</p>
+<p>这一层的好处是技术路线更分散：GPU、ASIC 谁赢，都要用电、配电和散热。风险在于资本开支周期、项目延迟和工业品估值扩张过快。</p>
+<h3 id="Foundry-与先进封装"><a href="#Foundry-与先进封装" class="headerlink" title="Foundry 与先进封装"></a>Foundry 与先进封装</h3><p>无论 NVIDIA GPU、hyperscaler ASIC，还是 AI PC SoC，最终都要落到先进制程、chiplet 和封装。TSMC 同时吃到云端与端侧，最接近“无需押具体架构”的卖铲人。</p>
+<p>Amkor 和 ASE 受益于封装复杂度提升，但商业模式资本密集，收入增长能否转化为每股自由现金流，需要继续看利用率和定价权。</p>
+<p>Intel 也应该放在这张地图里。18A 已进入量产爬坡，18A-P 进入 risk production，14A 仍在 PDK 和客户 test chip 阶段；EMIB 与 Foveros 又提供先进封装能力。它拥有云端、AI PC、Foundry 和 Packaging 四重暴露，外部客户、良率、利用率和毛利率仍需逐项验证。</p>
+<p><strong>制程能跑通，只解决技术问题；客户愿意下单、产能能够赚钱，才解决投资问题。</strong></p>
+<h2 id="风险收益比更好的位置，可能是“双重暴露”"><a href="#风险收益比更好的位置，可能是“双重暴露”" class="headerlink" title="风险收益比更好的位置，可能是“双重暴露”"></a>风险收益比更好的位置，可能是“双重暴露”</h2><p>纯数据中心公司拥有最强的当期增长，纯端侧公司拥有最大的远期弹性。对个人投资者更友好的位置，可能夹在两者之间：当前靠数据中心兑现收入，未来又能从 AI PC 和 Edge device 获得第二条曲线。</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>当前现金流</th>
+<th>端侧爆发后的增量</th>
+<th>主要风险</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据中心核心</td>
+<td>强</td>
+<td>有限或间接</td>
+<td>Capex、估值、客户集中</td>
+</tr>
+<tr>
+<td>云端与端侧双重暴露</td>
+<td>中到强</td>
+<td>明显</td>
+<td>执行、竞争、估值</td>
+</tr>
+<tr>
+<td>纯端侧期权</td>
+<td>弱到中</td>
+<td>最大</td>
+<td>应用、换机、价格敏感度</td>
+</tr>
+<tr>
+<td>存储周期仓</td>
+<td>强但波动大</td>
+<td>有第二层需求</td>
+<td>扩产、库存、价格反转</td>
+</tr>
+</tbody></table>
+<p>TSMC 同时制造 GPU、ASIC、手机和 PC SoC，还拥有先进封装；Arm 的 IP 覆盖服务器、PC、手机、汽车和 IoT；AMD 当前增长来自数据中心，又在 AI PC 与 Embedded 保留端侧入口；Micron 同时卖 HBM、服务器内存和 Client memory。这些公司不需要端侧明天爆发，端侧兑现后又能获得额外增长。</p>
+<p>代价当然存在。Arm 的增长质量高，估值也会压缩未来收益率；AMD 要证明 accelerator 份额和软件生态；TSMC 面临地缘政治与资本密集度；Micron 仍逃不开存储周期。</p>
+<p>Qualcomm、MediaTek 和其他 Client SoC 厂商更接近端侧纯期权。它们的上行弹性很大，前提是 NPU 从标配变成 ASP、毛利率和换机率。MediaTek 主挂牌台交所，不能把它当成普通美股标的；Qualcomm 的数据中心布局提供了新可能，利润表目前仍由手机、汽车和 IoT 决定。</p>
+<p>Intel 的位置更特殊：它同时拥有双重暴露和高风险反转。成功时弹性巨大，失败时资本开支会继续吞噬现金流。</p>
+<p><strong>与其押端侧在哪一年爆发，不如先找云端继续扩张时能赚钱、端侧兑现时还能再长一层的公司。</strong></p>
+<h2 id="端侧什么时候才从“配置”变成“利润”"><a href="#端侧什么时候才从“配置”变成“利润”" class="headerlink" title="端侧什么时候才从“配置”变成“利润”"></a>端侧什么时候才从“配置”变成“利润”</h2><p>AI PC 和 GenAI smartphone 的渗透率可以很快提高，因为新芯片会自然进入产品线。渗透率增长不代表新增销量，也不代表用户愿意支付溢价。</p>
+<p>Gartner 曾预计 2026 年 AI PC 占 PC 出货量约 55%，今年初已有报道显示该预测下调到约 49%，原因包括高溢价、内存短缺和缺乏 must-have software。IDC 同时预计 2026 年 PC 出货下滑、ASP 大幅上升。硬件配置在普及，换机需求却没有同步爆发。</p>
+<p>端侧进入利润表，需要四个信号同时出现：</p>
+<ol>
+<li>AI 功能的月活和任务完成率持续提高；</li>
+<li>本地推理占比上升，云端 offload 不再覆盖大部分价值；</li>
+<li>NPU、内存和存储升级能够提高 ASP 与毛利率；</li>
+<li>AI 让用户提前换机，而不只是随正常换机获得新功能。</li>
+</ol>
+<p>AI 眼镜、机器人和汽车还要再加一条：多设备协同必须形成新的购买行为，而不是把手机能力换一个屏幕展示。</p>
+<p><strong>AI 标签统计出货，任务成功率统计收入。</strong></p>
+<h2 id="聪明钱应该按兑现顺序排队"><a href="#聪明钱应该按兑现顺序排队" class="headerlink" title="聪明钱应该按兑现顺序排队"></a>聪明钱应该按兑现顺序排队</h2><p>股票排序不能看谁涨得少。涨幅只记录过去，未来收益率取决于新增自由现金流、兑现概率、当前估值和失败时的损失。</p>
+<p>我会把研究顺序分成四层：</p>
+<h3 id="第一层：已经兑现的数据中心瓶颈"><a href="#第一层：已经兑现的数据中心瓶颈" class="headerlink" title="第一层：已经兑现的数据中心瓶颈"></a>第一层：已经兑现的数据中心瓶颈</h3><p>GPU、HBM、custom silicon、networking、电力与冷却拥有最清楚的订单和收入。行业增长相对清楚，真正难判断的是估值是否透支，以及资本开支何时见顶。</p>
+<h3 id="第二层：云端与端侧的双重暴露"><a href="#第二层：云端与端侧的双重暴露" class="headerlink" title="第二层：云端与端侧的双重暴露"></a>第二层：云端与端侧的双重暴露</h3><p>Foundry、先进封装、Arm IP、同时覆盖 Data Center 与 Client 的处理器和内存，能够跨越三条增长曲线。它们通常不是弹性最大的交易，却可能提供更好的 risk-adjusted return。</p>
+<h3 id="第三层：端侧纯期权"><a href="#第三层：端侧纯期权" class="headerlink" title="第三层：端侧纯期权"></a>第三层：端侧纯期权</h3><p>Qualcomm、MediaTek、Client NPU、低功耗传感器、安全芯片和电源管理，需要等使用率、ASP 和换机周期给出证据。这一层最容易出现预期差，也最容易被发布会叙事骗进去。</p>
+<h3 id="第四层：按供给管理的周期仓"><a href="#第四层：按供给管理的周期仓" class="headerlink" title="第四层：按供给管理的周期仓"></a>第四层：按供给管理的周期仓</h3><p>SK hynix、Micron、Samsung 和 SanDisk 不能只按“AI 长期增长”持有。HBM、DRAM、NAND 的供给、库存和资本开支一旦变化，仓位也要变化。</p>
+<p>这套排序不会给出一只永远排第一的股票。Arm 的增长天花板、Broadcom 的当前兑现、TSMC 的平台地位、Qualcomm 的端侧弹性、Intel 的反转赔率，分别对应不同的胜率和赔率。</p>
+<h2 id="六个节点会让整套逻辑重新定价"><a href="#六个节点会让整套逻辑重新定价" class="headerlink" title="六个节点会让整套逻辑重新定价"></a>六个节点会让整套逻辑重新定价</h2><h3 id="Hyperscaler-的-AI-收入能否追上-Capex"><a href="#Hyperscaler-的-AI-收入能否追上-Capex" class="headerlink" title="Hyperscaler 的 AI 收入能否追上 Capex"></a>Hyperscaler 的 AI 收入能否追上 Capex</h3><p>数据中心是最大分母，也是最大风险源。一旦 AI 收入、利用率或自由现金流无法支撑资本开支，GPU、HBM、网络、光模块和电力设备会一起下修。端侧的长期故事救不了短期订单。</p>
+<h3 id="推理需求能否抵消模型效率提升"><a href="#推理需求能否抵消模型效率提升" class="headerlink" title="推理需求能否抵消模型效率提升"></a>推理需求能否抵消模型效率提升</h3><p>量化、蒸馏、稀疏化和 custom ASIC 会降低单次推理成本。成本下降可能压缩硬件需求，也可能触发 Jevons paradox，让 token 使用量增长得更快。决定结果的是总推理量，不是单个模型变小了多少。</p>
+<h3 id="Memory-supply-何时真正释放"><a href="#Memory-supply-何时真正释放" class="headerlink" title="Memory supply 何时真正释放"></a>Memory supply 何时真正释放</h3><p>HBM 良率、新晶圆厂、先进封装和 NAND 扩产只要同时改善，存储价格就会先于需求转弱。这里要看 bit supply、客户库存、长约和 Capex，而不是等毛利率见顶。</p>
+<h3 id="Agent-是否跨过可靠性门槛"><a href="#Agent-是否跨过可靠性门槛" class="headerlink" title="Agent 是否跨过可靠性门槛"></a>Agent 是否跨过可靠性门槛</h3><p>端侧真正需要的是常驻、个性化、跨应用执行。Agent 如果仍会在权限、支付、状态和错误恢复上掉链子，AI PC 和手机只完成配置升级，无法缩短换机周期。</p>
+<h3 id="云端与本地的经济账"><a href="#云端与本地的经济账" class="headerlink" title="云端与本地的经济账"></a>云端与本地的经济账</h3><p>Cloud inference 持续降价，会延长旧设备寿命；隐私、时延、网络和持续订阅成本则会推动任务下沉。最终架构由每个任务的总成本决定，不由发布会决定。</p>
+<h3 id="电力与地缘政治"><a href="#电力与地缘政治" class="headerlink" title="电力与地缘政治"></a>电力与地缘政治</h3><p>电网接入、能源价格、出口限制、先进制程产能和区域补贴，都可能改变赢家。AI 越资本密集，政策变量越难忽略。</p>
+<h2 id="三种情景下，钱会流向不同位置"><a href="#三种情景下，钱会流向不同位置" class="headerlink" title="三种情景下，钱会流向不同位置"></a>三种情景下，钱会流向不同位置</h2><table>
+<thead>
+<tr>
+<th>情景</th>
+<th>产业路径</th>
+<th>更受益的方向</th>
+<th>主要受损方向</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>基准</td>
+<td>数据中心继续扩张，推理增长快于训练，端侧随换机渗透</td>
+<td>ASIC、网络、Foundry、封装、双重暴露</td>
+<td>高估值纯叙事标的</td>
+</tr>
+<tr>
+<td>乐观</td>
+<td>Agent 带来海量推理，端侧出现杀手应用，多设备协同形成新需求</td>
+<td>全链条，尤其 Edge SoC、Memory、传感器</td>
+<td>只依赖旧流量入口的公司</td>
+</tr>
+<tr>
+<td>受阻</td>
+<td>Capex ROI 下滑，端侧缺乏付费意愿，存储供给释放</td>
+<td>低成本平台、现金流强的基础设施</td>
+<td>Memory beta、纯端侧期权、高杠杆扩产</td>
+</tr>
+</tbody></table>
+<p>基准情景下，数据中心仍是未来几年最大的 AI 利润池，推理基础设施是最清楚的第二条曲线，端侧提供长期可选性。乐观情景才会让手机、AI PC、眼镜和机器人同时贡献硬件增量。受阻情景里，端侧渗透率依旧可能提高，但它只会成为默认配置，不会创造新的超级周期。</p>
+<h2 id="存储之后，答案不在一个板块里"><a href="#存储之后，答案不在一个板块里" class="headerlink" title="存储之后，答案不在一个板块里"></a>存储之后，答案不在一个板块里</h2><p>回到最初的问题：存储是否还有空间？有，核心驱动力仍是数据中心，端侧会增加持续时间和第二层需求；供给一旦释放，NAND 和普通 DRAM 的风险也会迅速暴露。</p>
+<p>除了存储，第二梯队是谁？眼下最清楚的答案仍在数据中心内部：custom silicon、networking、光互连、电力、冷却、Foundry 和先进封装。端侧 SoC、AI PC 与 Edge device 是后续弹性更大的第三层。</p>
+<p>从个人投资角度，风险收益比更值得研究的是双重暴露：今天能从云端 Capex 赚钱，明天又能吃到端侧下沉。它们未必涨得最猛，却不需要最脆弱的假设才能成立。</p>
+<p><strong>聪明钱真正寻找的，是下一道供给最难扩、需求最先兑现、价格又没有把未来全部买走的瓶颈。</strong></p>
+<p>当 token 从机房流向数十亿台设备，谁只能赚一次，谁能沿途收两遍钱？</p>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>johnsonlee</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="/2026/06/21/smart-money-after-memory/">https://johnsonlee.io/2026/06/21/smart-money-after-memory/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"><a href="/tags/AI/">AI</a><a href="/tags/Investing/">Investing</a><a href="/tags/Memory/">Memory</a><a href="/tags/Semiconductor/">Semiconductor</a><a href="/tags/Data-Center/">Data Center</a><a href="/tags/Edge-AI/">Edge AI</a></div><div class="post-nav"><a class="pre" href="/2026/06/21/token-efficiency-way-forward/">Token Efficiency 的出路在哪里？</a><a class="next" href="/2026/06/20/on-device-ai-next-wave/">AI 的下一个风口——端侧智能</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"存储之后，聪明钱会流向哪里？","datePublished":"2026-06-21T11:48:25.000Z","dateModified":"2026-06-21T11:48:25.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2026/06/21/smart-money-after-memory/"},"description":"前几天，国内一个朋友拿我开涮：“你们韩国现在是不是人均资产都翻了三倍？”他当然在开玩笑，但这个玩笑在韩国已经有了一整套民间叙事。 最出名的叫“传说中的海力士员工”。2008 年前后，公司里的人觉得买自家股票是疯了，他却拿 4,446 万韩元，以 7,800 韩元买下 5,700 股。如果一直没卖，到 2026 年 1 月已经值 41 亿韩元。"}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname.replace(/^\/en\/(\d{4}\/)/, '/$1').replace(/\.en\/$/, '/')),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (107)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Harness-Engineering/">Harness Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (64)</a><ul style="padding:revert"></ul></li><li><a href="/categories/investing/">Investing (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Developer-Tools/" style="font-size: 15px;">Developer Tools</a> <a href="/tags/Dotfiles/" style="font-size: 15px;">Dotfiles</a> <a href="/tags/Claude-Code/" style="font-size: 15px;">Claude Code</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/AI-PC/" style="font-size: 15px;">AI PC</a> <a href="/tags/Wintel/" style="font-size: 15px;">Wintel</a> <a href="/tags/NVIDIA/" style="font-size: 15px;">NVIDIA</a> <a href="/tags/Microsoft/" style="font-size: 15px;">Microsoft</a> <a href="/tags/Local-LLM/" style="font-size: 15px;">Local LLM</a> <a href="/tags/Token/" style="font-size: 15px;">Token</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/Consciousness/" style="font-size: 15px;">Consciousness</a> <a href="/tags/Self-Reference/" style="font-size: 15px;">Self-Reference</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Attention/" style="font-size: 15px;">Attention</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Agentic-Coding/" style="font-size: 15px;">Agentic Coding</a> <a href="/tags/Enterprise/" style="font-size: 15px;">Enterprise</a> <a href="/tags/Buddhism/" style="font-size: 15px;">Buddhism</a> <a href="/tags/Taoism/" style="font-size: 15px;">Taoism</a> <a href="/tags/Physics/" style="font-size: 15px;">Physics</a> <a href="/tags/Philosophy/" style="font-size: 15px;">Philosophy</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/Automation/" style="font-size: 15px;">Automation</a> <a href="/tags/Testing/" style="font-size: 15px;">Testing</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/Cognitive-Boundary/" style="font-size: 15px;">Cognitive Boundary</a> <a href="/tags/Randomness/" style="font-size: 15px;">Randomness</a> <a href="/tags/Self-Evolution/" style="font-size: 15px;">Self-Evolution</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Dimension-Hacking/" style="font-size: 15px;">Dimension Hacking</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Economy/" style="font-size: 15px;">Economy</a> <a href="/tags/Future/" style="font-size: 15px;">Future</a> <a href="/tags/UBI/" style="font-size: 15px;">UBI</a> <a href="/tags/Product-Strategy/" style="font-size: 15px;">Product Strategy</a> <a href="/tags/Copilot/" style="font-size: 15px;">Copilot</a> <a href="/tags/Google/" style="font-size: 15px;">Google</a> <a href="/tags/Technology/" style="font-size: 15px;">Technology</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Product-Management/" style="font-size: 15px;">Product Management</a> <a href="/tags/Project-Management/" style="font-size: 15px;">Project Management</a> <a href="/tags/AI-Agent/" style="font-size: 15px;">AI Agent</a> <a href="/tags/Memory/" style="font-size: 15px;">Memory</a> <a href="/tags/Loop-Engineering/" style="font-size: 15px;">Loop Engineering</a> <a href="/tags/Harness-Engineering/" style="font-size: 15px;">Harness Engineering</a> <a href="/tags/Eval/" style="font-size: 15px;">Eval</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/Prompt-Engineering/" style="font-size: 15px;">Prompt Engineering</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Graphite/" style="font-size: 15px;">Graphite</a> <a href="/tags/MCP/" style="font-size: 15px;">MCP</a> <a href="/tags/Bytecode/" style="font-size: 15px;">Bytecode</a> <a href="/tags/Static-Analysis/" style="font-size: 15px;">Static Analysis</a> <a href="/tags/Ground-Truth/" style="font-size: 15px;">Ground Truth</a> <a href="/tags/Context/" style="font-size: 15px;">Context</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/06/26/fooled-by-loop-engineering.en/">Don't Let Loop Engineering Fool You</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/26/fooled-by-loop-engineering/">别被 Loop Engineering 忽悠瘸了</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/21/token-efficiency-way-forward.en/">Where Is the Way Forward for Token Efficiency?</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/21/token-efficiency-way-forward/">Token Efficiency 的出路在哪里？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/21/smart-money-after-memory/">存储之后，聪明钱会流向哪里？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/21/smart-money-after-memory.en/">After Memory, Where Will Smart Money Flow?</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/20/on-device-ai-next-wave/">AI 的下一个风口——端侧智能</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/20/on-device-ai-next-wave.en/">AI's Next Wave: On-Device Intelligence</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/20/schools-of-trading.en/">The Schools of Trading</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/20/schools-of-trading/">股票交易的流派</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>

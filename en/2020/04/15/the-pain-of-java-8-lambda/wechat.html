@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2020/04/15/the-pain-of-java-8-lambda/">
+  <title>The Pain of Java 8 Lambda | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">The Pain of Java 8 Lambda</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2020-04-15 · Johnson Lee · Computer Science / Java</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I was recently doing performance optimization for <a href="https://github.com/didi/booster/blob/master/booster-task-analyser" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-task-analyser</a> and found myself missing <em style="font-style:italic;color:#1f2937;">Java</em>. So I tried writing something in <em style="font-style:italic;color:#1f2937;">Java</em> again, but it felt painful -- especially <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">try-catch</code> inside <em style="font-style:italic;color:#1f2937;">lambda</em> expressions. What should be a one-liner bloats into six lines. (This is exactly how productivity dies.) I started wondering: can we make <em style="font-style:italic;color:#1f2937;">Java 8</em> lambdas less miserable?</p>
+<h2 id="Unchecked-Exception" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Unchecked Exception</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">In <em style="font-style:italic;color:#1f2937;">Java</em>, only two types of <em style="font-style:italic;color:#1f2937;">Throwable</em> don't require a <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">try-catch</code>:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">RuntimeException</code></li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">  The <em style="font-style:italic;color:#1f2937;">Java</em> designers considered <em style="font-style:italic;color:#1f2937;">RuntimeException</em> to be the programmer's fault, so catching it isn't mandatory.</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Error</code></li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">  The <em style="font-style:italic;color:#1f2937;">Java</em> designers considered <em style="font-style:italic;color:#1f2937;">Error</em> to be the most severe kind of exception -- typically unrecoverable with no way to handle it. Catching it wouldn't help.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Based on this reasoning, can we make lambdas throw <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">RuntimeException</code> whenever a checked exception would otherwise need catching?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">As it happens, <em style="font-style:italic;color:#1f2937;">Java 8</em> introduced <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">UncheckedIOException</code> in the <em style="font-style:italic;color:#1f2937;">JDK</em> specifically to make <em style="font-style:italic;color:#1f2937;">Lambda</em> usage more convenient in the <em style="font-style:italic;color:#1f2937;">Stream API</em>. For example:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class BufferedReader extends Reader {
+
+    public Stream&lt;String&gt; lines() {
+        Iterator&lt;String&gt; iter = new Iterator&lt;String&gt;() {
+            String nextLine = null;
+
+            @Override
+            public boolean hasNext() {
+                if (nextLine != null) {
+                    return true;
+                } else {
+                    try {
+                        nextLine = readLine();
+                        return (nextLine != null);
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                }
+            }
+
+            @Override
+            public String next() {
+                if (nextLine != null || hasNext()) {
+                    String line = nextLine;
+                    nextLine = null;
+                    return line;
+                } else {
+                    throw new NoSuchElementException();
+                }
+            }
+        };
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(
+                iter, Spliterator.ORDERED | Spliterator.NONNULL), false);
+    }
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">While <em style="font-style:italic;color:#1f2937;">UncheckedIOException</em> solves the problem, it still feels clunky. So I wondered: can we make this more concise?</p>
+<h2 id="Rolling-Our-Own" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Rolling Our Own</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Consider this code:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public void cat(Collection&lt;File&gt; files) {
+    files.stream().map(file -&gt; {
+        try {
+            return Files.readString(file.toPath());
+        } catch (IOException e) {
+            return "";
+        }
+    }).forEach(System.out::println);
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Wouldn't it be nice to write it like this instead (even with a minor difference)?</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public void cat(Collection&lt;File&gt; files) {
+    files.stream()
+            .map(file -&gt; Files.readString(file.toPath()))
+            .forEach(System.out::println);
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">What if we wrap the lambda in another layer? Something like this would work:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public void cat(Collection&lt;File&gt; files) {
+    files.stream()
+            .map(file -&gt; unchecked(() -&gt; Files.readString(file.toPath())}))
+            .forEach(System.out::println);
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">A few extra parentheses, sure, but much cleaner than the original. So how do we make this wrapper work for all cases?</p>
+<h3 id="Methods-with-Return-Values" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Methods with Return Values</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Since <em style="font-style:italic;color:#1f2937;">Java 8</em> supports <em style="font-style:italic;color:#1f2937;">Functional Interfaces</em>, methods with return values can be defined as:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">@FunctionalInterface
+public interface Procedure&lt;R, E extends Throwable&gt; {
+
+    R invoke() throws E;
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Then wrap the lambda with this method:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public static &lt;R, E extends Throwable&gt; R unchecked(final Procedure&lt;R, E&gt; procedure) {
+    try {
+        return procedure.invoke();
+    } catch (final Error | RuntimeException e) {
+        throw e;
+    } catch (final Throwable e) {
+        throw new UncheckedException(e);
+    }
+}</code></pre>
+
+<h3 id="Methods-without-Return-Values" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Methods without Return Values</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Methods without return values can be defined as:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">@FunctionalInterface
+public interface Block&lt;E extends Throwable&gt; {
+
+    void invoke() throws E;
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Then wrap the lambda with this method:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public static &lt;E extends Throwable&gt; void unchecked(final Block&lt;? super E&gt; block) {
+    try {
+        block.invoke();
+    } catch (final Error | RuntimeException e) {
+        throw e;
+    } catch (final Throwable e) {
+        throw new UncheckedException(e);
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">OK, done! Not a bad little wheel to reinvent.</p>
+<h2 id="Verbose-Variable-Declarations" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Verbose Variable Declarations</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">After getting used to <em style="font-style:italic;color:#1f2937;">Kotlin</em>, going back to <em style="font-style:italic;color:#1f2937;">Java</em> makes everything feel verbose. So I thought: can we shorten <em style="font-style:italic;color:#1f2937;">Java</em>'s variable declarations too? Thinking of <em style="font-style:italic;color:#1f2937;">jQuery</em>'s <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">$()</code> pattern in <em style="font-style:italic;color:#1f2937;">JavaScript</em>, and since <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">$</code> is a legal identifier in <em style="font-style:italic;color:#1f2937;">Java</em>, let's build another utility:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public static &lt;T&gt; void $(final T object, final Consumer&lt;? super T&gt; consumer) {
+    consumer.accept(object);
+}
+
+public static &lt;T, R&gt; R $(final T object, final Function&lt;T, R&gt; function) {
+    return function.apply(object);
+}
+
+public static &lt;A, B&gt; void with(final A a, final B b, final BiConsumer&lt;A, B&gt; consumer) {
+    consumer.accept(a, b);
+}
+
+public static &lt;A, B, R&gt; R with(final A a, final B b, final BiFunction&lt;A, B, R&gt; function) {
+    return function.apply(a, b);
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Now in the <em style="font-style:italic;color:#1f2937;">Java</em> world, we can play like <em style="font-style:italic;color:#1f2937;">JavaScript</em>:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">$(new File("..."), (f) -&gt; {
+
+});</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">If you're interested in this little utility, check it out here: <a href="https://github.com/johnsonlee/lambda-support" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">lambda-support</a></p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2020/04/15/the-pain-of-java-8-lambda/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2020/04/15/the-pain-of-java-8-lambda/</a></p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2020/01/01/booster-v1-0-0-released/">
+  <title>Booster v1.0.0 发布 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Booster v1.0.0 发布</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2020-01-01 · Johnson Lee · Computer Science / Open Source / Booster</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Booster 又双叒叕发布了新的版本—— v1.0.0（一改原来 0.x.x 的版本命名，以表示对新年的庆祝），此次更新的内容也是相当的给力：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">优化 <em style="font-style:italic;color:#1f2937;">transform</em> 处理过程，性能提升 50%</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">  在之前的版本中，针对 <em style="font-style:italic;color:#1f2937;">JAR</em> 文件中的 <em style="font-style:italic;color:#1f2937;">class</em> 的 <em style="font-style:italic;color:#1f2937;">transform</em> 一直是串行执行的，<em style="font-style:italic;color:#1f2937;">JAR</em> 读/写操作属于 I/O 密集型任务，<em style="font-style:italic;color:#1f2937;">transformClassesWithBoosterForXxx</em> 任务的耗时往往占了构建时间的很大一部分，为了提升构建效率，此版本采用了并行读/写 <em style="font-style:italic;color:#1f2937;">JAR</em> 的方式，性能提升了 50%+，以下是 <em style="font-style:italic;color:#1f2937;">Benchmark</em> 结果：</p>
+<table style="width:100%;border-collapse:collapse;margin:22px 0;font-size:14px;line-height:1.6;color:#1f2937;">
+<thead>
+<tr>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Benchmark</th>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Mode</th>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Cnt</th>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Score</th>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Error</th>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Units</th>
+</tr>
+</thead>
+<tbody><tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">JarFileTransformBenchmark.transformJarFileParallelly</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">avgt</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">10</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">31.310</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">±8.916</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">ms/op</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">JarFileTransformBenchmark.transformJarFileSequentially</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">avgt</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">10</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">66.343</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">±2.902</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">ms/op</td>
+</tr>
+</tbody></table>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">  <em style="font-style:italic;color:#1f2937;">Benchmark</em> 源码：<a href="https://github.com/johnsonlee/booster-benchmark/blob/master/jar-file-transform/src/jmh/kotlin/io/johnsonlee/booster/benchmark/JarFileTransformBenchmark.kt" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JarFileTransformBenchmark.java</a></p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">优化 <a href="https://github.com/didi/booster/tree/master/booster-task-compression" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-task-compression</a></li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">  在压缩 <em style="font-style:italic;color:#1f2937;">resources-xxx.ap_</em> 文件时，也涉及 <em style="font-style:italic;color:#1f2937;">ZIP</em> 文件的读/写操作，同样采用了并行读/写 <em style="font-style:italic;color:#1f2937;">ZIP</em> 的方式</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://github.com/didi/booster/tree/master/booster-transform-thread" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-transform-thread</a> 支持禁用线程池优化</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">  由于该模块包含「线程重命名」和「线程池优化」两个功能，为了避免线程池优化带来的副作用，于是增加了 <em style="font-style:italic;color:#1f2937;">booster.transform.thread.optimization.enabled</em> 属性，用于禁用线程池优化，仅启用「线程重命名」功能。详细用法请参考：<a href="https://github.com/didi/booster/blob/master/booster-transform-thread/README.md" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">README.md</a></p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">修复 <a href="https://github.com/didi/booster/blob/master/booster-transform-shared-preferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-transform-shared-preferences</a> 相关的 bug</li>
+</ol>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2020/01/01/booster-v1-0-0-released/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2020/01/01/booster-v1-0-0-released/</a></p>
+    </section>
+  </main>
+</body>
+</html>

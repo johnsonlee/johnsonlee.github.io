@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2021/05/07/java-9-new-features/">
+  <title>What&#39;s New in Java 9 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">What&#39;s New in Java 9</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2021-05-07 · Johnson Lee · Computer Science / Java</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">At <em style="font-style:italic;color:#1f2937;">JavaOne</em> 2011, Oracle discussed features they hoped to release with Java 9 in 2016. <em style="font-style:italic;color:#1f2937;">Java 9</em> was expected to offer better support for gigabyte-scale heaps, improved native code integration, a new <em style="font-style:italic;color:#1f2937;">G1</em> garbage collector, and a self-tuning JVM. In early 2016, Java 9's release was rescheduled to March 2017; in March 2017, it was pushed back to July 2017; and it was ultimately set to September 21, 2017, due to disagreements within the Java Executive Committee over the <em style="font-style:italic;color:#1f2937;">Jigsaw</em> project implementation. During this period, Oracle addressed some concerns and made important technical corrections. In the final days of June 2017, the JCP reached consensus on the proposed module system. The first release candidate of Java 9 came out on August 9, 2017, and the first stable release on September 21, 2017.</p>
+<h2 id="Java-Platform-Module-System" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Java Platform Module System</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The module system is arguably the heavyweight feature of Java 9. It provides functionality similar to the OSGi framework -- modules have dependency concepts and can export public APIs while hiding implementation details. The primary goal is to provide a modular JVM that can run on low-end devices, with the JVM loading only the modules and APIs required by the application. For a detailed description of modules, see: <a href="http://cr.openjdk.java.net/~mr/jigsaw/ea/module-summary.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Module Summary</a>. Starting from Java 9, internal JVM APIs like <em style="font-style:italic;color:#1f2937;">com.sun.*</em> are no longer accessible from applications.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Similar to <em style="font-style:italic;color:#1f2937;">package-info.java</em>, a module is described in <em style="font-style:italic;color:#1f2937;">module-info.java</em>:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">module com.example.modules.car {
+    requires com.example.modules.engines;
+    exports com.example.modules.car.handling;
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">For a deeper dive into Java 9 modularity, see: <a href="http://openjdk.java.net/projects/jigsaw/quick-start" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Project Jigsaw: Module System Quick-Start Guide</a></p>
+<h2 id="New-HTTP-Client" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">New HTTP Client</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Java 9 introduced the long-awaited replacement for <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">HttpURLConnection</code>. The new API resides in the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">java.net.http</code> package and supports the <em style="font-style:italic;color:#1f2937;">HTTP/2</em> protocol and <em style="font-style:italic;color:#1f2937;">WebSocket</em> handshake, with performance comparable to <em style="font-style:italic;color:#1f2937;">Apache Http Client</em>, <em style="font-style:italic;color:#1f2937;">Netty</em>, and <em style="font-style:italic;color:#1f2937;">Jetty</em>.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">With the new <em style="font-style:italic;color:#1f2937;">HTTP Client API</em>, you can quickly create a <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">GET</code> request:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">HttpRequest request = HttpRequest.newBuilder()
+  .uri(new URI("https://postman-echo.com/get"))
+  .GET()
+  .build();
+
+HttpResponse&lt;String&gt; response = HttpClient.newHttpClient()
+  .send(request, HttpResponse.BodyHandler.asString());</code></pre>
+
+<h2 id="Process-API" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Process API</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Java 9 enhanced the ability to access and manage system processes. <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">java.lang.ProcessHandle</code> provides access to more process-related information:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">ProcessHandle self = ProcessHandle.current();
+long PID = self.getPid();
+ProcessHandle.Info procInfo = self.info();
+
+Optional&lt;String[]&gt; args = procInfo.arguments();
+Optional&lt;String&gt; cmd =  procInfo.commandLine();
+Optional&lt;Instant&gt; startTime = procInfo.startInstant();
+Optional&lt;Duration&gt; cpuUsage = procInfo.totalCpuDuration();</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Stopping running child processes via <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">destroy()</code>:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">childProc = ProcessHandle.current().children();
+childProc.forEach(procHandle -&gt; {
+    assertTrue("Could not kill process " + procHandle.getPid(), procHandle.destroy());
+});</code></pre>
+
+<h2 id="The-Java-Shell" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">The Java Shell</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Java 9 introduced the <em style="font-style:italic;color:#1f2937;">jshell</em> command-line tool, allowing code snippets to be run directly from the command line without wrapping them in a class -- similar to other JVM-based languages like Groovy and Scala. The main motivation was that Java has a higher barrier to entry compared to other languages. <em style="font-style:italic;color:#1f2937;">Python</em>, for instance, can run a <em style="font-style:italic;color:#1f2937;">hello world</em> right from the command line, while Java requires opening an editor, declaring a class, compiling, and then running -- far too tedious to serve as a teaching language.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Beyond the command line, <em style="font-style:italic;color:#1f2937;">jshell</em> also provides an API that allows other tools to integrate <em style="font-style:italic;color:#1f2937;">jshell</em> functionality.</p>
+<h2 id="Multi-Release-JAR-Files" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Multi-Release JAR Files</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Java 9 introduced an interesting feature: support for releasing a single jar targeting multiple Java versions. By setting <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Multi-Release: true</code> in the <em style="font-style:italic;color:#1f2937;">MANIFEST.MF</em> file, the jar becomes a <em style="font-style:italic;color:#1f2937;">Multi-Release JAR (MRJAR)</em>, and the Java runtime selects the appropriate version based on the current major version. The file structure looks like this:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">jar root
+  - A.class
+  - B.class
+  - C.class
+  - D.class
+  - META-INF
+    - versions
+      - 9
+        - A.class
+        - B.class
+      - 10
+        - A.class</code></pre>
+
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">When JDK &lt; 9, only the classes in the root directory are visible to the Java runtime</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">On JDK 9, <em style="font-style:italic;color:#1f2937;">A.class</em> and <em style="font-style:italic;color:#1f2937;">B.class</em> are loaded from <em style="font-style:italic;color:#1f2937;">root/META-INF/versions/9/</em></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">On JDK 10, <em style="font-style:italic;color:#1f2937;">A.class</em> is loaded from <em style="font-style:italic;color:#1f2937;">root/META-INF/versions/10/</em></li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">Multi-Release Jars</em> allow projects to maintain different versions of code for different Java platforms, while only needing a single jar and a single version (Maven artifact version) for distribution. To enable this feature, the APIs that handle JARs were naturally modified, such as <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">JarFile</code> and <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">URLClassLoader</code>. Additionally, many JDK tools were adapted to the new format, including <em style="font-style:italic;color:#1f2937;">java</em>, <em style="font-style:italic;color:#1f2937;">javac</em>, and <em style="font-style:italic;color:#1f2937;">jar</em>.</p>
+<h2 id="Multi-Resolution-Images" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Multi-Resolution Images</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">JDK 9 added a new interface <a href="http://download.java.net/java/jdk9/docs/api/java/awt/image/MultiResolutionImage.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">MultiResolutionImage</a> and its base implementation <a href="http://download.java.net/java/jdk9/docs/api/java/awt/image/BaseMultiResolutionImage.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">BaseMultiResolutionImage</a>. It can encapsulate several image variants of different sizes and, given a width and height, select the best variant.</p>
+<h2 id="Reactive-Stream-Flow-API" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Reactive Stream Flow API</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">JDK 9 introduced the <a href="https://docs.oracle.com/javase/9/docs/api/java/util/concurrent/Flow.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">java.util.concurrent.Flow</a> class, which provides a set of standard <em style="font-style:italic;color:#1f2937;">Reactive Stream</em> interfaces. These interfaces enable asynchronous communication between data stream producers and consumers through a publish-subscribe mechanism, similar to <a href="https://github.com/ReactiveX/RxJava" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">RxJava</a>.</p>
+<h2 id="Make-G1-the-Default-Garbage-Collector" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Make G1 the Default Garbage Collector</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Before Java 9, the default garbage collector for servers was the parallel GC, and for clients it was the serial GC. In Java 9, the server default was changed to G1, which had been introduced in Java 7.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">G1 is a parallel, low-pause garbage collector particularly suited for multi-core machines with large heap spaces. For an overview of the G1 garbage collector, see: <a href="http://www.oracle.com/technetwork/tutorials/tutorials-1876574.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Getting Started with the G1 Garbage Collector</a>. Additionally, the Concurrent Mark Sweep (CMS) collector was deprecated.</p>
+<h2 id="Compact-Strings" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Compact Strings</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Java 9 optimized the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">String</code> class internally to reduce memory consumption, since most strings do not need 2-byte characters. The implementation changes the underlying storage from a character array to a byte array, with an additional byte indicating the encoding:</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Latin-1 uses 1 byte</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">UTF-16 uses 2 bytes</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The encoding of the byte array is determined by the content being stored.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">This change is internal and does not affect <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">String</code>'s public API or related classes like <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">StringBuilder</code> and <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">StringBuffer</code>. To disable string compaction, use the <em style="font-style:italic;color:#1f2937;">-XX:-CompactStrings</em> option.</p>
+<h2 id="Stack-Walking-API" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Stack-Walking API</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Before Java 9, stack frame traversal required <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">sun.reflect.Reflection</code>, particularly <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">sun.reflect.Reflection::getCallerClass()</code>. Some libraries depended on this method, but it was deprecated. JDK 9 provides a standard replacement -- <a href="https://docs.oracle.com/javase/9/docs/api/java/lang/StackWalker.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">StackWalker</a>, which improves performance through lazy access to stack frames. Applications can use this API to traverse the call stack and filter by class. Two methods are worth noting:</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">public &lt;T&gt; T walk(Function&lt;Stream&lt;StackFrame&gt;, T&gt; function)</code> - traverses the current thread's stack frames starting from the top and applies the specified <em style="font-style:italic;color:#1f2937;">Function</em></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">public Class&lt;?&gt; getCallerClass()</code> - returns the class that called this method</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">StackWalker</code> is thread-safe and can use the same instance to traverse stack frames across multiple threads.</p>
+<h2 id="Compiler-Control" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Compiler Control</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Java 9 provides a way to control JVM compilation through compiler directive options. The control levels include:</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Runtime manageable</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Method specific</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Compiler directives tell the JVM how to compile and can target individual method contexts. Directives can be used to write JVM test programs without restarting the entire JVM, and are also useful for working around JVM bugs.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">At program startup, directive files can be specified on the command line:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">java -XX:+UnlockDiagnosticVMOptions -XX:CompilerDirectivesFile=File_A.json TestProgram</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Directives can also be added or removed from a running program via diagnostic commands. You can enable automatic printing of the directive stack at startup[^1]:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">java -XX:+UnlockDiagnosticVMOptions -XX:+CompilerDirectivesPrint -XX:CompilerDirectivesFile=File_A.json TestProgram</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">For more details, see: <a href="https://docs.oracle.com/javase/9/vm/compiler-control1.htm" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Oracle JDK 9: Compiler Control</a>.</p>
+<h2 id="Segmented-Code-Cache" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Segmented Code Cache</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">In Java 9, the code cache was split from a single heap into multiple heaps, each containing a specific type of compiled code. This allows separation of code with different properties. There are three top-level types of compiled code:</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">JVM internal (non-method) code</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Primarily contains non-method code such as compiler buffers and the bytecode interpreter. This code type permanently resides in the code cache.</p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Profiled-Code</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Contains lightly optimized, short-lived methods.</p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Non-profiled Code</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Contains fully optimized <em style="font-style:italic;color:#1f2937;">non-profiled</em> methods that may have long lifetimes.</p>
+</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The non-method code heap has a fixed size of 3MB for JVM internals and compiler buffers. The compiler buffer size is adjusted based on the number of C1/C2 compiler threads. The remaining code cache space is evenly split between <em style="font-style:italic;color:#1f2937;">profiled</em> and <em style="font-style:italic;color:#1f2937;">non-profiled</em> code heaps. Code heap sizes can also be controlled via command-line switches:</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">-XX:NonMethodCodeHeapSize</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Sets the size of the code heap containing non-method code</p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">-XX:ProfiledCodeHeapSize</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Sets the size of the code heap containing <em style="font-style:italic;color:#1f2937;">profiled</em> code</p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">-XX:NonProfiledCodeHeapSize</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Sets the size of the code heap containing <em style="font-style:italic;color:#1f2937;">non-profiled</em> code</p>
+</li>
+</ul>
+<h2 id="Dynamic-Linking-of-Language-Defined-Object-Models" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Dynamic Linking of Language-Defined Object Models</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">This feature was introduced in Java 9 to provide interoperability between multiple programming languages within a JVM process at runtime. Objects can be passed between different runtimes, where an <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">invokedynamic</code> call site emitted by one language's compiler is linked by another language's linker. For example, <a href="https://johnsonlee.io/en/2021/05/07/java-se-8/#nashorn-javascript-engine" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Nashorn</a> introduced in Java 8 proved that cross-language invocation through <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">invokedynamic</code> is feasible, though <em style="font-style:italic;color:#1f2937;">Nashorn</em>'s limitation was that it was specific to <em style="font-style:italic;color:#1f2937;">JavaScript</em> rather than broadly applicable to other languages.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">In JDK 8, the code under <em style="font-style:italic;color:#1f2937;">jdk.internal.dynalink.*</em> served as an internal dependency of <em style="font-style:italic;color:#1f2937;">Nashorn</em>. In JDK 9, it was made public as the <a href="https://docs.oracle.com/javase/9/docs/api/jdk.dynalink-summary.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">jdk.dynalink</a> module.</p>
+<h2 id="JVM-Compiler-Interface" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">JVM Compiler Interface</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">For developers working on compiler optimizations, <em style="font-style:italic;color:#1f2937;">JVM CI</em> is a highly anticipated feature. It allows compilers written in Java to be used by the JVM for dynamic compilation. In Java 9, it was introduced as an experimental feature.</p>
+<h2 id="Version-String-Scheme" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Version-String Scheme</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Over the past 20+ years, Java's versioning has been rather chaotic. The first two major versions were JDK 1.0 and JDK 1.1. From 1.2 to 1.5, the platform was called J2SE (Standard Edition). Starting from 1.5, versioning became Java 5, then Java 6, and so on. However, running <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">java -version</code> with an installed Java 8 still outputs 1.8 rather than 8. The versioning scheme after Oracle acquired Sun works as follows:</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">For <em style="font-style:italic;color:#1f2937;">Limited Update Releases</em> (without critical security fixes), the version number is a multiple of 20</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">For Critical Patch Updates (security vulnerability fixes), the version number is calculated by incrementing from the previous <em style="font-style:italic;color:#1f2937;">Limited Update Release</em> by a multiple of 5, adding 1 if the result is even to make it odd</li>
+</ul>
+<h3 id="Version-Numbers" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Version Numbers</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Starting from Java 9, the version number format is: <em style="font-style:italic;color:#1f2937;">$MAJOR.$MINOR.$SECURITY.$PATCH</em></p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">MAJOR</em> - major version number; for JDK 9, <em style="font-style:italic;color:#1f2937;">MAJOR = 9</em></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">MINOR</em> - minor version number, incremented with bug fix and standard API enhancement releases</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">SECURITY</em> - security level, incremented with critical security fix releases; resets to <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">0</code> when <em style="font-style:italic;color:#1f2937;">MINOR</em> is incremented</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">PATCH</em> - patch version for non-security fixes</li>
+</ul>
+<h3 id="Version-Strings" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Version Strings</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"> A version string consists of the <em style="font-style:italic;color:#1f2937;">Version Number</em> plus additional information (such as early-access release identifier or build number):</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">$VNUM(-$PRE)?\+$BUILD(-$OPT)?</em></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">$VNUM-$PRE(-$OPT)?</em></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">$VNUM(+-$OPT)?</em></li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Where:</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">PRE</em> - pre-release identifier</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">BUILD</em> - build number</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">OPT</em> - other optional information, such as a timestamp</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Here is a comparison of the existing and new versioning schemes for JDK 9:</p>
+<table style="width:100%;border-collapse:collapse;margin:22px 0;font-size:14px;line-height:1.6;color:#1f2937;">
+<thead>
+<tr>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Release Type</th>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">long (Existing)</th>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">short (Existing)</th>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">long (New)</th>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">short (New)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Early Access</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">1.9.0-ea-b19</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9-ea</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9-ea+19</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9-ea</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Major</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">1.9.0-b100</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9+100</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Security #1</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">1.9.0_5-b20</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9u5</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9.0.1+20</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9.0.1</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Security #2</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">1.9.0_11-b12</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9u11</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9.0.2+12</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9.0.2</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Minor #1</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">1.9.0_20-b62</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9u20</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9.1.2+62</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9.1.2</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Security #3</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">1.9.0_25-b15</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9u25</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9.1.3+15</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9.1.3</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Security #4</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">1.9.0_31-b08</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9u31</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9.1.4+8</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9.1.4</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Minor #2</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">1.9.0_40-b45</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9u40</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9.2.4+45</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">9.2.4</td>
+</tr>
+</tbody></table>
+<h2 id="Remove-the-JVM-TI-hprof-Agent" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Remove the JVM TI hprof Agent</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Before Java 9, the hprof JVM native agent was used for heap dumps and CPU tracing. It was removed because better alternatives exist -- <a href="https://docs.oracle.com/javase/7/docs/technotes/tools/share/jmap.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">jmap</a> and <a href="https://visualvm.github.io/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Java VisualVM</a>.</p>
+<h2 id="Remove-the-jhat-Tool" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Remove the jhat Tool</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The <em style="font-style:italic;color:#1f2937;">jhat</em> tool was used to view heap dump information in a browser. It was also removed in favor of better alternatives.</p>
+<h2 id="Compile-for-Older-Platform-Versions" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Compile for Older Platform Versions</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Before Java 9, <em style="font-style:italic;color:#1f2937;">-source</em> was used to set the language specification level and <em style="font-style:italic;color:#1f2937;">-target</em> to generate bytecode for a specific version. However, the compiler would link compiled classes to the current JDK version's platform API, which could cause runtime issues (unless the bootclasspath was overridden). In Java 9, these options are replaced by <em style="font-style:italic;color:#1f2937;">--release</em> for compiling to older versions.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">--release</em> is equivalent to <em style="font-style:italic;color:#1f2937;">-source N -target N -bootclasspath &lt;bootclasspath-from-N&gt;</em></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">JDK 9 implements this by maintaining API signature data from older versions, located at: <em style="font-style:italic;color:#1f2937;">$JDK_HOME/lib/ct.sym</em></p>
+<h2 id="Applet-API-deprecated" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Applet API deprecated</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">As web browsers increasingly dropped support for Java plugins, the Applet API was deprecated in Java 9, though it remains uncertain whether it will be removed in the future.</p>
+<h2 id="Small-Language-Changes" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Small Language Changes</h2><ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">@SafeVarargs</code> can now be used on private instance methods. The <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">@SafeVarargs</code> annotation can only be applied to methods that cannot be overridden, including static methods and final instance methods. Private instance methods are another valid use case.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Java SE 7's <em style="font-style:italic;color:#1f2937;">try-with-resources</em> statement required declaring a new variable for each managed resource. Java SE 9 allows effectively <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">final</code> variables to be used as resources in <em style="font-style:italic;color:#1f2937;">try-with-resources</em> statements.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">The <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">&lt;&gt;</code> operator is now allowed with anonymous classes when the inferred type is denotable. In Java SE 7, the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">&lt;&gt;</code> operator with anonymous class constructors was prohibited because the inferred type might not belong to the set of types supported by the signature attribute.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">_</code> is no longer allowed as an identifier.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Interfaces now support <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">private</code> methods, enabling non-abstract methods within an interface to share code.</li>
+</ul>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">For more details, see: <a href="https://docs.oracle.com/javase/9/whatsnew/toc.htm" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://docs.oracle.com/javase/9/whatsnew/toc.htm</a></p>
+</blockquote>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2021/05/07/java-9-new-features/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2021/05/07/java-9-new-features/</a></p>
+    </section>
+  </main>
+</body>
+</html>

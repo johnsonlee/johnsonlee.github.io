@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/05/20/faulty-agent-memory/">
+  <title>长期记忆正在把 Agent 变蠢 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">长期记忆正在把 Agent 变蠢</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-05-20 · Johnson Lee · Independent Thinking</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">最近有篇论文，标题很炸：Useful Memories Become Faulty When Continuously Updated by LLMs。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">翻译成人话就是：LLM Agent 的长期记忆，不是越更新越聪明，而是可能越更新越蠢。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">论文里有个实验很刺眼：GPT-5.4 原本能 100% 解出一组 ARC-AGI 题。研究人员给它正确答案，让它把成功经验总结成长期记忆。连续更新 10 轮之后，准确率掉到 52.6%。它不是"没学会"，而是"本来会，被自己的记忆教坏了"。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">很多神话故事里，转世都要过奈何桥，喝孟婆汤。以前看这类设定，总觉得它只是为了制造戏剧冲突：忘了前世，才有今生的爱恨情仇。现在再看，反而像一种系统设计。前世记忆不是外挂，很多时候是污染源。那些经验是在上一组约束里长出来的——上一具身体、上一套关系、上一种秩序、上一轮恐惧和欲望。换了环境，还把它们当成真理带进来，不是开局优势，而是路径依赖。<strong style="font-weight:700;color:#111827;">长期记忆最危险的地方，不是忘记，而是把一个过早的抽象硬编码进未来。</strong></p>
+
+
+<h2 id="Memory-consolidation-是另一种克隆-best" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  Memory consolidation 是另一种克隆 best</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">过去的 trajectory 不是神谕。它只是某个环境切片下，Agent 和世界互动之后留下的一组痕迹。记忆不是资产本身，记忆是环境留下的压痕。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在《为什么自然界从不复制最优》里，我写过一句话：</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">Centralize feedback, decentralize exploration.</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">反馈可以集中。探索必须分散。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">best 可以作为参考信号、诊断信号、触发信号，但不能变成所有 lineage 的 base。因为一旦所有 lineage 都继承当前 best，它们就不再是在多个 basin 里探索，而是在同一个 basin 里排队撞墙。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">raw trajectory 是多个 lineage。每段经历都有自己的上下文、状态、反馈、失败路径。它们之间可能互相矛盾，可能还没来得及被解释，可能只是未来某个问题的关键证据。这和"前世记忆"很像——不是不能参考，而是不能直接继承为真理。真正危险的不是记得过去，而是忘了过去为什么成立。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">consolidated memory 是当前 best summary。它看起来更干净、更短、更像知识。但它也是一次选择：哪些细节保留，哪些细节丢掉；哪些经验被认为同类，哪些边界条件被抹平；哪些不确定性被写成确定规则。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">你每更新一次 memory，都是在问模型：请从这些经验里选一个当前最合理的解释。然后下一轮，再基于这个解释继续解释。这不就是把 best 作为下一代 base 吗？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">Memory consolidation 的本质，是在经验空间里复制当前 best explanation。</strong></p>
+<h2 id="我们太相信总结了" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  我们太相信总结了</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">现在做 Agent memory，最自然的设计是这样：Agent 完成一个任务，得到一段 trajectory——里面有问题、思考、动作、反馈、成功或失败。然后让 LLM 把这段经历总结成 lesson，写进 memory bank。下次遇到类似任务，再把相关 memory 检索出来，塞进上下文。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这套设计听起来太合理了。人不也是这样学习的吗？没有人会把每一天的所有细节原样背下来，我们会抽象、归纳、形成 schema。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这套逻辑在 demo 里通常很 work。第一次失败，写一条反思；第二次调用反思，成功了。于是很容易得出结论：记忆有效。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但这篇论文问了一个更狠的问题：如果这个过程持续发生，会怎样？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">答案不太好看。</p>
+<h2 id="总结会制造认知瓶颈" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  总结会制造认知瓶颈</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">人类的很多痛苦，也来自这里。小时候在某个环境里形成的生存策略，长大后还在自动运行。过去为了保护自己形成的反应，后来变成限制自己的墙。它不是一开始就是错的，它是在时过境迁之后继续被当成真理，才开始害人。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Agent memory 也是同样的结构。某条 memory 在生成它的环境里可能完全正确，但环境变了，任务 family 变了，工具接口变了，评价标准变了，它还被检索出来指导行为，就会从经验变成偏见。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">复制 best 会制造 genetic bottleneck。连续总结会制造 epistemic bottleneck。两者的共同问题不是"压缩"本身，而是压缩发生得太早、太自信、太不可逆。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">WebShop、ALFWorld、AppWorld、ARC-AGI，这些任务的策略空间都是多峰的。一个成功 trajectory 不代表它揭示了通用规律。一个漂亮 summary 不代表它抓住了真正结构。<strong style="font-weight:700;color:#111827;">在多峰任务里，过早抽象就是过早收敛。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">转世不带记忆，某种意义上是系统在避免过拟合上一轮环境。不是因为过去没有价值，而是因为过去太有说服力——它带着亲历者的重量，很容易伪装成真理。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">总结不是学习的终点，总结是对可能性的删除。</p>
+<h2 id="记忆不是存档，是改写历史" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  记忆不是存档，是改写历史</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">论文里有个关键观察：memory consolidation 不是 append-only log，而是 rewrite。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">每来一批新经验，LLM 不是简单把它们放进仓库，而是重写之前的记忆：合并、概括、删掉细节、调整措辞、生成新的规则。听起来像整理，实际上是在改写历史。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">一次改写问题不大。十次、五十次、一百次之后，原始经验里的边界条件会被磨平，有用细节会丢，某些只是偶然成立的 pattern 会被写成普遍规则，早期一次错误抽象会被当成事实继续抽象。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">就像你把一张照片反复截图、转发、压缩。每次都"差不多"，最后已经看不清人脸。也像进化系统里反复复制当前 best——每一代看起来都比上一代更"优"，但整个 population 的选择空间在变窄。最后不是找到了最优，而是失去了偏离当前方向的能力。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">忘记至少是空白。记错会给你一个很自信的错误答案。</p>
+<h2 id="最刺眼的结果：有用经验也会变成坏记忆" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  最刺眼的结果：有用经验也会变成坏记忆</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这篇论文最有价值的地方，是它没有停留在"LLM 总结会出错"这种泛泛而谈。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">作者控制了输入经验质量。他们不是拿一堆失败 trajectory 去喂 Agent——那样没什么意思，垃圾进垃圾出而已。他们用的是已经被证明有用的经验。更狠的是，在 ARC-AGI Stream 实验里，作者直接给 ground-truth solution。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">按理说这应该是最理想的情况：题会做，答案正确，经验有用。你让模型总结一下，最差也不该把自己搞废吧？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">结果就是开头那组数字：100% 掉到 52.6%。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这不是"经验没用"，这是"经验被总结坏了"。经验是 useful 的，坏掉的是 consolidation。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个结论对做 Agent 的人很致命。因为我们过去默认 consolidation 至少是 neutral 的——它可能没帮助，但不至于伤害系统。这个假设站不住了。</p>
+<h2 id="Streaming-memory-为什么更容易坏" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">6.  Streaming memory 为什么更容易坏</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">论文比较了几种更新方式。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Static-All：一次性看完整个 trajectory pool，然后总结。Static-Group：按任务类型分组，再分别总结。Stream：真实 Agent 更常见的方式，来一批经验就更新一次 memory。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">结果很清楚：Stream 最容易坏。原因不复杂——Stream 有路径依赖。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">早期记忆一旦写偏了，后面所有更新都站在这个偏差上继续写。LLM 看到的不是完整历史，而是"历史的摘要"。下一轮它再摘要摘要。最后系统不是在学习经验，而是在学习上一次总结的残影。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这和工程里的 cache corruption 很像。源数据还在，最多重新算一次。源数据丢了，只剩一个被污染的 cache，后面所有模块都会基于污染状态继续运行。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">所以这篇论文反复强调一个朴素原则：raw trajectory 要保留，别急着删。</p>
+<h2 id="Raw-trajectory-是独立-lineage" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">7.  Raw trajectory 是独立 lineage</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">沿用进化那篇文章的语言：raw trajectory 就是独立 lineage。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">它们不一定都优秀，也不一定马上有用。有些 episode 很笨，有些失败很蠢，有些路径看起来只是噪声。但你不知道未来哪个任务会让这段"噪声"突然变成证据。这就是独立 lineage 的价值：<strong style="font-weight:700;color:#111827;">它们保留了系统后悔的可能性。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">一旦你把所有 trajectory 压成一个 summary，这种后悔空间就没了。未来 Agent 不再面对多段原始经验，而是面对一个被过去的自己解释过的世界。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我们不是被经历限制，而是被自己对经历的解释限制。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这也是为什么"带着前世记忆转世"在小说里很爽，在系统设计里却很危险。它给了你一个开局优势，也给了你一套来自旧世界的默认参数。新世界还没开始探索，旧世界已经替你做完了解释。</p>
+<h2 id="Raw-trajectory-不是废料" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">8.  Raw trajectory 不是废料</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">很多 Agent memory 设计里，raw trajectory 的地位很低。它像日志——调试时有用，上线后嫌贵。真正要进入长期记忆的，是压缩后的 lesson、rule、skill、workflow。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这篇论文给了一个很朴素的 baseline：不总结，直接把 raw trajectory 当 in-context demonstration 用。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">结果它经常很能打。在 WebShop、ALFWorld、AppWorld 这些环境里，raw trajectory baseline 没有被 lesson-style memory 轻松打爆，反而很多时候更稳。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我们花很大力气让 LLM 把经历总结成原则，最后发现原始经历本身可能更可靠。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">为什么？因为 raw trajectory 里保留了上下文。它知道这个动作是在什么状态下做的，知道反馈是什么，知道失败发生在哪里，知道一个策略成立时旁边还有哪些隐含条件。而 lesson 往往只剩一句漂亮的话。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">漂亮的话最危险，因为它看起来像原则。</p>
+<h2 id="三种坏记忆" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">9.  三种坏记忆</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">论文把 faulty memory 归纳成三类，很适合放进工程检查表。</p>
+<h3 id="Misgrouping：把不该放一起的经验放一起" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">9.1.  Misgrouping：把不该放一起的经验放一起</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">两个任务表面相似，不代表底层结构相同。LLM 很容易基于表面文本把它们归为一类，然后总结出一个跨任务规则——这个规则看起来很合理，但其实混了两个 domain。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">就像你把"用户增长"和"传销"都归到"裂变"下面，然后总结出一套通用增长方法。词是同一个词，东西不是同一个东西。</p>
+<h3 id="Overgeneralization：把局部经验写成普遍原则" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">9.2.  Overgeneralization：把局部经验写成普遍原则</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">一个策略本来只在特定状态下成立。总结时，限定条件被删掉了。于是 memory 里只剩："遇到这种情况，应该这样做。"</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">下次遇到邻近任务，Agent 检索到这条 memory，非常自信地照做，然后翻车。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">抽象的价值来自去掉噪声，抽象的风险也来自去掉条件。现在的 LLM 还不够擅长判断什么是噪声、什么是条件。</p>
+<h3 id="Overfit：在窄输入流上学到表面模式" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">9.3.  Overfit：在窄输入流上学到表面模式</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果输入流很窄，memory 会过拟合已见 pattern。某一类题看多了，LLM 会总结出一条看似稳定的规则，但这个规则可能只对已见样本有效，遇到同 family 的简单变体就崩。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这跟传统 ML 里的 overfit 没什么本质区别。区别只是，以前 overfit 发生在参数里，现在发生在文本记忆里。</p>
+<h2 id="Agent-不是缺记忆，是缺记忆管理" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">10.  Agent 不是缺记忆，是缺记忆管理</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这篇论文容易被误读成：不要做 Agent memory。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">不是。长期来看，Agent 不可能只靠上下文窗口。raw history 会无限增长，检索成本会上升，跨任务迁移也需要抽象。没有 memory，Agent 只能像金鱼一样永远活在当前窗口里。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">真正的问题是：不要把 memory consolidation 设计成自动发生的后台任务。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">现在很多系统像这样：任务结束，自动总结；总结完，自动更新；更新后，默认可信。太危险了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">更合理的设计，应该把记忆拆成几层。</p>
+<h3 id="Episodic-memory-是证据层" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">10.1.  Episodic memory 是证据层</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">保留原始 episode，包括输入、动作、反馈、环境状态、失败路径。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">它不一定每次都进 prompt，但必须可追溯。任何 abstract memory 都应该能回链到原始证据。没有 evidence 的 memory，就是幻觉的温床。</p>
+<h3 id="Semantic-memory-是假设层" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">10.2.  Semantic memory 是假设层</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">lesson、rule、workflow、skill 都应该被当成 hypothesis，而不是 fact。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">既然是假设，就要有适用范围、置信度、来源、反例。一条 memory 不应该只是：</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">"购买商品前先检查库存。"</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">它应该更像：</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">"在 WebShop 类任务中，如果商品页面存在库存状态，购买前检查库存可减少无效 checkout。来源：episode 12、18、31。反例：episode 44 中库存状态延迟更新。"</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">更啰嗦，也更贵。但可靠系统本来就贵。</p>
+<h3 id="Consolidation-是动作，不是默认副作用" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">10.3.  Consolidation 是动作，不是默认副作用</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这和"best 在独立进化下还有用吗"是同一个问题。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">best 当然有用，但它不能繁衍所有后代。summary 当然有用，但它不能替代所有证据。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Agent 应该可以选择 Retain、Delete、Consolidate。不是每个 episode 都值得总结，不是每次成功都值得抽象，不是每条新经验都应该改写旧记忆。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这篇论文在 ARC-AGI Stream 里也观察到，当 Agent 被允许自己选择这些动作时，它默认更愿意保留 raw episode，只少量使用 abstract store。更极端的是，禁用 consolidation、只做 episodic management 的版本，能匹配甚至超过 full auto mode。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">当抽象能力不可靠时，少抽象就是一种能力。</strong></p>
+<h2 id="对工程系统的启发" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">11.  对工程系统的启发</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果今天让我设计一个 production Agent memory，我会先定几条保守规则：</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">raw episode 不直接丢弃，至少在一个可审计窗口内保留；任何 abstract memory 必须带 provenance——从哪些 episode 来，哪些任务验证过，最近一次导致失败是什么时候；memory update 不能只看新增经验，还要做 regression test，更新后老任务还会不会，以前稳定通过的 case 有没有掉；consolidation 要分组，不要把不同 task family 的经验混在一起；memory 要支持撤销，一次坏的 consolidation 不应该永久污染系统。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这些听起来都不酷，没有"自进化 Agent"那么性感。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但工程上真正难的地方，往往不是让系统多做一步，而是知道哪一步不该做。</p>
+<h2 id="记忆会成为新的状态管理问题" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">12.  记忆会成为新的状态管理问题</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">过去我们讨论 Agent，经常把问题放在 planning、tool use、multi-step reasoning 上。但如果 Agent 真要长期运行，memory 会变成新的状态管理问题。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">状态管理从来都不只是"存起来"——它还包括一致性、版本、回滚、隔离、过期、审计、权限。Agent memory 也是一样。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">今天很多 memory 系统还停留在"把经验总结成文本，放进向量库"的阶段。它像一个很聪明但没有事务、没有版本、没有审计日志的数据库。短 demo 里没问题，长期运行一定出事。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">Agent 的记忆不是知识库，而是会影响行为的状态。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">只要它会影响行为，就必须按状态来管理，而不是按文档来管理。</p>
+<h2 id="过早收敛是设计缺陷" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">13.  过早收敛是设计缺陷</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这篇论文和《为什么自然界从不复制最优》有异曲同工之妙。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">那篇讲的是：不要让当前 best 污染整个未来 population。这篇讲的是：不要让当前 summary 污染整个未来 memory。底层都是同一件事：在不确定的、复杂的、多峰的任务里，<strong style="font-weight:700;color:#111827;">过早收敛是一种系统性风险</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这篇论文最好的地方，是它说的不是"LLM 不会记忆"，而是一件更麻烦的事：LLM 可以把有用经验写成坏记忆。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">没有记忆的 Agent，只是笨。有坏记忆的 Agent，会自信地错。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">所以我现在看 Agent memory，会先问一个问题：这条记忆坏掉的时候，系统怎么知道？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果答案是"不知道"，它就不是记忆，它是污染源。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">自然界不复制最优，因为今天的 best 可能是明天的 worst。Agent 也不该克隆自己的记忆，因为今天最合理的解释，可能正是明天最大的偏见。</p>
+<h2 id="References" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">14.  References</h2><ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://arxiv.org/pdf/2605.12978" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Useful Memories Become Faulty When Continuously Updated by LLMs</a></li>
+</ul>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/05/20/faulty-agent-memory/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/05/20/faulty-agent-memory/</a></p>
+    </section>
+  </main>
+</body>
+</html>

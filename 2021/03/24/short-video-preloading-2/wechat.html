@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2021/03/24/short-video-preloading-2/">
+  <title>短视频预加载技术（二） | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">短视频预加载技术（二）</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2021-03-24 · Johnson Lee · Computer Science / Mobile</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"> 最近有朋友问道：“森哥，你在面试中是如何考察候选人的架构设计能力的？”，这个问题不太方便回答，在 <a href="https://johnsonlee.io/2021/02/10/short-video-preloading-1/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">短视频预加载技术（一）</a> 中，我们从架构设计的角度系统性的介绍了短视的预加载技术，如果非要举个例子的话，那我们不妨就以短视频预加载为例吧。</p>
+<h2 id="面试题" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  面试题</h2><h3 id="条件" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">1.1.  条件</h3><ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">给定一个异步文件下载 SDK，API 如下：</li>
+</ol>
+  <pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">enum class DownloadStatus {
+    COMPLETE,
+    IN_PROGRESS,
+    ERROR,
+}
+
+interface DownloadCallback {
+    fun onProgressChange(task: DownloadTask, status: DownloadStatus) = Unit
+}
+
+data class DownloadTask(
+    /**
+    * 资源 URL
+    */
+    val url: String,
+
+    /**
+    * 需要下载的 size
+    */
+    val size: Long,
+
+    /**
+    * 超时时间 (ms)
+    */
+    val timeout: Long
+)
+
+fun download(task: DownloadTask, callback: DownloadCallback)  {
+    // ...
+}
+
+fun cancel(task: DownloadTask) {
+    // ...
+}</code></pre>
+
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">给定服务端返回的视频列表格式如下：</li>
+</ol>
+  <pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">{
+  data: [{
+      id: "12345",
+      path: "12345.mp4",
+      cdns: ["1.2.3.4", "2.3.4,5", ...],
+      ......
+  },{
+      id: "23456",
+      path: "23456.mp4",
+      cdns ["1.2.3.4", "2.3.4,5", ...],
+      ......
+  }]
+}</code></pre>
+
+<h3 id="需求" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">1.2.  需求</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">实现一个多源（同一个图片，来自多个 <em style="font-style:italic;color:#1f2937;">CDN</em> ，<em style="font-style:italic;color:#1f2937;">URL path</em> 相同，但 <em style="font-style:italic;color:#1f2937;">host</em> 不同）视频列表的下载功能，并满足以下条件：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">一次最多只能下载一个视频，即：前一个视频下载完成（或者失败）之后，才能下载下一个</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">默认从第 <em style="font-style:italic;color:#1f2937;">0</em> 个源开始下载，在当前源下载失败后，切换到下一个源进行重试，如果重试完所有源还是失败，则放弃当前视频，继续下载下一个视频</li>
+</ul>
+<h3 id="进阶" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">1.3.  进阶</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">假设 API 是分页的，每页返回 <em style="font-style:italic;color:#1f2937;">10</em> 个视频，实现：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">第一轮每个视频下载 <em style="font-style:italic;color:#1f2937;">200KB</em> ，每个视频的 <em style="font-style:italic;color:#1f2937;">200KB</em> 都下完后，接着开始第二轮，每个再下 <em style="font-style:italic;color:#1f2937;">200K</em> ，以此类推，直到所有的视频都下载完为止</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">响应 UI 的滑动操作，根据当前视频在视频列表中的索引，预加载当前视频之后的所有视频，下载策略参考上一项</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">以抖音 app 为例，当滑动到索引为 <em style="font-style:italic;color:#1f2937;">1</em> 的视频时（假设 API 返回的数据是每页 10 条）</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">如果当前正在下载的视频不是索引为 <em style="font-style:italic;color:#1f2937;">2</em> 的视频，则取消当前正在下载的任务，然后依次下载索引为 <em style="font-style:italic;color:#1f2937;">2, 3, 4, 5, 6, 7, 8, 9</em> 的视频</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">如果当前正在下载的视频是索引为 <em style="font-style:italic;color:#1f2937;">2</em> 的视频，则继续当前任务，直到当前任务完成后，依次下载索引为 <em style="font-style:italic;color:#1f2937;">3, 4, 5, 6, 7, 8, 9</em> 的视频</li>
+</ul>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2021/03/24/short-video-preloading-2/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2021/03/24/short-video-preloading-2/</a></p>
+    </section>
+  </main>
+</body>
+</html>

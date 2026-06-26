@@ -1,0 +1,167 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta name="theme-color" content="#FFF" id="theme-color"><meta content="telephone=no" name="format-detection"><meta name="description" content="老板问：&quot;我们 AI 自动化测试做得怎么样了？&quot;会议室里没人说话。一个月前，有人提醒过：AI 不可靠，自动化测试不能这么搞，测试系统最怕的不是不会做，而是不稳定。但那个时候，这句话听起来很像借口——站在老板的位置，也很难判断，到底是 AI 不可靠，还是你人不行？ 烧了上百万美元，团队终于得出一个结论：AI 在自动化测试这件事上不行，最后还得靠人，靠自动化脚本。什么？！裤子都脱了，你告诉我这个？这事"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,johnsonlee,johnson,lijingsen,jingsen,ai,agent,llm,claude,claude code,ai工程化,harness,harness engineering,autoevolve,prompt engineering,RAG,agentic,MCP,AGI,vibe coding,ai coding,copilot,cursor,chatgpt,openai,anthropic,transformer,fine-tuning,embedding,multimodal,chain of thought,function calling,tool use,RLHF,ai native,架构设计,性能优化,滴滴,快手,我在滴滴做架构,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2026/05/29/anthropic-promises-vs-enterprise-bills/"><link rel="alternate" hreflang="zh-CN" href="https://johnsonlee.io/2026/05/29/anthropic-promises-vs-enterprise-bills/"><link rel="alternate" hreflang="en" href="https://johnsonlee.io/en/2026/05/29/anthropic-promises-vs-enterprise-bills/"><link rel="alternate" hreflang="x-default" href="https://johnsonlee.io/2026/05/29/anthropic-promises-vs-enterprise-bills/"><meta property="og:title" content="A 社画的饼，正在变成企业的账单"><meta property="og:description" content="老板问：&quot;我们 AI 自动化测试做得怎么样了？&quot;会议室里没人说话。一个月前，有人提醒过：AI 不可靠，自动化测试不能这么搞，测试系统最怕的不是不会做，而是不稳定。但那个时候，这句话听起来很像借口——站在老板的位置，也很难判断，到底是 AI 不可靠，还是你人不行？ 烧了上百万美元，团队终于得出一个结论：AI 在自动化测试这件事上不行，最后还得靠人，靠自动化脚本。什么？！裤子都脱了，你告诉我这个？这事"><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2026/05/29/anthropic-promises-vs-enterprise-bills/"><meta property="og:image" content="https://johnsonlee.io/og-cards/anthropic-promises-vs-enterprise-bills.png"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2026-05-29T10:00:00.000Z"><meta property="article:author" content="Johnson Lee"><meta property="article:tag" content="AI"><meta property="article:tag" content="Agent"><meta property="article:tag" content="ROI"><meta property="article:tag" content="Automation"><meta property="article:tag" content="Testing"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="A 社画的饼，正在变成企业的账单"><meta name="twitter:description" content="老板问：&quot;我们 AI 自动化测试做得怎么样了？&quot;会议室里没人说话。一个月前，有人提醒过：AI 不可靠，自动化测试不能这么搞，测试系统最怕的不是不会做，而是不稳定。但那个时候，这句话听起来很像借口——站在老板的位置，也很难判断，到底是 AI 不可靠，还是你人不行？ 烧了上百万美元，团队终于得出一个结论：AI 在自动化测试这件事上不行，最后还得靠人，靠自动化脚本。什么？！裤子都脱了，你告诉我这个？这事"><meta name="twitter:image" content="https://johnsonlee.io/og-cards/anthropic-promises-vs-enterprise-bills.png"><title>A 社画的饼，正在变成企业的账单 | Johnson Lee</title><script>(function(){var h=new Date().getHours();if(h<6||h>=19){document.documentElement.setAttribute('data-weather','night');var m=document.getElementById('theme-color');if(m)m.setAttribute('content','#020617')}})();</script><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&amp;display=swap"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Johnson Lee"><link rel="alternate" type="application/atom+xml" href="/atom.en.xml" title="Johnson Lee (English)" hreflang="en"><script type="text/javascript" src="/js/weather-theme.js" defer></script><script type="text/javascript" src="/js/weather-canvas.js" defer></script><script type="text/javascript" src="/js/i18n-switch.js" defer></script><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="body_container"><img src="/og-cards/anthropic-promises-vs-enterprise-bills.png" style="display:none"><div id="header"><div class="site-name"><h1 class="hidden">A 社画的饼，正在变成企业的账单</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a target="_blank" rel="noopener" href="https://about.johnsonlee.io/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div><button class="lang-switch" type="button" data-target-lang="en" title="English">EN</button></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">A 社画的饼，正在变成企业的账单</h1><div class="post-meta">May 29, 2026<span> | </span><span class="category"><a href="/categories/Independent-Thinking/">Independent Thinking</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 5.9k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 20</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>老板问：&quot;我们 AI 自动化测试做得怎么样了？&quot;会议室里没人说话。一个月前，有人提醒过：AI 不可靠，自动化测试不能这么搞，测试系统最怕的不是不会做，而是不稳定。但那个时候，这句话听起来很像借口——站在老板的位置，也很难判断，到底是 AI 不可靠，还是你人不行？</p>
+<p>烧了上百万美元，团队终于得出一个结论：AI 在自动化测试这件事上不行，最后还得靠人，靠自动化脚本。什么？！裤子都脱了，你告诉我这个？这事最魔幻的地方，不是 AI 没有替代测试，而是企业花了成百上千万美元，才重新发现了一件十年前就知道的事：软件质量靠工程纪律，靠稳定接口，靠确定性反馈，靠一遍遍枯燥但可靠的自动化脚本。A 社当然不会这么讲——它会讲 Agent，讲 reasoning，讲&quot;未来每个公司都会拥有一支数字员工队伍&quot;，翻译成人话就是：你先买单，成不成算未来的。</p>
+<h2 id="A-社最厉害的地方，不是模型，是叙事"><a href="#A-社最厉害的地方，不是模型，是叙事" class="headerlink" title="A 社最厉害的地方，不是模型，是叙事"></a>A 社最厉害的地方，不是模型，是叙事</h2><p>先说清楚，A 社的模型不弱。</p>
+<p>它能写代码，能读文档，能分析日志，能生成测试用例，能在某些受控场景下把任务跑通。很多能力是真的，不是假的。</p>
+<p>问题不在能力，问题在包装。</p>
+<p><strong>A 社最厉害的地方，不是把模型做得多强，而是把&quot;模型能做一次&quot;包装成&quot;企业可以长期依赖&quot;。</strong></p>
+<p>这中间差了十万八千里。</p>
+<p>Demo 里，Agent 成功一次就够了。生产里，系统要稳定一万次。Demo 里，失败了可以重录。生产里，失败了要有人背锅。Demo 里，环境是干净的，路径是设计好的，数据是准备好的，用户是配合的。生产里，环境是脏的，路径是混乱的，数据是历史遗留的，用户是不会按剧本走的。</p>
+<p>A 社当然知道这些区别。但它不会把这些区别放在 PPT 首页。它会把最顺滑的路径剪出来，把最聪明的瞬间放大，把最像未来的片段讲成必然趋势。至于中间那些权限、上下文、误报、复核、成本、集成、治理、责任边界，统统变成一句轻飘飘的：</p>
+<p>&quot;这些都可以随着模型能力提升解决。&quot;</p>
+<p>妙啊。所有当下解决不了的问题，都被打包寄给未来。</p>
+<p>A 社卖的不是确定性，而是把不确定性包装成确定性的能力。这才是企业最容易中招的地方。不是因为老板傻，不是因为工程师不懂，而是因为整个故事太完整了。它刚好击中企业最想听的东西：少招人、少写脚本、少管流程、少做苦活，让 Agent 自动完成一切。</p>
+<p>谁不想信？</p>
+<h2 id="那个时候，谁都没法说自己一定对"><a href="#那个时候，谁都没法说自己一定对" class="headerlink" title="那个时候，谁都没法说自己一定对"></a>那个时候，谁都没法说自己一定对</h2><p>一个月前，工程师说&quot;AI 不可靠&quot;。</p>
+<p>这句话本身没问题。但放到当时的语境里，它听起来就很复杂。</p>
+<p>你怎么知道这是技术事实，还是团队在抗拒变化？你怎么知道是 AI 真不行，还是这帮人不会用？你怎么知道是方向错了，还是执行不到位？你怎么知道是模型能力不够，还是 prompt 没写好、上下文没给够、工具链没接顺？</p>
+<p>这不是老板蠢。这是所有新技术落地时都会出现的灰区。尤其在 AI 这件事上，灰区被 A 社们放大了十倍。外面所有人都在讲 Agent，所有 demo 都在展示&quot;端到端自动完成任务&quot;，所有投资人、媒体、vendor 都在说企业软件要被重写。你坐在那个位置，很难不问一句：</p>
+<p>别人都在搞，我们不搞，是不是要落后？</p>
+<p>所以当工程师说&quot;AI 不可靠&quot;的时候，这句话在会议室里会自动变味。它原本是一句技术判断，听起来却像一句防守姿态。像是不想改流程，像是不想碰新东西，像是在保护自己的舒适区，像是在给执行失败提前找借口。</p>
+<p><strong>AI 狂热期里，最难的不是判断模型边界，而是判断谁在说真话。</strong></p>
+<p>工程师可能是对的。老板的怀疑也不是完全没道理。过去二十年，太多&quot;技术上不可能&quot;最后都被证明只是&quot;当时那批人不会做&quot;。云计算刚出来，有人说不安全；移动互联网刚起来，有人说只是玩具；低代码、Serverless、DevOps、Kubernetes，每一轮新东西出来，都会有人说&quot;不靠谱&quot;。老板听多了，自然会形成一个本能反应：</p>
+<p>你说不行，到底是它不行，还是你不行？</p>
+<p>这句话不好听，但它很真实。</p>
+<p>问题在于，AI 自动化测试最后证明的是另一件事：这一次，说&quot;不可靠&quot;的人不是保守，他只是把测试系统最基本的约束说了出来。测试不是 demo，测试不是魔法，测试不是让一个聪明东西去自由发挥，测试是把&quot;什么叫对&quot;写成确定性的契约。</p>
+<p>这件事，一个月前讲，像借口。一个月后讲，叫复盘。中间差的不是认知，是上百万美元。</p>
+<h2 id="AI-最擅长的地方，恰好不是测试最需要的地方"><a href="#AI-最擅长的地方，恰好不是测试最需要的地方" class="headerlink" title="AI 最擅长的地方，恰好不是测试最需要的地方"></a>AI 最擅长的地方，恰好不是测试最需要的地方</h2><p>LLM 很强。它能读懂一段需求，猜出用户想干什么；它能根据代码补测试；它能把错误日志翻译成人话；它甚至能在某些简单场景里，像一个 junior QA 一样点点页面，找出明显 bug。这些能力都是真的。</p>
+<p>这也是 A 社叙事最聪明的地方。它不需要完全撒谎，它只需要拿一个真实能力，往前多推半步。模型能生成测试用例，于是它暗示未来可以自动完成测试。模型能操作浏览器，于是它暗示未来可以替代人工回归。模型能理解页面，于是它暗示未来可以判断业务正确性。模型能跑通一个 demo，于是它暗示企业可以把质量体系交给 Agent。</p>
+<p>每一步看起来都不离谱。但连起来就很离谱。</p>
+<p>因为自动化测试要的不是&quot;有时候看起来挺聪明&quot;。自动化测试要的是重复、稳定、可解释、可回放。今天跑 100 次，99 次结果一致；失败了能定位到哪一层；误报率低到团队愿意相信它；成本低到能放进 CI 里天天跑。</p>
+<p>AI 恰好反过来。它每次都像在重新理解世界。上下文换一点，判断变一点；页面抖一下，结果变一点；需求没写清楚，它开始脑补；按钮文案改一下，它像新入职的同事一样重新适应。</p>
+<p><strong>测试系统最怕的，不是笨，而是不稳定。</strong></p>
+<p>一个笨脚本，只要稳定，就能创造价值。一个聪明 Agent，只要不稳定，就会制造噪音。工程团队不怕工具能力有限，怕的是它每次失败的方式都不一样。</p>
+<p>脚本失败，通常会留下明确痕迹：selector 变了，接口挂了，数据不对，环境异常。修一次，下次就少一个坑。Agent 失败不一样。它可能是理解错了页面，可能是漏了一个业务规则，可能是上下文塞太多注意力飘了，可能是模型这次抽风，可能是 prompt 里某句话权重不对，也可能什么都没错，它只是这次做了一个和上次不一样的判断。</p>
+<p>这类失败最要命。它不是 bug，它像情绪。工程系统能处理 bug，很难处理情绪。因为 bug 可以复现，情绪只能安抚。</p>
+<h2 id="Demo-里的-Agent-是员工，生产里的-Agent-是实习生"><a href="#Demo-里的-Agent-是员工，生产里的-Agent-是实习生" class="headerlink" title="Demo 里的 Agent 是员工，生产里的 Agent 是实习生"></a>Demo 里的 Agent 是员工，生产里的 Agent 是实习生</h2><p>AI 自动化测试的 demo 通常很迷人。你给它一个登录页，它能自己输入账号密码；你让它检查购物车，它能一路点到 checkout；你给它一段需求，它能生成测试步骤。配上一句&quot;未来 QA 只需要 review AI 生成的结果&quot;，听起来很合理——这不就是人效提升吗？</p>
+<p>但真实系统不是 demo。</p>
+<p>真实系统有灰度环境，有脏数据，有权限隔离，有 A&#x2F;B 实验，有弹窗，有风控，有 flaky network，有历史债，有埋在角落里的业务规则。更要命的是，真实系统每天都在变。</p>
+<p>Agent 进来以后，第一件事不是测试，而是迷路。它不知道哪个账号有权限；不知道这个按钮为什么在某些用户下不展示；不知道错误 toast 是预期还是 bug；不知道页面慢是环境问题还是性能问题；不知道某个失败 case 到底该重跑、跳过、上报，还是找人。</p>
+<p>于是团队开始给它补上下文。补账号体系，补环境说明，补页面结构，补业务规则，补异常处理，补 prompt，补 eval，补 tracing，补人工 review。补着补着，大家发现不对劲：</p>
+<p><strong>这玩意儿不是替人干活，这是多了一个永远需要解释世界、永远需要复核结果、永远不承担责任的实习生。</strong></p>
+<p>Agent 最大的问题不是不会做事，而是它不知道什么时候自己做错了。测试偏偏不能接受这个。因为测试不是写作文——写错了可以改。测试错了，会让团队误判质量。一个误报会浪费工程师时间，一个漏报会把 bug 放进生产，一个不稳定的测试系统，最后会被所有人无视。</p>
+<p>更糟的是，团队会为了让 Agent 看起来能工作，反过来改造自己的工作流。本来一个 Playwright 脚本能解决的问题，现在要写 prompt；本来一个 mock server 能解决的问题，现在要给 Agent 解释数据状态；本来一个 assert 能解决的问题，现在要让模型判断&quot;页面看起来是否正确&quot;。</p>
+<p>你以为你在自动化测试，其实你在自动化地伺候 AI。</p>
+<p>A 社会把这叫&quot;human-in-the-loop&quot;。这词听起来很高级。但很多时候，它的真实意思是：AI 干不完的，你来兜底；AI 判断不准的，你来复核；AI 迷路的，你来导航；AI 搞砸的，你来解释。最后账单还是它的，责任还是你的。</p>
+<h2 id="企业真正买到的，是一张更贵的账单"><a href="#企业真正买到的，是一张更贵的账单" class="headerlink" title="企业真正买到的，是一张更贵的账单"></a>企业真正买到的，是一张更贵的账单</h2><p>过去买 SaaS，至少还有个确定性。买 Jira，流程被固化；买 GitHub，代码协作被固化；买 CI，构建和发布被固化。它们不一定让组织变聪明，但会把某些动作标准化。</p>
+<p>AI 不一样。很多 AI 项目卖的不是确定性，而是可能性。</p>
+<p>&quot;它<strong>可能</strong>帮你省掉 50% QA。&quot;&quot;它<strong>可能</strong>自动发现线上问题。&quot;&quot;它<strong>可能</strong>让研发效率翻倍。&quot;</p>
+<p>注意，关键词是&quot;可能&quot;。这也是 A 社叙事最鸡贼的地方。说得太满，容易被打脸；说得太虚，没人买单。所以最好的话术，就是把所有结果都停在&quot;可能&quot;上——可能替代，可能提升，可能重构，可能颠覆。然后让企业用确定的钱，为不确定的未来买单。</p>
+<p>于是 Token 费、平台费、集成费、咨询费、PoC 费、内部人力，全都算进去，账单飞起来。Dashboard 上，调用量很漂亮，Token burn rate 很性感，汇报里也终于有了 AI transformation。</p>
+<p>可到了最后，真正能回答 ROI 的问题只有三个：这件事原来谁做？现在这个人少做了多少？省下来的时间有没有变成收入、利润，或者更强的组织能力？</p>
+<p><strong>大部分 AI 自动化测试项目死在第二个问题。人没少，脚本没少，review 没少，只是中间多了一个模型调用环节。</strong></p>
+<p>Token 不是生产力，Token 只是成本单位。把测试流程里每一步都接上 LLM，并不等于自动化。很多时候，它只是把原来便宜、确定、可控的工程问题，改造成了昂贵、不确定、难 debug 的 AI 问题。</p>
+<p>以前脚本失败，工程师看日志。现在 Agent 失败，工程师先猜它为什么这么想。这叫把确定性债务换成认知债务。技术债至少能定位，认知债连边界都没有。所有问题最后都会变成一句话：再试试，再调调，再加点上下文，再换个模型，再买点额度。听起来像迭代，实际上像赌博。只不过赌场换了个名字，叫 AI transformation。</p>
+<h2 id="自动化测试的本质，从来不是-像人一样点页面"><a href="#自动化测试的本质，从来不是-像人一样点页面" class="headerlink" title="自动化测试的本质，从来不是&quot;像人一样点页面&quot;"></a>自动化测试的本质，从来不是&quot;像人一样点页面&quot;</h2><p>很多人对自动化测试有个误解：以为它的目标是模拟人。所以 Agent 很有诱惑力——人会看页面，Agent 也会看；人会点按钮，Agent 也会点；人会判断结果对不对，Agent 好像也会。</p>
+<p>A 社最喜欢的就是这个错觉。因为只要你相信测试是在&quot;像人一样操作系统&quot;，你就会自然相信一个更聪明的 Agent 可以替代人。</p>
+<p>但测试的本质不是模拟人。<strong>测试的本质是把质量判断变成机器可执行的契约。</strong></p>
+<p>一个好的测试，不是&quot;像人一样聪明&quot;，而是把&quot;什么叫对&quot;写死。接口返回什么，状态怎么变化，数据库应该有什么，事件有没有发出，权限边界怎么生效，性能阈值是多少。这些东西越明确，测试越有价值。</p>
+<p>AI 恰恰喜欢模糊。它擅长在模糊里给出一个看似合理的答案。但测试要做的是消灭模糊。这就是根本冲突。</p>
+<p>你可以让 AI 辅助写测试，帮你生成 skeleton，帮你补边界 case，帮你解释失败原因，帮你从日志里聚类问题。这些都很有价值。但你不能指望 AI 替你决定系统是不是对的。因为&quot;对&quot;不是模型涌现出来的，&quot;对&quot;来自业务规则，来自接口契约，来自工程师和 QA 对系统的共同理解。</p>
+<p>测试不是让机器自由发挥，测试是不给机器自由发挥。越关键的系统，越不能靠感觉。支付不能靠感觉，权限不能靠感觉，账务不能靠感觉，发布不能靠感觉。</p>
+<p>这也是为什么很多 AI 测试项目最后都会回到 Playwright、Cypress、JUnit、pytest、mock、fixture、CI、coverage、contract test 这些老东西上。不是因为这些东西性感，是因为它们可靠。<strong>工程世界里，可靠经常比聪明值钱。</strong></p>
+<h2 id="最贵的不是账单，是优先级被带偏"><a href="#最贵的不是账单，是优先级被带偏" class="headerlink" title="最贵的不是账单，是优先级被带偏"></a>最贵的不是账单，是优先级被带偏</h2><p>花上百万美元验证 AI 不适合接管自动化测试，账单当然肉疼。但更贵的是优先级被带偏。</p>
+<p>这件事不能简单归因到老板不懂技术，也不能简单归因到团队执行不行。更准确地说，是 A 社们在过去两年制造了一种错觉：只要模型继续变强，很多基础工程就可以跳过去。</p>
+<p>于是该补测试基础设施的时候，大家会先想能不能买 Agent；该清理测试数据的时候，大家会先想能不能调 prompt；该建设稳定环境的时候，大家会先想能不能用多模态理解页面；该定义质量标准的时候，大家会先想能不能让模型自己判断。</p>
+<p>这就像地基没打好，先研究智能装修。不是装修没价值，是房子会塌。</p>
+<p>AI 项目失败以后，组织也很容易把原因归到&quot;模型还不够强&quot;。这句话最省事，因为它把问题推给未来。今年模型不够强，明年再试；明年上下文不够长，后年再试；后年 Agent 不够稳定，再等等。</p>
+<p>这套逻辑对谁最有利？当然是 A 社。因为每一次失败，都不会证明它的叙事有问题，只会证明你还应该买下一代模型。当前模型不够强？升级。上下文不够长？升级。工具调用不够稳？升级。成本太高？等下一代。效果不好？再做一轮 PoC。</p>
+<p>你看，所有路都通向账单。</p>
+<p><strong>AI 能放大工程能力，但不能替代工程能力。</strong> 一个没有稳定测试体系的团队，上 AI 只会更乱。一个没有清晰质量标准的组织，上 Agent 只会更贵。AI 不会自动补齐组织缺的那一课，它只会把缺口照得更亮。</p>
+<h2 id="真正有用的-AI-测试，不长得像-demo"><a href="#真正有用的-AI-测试，不长得像-demo" class="headerlink" title="真正有用的 AI 测试，不长得像 demo"></a>真正有用的 AI 测试，不长得像 demo</h2><p>不是说 AI 在测试里没用。恰恰相反，AI 很有用。但它最有用的地方，不是替你端到端接管测试，而是嵌进已有工程体系里，做那些低风险、高重复、可验证的事。</p>
+<p>比如从代码 diff 里推荐需要补的测试；比如根据接口 schema 生成边界 case；比如分析 flaky test 的失败模式；比如把线上错误日志聚类，归因到可能的模块；比如帮 QA 把自然语言场景转成 Playwright skeleton；比如在 PR 里提醒：你改了权限判断，但没有补对应测试。</p>
+<p>这些场景有个共同点：AI 不负责最终判断。它负责提案，人负责确认；它负责生成，脚本负责验证；它负责解释，工程系统负责裁决。</p>
+<p><strong>AI 最适合做副驾驶，不适合做安全带。</strong> 安全带必须确定，副驾驶可以聪明。这两个位置不能搞反。</p>
+<p>如果一个 AI 测试工具的价值主张是&quot;让你不用写测试&quot;，那大概率是坑。如果它的价值主张是&quot;让你更快写出可靠测试&quot;，那才可能有戏。前者在卖幻想，后者在卖工具。</p>
+<p>A 社当然更喜欢卖前者。因为幻想的 TAM 最大。卖&quot;帮你更快写 Playwright 脚本&quot;，听起来只是一个工具；卖&quot;未来测试团队会被 Agent 重写&quot;，听起来才像下一代平台。资本市场爱听后者，老板汇报爱听后者，媒体标题爱听后者。只是最后落到团队手里，前者能省时间，后者会烧预算。</p>
+<h2 id="这场实验真正证明了什么"><a href="#这场实验真正证明了什么" class="headerlink" title="这场实验真正证明了什么"></a>这场实验真正证明了什么</h2><p>从结果看，上百万美元买来的结论很简单：AI 不能独立接管自动化测试。</p>
+<p>但这不是全部。它还证明了几件更难听的事。</p>
+<p>它证明了很多企业没有能力区分 demo 和生产力。它证明了很多人分不清&quot;模型能做一次&quot;和&quot;系统能长期稳定运行&quot;。它证明了很多 AI 项目的 ROI，从第一天开始就没人敢认真算。它也证明了，在叙事足够热的时候，工程常识会被暂时打成保守。</p>
+<p>一个月前，那个说&quot;AI 不可靠&quot;的人，可能还在被质疑。一个月后，账单证明他是对的。这件事听起来爽吗？不爽。因为组织已经付过学费了。</p>
+<p>真正成熟的组织，不应该靠上百万美元的账单来证明常识。它应该允许团队在项目开始前，就把难听的话说完。它应该允许有人问：这个 Agent 失败了谁负责？这个结果怎么验证？这个流程省掉了哪个人？这个系统如何进入 CI？这个方案跟现有脚本相比，成本低在哪里？</p>
+<p>如果这些问题问不清楚，项目就不该立项。不是因为反 AI，是因为尊重钱。</p>
+<p>A 社不会替你问这些问题，它的销售也不会。它们最希望你问的是：&quot;什么时候接入？&quot;&quot;要买多少额度？&quot;&quot;能不能支持我们的场景？&quot;但企业真正该问的是：&quot;如果这个东西失败了，我们能不能解释为什么？&quot;很多 AI 项目回答不了这个问题。回答不了，就不是工程系统，只是一个昂贵的愿望机。</p>
+<h2 id="A-社画的饼，正在变成企业的账单"><a href="#A-社画的饼，正在变成企业的账单" class="headerlink" title="A 社画的饼，正在变成企业的账单"></a>A 社画的饼，正在变成企业的账单</h2><p>过去两年，AI 公司讲了一个很漂亮的故事：Agent 会接管白领工作，软件会自己写自己，测试会自己跑自己。企业只要接入模型，就能获得一支不会睡觉、无限扩容、随叫随到的数字员工队伍。</p>
+<p>这个故事太诱人了，诱人到很多人忘了问一句：它到底替我们省了什么？</p>
+<p>如果一个 AI 项目花了上百万美元，最后只是证明&quot;测试还得靠人、靠自动化脚本&quot;，那它当然也有价值——它完成了一次昂贵的组织教育。它告诉老板，AI 不是魔法；告诉团队，工程纪律不会过时；告诉财务，Token burn 不等于 transformation；告诉所有人，demo 里的未来不能直接折现成生产力。</p>
+<p>只是这个学费太贵了。</p>
+<p>真正的问题不是 A 社有没有能力。A 社当然有能力。问题是它把能力边界讲得太轻，把落地成本讲得太少，把未来收益讲得太满。它把 demo 里的顺滑，包装成生产里的必然；把模型偶尔展现出的聪明，包装成组织可以采购的生产力；把企业对降本增效的焦虑，包装成一张张越来越厚的 Token 账单。</p>
+<p>销售当然会画饼，创业公司当然会讲未来，模型公司当然希望你相信&quot;下一代会解决一切&quot;。问题是企业为什么这么容易相信？因为&quot;AI 替代人&quot;这个故事，比&quot;回去把自动化测试体系补好&quot;性感太多。前者像未来，后者像苦活。</p>
+<p>可软件工程大部分有价值的东西，本来就是苦活。写脚本是苦活，补 case 是苦活，清数据是苦活，稳定 CI 是苦活，定义质量标准是苦活。这些东西不会因为 Agent 出现就消失，它们只会换一种方式回来找你要账。</p>
+<p>有些账，可以付给工程师；有些账，可以付给 QA；有些账，可以付给基础设施；也可以付给模型公司。区别在于，前三种账付完以后，组织会长出能力。最后一种账付完以后，通常只会长出下一张账单。</p>
+<p>下一次有人拿着 AI 自动化测试 demo 走进会议室，先问一句：</p>
+<p><strong>这个东西到底是在替我们提高质量，还是只是在替 A 社提高收入？</strong></p>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>johnsonlee</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="/2026/05/29/anthropic-promises-vs-enterprise-bills/">https://johnsonlee.io/2026/05/29/anthropic-promises-vs-enterprise-bills/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"><a href="/tags/AI/">AI</a><a href="/tags/Agent/">Agent</a><a href="/tags/ROI/">ROI</a><a href="/tags/Automation/">Automation</a><a href="/tags/Testing/">Testing</a></div><div class="post-nav"><a class="pre" href="/2026/05/30/saas-value-return-token-burning/">疯狂烧 Token 的日子要结束了</a><a class="next" href="/2026/05/20/faulty-agent-memory/">长期记忆正在把 Agent 变蠢</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"A 社画的饼，正在变成企业的账单","datePublished":"2026-05-29T10:00:00.000Z","dateModified":"2026-05-29T10:00:00.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2026/05/29/anthropic-promises-vs-enterprise-bills/"},"description":"老板问：&quot;我们 AI 自动化测试做得怎么样了？&quot;会议室里没人说话。一个月前，有人提醒过：AI 不可靠，自动化测试不能这么搞，测试系统最怕的不是不会做，而是不稳定。但那个时候，这句话听起来很像借口——站在老板的位置，也很难判断，到底是 AI 不可靠，还是你人不行？ 烧了上百万美元，团队终于得出一个结论：AI 在自动化测试这件事上不行，最后还得靠人，靠自动化脚本。什么？！裤子都脱了"}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname.replace(/^\/en\/(\d{4}\/)/, '/$1').replace(/\.en\/$/, '/')),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (107)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Harness-Engineering/">Harness Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (64)</a><ul style="padding:revert"></ul></li><li><a href="/categories/investing/">Investing (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Developer-Tools/" style="font-size: 15px;">Developer Tools</a> <a href="/tags/Dotfiles/" style="font-size: 15px;">Dotfiles</a> <a href="/tags/Claude-Code/" style="font-size: 15px;">Claude Code</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/AI-PC/" style="font-size: 15px;">AI PC</a> <a href="/tags/Wintel/" style="font-size: 15px;">Wintel</a> <a href="/tags/NVIDIA/" style="font-size: 15px;">NVIDIA</a> <a href="/tags/Microsoft/" style="font-size: 15px;">Microsoft</a> <a href="/tags/Local-LLM/" style="font-size: 15px;">Local LLM</a> <a href="/tags/Token/" style="font-size: 15px;">Token</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/Consciousness/" style="font-size: 15px;">Consciousness</a> <a href="/tags/Self-Reference/" style="font-size: 15px;">Self-Reference</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Attention/" style="font-size: 15px;">Attention</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Agentic-Coding/" style="font-size: 15px;">Agentic Coding</a> <a href="/tags/Enterprise/" style="font-size: 15px;">Enterprise</a> <a href="/tags/Buddhism/" style="font-size: 15px;">Buddhism</a> <a href="/tags/Taoism/" style="font-size: 15px;">Taoism</a> <a href="/tags/Physics/" style="font-size: 15px;">Physics</a> <a href="/tags/Philosophy/" style="font-size: 15px;">Philosophy</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/Automation/" style="font-size: 15px;">Automation</a> <a href="/tags/Testing/" style="font-size: 15px;">Testing</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/Cognitive-Boundary/" style="font-size: 15px;">Cognitive Boundary</a> <a href="/tags/Randomness/" style="font-size: 15px;">Randomness</a> <a href="/tags/Self-Evolution/" style="font-size: 15px;">Self-Evolution</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Dimension-Hacking/" style="font-size: 15px;">Dimension Hacking</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Economy/" style="font-size: 15px;">Economy</a> <a href="/tags/Future/" style="font-size: 15px;">Future</a> <a href="/tags/UBI/" style="font-size: 15px;">UBI</a> <a href="/tags/Product-Strategy/" style="font-size: 15px;">Product Strategy</a> <a href="/tags/Copilot/" style="font-size: 15px;">Copilot</a> <a href="/tags/Google/" style="font-size: 15px;">Google</a> <a href="/tags/Technology/" style="font-size: 15px;">Technology</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Product-Management/" style="font-size: 15px;">Product Management</a> <a href="/tags/Project-Management/" style="font-size: 15px;">Project Management</a> <a href="/tags/AI-Agent/" style="font-size: 15px;">AI Agent</a> <a href="/tags/Memory/" style="font-size: 15px;">Memory</a> <a href="/tags/Loop-Engineering/" style="font-size: 15px;">Loop Engineering</a> <a href="/tags/Harness-Engineering/" style="font-size: 15px;">Harness Engineering</a> <a href="/tags/Eval/" style="font-size: 15px;">Eval</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/Prompt-Engineering/" style="font-size: 15px;">Prompt Engineering</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Graphite/" style="font-size: 15px;">Graphite</a> <a href="/tags/MCP/" style="font-size: 15px;">MCP</a> <a href="/tags/Bytecode/" style="font-size: 15px;">Bytecode</a> <a href="/tags/Static-Analysis/" style="font-size: 15px;">Static Analysis</a> <a href="/tags/Ground-Truth/" style="font-size: 15px;">Ground Truth</a> <a href="/tags/Context/" style="font-size: 15px;">Context</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/06/26/fooled-by-loop-engineering.en/">Don't Let Loop Engineering Fool You</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/26/fooled-by-loop-engineering/">别被 Loop Engineering 忽悠瘸了</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/21/token-efficiency-way-forward.en/">Where Is the Way Forward for Token Efficiency?</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/21/token-efficiency-way-forward/">Token Efficiency 的出路在哪里？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/21/smart-money-after-memory/">存储之后，聪明钱会流向哪里？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/21/smart-money-after-memory.en/">After Memory, Where Will Smart Money Flow?</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/20/on-device-ai-next-wave/">AI 的下一个风口——端侧智能</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/20/on-device-ai-next-wave.en/">AI's Next Wave: On-Device Intelligence</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/20/schools-of-trading.en/">The Schools of Trading</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/20/schools-of-trading/">股票交易的流派</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>

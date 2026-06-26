@@ -1,0 +1,180 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta name="theme-color" content="#FFF" id="theme-color"><meta content="telephone=no" name="format-detection"><meta name="description" content="最近有篇论文，标题很炸：Useful Memories Become Faulty When Continuously Updated by LLMs。 翻译成人话就是：LLM Agent 的长期记忆，不是越更新越聪明，而是可能越更新越蠢。 论文里有个实验很刺眼：GPT-5.4 原本能 100% 解出一组 ARC-AGI 题。研究人员给它正确答案，让它把成功经验总结成长期记忆。连续更新 10 轮之"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,johnsonlee,johnson,lijingsen,jingsen,ai,agent,llm,claude,claude code,ai工程化,harness,harness engineering,autoevolve,prompt engineering,RAG,agentic,MCP,AGI,vibe coding,ai coding,copilot,cursor,chatgpt,openai,anthropic,transformer,fine-tuning,embedding,multimodal,chain of thought,function calling,tool use,RLHF,ai native,架构设计,性能优化,滴滴,快手,我在滴滴做架构,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2026/05/20/faulty-agent-memory/"><link rel="alternate" hreflang="en" href="https://johnsonlee.io/en/2026/05/20/faulty-agent-memory/"><link rel="alternate" hreflang="zh-CN" href="https://johnsonlee.io/2026/05/20/faulty-agent-memory/"><link rel="alternate" hreflang="x-default" href="https://johnsonlee.io/2026/05/20/faulty-agent-memory/"><meta property="og:title" content="长期记忆正在把 Agent 变蠢"><meta property="og:description" content="最近有篇论文，标题很炸：Useful Memories Become Faulty When Continuously Updated by LLMs。 翻译成人话就是：LLM Agent 的长期记忆，不是越更新越聪明，而是可能越更新越蠢。 论文里有个实验很刺眼：GPT-5.4 原本能 100% 解出一组 ARC-AGI 题。研究人员给它正确答案，让它把成功经验总结成长期记忆。连续更新 10 轮之"><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2026/05/20/faulty-agent-memory/"><meta property="og:image" content="https://johnsonlee.io/og-cards/faulty-agent-memory.png"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta property="article:published_time" content="2026-05-20T09:10:55.000Z"><meta property="article:author" content="Johnson Lee"><meta property="article:tag" content="LLM"><meta property="article:tag" content="Software Engineering"><meta property="article:tag" content="AI Agent"><meta property="article:tag" content="Memory"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="长期记忆正在把 Agent 变蠢"><meta name="twitter:description" content="最近有篇论文，标题很炸：Useful Memories Become Faulty When Continuously Updated by LLMs。 翻译成人话就是：LLM Agent 的长期记忆，不是越更新越聪明，而是可能越更新越蠢。 论文里有个实验很刺眼：GPT-5.4 原本能 100% 解出一组 ARC-AGI 题。研究人员给它正确答案，让它把成功经验总结成长期记忆。连续更新 10 轮之"><meta name="twitter:image" content="https://johnsonlee.io/og-cards/faulty-agent-memory.png"><title>长期记忆正在把 Agent 变蠢 | Johnson Lee</title><script>(function(){var h=new Date().getHours();if(h<6||h>=19){document.documentElement.setAttribute('data-weather','night');var m=document.getElementById('theme-color');if(m)m.setAttribute('content','#020617')}})();</script><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&amp;display=swap"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Johnson Lee"><link rel="alternate" type="application/atom+xml" href="/atom.en.xml" title="Johnson Lee (English)" hreflang="en"><script type="text/javascript" src="/js/weather-theme.js" defer></script><script type="text/javascript" src="/js/weather-canvas.js" defer></script><script type="text/javascript" src="/js/i18n-switch.js" defer></script><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="body_container"><img src="/og-cards/faulty-agent-memory.png" style="display:none"><div id="header"><div class="site-name"><h1 class="hidden">长期记忆正在把 Agent 变蠢</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a target="_blank" rel="noopener" href="https://about.johnsonlee.io/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div><button class="lang-switch" type="button" data-target-lang="en" title="English">EN</button></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">长期记忆正在把 Agent 变蠢</h1><div class="post-meta">May 20, 2026<span> | </span><span class="category"><a href="/categories/Independent-Thinking/">Independent Thinking</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 4.3k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 15</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>最近有篇论文，标题很炸：Useful Memories Become Faulty When Continuously Updated by LLMs。</p>
+<p>翻译成人话就是：LLM Agent 的长期记忆，不是越更新越聪明，而是可能越更新越蠢。</p>
+<p>论文里有个实验很刺眼：GPT-5.4 原本能 100% 解出一组 ARC-AGI 题。研究人员给它正确答案，让它把成功经验总结成长期记忆。连续更新 10 轮之后，准确率掉到 52.6%。它不是&quot;没学会&quot;，而是&quot;本来会，被自己的记忆教坏了&quot;。</p>
+<p>很多神话故事里，转世都要过奈何桥，喝孟婆汤。以前看这类设定，总觉得它只是为了制造戏剧冲突：忘了前世，才有今生的爱恨情仇。现在再看，反而像一种系统设计。前世记忆不是外挂，很多时候是污染源。那些经验是在上一组约束里长出来的——上一具身体、上一套关系、上一种秩序、上一轮恐惧和欲望。换了环境，还把它们当成真理带进来，不是开局优势，而是路径依赖。<strong>长期记忆最危险的地方，不是忘记，而是把一个过早的抽象硬编码进未来。</strong></p>
+<span id="more"></span>
+
+<h2 id="Memory-consolidation-是另一种克隆-best"><a href="#Memory-consolidation-是另一种克隆-best" class="headerlink" title="Memory consolidation 是另一种克隆 best"></a>Memory consolidation 是另一种克隆 best</h2><p>过去的 trajectory 不是神谕。它只是某个环境切片下，Agent 和世界互动之后留下的一组痕迹。记忆不是资产本身，记忆是环境留下的压痕。</p>
+<p>在《为什么自然界从不复制最优》里，我写过一句话：</p>
+<blockquote>
+<p>Centralize feedback, decentralize exploration.</p>
+</blockquote>
+<p>反馈可以集中。探索必须分散。</p>
+<p>best 可以作为参考信号、诊断信号、触发信号，但不能变成所有 lineage 的 base。因为一旦所有 lineage 都继承当前 best，它们就不再是在多个 basin 里探索，而是在同一个 basin 里排队撞墙。</p>
+<p>raw trajectory 是多个 lineage。每段经历都有自己的上下文、状态、反馈、失败路径。它们之间可能互相矛盾，可能还没来得及被解释，可能只是未来某个问题的关键证据。这和&quot;前世记忆&quot;很像——不是不能参考，而是不能直接继承为真理。真正危险的不是记得过去，而是忘了过去为什么成立。</p>
+<p>consolidated memory 是当前 best summary。它看起来更干净、更短、更像知识。但它也是一次选择：哪些细节保留，哪些细节丢掉；哪些经验被认为同类，哪些边界条件被抹平；哪些不确定性被写成确定规则。</p>
+<p>你每更新一次 memory，都是在问模型：请从这些经验里选一个当前最合理的解释。然后下一轮，再基于这个解释继续解释。这不就是把 best 作为下一代 base 吗？</p>
+<p><strong>Memory consolidation 的本质，是在经验空间里复制当前 best explanation。</strong></p>
+<h2 id="我们太相信总结了"><a href="#我们太相信总结了" class="headerlink" title="我们太相信总结了"></a>我们太相信总结了</h2><p>现在做 Agent memory，最自然的设计是这样：Agent 完成一个任务，得到一段 trajectory——里面有问题、思考、动作、反馈、成功或失败。然后让 LLM 把这段经历总结成 lesson，写进 memory bank。下次遇到类似任务，再把相关 memory 检索出来，塞进上下文。</p>
+<p>这套设计听起来太合理了。人不也是这样学习的吗？没有人会把每一天的所有细节原样背下来，我们会抽象、归纳、形成 schema。</p>
+<p>这套逻辑在 demo 里通常很 work。第一次失败，写一条反思；第二次调用反思，成功了。于是很容易得出结论：记忆有效。</p>
+<p>但这篇论文问了一个更狠的问题：如果这个过程持续发生，会怎样？</p>
+<p>答案不太好看。</p>
+<h2 id="总结会制造认知瓶颈"><a href="#总结会制造认知瓶颈" class="headerlink" title="总结会制造认知瓶颈"></a>总结会制造认知瓶颈</h2><p>人类的很多痛苦，也来自这里。小时候在某个环境里形成的生存策略，长大后还在自动运行。过去为了保护自己形成的反应，后来变成限制自己的墙。它不是一开始就是错的，它是在时过境迁之后继续被当成真理，才开始害人。</p>
+<p>Agent memory 也是同样的结构。某条 memory 在生成它的环境里可能完全正确，但环境变了，任务 family 变了，工具接口变了，评价标准变了，它还被检索出来指导行为，就会从经验变成偏见。</p>
+<p>复制 best 会制造 genetic bottleneck。连续总结会制造 epistemic bottleneck。两者的共同问题不是&quot;压缩&quot;本身，而是压缩发生得太早、太自信、太不可逆。</p>
+<p>WebShop、ALFWorld、AppWorld、ARC-AGI，这些任务的策略空间都是多峰的。一个成功 trajectory 不代表它揭示了通用规律。一个漂亮 summary 不代表它抓住了真正结构。<strong>在多峰任务里，过早抽象就是过早收敛。</strong></p>
+<p>转世不带记忆，某种意义上是系统在避免过拟合上一轮环境。不是因为过去没有价值，而是因为过去太有说服力——它带着亲历者的重量，很容易伪装成真理。</p>
+<p>总结不是学习的终点，总结是对可能性的删除。</p>
+<h2 id="记忆不是存档，是改写历史"><a href="#记忆不是存档，是改写历史" class="headerlink" title="记忆不是存档，是改写历史"></a>记忆不是存档，是改写历史</h2><p>论文里有个关键观察：memory consolidation 不是 append-only log，而是 rewrite。</p>
+<p>每来一批新经验，LLM 不是简单把它们放进仓库，而是重写之前的记忆：合并、概括、删掉细节、调整措辞、生成新的规则。听起来像整理，实际上是在改写历史。</p>
+<p>一次改写问题不大。十次、五十次、一百次之后，原始经验里的边界条件会被磨平，有用细节会丢，某些只是偶然成立的 pattern 会被写成普遍规则，早期一次错误抽象会被当成事实继续抽象。</p>
+<p>就像你把一张照片反复截图、转发、压缩。每次都&quot;差不多&quot;，最后已经看不清人脸。也像进化系统里反复复制当前 best——每一代看起来都比上一代更&quot;优&quot;，但整个 population 的选择空间在变窄。最后不是找到了最优，而是失去了偏离当前方向的能力。</p>
+<p>忘记至少是空白。记错会给你一个很自信的错误答案。</p>
+<h2 id="最刺眼的结果：有用经验也会变成坏记忆"><a href="#最刺眼的结果：有用经验也会变成坏记忆" class="headerlink" title="最刺眼的结果：有用经验也会变成坏记忆"></a>最刺眼的结果：有用经验也会变成坏记忆</h2><p>这篇论文最有价值的地方，是它没有停留在&quot;LLM 总结会出错&quot;这种泛泛而谈。</p>
+<p>作者控制了输入经验质量。他们不是拿一堆失败 trajectory 去喂 Agent——那样没什么意思，垃圾进垃圾出而已。他们用的是已经被证明有用的经验。更狠的是，在 ARC-AGI Stream 实验里，作者直接给 ground-truth solution。</p>
+<p>按理说这应该是最理想的情况：题会做，答案正确，经验有用。你让模型总结一下，最差也不该把自己搞废吧？</p>
+<p>结果就是开头那组数字：100% 掉到 52.6%。</p>
+<p>这不是&quot;经验没用&quot;，这是&quot;经验被总结坏了&quot;。经验是 useful 的，坏掉的是 consolidation。</p>
+<p>这个结论对做 Agent 的人很致命。因为我们过去默认 consolidation 至少是 neutral 的——它可能没帮助，但不至于伤害系统。这个假设站不住了。</p>
+<h2 id="Streaming-memory-为什么更容易坏"><a href="#Streaming-memory-为什么更容易坏" class="headerlink" title="Streaming memory 为什么更容易坏"></a>Streaming memory 为什么更容易坏</h2><p>论文比较了几种更新方式。</p>
+<p>Static-All：一次性看完整个 trajectory pool，然后总结。Static-Group：按任务类型分组，再分别总结。Stream：真实 Agent 更常见的方式，来一批经验就更新一次 memory。</p>
+<p>结果很清楚：Stream 最容易坏。原因不复杂——Stream 有路径依赖。</p>
+<p>早期记忆一旦写偏了，后面所有更新都站在这个偏差上继续写。LLM 看到的不是完整历史，而是&quot;历史的摘要&quot;。下一轮它再摘要摘要。最后系统不是在学习经验，而是在学习上一次总结的残影。</p>
+<p>这和工程里的 cache corruption 很像。源数据还在，最多重新算一次。源数据丢了，只剩一个被污染的 cache，后面所有模块都会基于污染状态继续运行。</p>
+<p>所以这篇论文反复强调一个朴素原则：raw trajectory 要保留，别急着删。</p>
+<h2 id="Raw-trajectory-是独立-lineage"><a href="#Raw-trajectory-是独立-lineage" class="headerlink" title="Raw trajectory 是独立 lineage"></a>Raw trajectory 是独立 lineage</h2><p>沿用进化那篇文章的语言：raw trajectory 就是独立 lineage。</p>
+<p>它们不一定都优秀，也不一定马上有用。有些 episode 很笨，有些失败很蠢，有些路径看起来只是噪声。但你不知道未来哪个任务会让这段&quot;噪声&quot;突然变成证据。这就是独立 lineage 的价值：<strong>它们保留了系统后悔的可能性。</strong></p>
+<p>一旦你把所有 trajectory 压成一个 summary，这种后悔空间就没了。未来 Agent 不再面对多段原始经验，而是面对一个被过去的自己解释过的世界。</p>
+<p>我们不是被经历限制，而是被自己对经历的解释限制。</p>
+<p>这也是为什么&quot;带着前世记忆转世&quot;在小说里很爽，在系统设计里却很危险。它给了你一个开局优势，也给了你一套来自旧世界的默认参数。新世界还没开始探索，旧世界已经替你做完了解释。</p>
+<h2 id="Raw-trajectory-不是废料"><a href="#Raw-trajectory-不是废料" class="headerlink" title="Raw trajectory 不是废料"></a>Raw trajectory 不是废料</h2><p>很多 Agent memory 设计里，raw trajectory 的地位很低。它像日志——调试时有用，上线后嫌贵。真正要进入长期记忆的，是压缩后的 lesson、rule、skill、workflow。</p>
+<p>这篇论文给了一个很朴素的 baseline：不总结，直接把 raw trajectory 当 in-context demonstration 用。</p>
+<p>结果它经常很能打。在 WebShop、ALFWorld、AppWorld 这些环境里，raw trajectory baseline 没有被 lesson-style memory 轻松打爆，反而很多时候更稳。</p>
+<p>我们花很大力气让 LLM 把经历总结成原则，最后发现原始经历本身可能更可靠。</p>
+<p>为什么？因为 raw trajectory 里保留了上下文。它知道这个动作是在什么状态下做的，知道反馈是什么，知道失败发生在哪里，知道一个策略成立时旁边还有哪些隐含条件。而 lesson 往往只剩一句漂亮的话。</p>
+<p>漂亮的话最危险，因为它看起来像原则。</p>
+<h2 id="三种坏记忆"><a href="#三种坏记忆" class="headerlink" title="三种坏记忆"></a>三种坏记忆</h2><p>论文把 faulty memory 归纳成三类，很适合放进工程检查表。</p>
+<h3 id="Misgrouping：把不该放一起的经验放一起"><a href="#Misgrouping：把不该放一起的经验放一起" class="headerlink" title="Misgrouping：把不该放一起的经验放一起"></a>Misgrouping：把不该放一起的经验放一起</h3><p>两个任务表面相似，不代表底层结构相同。LLM 很容易基于表面文本把它们归为一类，然后总结出一个跨任务规则——这个规则看起来很合理，但其实混了两个 domain。</p>
+<p>就像你把&quot;用户增长&quot;和&quot;传销&quot;都归到&quot;裂变&quot;下面，然后总结出一套通用增长方法。词是同一个词，东西不是同一个东西。</p>
+<h3 id="Overgeneralization：把局部经验写成普遍原则"><a href="#Overgeneralization：把局部经验写成普遍原则" class="headerlink" title="Overgeneralization：把局部经验写成普遍原则"></a>Overgeneralization：把局部经验写成普遍原则</h3><p>一个策略本来只在特定状态下成立。总结时，限定条件被删掉了。于是 memory 里只剩：&quot;遇到这种情况，应该这样做。&quot;</p>
+<p>下次遇到邻近任务，Agent 检索到这条 memory，非常自信地照做，然后翻车。</p>
+<p>抽象的价值来自去掉噪声，抽象的风险也来自去掉条件。现在的 LLM 还不够擅长判断什么是噪声、什么是条件。</p>
+<h3 id="Overfit：在窄输入流上学到表面模式"><a href="#Overfit：在窄输入流上学到表面模式" class="headerlink" title="Overfit：在窄输入流上学到表面模式"></a>Overfit：在窄输入流上学到表面模式</h3><p>如果输入流很窄，memory 会过拟合已见 pattern。某一类题看多了，LLM 会总结出一条看似稳定的规则，但这个规则可能只对已见样本有效，遇到同 family 的简单变体就崩。</p>
+<p>这跟传统 ML 里的 overfit 没什么本质区别。区别只是，以前 overfit 发生在参数里，现在发生在文本记忆里。</p>
+<h2 id="Agent-不是缺记忆，是缺记忆管理"><a href="#Agent-不是缺记忆，是缺记忆管理" class="headerlink" title="Agent 不是缺记忆，是缺记忆管理"></a>Agent 不是缺记忆，是缺记忆管理</h2><p>这篇论文容易被误读成：不要做 Agent memory。</p>
+<p>不是。长期来看，Agent 不可能只靠上下文窗口。raw history 会无限增长，检索成本会上升，跨任务迁移也需要抽象。没有 memory，Agent 只能像金鱼一样永远活在当前窗口里。</p>
+<p>真正的问题是：不要把 memory consolidation 设计成自动发生的后台任务。</p>
+<p>现在很多系统像这样：任务结束，自动总结；总结完，自动更新；更新后，默认可信。太危险了。</p>
+<p>更合理的设计，应该把记忆拆成几层。</p>
+<h3 id="Episodic-memory-是证据层"><a href="#Episodic-memory-是证据层" class="headerlink" title="Episodic memory 是证据层"></a>Episodic memory 是证据层</h3><p>保留原始 episode，包括输入、动作、反馈、环境状态、失败路径。</p>
+<p>它不一定每次都进 prompt，但必须可追溯。任何 abstract memory 都应该能回链到原始证据。没有 evidence 的 memory，就是幻觉的温床。</p>
+<h3 id="Semantic-memory-是假设层"><a href="#Semantic-memory-是假设层" class="headerlink" title="Semantic memory 是假设层"></a>Semantic memory 是假设层</h3><p>lesson、rule、workflow、skill 都应该被当成 hypothesis，而不是 fact。</p>
+<p>既然是假设，就要有适用范围、置信度、来源、反例。一条 memory 不应该只是：</p>
+<blockquote>
+<p>&quot;购买商品前先检查库存。&quot;</p>
+</blockquote>
+<p>它应该更像：</p>
+<blockquote>
+<p>&quot;在 WebShop 类任务中，如果商品页面存在库存状态，购买前检查库存可减少无效 checkout。来源：episode 12、18、31。反例：episode 44 中库存状态延迟更新。&quot;</p>
+</blockquote>
+<p>更啰嗦，也更贵。但可靠系统本来就贵。</p>
+<h3 id="Consolidation-是动作，不是默认副作用"><a href="#Consolidation-是动作，不是默认副作用" class="headerlink" title="Consolidation 是动作，不是默认副作用"></a>Consolidation 是动作，不是默认副作用</h3><p>这和&quot;best 在独立进化下还有用吗&quot;是同一个问题。</p>
+<p>best 当然有用，但它不能繁衍所有后代。summary 当然有用，但它不能替代所有证据。</p>
+<p>Agent 应该可以选择 Retain、Delete、Consolidate。不是每个 episode 都值得总结，不是每次成功都值得抽象，不是每条新经验都应该改写旧记忆。</p>
+<p>这篇论文在 ARC-AGI Stream 里也观察到，当 Agent 被允许自己选择这些动作时，它默认更愿意保留 raw episode，只少量使用 abstract store。更极端的是，禁用 consolidation、只做 episodic management 的版本，能匹配甚至超过 full auto mode。</p>
+<p><strong>当抽象能力不可靠时，少抽象就是一种能力。</strong></p>
+<h2 id="对工程系统的启发"><a href="#对工程系统的启发" class="headerlink" title="对工程系统的启发"></a>对工程系统的启发</h2><p>如果今天让我设计一个 production Agent memory，我会先定几条保守规则：</p>
+<p>raw episode 不直接丢弃，至少在一个可审计窗口内保留；任何 abstract memory 必须带 provenance——从哪些 episode 来，哪些任务验证过，最近一次导致失败是什么时候；memory update 不能只看新增经验，还要做 regression test，更新后老任务还会不会，以前稳定通过的 case 有没有掉；consolidation 要分组，不要把不同 task family 的经验混在一起；memory 要支持撤销，一次坏的 consolidation 不应该永久污染系统。</p>
+<p>这些听起来都不酷，没有&quot;自进化 Agent&quot;那么性感。</p>
+<p>但工程上真正难的地方，往往不是让系统多做一步，而是知道哪一步不该做。</p>
+<h2 id="记忆会成为新的状态管理问题"><a href="#记忆会成为新的状态管理问题" class="headerlink" title="记忆会成为新的状态管理问题"></a>记忆会成为新的状态管理问题</h2><p>过去我们讨论 Agent，经常把问题放在 planning、tool use、multi-step reasoning 上。但如果 Agent 真要长期运行，memory 会变成新的状态管理问题。</p>
+<p>状态管理从来都不只是&quot;存起来&quot;——它还包括一致性、版本、回滚、隔离、过期、审计、权限。Agent memory 也是一样。</p>
+<p>今天很多 memory 系统还停留在&quot;把经验总结成文本，放进向量库&quot;的阶段。它像一个很聪明但没有事务、没有版本、没有审计日志的数据库。短 demo 里没问题，长期运行一定出事。</p>
+<p><strong>Agent 的记忆不是知识库，而是会影响行为的状态。</strong></p>
+<p>只要它会影响行为，就必须按状态来管理，而不是按文档来管理。</p>
+<h2 id="过早收敛是设计缺陷"><a href="#过早收敛是设计缺陷" class="headerlink" title="过早收敛是设计缺陷"></a>过早收敛是设计缺陷</h2><p>这篇论文和《为什么自然界从不复制最优》有异曲同工之妙。</p>
+<p>那篇讲的是：不要让当前 best 污染整个未来 population。这篇讲的是：不要让当前 summary 污染整个未来 memory。底层都是同一件事：在不确定的、复杂的、多峰的任务里，<strong>过早收敛是一种系统性风险</strong>。</p>
+<p>这篇论文最好的地方，是它说的不是&quot;LLM 不会记忆&quot;，而是一件更麻烦的事：LLM 可以把有用经验写成坏记忆。</p>
+<p>没有记忆的 Agent，只是笨。有坏记忆的 Agent，会自信地错。</p>
+<p>所以我现在看 Agent memory，会先问一个问题：这条记忆坏掉的时候，系统怎么知道？</p>
+<p>如果答案是&quot;不知道&quot;，它就不是记忆，它是污染源。</p>
+<p>自然界不复制最优，因为今天的 best 可能是明天的 worst。Agent 也不该克隆自己的记忆，因为今天最合理的解释，可能正是明天最大的偏见。</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2605.12978">Useful Memories Become Faulty When Continuously Updated by LLMs</a></li>
+</ul>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>johnsonlee</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="/2026/05/20/faulty-agent-memory/">https://johnsonlee.io/2026/05/20/faulty-agent-memory/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"><a href="/tags/LLM/">LLM</a><a href="/tags/Software-Engineering/">Software Engineering</a><a href="/tags/AI-Agent/">AI Agent</a><a href="/tags/Memory/">Memory</a></div><div class="post-nav"><a class="pre" href="/2026/05/29/anthropic-promises-vs-enterprise-bills/">A 社画的饼，正在变成企业的账单</a><a class="next" href="/2026/05/15/from-prompt-to-harness/">从 Prompt 到 Harness</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"长期记忆正在把 Agent 变蠢","datePublished":"2026-05-20T09:10:55.000Z","dateModified":"2026-05-20T09:10:55.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2026/05/20/faulty-agent-memory/"},"description":"最近有篇论文，标题很炸：Useful Memories Become Faulty When Continuously Updated by LLMs。 翻译成人话就是：LLM Agent 的长期记忆，不是越更新越聪明，而是可能越更新越蠢。 论文里有个实验很刺眼：GPT-5.4 原本能 100% 解出一组 ARC-AGI 题。研究人员给它正确答案，让它把成功经验总结成长期记忆。连续更新 10 轮之"}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname.replace(/^\/en\/(\d{4}\/)/, '/$1').replace(/\.en\/$/, '/')),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (107)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Harness-Engineering/">Harness Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (64)</a><ul style="padding:revert"></ul></li><li><a href="/categories/investing/">Investing (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Developer-Tools/" style="font-size: 15px;">Developer Tools</a> <a href="/tags/Dotfiles/" style="font-size: 15px;">Dotfiles</a> <a href="/tags/Claude-Code/" style="font-size: 15px;">Claude Code</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/AI-PC/" style="font-size: 15px;">AI PC</a> <a href="/tags/Wintel/" style="font-size: 15px;">Wintel</a> <a href="/tags/NVIDIA/" style="font-size: 15px;">NVIDIA</a> <a href="/tags/Microsoft/" style="font-size: 15px;">Microsoft</a> <a href="/tags/Local-LLM/" style="font-size: 15px;">Local LLM</a> <a href="/tags/Token/" style="font-size: 15px;">Token</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/Consciousness/" style="font-size: 15px;">Consciousness</a> <a href="/tags/Self-Reference/" style="font-size: 15px;">Self-Reference</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Attention/" style="font-size: 15px;">Attention</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Agentic-Coding/" style="font-size: 15px;">Agentic Coding</a> <a href="/tags/Enterprise/" style="font-size: 15px;">Enterprise</a> <a href="/tags/Buddhism/" style="font-size: 15px;">Buddhism</a> <a href="/tags/Taoism/" style="font-size: 15px;">Taoism</a> <a href="/tags/Physics/" style="font-size: 15px;">Physics</a> <a href="/tags/Philosophy/" style="font-size: 15px;">Philosophy</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/Automation/" style="font-size: 15px;">Automation</a> <a href="/tags/Testing/" style="font-size: 15px;">Testing</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/Cognitive-Boundary/" style="font-size: 15px;">Cognitive Boundary</a> <a href="/tags/Randomness/" style="font-size: 15px;">Randomness</a> <a href="/tags/Self-Evolution/" style="font-size: 15px;">Self-Evolution</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Dimension-Hacking/" style="font-size: 15px;">Dimension Hacking</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Economy/" style="font-size: 15px;">Economy</a> <a href="/tags/Future/" style="font-size: 15px;">Future</a> <a href="/tags/UBI/" style="font-size: 15px;">UBI</a> <a href="/tags/Product-Strategy/" style="font-size: 15px;">Product Strategy</a> <a href="/tags/Copilot/" style="font-size: 15px;">Copilot</a> <a href="/tags/Google/" style="font-size: 15px;">Google</a> <a href="/tags/Technology/" style="font-size: 15px;">Technology</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Product-Management/" style="font-size: 15px;">Product Management</a> <a href="/tags/Project-Management/" style="font-size: 15px;">Project Management</a> <a href="/tags/AI-Agent/" style="font-size: 15px;">AI Agent</a> <a href="/tags/Memory/" style="font-size: 15px;">Memory</a> <a href="/tags/Loop-Engineering/" style="font-size: 15px;">Loop Engineering</a> <a href="/tags/Harness-Engineering/" style="font-size: 15px;">Harness Engineering</a> <a href="/tags/Eval/" style="font-size: 15px;">Eval</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/Prompt-Engineering/" style="font-size: 15px;">Prompt Engineering</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Graphite/" style="font-size: 15px;">Graphite</a> <a href="/tags/MCP/" style="font-size: 15px;">MCP</a> <a href="/tags/Bytecode/" style="font-size: 15px;">Bytecode</a> <a href="/tags/Static-Analysis/" style="font-size: 15px;">Static Analysis</a> <a href="/tags/Ground-Truth/" style="font-size: 15px;">Ground Truth</a> <a href="/tags/Context/" style="font-size: 15px;">Context</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/06/26/fooled-by-loop-engineering.en/">Don't Let Loop Engineering Fool You</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/26/fooled-by-loop-engineering/">别被 Loop Engineering 忽悠瘸了</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/21/token-efficiency-way-forward.en/">Where Is the Way Forward for Token Efficiency?</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/21/token-efficiency-way-forward/">Token Efficiency 的出路在哪里？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/21/smart-money-after-memory/">存储之后，聪明钱会流向哪里？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/21/smart-money-after-memory.en/">After Memory, Where Will Smart Money Flow?</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/20/on-device-ai-next-wave/">AI 的下一个风口——端侧智能</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/20/on-device-ai-next-wave.en/">AI's Next Wave: On-Device Intelligence</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/20/schools-of-trading.en/">The Schools of Trading</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/20/schools-of-trading/">股票交易的流派</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>

@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2021/10/29/do-you-really-know-kotlin-1/">
+  <title>Kotlin Pitfalls: Metadata | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Kotlin Pitfalls: Metadata</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2021-10-29 · Johnson Lee · Computer Science / Kotlin</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I was recently using KAPT to generate Kotlin code and ran into a frustrating problem. The generated Kotlin code needed to call properties annotated with <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Annotation</code> in the source Kotlin code. In theory, you'd just use the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">.</code> operator to access the property, right? Things turned out to be far less straightforward.</p>
+<h2 id="Kotlin-Property" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Kotlin Property</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">In Kotlin, a Property can manifest at the JVM level as either a field or a method, depending on whether there are other JVM-related annotations on the property. For example:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">object Data {
+  @MyAnnotation
+  val value = "Hello, world!"
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">As a Property, <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">value</code>'s publicly exposed API at the JVM level is actually <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">getValue(): String</code>. But in this case:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">object Data {
+  @JvmField
+  @MyAnnotation
+  val value = "Hello, world!"
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">value</code> is exposed at the JVM level as a <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">static</code> field. So in generated Kotlin code, if you want to access this <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">value</code> property, should you reference the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">value</code> field or call the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">getValue()</code> method?</p>
+<h2 id="Kotlin-Metadata" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Kotlin Metadata</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">If you've used KAPT, you probably know that it's built on top of APT. KAPT generates corresponding Java stubs for Kotlin code at compile time so that APT can do its thing. But how does the Kotlin compiler resolve the Property access problem? The answer lies in the Java stubs that KAPT generates for Kotlin code.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">In the Java stubs, every Class is annotated with a <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">kotlin.Metadata</code> annotation, like this:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;"> @kotlin.Metadata(
+  mv={1,5,1},
+  k=1,
+  xi=48,
+  d1={"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\bÆ\u0002\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u0010\u0010\u0003\u001a\u00020\u00048\u0006X\u0087D¢\u0006\u0002\n\u0000¨\u0006\u0005"},
+  d2={"Lio/johnsonlee/Data;","","()V","value","","dsl_debug"}
+)</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">If you've never seen this before, it probably looks like gibberish. What does <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">d1</code> mean? What's <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">d2</code>? I was equally confused when I first encountered it. How do you decode this blob of encoded symbols? My first instinct was to look for official design documentation from JetBrains. After searching high and low, I found nothing. So I rolled up my sleeves and dug into the Kotlin source code, where I found an interesting class -- <a href="https://github.com/JetBrains/kotlin/blob/master/core/metadata.jvm/src/org/jetbrains/kotlin/metadata/jvm/deserialization/JvmProtoBufUtil.kt" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JvmProtobufUtil.kt</a>. In it, there's a method:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">@JvmStatic
+fun readClassDataFrom(data: Array&lt;String&gt;, strings: Array&lt;String&gt;): Pair&lt;JvmNameResolver, ProtoBuf.Class&gt; =
+    readClassDataFrom(BitEncoding.decodeBytes(data), strings)</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Through the annotated <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Element</code>, we can easily obtain the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Metadata</code>:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">val metadata = ele.getAnnotation(Metadata::class.java)</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Combining this with the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">@kotlin.Metadata</code> content shown above, what happens if we pass <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Metadata</code>'s <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">data1</code> and <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">data2</code> as parameters?</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">fun parseMetadata(ele: Element) {
+  val metadata = ele.getAnnotation(Metadata::class.java)
+  val (resolver, klass) = JvmProtoBufUtil.readClassDataFrom(metadata.data1, metadata.data2)
+  println("${resolver} -&gt; ${klass}")
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I tried it, and it actually parsed successfully! So what's inside <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Metadata</code>? According to the comments in <a href="https://github.com/JetBrains/kotlin/blob/master/libraries/stdlib/jvm/runtime/kotlin/Metadata.kt" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Metadata.kt</a>, the fields are defined as follows:</p>
+<table style="width:100%;border-collapse:collapse;margin:22px 0;font-size:14px;line-height:1.6;color:#1f2937;">
+<thead>
+<tr>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Field</th>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">k</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">The kind of entity encoded by this annotation: <ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;"><li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">1</code>: Class</li><li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">2</code>: File</li><li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">3</code>: Synthetic class</li><li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">4</code>: Multi-file class facade</li><li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">5</code>: Multi-file class part</li></ul></td>
+</tr>
+<tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">mv</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Metadata version</td>
+</tr>
+<tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">xi</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Flags</td>
+</tr>
+<tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">d1</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><a href="https://github.com/JetBrains/kotlin/blob/master/core/metadata/src/metadata.proto" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">metadata.proto</a></td>
+</tr>
+<tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">d2</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">String constant pool</td>
+</tr>
+</tbody></table>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">With the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">JvmNameResolver</code> and <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ProtoBuf.Class</code> returned by <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">JvmProtoBufUtil.readClassDataFrom</code>, you can decode everything encoded in the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Metadata</code>. For Kotlin Properties specifically, you can use <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ProtoBuf.Class</code>'s <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">getPropertyList()</code> to retrieve all properties:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">klass.propertyList.forEach {
+  val name = resolver.getString(it.name)
+  val type = resolver.getQualifiedClassName(it.returnType.className)
+  val flags = if (it.hasGetterFlags()) "(getter)" else ""
+  println("${name}: ${type} ${flags}")
+}</code></pre>
+
+<h2 id="Interoperability" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Interoperability</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">When using KAPT to generate code based on the type of annotated elements, you'll discover that Kotlin's <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">String</code> cannot be substituted with Java's <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">String</code> -- they are genuinely two different types. For example:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">object Data {
+  @MyAnnotation
+  val value = "Hello, World!"
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">If you want to generate a wrapper class for <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">value</code>, it would look something like:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">class ValueWrapper : Wrapper&lt;java.lang.String&gt; {
+  override fun get(): java.lang.String = Data.value
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">But <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ValueWrapper.get()</code> returning <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Data.value</code> would fail to compile:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">Type mismatch.
+ Required: java.lang.String
+ Found:    kotlin.String</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">What?! How is this possible?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">In Kotlin, standard library types like <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">String</code> are defined as <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">kotlin.String</code>. But why do the stub files and bytecode show <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">java.lang.String</code>? To find out, we need to dig into the Kotlin source code again -- <a href="https://github.com/JetBrains/kotlin/blob/master/core/metadata.jvm/src/org/jetbrains/kotlin/metadata/jvm/deserialization/ClassMapperLite.kt" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">ClassMapperLite.kt</a>. It turns out the Kotlin compiler automatically converts Kotlin standard types to Java standard types. So in the stub files, <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">kotlin.String</code> has already been converted to <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">java.lang.String</code>.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Therefore, if you want to convert Java standard types back to Kotlin standard types in generated code, you need a reverse mapping -- inverting the mappings in <a href="https://github.com/JetBrains/kotlin/blob/master/core/metadata.jvm/src/org/jetbrains/kotlin/metadata/jvm/deserialization/ClassMapperLite.kt" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">ClassMapperLite.kt</a>. This way, you can generate clean Kotlin code:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">class ValueWrapper : Wrapper&lt;kotlin.String&gt; {
+  override fun get(): kotlin.String = Data.value
+}</code></pre>
+
+<h2 id="Incompatible-Kotlin-Version" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Incompatible Kotlin Version</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">If you're still using a Kotlin version below 1.5.0, you may encounter the following error when importing third-party Kotlin libraries:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">"Module was compiled with an incompatible version of Kotlin. The binary version of its metadata is 1.5.x, expected version is 1.x.y"</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Based on what we now know about Kotlin Metadata, we can deduce that Kotlin made backward-incompatible changes to <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Metadata</code> in version 1.5.0. If you encounter this situation, you have two options:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Upgrade the Kotlin version used in your project</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Use an older version of the third-party library (assuming one compiled with a pre-1.5.0 Kotlin version exists)</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">By now you're probably realizing -- Kotlin has its share of pitfalls! And indeed, Kotlin's version compatibility issues are plentiful.</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2021/10/29/do-you-really-know-kotlin-1/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2021/10/29/do-you-really-know-kotlin-1/</a></p>
+    </section>
+  </main>
+</body>
+</html>

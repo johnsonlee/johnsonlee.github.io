@@ -1,0 +1,241 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta name="theme-color" content="#FFF" id="theme-color"><meta content="telephone=no" name="format-detection"><meta name="description" content="Recently I noticed an interesting pattern. Some people add a stack of SKILLs to an Agent, wire it to all kinds of knowledge bases, build workflows everywhere, stuff the prompt with caveats, counterexa"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,johnsonlee,johnson,lijingsen,jingsen,ai,agent,llm,claude,claude code,ai工程化,harness,harness engineering,autoevolve,prompt engineering,RAG,agentic,MCP,AGI,vibe coding,ai coding,copilot,cursor,chatgpt,openai,anthropic,transformer,fine-tuning,embedding,multimodal,chain of thought,function calling,tool use,RLHF,ai native,架构设计,性能优化,滴滴,快手,我在滴滴做架构,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/2026/05/15/from-prompt-to-harness.en/"><link rel="alternate" hreflang="en" href="https://johnsonlee.io/en/2026/05/15/from-prompt-to-harness/"><link rel="alternate" hreflang="zh-CN" href="https://johnsonlee.io/2026/05/15/from-prompt-to-harness/"><link rel="alternate" hreflang="x-default" href="https://johnsonlee.io/2026/05/15/from-prompt-to-harness/"><meta property="og:title" content="From Prompt to Harness"><meta property="og:description" content="Recently I noticed an interesting pattern. Some people add a stack of SKILLs to an Agent, wire it to all kinds of knowledge bases, build workflows everywhere, stuff the prompt with caveats, counterexa"><meta property="og:type" content="article"><meta property="og:url" content="https://johnsonlee.io/2026/05/15/from-prompt-to-harness.en/"><meta property="og:image" content="https://johnsonlee.io/og-cards/from-prompt-to-harness.png"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="en_US"><meta property="article:published_time" content="2026-05-15T09:44:41.000Z"><meta property="article:author" content="Johnson Lee"><meta property="article:tag" content="AI"><meta property="article:tag" content="Agent"><meta property="article:tag" content="Harness Engineering"><meta property="article:tag" content="Eval"><meta property="article:tag" content="Prompt Engineering"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="From Prompt to Harness"><meta name="twitter:description" content="Recently I noticed an interesting pattern. Some people add a stack of SKILLs to an Agent, wire it to all kinds of knowledge bases, build workflows everywhere, stuff the prompt with caveats, counterexa"><meta name="twitter:image" content="https://johnsonlee.io/og-cards/from-prompt-to-harness.png"><title>From Prompt to Harness | Johnson Lee</title><script>(function(){var h=new Date().getHours();if(h<6||h>=19){document.documentElement.setAttribute('data-weather','night');var m=document.getElementById('theme-color');if(m)m.setAttribute('content','#020617')}})();</script><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&amp;display=swap"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Johnson Lee"><link rel="alternate" type="application/atom+xml" href="/atom.en.xml" title="Johnson Lee (English)" hreflang="en"><script type="text/javascript" src="/js/weather-theme.js" defer></script><script type="text/javascript" src="/js/weather-canvas.js" defer></script><script type="text/javascript" src="/js/i18n-switch.js" defer></script><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="body_container"><img src="/og-cards/from-prompt-to-harness.png" style="display:none"><div id="header"><div class="site-name"><h1 class="hidden">From Prompt to Harness</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/tags/"><i class="fa fa-tag"> Tags</i></a><a target="_blank" rel="noopener" href="https://about.johnsonlee.io/"><i class="fa fa-user"> About</i></a><a href="/atom.xml"><i class="fa fa-rss"> RSS</i></a></div><button class="lang-switch" type="button" data-target-lang="en" title="English">EN</button></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">From Prompt to Harness</h1><div class="post-meta">May 15, 2026<span> | </span><span class="category"><a href="/categories/Independent-Thinking/">Independent Thinking</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 2.5k</span><span class="post-meta-item-text"> Words</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 15</span><span class="post-meta-item-text"> Minutes</span></span></span></div><div class="post-content"><p>Recently I noticed an interesting pattern.</p>
+<p>Some people add a stack of SKILLs to an Agent, wire it to all kinds of knowledge bases, build workflows everywhere, stuff the prompt with caveats, counterexamples, and few-shot examples, then say very seriously: we are doing harness engineering now.</p>
+<p>My first reaction was: this has barely reached the entrance, and is still far from real Harness Engineering.</p>
+<p>SKILLs, KBs, and structured prompts are valuable. They help the model understand context, act closer to your expectations, and avoid plenty of basic mistakes. But if you call these things a harness, you are making the whole problem shallower than it is.</p>
+<p><strong>KB&#x2F;SKILL is not harness. At most, they are the input constraint layer of a harness.</strong></p>
+<span id="more"></span>
+
+<h2 id="Prompt-Is-Not-the-Rein-It-Is-Just-What-You-Say-to-the-Horse"><a href="#Prompt-Is-Not-the-Rein-It-Is-Just-What-You-Say-to-the-Horse" class="headerlink" title="Prompt Is Not the Rein, It Is Just What You Say to the Horse"></a>Prompt Is Not the Rein, It Is Just What You Say to the Horse</h2><p>The easiest way to misunderstand Harness Engineering is to hear the word &quot;harness&quot; and immediately translate it into &quot;constraint.&quot; If it is about constraints, then writing longer prompts, adding more rules, and preparing more KBs must be constraining the model, right?</p>
+<p>Not exactly.</p>
+<p>Imagine you are riding a horse. You tell it: &quot;A little to the left, don&#39;t run too fast, go around the rocks, there is a river ahead, don&#39;t jump.&quot; That is useful. If the horse understands, the error rate goes down.</p>
+<p>But that is not a harness.</p>
+<p>A real harness is the rein, saddle, guardrail, route, checkpoints, and the mechanism that lets you review why you fell after you fall. What you say to the horse is only the softest layer.</p>
+<p>LLMs are the same.</p>
+<p>Prompts can change the probability distribution of model outputs. SKILLs can encode common patterns in advance. KBs can fill in missing context. Structured prompts can reduce the space for free-form improvisation.</p>
+<p>All of these things do the same job: <strong>they increase the prior probability of a correct output.</strong></p>
+<p>The key word is probability.</p>
+<p>As long as the execution layer is still a model call, the output remains probabilistic. You can move the probability from 60% to 80%, from 80% to 92%, maybe even make it look close to 99% in some scenarios. But it has not become deterministic.</p>
+<p>This is where many people get stuck.</p>
+<p>Many people think &quot;the model is more obedient&quot; means &quot;the system is constrained.&quot; It does not. A more obedient horse does not mean you have guardrails around the track.</p>
+<h2 id="A-Real-Harness-Has-at-Least-Five-Layers"><a href="#A-Real-Harness-Has-at-Least-Five-Layers" class="headerlink" title="A Real Harness Has at Least Five Layers"></a>A Real Harness Has at Least Five Layers</h2><p>More precisely, a harness should have at least five layers.</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 600" role="img" aria-labelledby="harness-layers-title-en harness-layers-desc-en" style="max-width: 100%; height: auto;">
+  <title id="harness-layers-title-en">The Five Layers of Harness</title>
+  <desc id="harness-layers-desc-en">A five-layer view of harness: input constraints, execution, output validation, feedback, and reproducibility.</desc>
+  <defs>
+    <filter id="harness-shadow-en" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.16"/>
+    </filter>
+    <marker id="harness-arrow-en" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#4b5563"/>
+    </marker>
+  </defs>
+  <rect x="20" y="20" width="880" height="560" rx="8" fill="none" stroke="#cbd5e1"/>
+  <text x="460" y="58" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700" fill="#111827">The Five Layers of Harness</text>
+  <text x="460" y="86" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#4b5563">Harness = the structure that puts probabilistic models inside deterministic systems</text>
+
+  <g filter="url(#harness-shadow-en)">
+    <rect x="80" y="122" width="500" height="72" rx="6" fill="#fff7ed" stroke="#f97316" stroke-width="2"/>
+    <text x="112" y="151" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#9a3412">1. Input Constraints</text>
+    <text x="112" y="177" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#7c2d12">SKILL / KB / structured prompt / few-shot: raise the prior</text>
+  </g>
+  <g filter="url(#harness-shadow-en)">
+    <rect x="80" y="214" width="500" height="72" rx="6" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+    <text x="112" y="243" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8">2. Execution Layer</text>
+    <text x="112" y="269" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#1e3a8a">The LLM call itself: a probabilistic node remains</text>
+  </g>
+  <g filter="url(#harness-shadow-en)">
+    <rect x="80" y="306" width="500" height="72" rx="6" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+    <text x="112" y="335" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#047857">3. Output Validation</text>
+    <text x="112" y="361" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#064e3b">schema / tests / linters / policy: deterministic gates</text>
+  </g>
+  <g filter="url(#harness-shadow-en)">
+    <rect x="80" y="398" width="500" height="72" rx="6" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="2"/>
+    <text x="112" y="427" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#6d28d9">4. Feedback Layer</text>
+    <text x="112" y="453" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#4c1d95">slow-loop eval / human review / golden dataset: calibrate ground truth</text>
+  </g>
+  <g filter="url(#harness-shadow-en)">
+    <rect x="80" y="490" width="500" height="72" rx="6" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+    <text x="112" y="519" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#b91c1c">5. Reproducibility Layer</text>
+    <text x="112" y="545" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#7f1d1d">seed / model / prompt / tool / KB / dataset snapshots: make results comparable</text>
+  </g>
+
+  <line x1="330" y1="194" x2="330" y2="214" stroke="#4b5563" stroke-width="2" marker-end="url(#harness-arrow-en)"/>
+  <line x1="330" y1="286" x2="330" y2="306" stroke="#4b5563" stroke-width="2" marker-end="url(#harness-arrow-en)"/>
+  <line x1="330" y1="378" x2="330" y2="398" stroke="#4b5563" stroke-width="2" marker-end="url(#harness-arrow-en)"/>
+  <line x1="330" y1="470" x2="330" y2="490" stroke="#4b5563" stroke-width="2" marker-end="url(#harness-arrow-en)"/>
+
+  <path d="M 620 158 C 735 158 735 342 620 342" fill="none" stroke="#64748b" stroke-width="2" stroke-dasharray="6 6"/>
+  <text x="732" y="235" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#334155">Probability Boost</text>
+  <text x="732" y="258" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#475569">not a hard boundary</text>
+
+  <path d="M 620 342 C 785 342 785 526 620 526" fill="none" stroke="#111827" stroke-width="2.5"/>
+  <text x="760" y="426" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#111827">Engineering Loop</text>
+  <text x="760" y="449" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#374151">block, calibrate, reproduce</text>
+
+  <rect x="650" y="484" width="190" height="62" rx="6" fill="#ffffff" stroke="#94a3b8"/>
+  <text x="745" y="512" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700" fill="#111827">Harness Boundary</text>
+  <text x="745" y="533" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#475569">not "trust it", but "block it"</text>
+</svg>
+
+<h3 id="Input-Constraints-Raising-the-Prior-Probability"><a href="#Input-Constraints-Raising-the-Prior-Probability" class="headerlink" title="Input Constraints: Raising the Prior Probability"></a>Input Constraints: Raising the Prior Probability</h3><p>This layer includes SKILLs, KBs, structured prompts, tool descriptions, few-shot examples, and system instructions.</p>
+<p>Their goal is not to guarantee correctness. Their goal is to make the model more likely to get onto the right path before generation starts.</p>
+<p>For example, you tell an Agent: read the README before editing code, run tests before submitting a PR, do not guess when uncertain. These rules are useful. They eliminate a lot of basic mistakes.</p>
+<p>But in essence, they are still &quot;telling the model what it should do.&quot; The model may follow them, or it may miss them. It may understand them correctly, or distort them. It may behave well in simple cases, then suddenly lose control after long context, complex state, or tool failures.</p>
+<p>So the value of the input constraint layer should be acknowledged. Its boundary should be acknowledged too.</p>
+<p><strong>A prompt can make the model more likely to be correct. It cannot make the system required to be correct.</strong></p>
+<h3 id="Execution-Layer-Probability-Cannot-Be-Removed"><a href="#Execution-Layer-Probability-Cannot-Be-Removed" class="headerlink" title="Execution Layer: Probability Cannot Be Removed"></a>Execution Layer: Probability Cannot Be Removed</h3><p>The execution layer is the model call itself.</p>
+<p>As long as an LLM sits in the middle, the system contains a probabilistic node. This node is not a bug. It is the nature of the thing.</p>
+<p>Many engineers do not want to accept this. They keep trying to &quot;prompt away&quot; probability with more elaborate prompts. That is a bit like trying to eliminate traffic accidents with a better driving manual. The manual can lower the accident rate, but it cannot replace brakes, traffic lights, and crash tests.</p>
+<p>Model calls work the same way.</p>
+<p>You can switch to a stronger model. You can tune temperature. You can increase thinking tokens. You can add chain-of-thought-style intermediate steps. You can ask the model to self-check. None of this changes the fact that the execution layer is still not a deterministic program.</p>
+<p>This is also why &quot;let another LLM check it&quot; is only weak validation. It may help, but it is not a boundary.</p>
+<p><strong>Probabilistic output cannot be closed by probabilistic judgment.</strong></p>
+<h3 id="Output-Validation-A-Deterministic-Gate-Is-the-First-Hard-Boundary"><a href="#Output-Validation-A-Deterministic-Gate-Is-the-First-Hard-Boundary" class="headerlink" title="Output Validation: A Deterministic Gate Is the First Hard Boundary"></a>Output Validation: A Deterministic Gate Is the First Hard Boundary</h3><p>A real harness starts to become hard at the output validation layer.</p>
+<p>The keyword here is not &quot;review.&quot; It is gate.</p>
+<p>A gate means: if it does not pass, it cannot continue. Not &quot;the model thinks it is fine,&quot; not &quot;it looks okay to a human,&quot; not &quot;it should probably be fine,&quot; but a deterministic check that blocks the output.</p>
+<p>This is where the fast-loop earns its place. The fast-loop is not responsible for proving the truth of the universe. It is responsible for immediately cutting off obviously unqualified results after each Agent output in a cheap, deterministic, repeatable way.</p>
+<p>A solid fast-loop gate should block at least seven classes of problems:</p>
+<ol>
+<li>The output must satisfy the schema. If it does not, fail immediately.</li>
+<li>Every factual claim must trace back to context, tool results, or an explicit assumption.</li>
+<li>The Agent must not perform actions beyond its authorization scope, especially writing files, sending requests, deleting resources, or changing configuration.</li>
+<li>The Agent must not package uncertainty as a certain conclusion.</li>
+<li>Tool errors must not be swallowed. Failures must be exposed explicitly.</li>
+<li>Modification tasks must produce a verifiable diff, not just &quot;I changed it.&quot;</li>
+<li>Critical artifacts must be reviewable by deterministic checkers, such as parsers, linters, tests, static analyzers, or policy rules.</li>
+</ol>
+<p>These seven rules are not mysterious. They are not sexy either.</p>
+<p>But engineering systems do not run on sexiness. They run on blocking the same class of error every time.</p>
+<p>If an Agent generates JSON without schema validation, you are merely trusting it to generate JSON. If an Agent edits code without tests and static checks, you are merely trusting that it did not break anything. If an Agent writes an analysis report without citation coverage and source boundaries, you are merely trusting that it did not hallucinate.</p>
+<p>Trust is not harness.</p>
+<p><strong>The first principle of harness is replacing &quot;trust it&quot; with &quot;block it.&quot;</strong></p>
+<h3 id="Feedback-Layer-Slow-Loop-Eval-Calibrates-Ground-Truth"><a href="#Feedback-Layer-Slow-Loop-Eval-Calibrates-Ground-Truth" class="headerlink" title="Feedback Layer: Slow-Loop Eval Calibrates Ground Truth"></a>Feedback Layer: Slow-Loop Eval Calibrates Ground Truth</h3><p>The fast-loop answers &quot;can this output clear the minimum bar this time?&quot; It does not answer a larger question: is your gate itself correct?</p>
+<p>That requires slow-loop eval.</p>
+<p>Many teams build a pile of automatic checks, then quickly fall into another hallucination: if all checks are green, the system is good. This idea is just as dangerous.</p>
+<p>Because a checker can check the wrong thing.</p>
+<p>Suppose you are building a code generation Agent. The fast-loop can check whether the code compiles, whether tests pass, and whether formatting is right. But none of that equals correct business logic. You may have tested the happy path and missed edge cases. You may have asked the Agent to fix a surface bug while introducing architectural debt. You may have overfit the eval set to a batch of old problems, then collapse the moment real users arrive.</p>
+<p>The job of slow-loop eval is to periodically pull the system back to ground truth.</p>
+<p>It does not have to run every time, and it does not have to be cheap. It may require human labeling, online sample replay, golden datasets, shadow traffic, real user feedback, and case study reviews. It is slow, but it calibrates direction.</p>
+<p>The fast-loop is the brake. The slow-loop is the map.</p>
+<p>Without a fast-loop, the system crashes around every day. Without a slow-loop, the system charges along the wrong map.</p>
+<h3 id="Reproducibility-Layer-Eval-Harness-Makes-Results-Comparable"><a href="#Reproducibility-Layer-Eval-Harness-Makes-Results-Comparable" class="headerlink" title="Reproducibility Layer: Eval Harness Makes Results Comparable"></a>Reproducibility Layer: Eval Harness Makes Results Comparable</h3><p>The last layer is the easiest to ignore: reproducibility.</p>
+<p>You say one prompt version is better. How do you prove it? You say the new model increased pass rate from 72% to 81%. How do you prove it? You say a SKILL reduced hallucination. How do you prove it?</p>
+<p>Without seed, model version, prompt snapshot, tool version, KB snapshot, and eval dataset snapshot, your conclusion is hard to reproduce.</p>
+<p>You get 81% today and maybe 74% tomorrow. You do not know whether the model version changed, the tool response changed, the KB was updated, the sample was randomly different, or the prompt changed by one small sentence you forgot to record.</p>
+<p>At that point, you are not doing engineering. You are doing mystical A&#x2F;B testing.</p>
+<p>A real eval harness records the entire runtime environment: what the input was, what the model was, which prompt version was used, what the tools returned, what the external dependencies were, how the checker judged the result, and where the ground truth came from.</p>
+<p>Only then are results comparable. Only when they are comparable does optimization mean anything.</p>
+<p><strong>An improvement that cannot be reproduced is not an improvement. It is luck.</strong></p>
+<h2 id="Why-People-Mistake-SKILL-KB-for-Harness"><a href="#Why-People-Mistake-SKILL-KB-for-Harness" class="headerlink" title="Why People Mistake SKILL&#x2F;KB for Harness"></a>Why People Mistake SKILL&#x2F;KB for Harness</h2><p>This misconception is natural.</p>
+<p>Because SKILL&#x2F;KB is the easiest thing to show, and the easiest thing to sell.</p>
+<p>Open a repo and see a pile of carefully organized markdown, polished prompt templates, and complex agent workflows, and you naturally feel that the system is engineered. It looks like engineering, reads like a specification, and demos more smoothly.</p>
+<p>A real harness often does not look good.</p>
+<p>Schema validators are not much of a demo. Log snapshots are not much to brag about. Eval datasets are dirty, case reviews are tedious, and writing deterministic checkers feels like labor. You spend two weeks building a gate, and in the end the only thing users see is &quot;this error did not happen.&quot;</p>
+<p>In software engineering, the most valuable things often make bad things not happen.</p>
+<p>But &quot;not happening&quot; is hard to see.</p>
+<p>So people naturally flock to prompt engineering. The feedback is fast, the cost is low, the changes are visible, and it is easy to talk about. Change one line in a system prompt today, see the metric rise a few points tomorrow. It feels rewarding.</p>
+<p>That is fine.</p>
+<p>The mistake is treating it as the destination.</p>
+<p>Prompt engineering is the entrance, not the moat. SKILL is packaged experience, not a system boundary. KB is contextual asset, not a correctness guarantee.</p>
+<p><strong>You can start with prompt, but you cannot finish with prompt.</strong></p>
+<h2 id="What-Is-a-Harness-Engineer-Actually-Building"><a href="#What-Is-a-Harness-Engineer-Actually-Building" class="headerlink" title="What Is a Harness Engineer Actually Building?"></a>What Is a Harness Engineer Actually Building?</h2><p>So what is a real Harness Engineer building?</p>
+<p>Not longer prompts. Not more SKILLs.</p>
+<p>The real work is building a structure that puts probabilistic models inside deterministic systems.</p>
+<p>That sounds abstract. Split it apart and it becomes concrete:</p>
+<p>The model may generate freely, but the output must pass schema. The model may call tools, but tool permissions must be controlled. The model may write code, but the diff must be checkable by tests and static analyzers. The model may summarize documents, but each key conclusion must trace back to source. The model may plan tasks, but high-risk actions must have a deterministic gate or human approval.</p>
+<p>The key is not &quot;restricting the model.&quot; The key is knowing where the model cannot be trusted.</p>
+<p>The default posture of many Agent builders is: the model is smart, so I should let it do more.</p>
+<p>The default posture of a Harness Engineer is: the model is smart, so I must know when it will apply that intelligence in the wrong place.</p>
+<p>These two postures are worlds apart.</p>
+<p>The former expands capability boundaries. The latter defines safety boundaries. Without the latter, the faster the former expands, the more dangerous the system becomes.</p>
+<h2 id="From-Input-Constraints-to-an-Engineering-Loop"><a href="#From-Input-Constraints-to-an-Engineering-Loop" class="headerlink" title="From Input Constraints to an Engineering Loop"></a>From Input Constraints to an Engineering Loop</h2><p>I am not against SKILL, KB, or prompt engineering.</p>
+<p>Quite the opposite. I think they are necessary. Without a good input constraint layer, an Agent performs terribly, and the gates that follow get flooded by garbage output. If a model has no understanding of the task context, even the strongest checker is just rejecting garbage efficiently.</p>
+<p>But necessary does not mean sufficient.</p>
+<p>SKILL&#x2F;KB belongs to the input-constraint layer. This layer brings the model near the right direction and makes the system usable.</p>
+<p>A full harness continues from there: the execution layer admits probability, the output layer builds deterministic gates, the feedback layer calibrates against ground truth, and the reproducibility layer makes each optimization comparable.</p>
+<p>That is a complete engineering loop.</p>
+<p>If a system has only SKILL&#x2F;KB, with no gate, no eval, no snapshot, and no reproducibility, then at most it is a prompt-augmented agent. It is not a harnessed agent.</p>
+<p>This distinction is not wordplay.</p>
+<p>It decides whether you are building a demo or building a system.</p>
+<h2 id="Closing-Do-Not-Mistake-the-Threshold-for-the-Destination"><a href="#Closing-Do-Not-Mistake-the-Threshold-for-the-Destination" class="headerlink" title="Closing: Do Not Mistake the Threshold for the Destination"></a>Closing: Do Not Mistake the Threshold for the Destination</h2><p>AI engineering today feels a bit like early Web development.</p>
+<p>Someone could write HTML and think they were doing software engineering. Later, people slowly realized that real engineering was not just drawing the page. It also included state management, build systems, testing, monitoring, progressive rollout, rollback, security, performance, and maintainability.</p>
+<p>Agents are the same today.</p>
+<p>Writing prompts, organizing KBs, and making SKILLs are all important. But that is just drawing the page. The hard part is: when the model produces a wrong output, can you block it? When the metrics get better, can you prove it? When the system drifts after three months in production, can you reconstruct what happened?</p>
+<p>Many people are excited about SKILL&#x2F;KB&#x2F;prompt engineering. It is easy to mistake input-layer capability for full Harness Engineering.</p>
+<p>It is not the same thing.</p>
+<p><strong>A Harness Engineer&#39;s job is not to make the model speak better. It is to make the system more trustworthy.</strong></p>
+</div><iframe src="/donate/?AliPayQR=/img/AliPayQR.png&amp;WeChatQR=/img/WeChatQR.png&amp;GitHub=undefined&amp;BTCQR=undefined&amp;BTCKEY=undefined&amp;PayPal=undefined" style="overflow-x:hidden; overflow-y:hidden; border:0xp none #fff; min-height:300px; width:100%;" frameborder="0" scrolling="no"></iframe><div><ul class="post-copyright"><li class="post-copyright-author"><strong>Author: </strong>johnsonlee</li><li class="post-copyright-link"><strong>Blog Link: </strong><a href="/en/2026/05/15/from-prompt-to-harness/index.html">https://johnsonlee.io/2026/05/15/from-prompt-to-harness.en/</a></li><li class="post-copyright-license"><strong>Copyright Declaration: </strong>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</li></ul></div><br><div class="tags"><a href="/tags/AI/">AI</a><a href="/tags/Agent/">Agent</a><a href="/tags/Harness-Engineering/">Harness Engineering</a><a href="/tags/Eval/">Eval</a><a href="/tags/Prompt-Engineering/">Prompt Engineering</a></div><div class="post-nav"><a class="pre" href="/en/2026/05/20/faulty-agent-memory/">Long-Term Memory Is Making Agents Dumber</a><a class="next" href="/en/2026/05/11/graphite-agent-bytecode-context/">Graphite: Code Is Context</a></div><script type="text/javascript" id="diffblog-plugin-script" async="false" src="https://diff.blog/static/js/diffblog_plugin_v1.js"></script><script>document.getElementById("diffblog-plugin-script").addEventListener('load', () => {
+  DiffBlog('0jhfofmazizsde2k5pw64l8p2sy592xanbfvhtabsoy93kenap');
+});
+</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"From Prompt to Harness","datePublished":"2026-05-15T09:44:41.000Z","dateModified":"2026-05-15T09:44:41.000Z","author":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"publisher":{"@type":"Person","name":"Johnson Lee","url":"https://johnsonlee.io"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://johnsonlee.io/2026/05/15/from-prompt-to-harness.en/"},"description":"Recently I noticed an interesting pattern. Some people add a stack of SKILLs to an Agent, wire it to all kinds of knowledge bases, build workflows everywhere, stuff the prompt with caveats, counterexa"}</script><div id="container"></div><link rel="preload" type="text/css" href="/libs/gitalk/1.7.2/gitalk.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><script>(function() {
+  load(
+    '/libs/blueimp-md5/2.10.0/js/md5.js',
+    '/libs/gitalk/1.7.2/gitalk.min.js'
+  ).then(() => {
+    var gitalk = new Gitalk({
+      clientID: '80b7a03dd9cce611f9ff',
+      clientSecret: 'e3296e3d54d9da61d79ee7cf072fa7a1fb5eebc2',
+      repo: 'blog',
+      owner: 'johnsonlee',
+      admin: ['johnsonlee'],
+      id: md5(location.pathname.replace(/^\/en\/(\d{4}\/)/, '/$1').replace(/\.en\/$/, '/')),
+      distractionFreeMode: false
+    })
+    gitalk.render('container')
+  })
+})();</script></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (107)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Harness-Engineering/">Harness Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (64)</a><ul style="padding:revert"></ul></li><li><a href="/categories/investing/">Investing (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Developer-Tools/" style="font-size: 15px;">Developer Tools</a> <a href="/tags/Dotfiles/" style="font-size: 15px;">Dotfiles</a> <a href="/tags/Claude-Code/" style="font-size: 15px;">Claude Code</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/AI-PC/" style="font-size: 15px;">AI PC</a> <a href="/tags/Wintel/" style="font-size: 15px;">Wintel</a> <a href="/tags/NVIDIA/" style="font-size: 15px;">NVIDIA</a> <a href="/tags/Microsoft/" style="font-size: 15px;">Microsoft</a> <a href="/tags/Local-LLM/" style="font-size: 15px;">Local LLM</a> <a href="/tags/Token/" style="font-size: 15px;">Token</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/Consciousness/" style="font-size: 15px;">Consciousness</a> <a href="/tags/Self-Reference/" style="font-size: 15px;">Self-Reference</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Attention/" style="font-size: 15px;">Attention</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Agentic-Coding/" style="font-size: 15px;">Agentic Coding</a> <a href="/tags/Enterprise/" style="font-size: 15px;">Enterprise</a> <a href="/tags/Buddhism/" style="font-size: 15px;">Buddhism</a> <a href="/tags/Taoism/" style="font-size: 15px;">Taoism</a> <a href="/tags/Physics/" style="font-size: 15px;">Physics</a> <a href="/tags/Philosophy/" style="font-size: 15px;">Philosophy</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/Automation/" style="font-size: 15px;">Automation</a> <a href="/tags/Testing/" style="font-size: 15px;">Testing</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/Cognitive-Boundary/" style="font-size: 15px;">Cognitive Boundary</a> <a href="/tags/Randomness/" style="font-size: 15px;">Randomness</a> <a href="/tags/Self-Evolution/" style="font-size: 15px;">Self-Evolution</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Dimension-Hacking/" style="font-size: 15px;">Dimension Hacking</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Economy/" style="font-size: 15px;">Economy</a> <a href="/tags/Future/" style="font-size: 15px;">Future</a> <a href="/tags/UBI/" style="font-size: 15px;">UBI</a> <a href="/tags/Product-Strategy/" style="font-size: 15px;">Product Strategy</a> <a href="/tags/Copilot/" style="font-size: 15px;">Copilot</a> <a href="/tags/Google/" style="font-size: 15px;">Google</a> <a href="/tags/Technology/" style="font-size: 15px;">Technology</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Product-Management/" style="font-size: 15px;">Product Management</a> <a href="/tags/Project-Management/" style="font-size: 15px;">Project Management</a> <a href="/tags/AI-Agent/" style="font-size: 15px;">AI Agent</a> <a href="/tags/Memory/" style="font-size: 15px;">Memory</a> <a href="/tags/Loop-Engineering/" style="font-size: 15px;">Loop Engineering</a> <a href="/tags/Harness-Engineering/" style="font-size: 15px;">Harness Engineering</a> <a href="/tags/Eval/" style="font-size: 15px;">Eval</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/Prompt-Engineering/" style="font-size: 15px;">Prompt Engineering</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Graphite/" style="font-size: 15px;">Graphite</a> <a href="/tags/MCP/" style="font-size: 15px;">MCP</a> <a href="/tags/Bytecode/" style="font-size: 15px;">Bytecode</a> <a href="/tags/Static-Analysis/" style="font-size: 15px;">Static Analysis</a> <a href="/tags/Ground-Truth/" style="font-size: 15px;">Ground Truth</a> <a href="/tags/Context/" style="font-size: 15px;">Context</a> <a href="/tags/Dart/" style="font-size: 15px;">Dart</a> <a href="/tags/Flutter/" style="font-size: 15px;">Flutter</a> <a href="/tags/Coupang/" style="font-size: 15px;">Coupang</a> <a href="/tags/Reveal2021/" style="font-size: 15px;">Reveal2021</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/06/26/fooled-by-loop-engineering.en/">Don't Let Loop Engineering Fool You</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/26/fooled-by-loop-engineering/">别被 Loop Engineering 忽悠瘸了</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/21/token-efficiency-way-forward.en/">Where Is the Way Forward for Token Efficiency?</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/21/token-efficiency-way-forward/">Token Efficiency 的出路在哪里？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/21/smart-money-after-memory/">存储之后，聪明钱会流向哪里？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/21/smart-money-after-memory.en/">After Memory, Where Will Smart Money Flow?</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/20/on-device-ai-next-wave/">AI 的下一个风口——端侧智能</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/20/on-device-ai-next-wave.en/">AI's Next Wave: On-Device Intelligence</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/20/schools-of-trading.en/">The Schools of Trading</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/06/20/schools-of-trading/">股票交易的流派</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>

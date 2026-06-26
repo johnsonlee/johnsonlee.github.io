@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/06/20/on-device-ai-next-wave/">
+  <title>AI 的下一个风口——端侧智能 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">AI 的下一个风口——端侧智能</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-06-20 · Johnson Lee · Independent Thinking</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">5 月底，Windows、NVIDIA 和 Arm 几乎同时喊出一句话："A new era of PC." 我已经用两篇文章拆过这句话：<a href="https://johnsonlee.io/2026/05/31/a-new-era-of-pc/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">《Wintel 时代结束了》</a>讲 PC 为什么重新变成算力资产，<a href="https://johnsonlee.io/2026/05/31/ai-pc-real-opportunity/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">《当 AI PC 成为新的风口，真正的机会在哪里？》</a>讲 local runtime、context layer 和 cost-aware execution。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">那两篇关心的是一台 PC 如何接住从云端下沉的智能。一周多后，苹果在 WWDC 2026 发布新一代 Siri AI，强调 personal context understanding、on-screen awareness、app actions 和 across apps，还把同一段对话接进 iPhone、iPad、Mac、Apple Watch 和 Vision Pro。</p>
+
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">看起来，一边在谈 PC，一边在谈 Siri。放在一起看，它们指向同一轮迁移：AI 正从云端的一颗大脑，长成分布在个人设备上的一套神经系统。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这篇继续往前一步。PC 很重要，但端侧智能的棋盘远不止 PC。</p>
+<h2 id="端侧首先是一张计算网络" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  端侧首先是一张计算网络</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">把端侧等同于手机，会漏掉一半；把端侧等同于本地模型，还会漏掉另一半。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">端侧包含用户身边所有可以感知、计算和执行的设备。手机看见你此刻的位置、屏幕、消息和相机；手表知道你是否佩戴、是否运动、是否刚完成一次身份确认；耳机一直贴着你的声音和环境；PC 保存文件、代码、浏览器会话、企业账号和长期工作状态；汽车、眼镜和家庭设备理解周围空间。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这些设备拥有不同的上下文，也适合不同的任务。把同一个小模型复制到每台机器上，价值有限。真正有意思的地方，是它们开始围绕同一个人协作。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">端侧智能的单位，最终会从设备变成人。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">云端仍然负责世界知识和高强度推理。端侧负责现场：你正在看什么，刚刚发生了什么，哪台设备处于可信状态，哪个动作可以立刻执行。这里的“端”是一条数据与权限边界，离线运行只是其中一种结果。</p>
+<h2 id="PC-是这张网络里的重节点" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  PC 是这张网络里的重节点</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">PC 为什么重新回到牌桌，前两篇已经写过：Agent 的使用频率会把云端成本放大，本地算力重新成为资产。这里不再重复那笔账，只补一个更重要的角色。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">PC 是个人 Agent 最适合长期工作的地方。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">手机擅长捕捉意图。它始终在身边，能看到通知、位置、照片和即时对话。复杂工作却大量沉淀在 PC：几十个文件、完整 repo、邮件历史、设计稿、财务表、terminal、企业系统和浏览器登录状态。PC 还有稳定电源、更大内存和更好的散热，适合让任务连续运行几十分钟，甚至几小时。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">想象一下这个场景：你在地铁上收到客户发来的合同，对手机说：“跟上一个版本比较，找出和邮件里谈妥内容不一致的条款，先拟一封回复，我到公司前给我。”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">手机拿到当前邮件和你的意图，Watch 完成身份确认，办公室里的 Mac 读取项目目录与邮件索引，本地模型先过滤敏感信息，复杂条款再交给云端模型，结果最后回到手机。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">没有哪一台设备独自完成了这件事。Agent 活在它们的交接里。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">手机让 Agent 随身，PC 让 Agent 开工。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这也是 "A new era of PC" 更深的一层含义。PC 不只获得了新的算力任务，它开始承担个人智能网络里的重计算、长任务和私有工作状态。</p>
+<h2 id="苹果在搭个人智能的-control-plane" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  苹果在搭个人智能的 control plane</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">把 WWDC 2026 看成 Siri 终于更像 ChatGPT，会错过真正的产品。Siri 是用户看得见的界面，设备、数据、身份、模型和 App 之间那层系统才是核心。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">苹果宣布 Siri AI 深度接入 iPhone、iPad、Mac、Apple Watch 和 Vision Pro，并通过 iCloud 私密同步对话历史。用户可以在 Mac 开始，在 iPhone 或 Watch 继续。<a href="https://www.apple.com/newsroom/2026/06/apple-introduces-siri-ai-a-profoundly-more-capable-and-personal-assistant/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Apple</a> 这只是最容易展示的一层。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">真正困难的是一项任务如何跨设备延续：意图从哪台设备进入，哪份上下文仍然有效，哪台设备拥有执行条件，哪个动作需要再次确认，什么时候调用云端，最终由哪个 App 落地。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这套系统更像个人智能的 control plane。它调度的不只是模型，还包括设备、权限、身份和动作。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">模型决定答案有多聪明，control plane 决定 AI 到底能不能替你做事。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">苹果的优势也在这里。它控制芯片、操作系统、账号体系、安全硬件、App 权限和一整组个人设备。单看模型，苹果未必领先；把一个人的设备组织成连续系统，它拥有别人很难复制的起点。</p>
+<h2 id="个人上下文是一种实时状态" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  个人上下文是一种实时状态</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">“个人上下文”很容易被理解成一个更大的用户数据库：邮件、照片、日历、聊天记录全部做 embedding，Agent 需要时检索。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这还不够。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">数据告诉 AI 你过去做过什么。实时状态告诉它你现在正在做什么：屏幕上打开哪份文件，耳机是否佩戴，Mac 是否解锁，附近有没有自己的设备，刚收到哪条通知，付款动作是否已经确认。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这些信息变化快、保质期短，也和权限紧密绑定。十分钟前的屏幕状态可能已经失效；在已解锁 Mac 上允许读取的文件，不该因为一句手机语音就自动上传；Watch 上的一次确认，也不能无限期授权后续动作。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">数据告诉 AI 你是谁，端侧状态告诉它你此刻要什么。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这就是操作系统厂商的机会。聊天机器人只能看到用户主动交给它的内容，OS 站在上下文发生的现场。未来个人 Agent 的差距，很可能不在“记住了多少”，而在能否判断哪些信息此刻有效、哪些权限此刻成立。</p>
+<h2 id="App-会被拆成一组可调用能力" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  App 会被拆成一组可调用能力</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">苹果给开发者的信号同样清楚。App Intents schemas 可以把 App 的实体放进 Spotlight semantic index，把动作暴露给 Siri；View Annotations 则让系统理解屏幕上正在显示的对象。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">过去，App 是一个目的地。用户找到图标、打开首页、穿过几层页面，最后完成一个动作。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Agent 接管入口后，App 更像能力供应商。用户说“把这张票据记到账本”“把合同风险同步到项目任务”“等这个网页开放报名就通知我”，系统会选择合适的 App，再把多个动作串起来。整个过程可能一次界面都不打开。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我把这一层叫作 Intent Store。它未必真的长成一个商店，却会形成新的分发逻辑：</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">App Store 决定软件有没有进入设备，Intent Store 决定它有没有进入任务。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这件事在 PC 上尤其重要。IDE、Office、设计软件、数据库工具和企业应用拥有大量深层能力，过去都藏在菜单、命令和复杂 UI 里。一旦这些能力被 Agent 理解并组合，PC 软件的竞争力会从“界面里有什么”，延伸到“系统能调用什么”。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">不会被 Agent 理解的软件，依然可以被人打开，只是会逐渐失去自动化工作流里的位置。</p>
+<h2 id="几家巨头其实在争同一个入口" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">6.  几家巨头其实在争同一个入口</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Microsoft 和 NVIDIA 从 PC 出发。它们强调本地 Agent、统一内存和持续运行的工作负载，NVIDIA 甚至直接把 agents 称为 personal computing 的未来。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">苹果从个人上下文出发。它把 Siri 放进每块屏幕，把 App Intents 接到系统动作，再用端侧模型和 Private Cloud Compute 覆盖不同强度的任务。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">起点不同，终点正在靠近：一个围绕用户组织的 personal AI fabric。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在这张网络里，PC 是最重的计算节点，手机是最密集的感知节点，Watch 和耳机提供身份与即时交互，云端模型提供外部知识和高难推理。操作系统负责把它们拼成一次完整任务。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">因此，下一轮竞争不只看谁的模型更强。模型厂商提供能力，操作系统决定能力在什么时间、拿着什么上下文、通过哪台设备进入用户生活。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">PC 是其中最重的一块，端侧智能才是完整的棋盘。</p>
+<h2 id="真正的门槛在交接" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">7.  真正的门槛在交接</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">跨设备听起来很自然，做起来比跨 App 更难。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">iOSWorld 用 26 个 App 和同一个人的持续身份测试手机 Agent。最好的配置总体只有 52%，跨 App 任务只有 37%。<a href="https://arxiv.org/abs/2606.09764" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">iOSWorld</a> 单台手机、受控环境、已有高权限接口，Agent 仍然经常走丢。把任务扩展到多台设备，还要增加网络中断、设备休眠、上下文过期、权限升级、状态冲突和失败恢复。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">一段对话能同步，不代表一项工作能延续。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">真正可用的个人 Agent 必须记得任务做到哪一步，知道哪份状态已经过期，在设备切换后恢复执行，还要让用户随时看见它读过什么、做过什么、准备做什么。出错后能撤回，越权前会停下来，设备离线时不会悄悄换一条危险路径。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">发布会最容易演示“从这里继续聊”。真正的门槛，是“从那里继续做”，而且不能做错。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这也是苹果路线最大的考验。封闭生态让它有条件打通设备，也意味着任何一处不可靠都会破坏整套体验。Agent 连续两次找错文件、重复发信或忘记用户刚刚拒绝的动作，个人智能网络就会立刻退化成一组更烦的通知。</p>
+<h2 id="云端有大脑，端侧开始长身体" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">8.  云端有大脑，端侧开始长身体</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">回头再看 "A new era of PC" 和 WWDC 2026，两条新闻其实是一件事。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">前者在问：AI 的重任务以后在哪里运行？后者在问：AI 凭什么理解并代表一个人？答案正在同一处汇合——用户自己拥有的设备。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">云端模型还会继续变大，也会长期承担最难的推理。但一颗远在数据中心的大脑，没有你的屏幕、文件、传感器、身份和执行权限。它可以回答世界，却很难真正进入生活。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">端侧智能给 AI 补上身体。手机负责感知，PC 负责工作，Watch 负责确认，App 负责行动，云端在必要时提供更强的大脑。Agent 则穿过它们，保持同一个目标。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">AI 的下一轮平台，是一组终于开始围绕同一个人协作的设备。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">当一项任务可以从手腕开始，在 PC 上完成，再回到手机交付，我们还会把端侧智能理解成手机里的一个模型吗？</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/06/20/on-device-ai-next-wave/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/06/20/on-device-ai-next-wave/</a></p>
+    </section>
+  </main>
+</body>
+</html>
