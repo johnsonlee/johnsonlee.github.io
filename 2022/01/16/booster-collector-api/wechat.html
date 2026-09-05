@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2022/01/16/booster-collector-api/">
+  <title>Booster Collector API | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Booster Collector API</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2022-01-16 · Johnson Lee · Computer Science / Open Source / Booster</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Booster 之所以保持着高性能，除了并行 I/O 以外，还有一个很重要的方面 —— 单次 I/O。可能有人会问，什么叫单次 I/O？所谓单次 I/O 是指，在 Transform 的过程中，对于每一个输入 (JAR/DIR) ，Booster 只需要一次读和一次写，便可以实现整个 app 的字节码以流水线的方式进行处理，也就是 <em style="font-style:italic;color:#1f2937;">Bytecode Transform Pipeline</em>。这就意味着，每个 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Transformer</code> 只有一次机会来处理 <em style="font-style:italic;color:#1f2937;">class</em> ，但如果想要在 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Transformer</code> 先收集一些信息，再在 <em style="font-style:italic;color:#1f2937;">Transform</em> 的过程中将这些收集到的信息，以字节码的方式写入到某个 <em style="font-style:italic;color:#1f2937;">class</em> 中，就不太容易实现。一个典型的例子便是 <em style="font-style:italic;color:#1f2937;">SPI</em> 优化，虽然 <em style="font-style:italic;color:#1f2937;">R8</em> 可以对 <em style="font-style:italic;color:#1f2937;">SPI</em> 进行化，但是，对写代码的姿势有一定的要求。</p>
+<h2 id="R8-对-SPI-的优化" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  R8 对 SPI 的优化</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">R8 从 <em style="font-style:italic;color:#1f2937;">1.5.68</em> 开始，增加了对 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ServiceLoader</code> 的优化，为什么 R8 要增加这样一个优化功能呢？主要是为了解决 <em style="font-style:italic;color:#1f2937;">Kotlin Coroutines</em> 的一个性能问题 —— <a href="https://github.com/Kotlin/kotlinx.coroutines/issues/878" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Slow android Dispatchers.Main init</a>，关于这个 bug 的更详细的内容，请参考：<a href="https://issuetracker.google.com/issues/120436373" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://issuetracker.google.com/issues/120436373</a></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">Kotlin Coroutines</em> 之所以要用 <em style="font-style:italic;color:#1f2937;">SPI</em> 是为了解决在不同的 JVM 平台上运行不同的 <em style="font-style:italic;color:#1f2937;">Kotlin Coroutines</em> 相关的 API 实现，比如，<em style="font-style:italic;color:#1f2937;">Android</em> 平台上的实现和 <em style="font-style:italic;color:#1f2937;">Java</em> 平台上的实现是不一样的，<em style="font-style:italic;color:#1f2937;">Android</em> 需要用到 <em style="font-style:italic;color:#1f2937;">Main Looper</em> 但这个在 <em style="font-style:italic;color:#1f2937;">Java</em> 中并不存在，但 <em style="font-style:italic;color:#1f2937;">Kotlin Coroutines</em> 的解决方案有点挫，为了解决这一性能问题，R8 给出了优化方案，针对以下这种写法来进行优化：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">ServiceLoader.load(X.class, X.class.getClassLoader()).iterator();</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">优化后的代码长这样：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">Arrays.asList(new X[] { new Y(), ..., new Z() }).iterator()</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">其中，<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Y</code>, <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Z</code> 则是在编译期分析出来的所有 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">X</code> 的实现，具体实现细节，可以参考：<a href="https://r8.googlesource.com/r8/+/refs/heads/main/src/main/java/com/android/tools/r8/ir/optimize/ServiceLoaderRewriter.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">ServiceLoaderRewriter.java</a></p>
+<h2 id="单次-I-O-的局限性" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  单次 I/O 的局限性</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">针对这种场景，Booster 的单次 I/O 就明显满足不了需求，因为，修改 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ServiceLoader</code> 的调用需要在分析出每个 <em style="font-style:italic;color:#1f2937;">Service</em> 对应的所有实现类之后，所以，至少需要两次读操作，但是，<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Transformer</code> 只有一次读的机会。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这里还存在另一个问题，在于增量编译的情况下，如果 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">X</code> 的实现类从原来的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Y</code>, <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Z</code> 变成了 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Y</code>，也就是 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Z</code> 被删除了，对于调用了 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ServiceLoader</code> 的类来说，如何才能感知到 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">X</code> 的实现类的变化，然后将 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Z</code> 从原来已经优化过的代码中删除掉，即：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">Arrays.asList(new X[] { new Y(), new Z() }).iterator()</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">变成：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">Arrays.asList(new X[] { new Y() }).iterator()</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">对于第一个问题，只是多一次读的问题，还比较好解决，但对于第二个问题，即增量编译的情况下，增量的部分就不仅仅是表现在 AGP 的增量的范围了，需要增量更新范围会更大，因为有一些 <em style="font-style:italic;color:#1f2937;">JAR/DIR</em> 并没变化，但是因为优化而被改到了，需要重新对其进行优化，所以，要解决这一问题，还需要一次读操作，如果是三次读加一次写的话，跟之前的一次读一次写，对于追求极致性能的 Booster 显然是无法接受的，有什么办法降低不必要的 I/O 开销呢？</p>
+<h2 id="Booster-Collector-API" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  Booster Collector API</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">为了彻底的解决前面提到的问题，Booster 从 4.3.0 开始，提供了 <a href="https://github.com/didi/booster/blob/master/booster-transform-spi/src/main/kotlin/com/didiglobal/booster/transform/Collector.kt" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Collector API</a> 来将前面提到的两次额外的读操作进行合并，一般情况下，不需要重新解析 <em style="font-style:italic;color:#1f2937;">class</em> 就能收集到所有的信息，只需要遍历一下所有的 <em style="font-style:italic;color:#1f2937;">JAR/DIR</em> 中的文件名即可。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">除此之外，还提供了另一个跟 <a href="https://github.com/didi/booster/blob/master/booster-transform-spi/src/main/kotlin/com/didiglobal/booster/transform/Collector.kt" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Collector API</a> 类似的 <a href="https://github.com/didi/booster/blob/master/booster-transform-spi/src/main/kotlin/com/didiglobal/booster/transform/Collector.kt#L23" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Supervisor API</a>，它们之间唯一的区别在于，<a href="https://github.com/didi/booster/blob/master/booster-transform-spi/src/main/kotlin/com/didiglobal/booster/transform/Collector.kt#L7" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Collector API</a> 的结果会影响增量 <em style="font-style:italic;color:#1f2937;">Transform</em> 的范围，而 <a href="https://github.com/didi/booster/blob/master/booster-transform-spi/src/main/kotlin/com/didiglobal/booster/transform/Collector.kt#L23" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Supervisor API</a> 并不会影响构建。</p>
+<h3 id="SPI-Service-收集" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">3.1.  SPI Service 收集</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">针对 <em style="font-style:italic;color:#1f2937;">SPI</em> 的信息收集，Booster 提供了默认的实现 —— <a href="https://github.com/didi/booster/blob/master/booster-transform-util/src/main/kotlin/com/didiglobal/booster/transform/util/Supervisors.kt#L55" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">ServiceSupervisor</a>，使用方法如下所示：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">@AutoService(ClassTransformer::class)
+class ServiceRegistryTransformer : ClassTransformer {
+
+    val services = mutableListOf&lt;Pair&lt;String, Collection&lt;String&gt;&gt;&gt;()
+
+    override fun onPreTransform(context: TransformContext) {
+        context.registerCollector(ServiceSupervisor() {
+            services += it
+        })
+    }
+
+    override fun transform(context: TransformContext, klass: ClassNode) = klass.apply {
+        // TODO ...
+    }
+
+}</code></pre>
+
+<h3 id="生成-更新-ServiceRegistry" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">3.2.  生成/更新 ServiceRegistry</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">很多框架的实现都是在编译期生成一个服务注册表，用于实现服务的注册与发现，在全量编译下，用 <a href="https://github.com/didi/booster/blob/master/booster-transform-util/src/main/kotlin/com/didiglobal/booster/transform/util/Supervisors.kt#L55" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">ServiceSupervisor</a> 就能实现服务接口与实现的注册，但是在增量编译下，由于 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ServiceRegistry</code> 这个类一般是内置在框架代码中，是再也不会产生变化的，因为已经打成了 <em style="font-style:italic;color:#1f2937;">JAR/AAR</em>，在 <em style="font-style:italic;color:#1f2937;">Transform</em> 之前，是不会被修改了。但对于框架来说，要实现对增量的支持，就需要在 <em style="font-style:italic;color:#1f2937;">Service</em> 有变化的时候，也更新 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ServiceRegistry</code>，这时候，就需要用到 <a href="https://github.com/didi/booster/blob/master/booster-transform-util/src/main/kotlin/com/didiglobal/booster/transform/util/Collectors.kt#L53" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">NameCollector</a> 来针对 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ServiceRegistry</code> 所在的 <em style="font-style:italic;color:#1f2937;">JAR</em> 进行强制更新，代码如下所示：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">@AutoService(ClassTransformer::class)
+class ServiceRegistryTransformer : ClassTransformer {
+
+    val services = mutableListOf&lt;Pair&lt;String, Collection&lt;String&gt;&gt;&gt;()
+
+    override fun onPreTransform(context: TransformContext) {
+        context.registerCollector(ServiceSupervisor() {
+            services += it
+        })
+
+        // 一旦有 JAR/DIR 中包含 ${SERVICE_REGISTRY} 这个文件
+        // 则强制走 transform 的流程，无论是全量还是增量
+        context.registerCollector(NameCollector(SERVICE_REGISTRY))
+    }
+
+    override fun transform(context: TransformContext, klass: ClassNode) = klass.apply {
+        when (klass.name) {
+            SERVICE_REGISTRY -&gt; {
+                val init = methods.find {
+                    it.name == "&lt;init&gt;" &amp;&amp; it.desc == "()V"
+                } ?: defaultInit.apply {
+                    methods.add(this)
+                }
+
+                init.instructions = InstList().apply {
+                    services.forEach { (api, implementations) -&gt;
+                        implementations.forEach { implementation -&gt;
+                            // class of api
+                            add(LdcInsnNode(Type.getObjectType(api)))
+                            // class of implementation
+                            add(LdcInsnNode(Type.getObjectType(implementation)))
+                            // ServiceRegistry.register(interface, implementation)
+                            add(MethodInsnNode(Opcodes.INVOKEVIRTUAL, SERVICE_REGISTRY, "register", "(Ljava/lang/Class;Ljava/lang/Class;)"))
+                        }
+                    }
+                    add(InsnNode(Opcodes.RETURN))
+                }
+            }
+        }
+    }
+}
+
+private const val SERVICE_REGISTRY = "com/your/package/ServiceRegistry.class"</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">最终的代码如果反编译过来，应该长这个样子：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">class ServiceRegistry {
+
+    private static final Map&lt;Class&lt;?&gt;, List&lt;Class&lt;?&gt;&gt; mapping = new HashMap&lt;&gt;();
+
+    private void &lt;T&gt; register(Class&lt;T&gt; api, Class&lt;? extends T&gt; implementation) {
+        ...
+    }
+
+    private ServiceRegistry() {
+        register(A.class, AImpl.class);
+        register(B.class, BImpl.class);
+        register(C.class, CImpl.class);
+        ...
+    }
+
+}</code></pre>
+
+<h2 id="References" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  References</h2><ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://johnsonlee.io/2020/01/23/service-provider-interface-optimization/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SPI 性能优化</a></li>
+</ol>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2022/01/16/booster-collector-api/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2022/01/16/booster-collector-api/</a></p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2022/04/11/the-data-mutability-problem/">
+  <title>The Data (Im)mutability Problem | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">The Data (Im)mutability Problem</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2022-04-11 · Johnson Lee · Computer Science / Architecture Design</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Whether data should be mutable or immutable after creation -- despite knowing that Java's <em style="font-style:italic;color:#1f2937;">String</em> benefits enormously from its immutable design, I'd rarely thought about this problem systematically throughout my career. That changed recently when I was reviewing a colleague's code and realized just how serious this issue can be.</p>
+<h2 id="Programming-Habits" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Programming Habits</h2><h3 id="The-final-Keyword" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">The <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">final</code> Keyword</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I've been writing code for over a decade now, mostly in <em style="font-style:italic;color:#1f2937;">Java</em>. If you've read my code, you've probably noticed I put <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">final</code> in front of nearly every variable. Where did this habit come from?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">It started early. Back then I was writing not just <em style="font-style:italic;color:#1f2937;">Java</em> but also <em style="font-style:italic;color:#1f2937;">C/C++</em>. In <em style="font-style:italic;color:#1f2937;">C</em>, even a simple operation that's one line in <em style="font-style:italic;color:#1f2937;">Java</em> could take dozens of lines. Early <em style="font-style:italic;color:#1f2937;">C</em> compilers also required variables to be declared at the top of functions, unlike <em style="font-style:italic;color:#1f2937;">Java</em>'s declare-as-you-go approach. In long functions, you couldn't be sure when a variable might get modified -- one slip of the finger and you'd corrupt something. So I learned to be cautious and keep mutations clustered together. When I moved to <em style="font-style:italic;color:#1f2937;">Java</em>, the habit of adding <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">final</code> came naturally as a way to prevent accidental modifications. I kept this up for years, initially for two reasons:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Preventing accidental mutations</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Making closures work more naturally</li>
+</ol>
+<h3 id="Collections-unmodifiableXxxx" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Collections.unmodifiableXxxx</code></h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">When reviewing code, I often see patterns like this:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">class Registry {
+  final Map&lt;String, List&lt;Class&lt;*&gt;&gt;&gt; mapping = ...
+
+  public List&lt;Class&lt;*&gt;&gt; getValue(String key) {
+    return this.mapping.get(key);
+  }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Looks fine at first glance. But what about this?</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public void wtf(Registry registry) {
+  registry.get("key").put("wtf", Wtf.class)
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">To prevent internal data from being modified externally, I typically write:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public List&lt;Class&lt;*&gt;&gt; getValue(String key) {
+  return Collections.unmodifiableList(this.mapping.get(key));
+}</code></pre>
+
+<h3 id="Data-Snapshots" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Data Snapshots</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Another habit I picked up from reading <em style="font-style:italic;color:#1f2937;">Swing</em>'s source code -- in the <em style="font-style:italic;color:#1f2937;">Observer</em> pattern, most people notify listeners like this:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">void notifyListeners() {
+  for (Listener listener : this.listeners) {
+    listener.onStateChange();
+  }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Seems harmless. And in most cases it is. But in a multithreaded environment, this can blow up. So I write it like this:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">void notifyListeners() {
+  final Listener[] listeners = this.listeners.toArray(new Listener[0]);
+  for (Listener listener : listeners) {
+    listener.onStateChange();
+  }
+}</code></pre>
+
+<h2 id="Functional-Programming-Languages" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Functional Programming Languages</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Speaking of functional programming, <a href="https://www.haskell.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Haskell</a> is the granddaddy. In <a href="https://www.haskell.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Haskell</a>'s world, all data is immutable -- if you want to change something, you copy it. Many people wonder why <a href="https://www.haskell.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Haskell</a> was designed this way. Doesn't copying on every modification hurt performance? If you've used <em style="font-style:italic;color:#1f2937;">Java</em> closures or lambdas, you know the pain: local variables referenced in a closure or lambda must be <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">final</code>. Why is that?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Anyone who's written <em style="font-style:italic;color:#1f2937;">JavaScript</em> has probably experienced something like this:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">function setupButtons(container) {
+  for (var i = 1; i &lt;= 10; i++) {
+    const btn = document.createElement("A");
+    btn.href = "javascript:void(0)";
+    btn.innerText = `${i}`;
+    btn.onclick = function() {
+      alert(`Button ${i}`);
+    }
+    container.appendChild(btn)
+  }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The intent is to create 10 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">&lt;A&gt;</code> tags as buttons, where clicking any button shows a dialog with its index. Looks fine. But run it and you'll find every button shows <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">11</code>.</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">What The Fuck!!??</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The root cause: <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">btn.onclick</code>'s function creates a closure. Unlike <em style="font-style:italic;color:#1f2937;">Java</em>, <em style="font-style:italic;color:#1f2937;">JavaScript</em> doesn't require closure-captured variables to be <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">final</code>. By the time any button is clicked, the loop has finished and <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">i</code> equals <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">11</code>. The typical fix:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">function setupButtons(container) {
+  for (var i = 1; i &lt;= 10; i++) {
+    (function(index) {
+      const btn = document.createElement("A");
+      btn.href = "javascript:void(0)";
+      btn.innerText = `${index}`;
+      btn.onclick = function() {
+        alert(`Button ${index}`);
+      }
+      container.appendChild(btn)
+    })(i);
+  }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">With the rise of functional programming, immutable objects have become the default choice to avoid problems like this. <em style="font-style:italic;color:#1f2937;">Kotlin</em>, for example, makes method parameters <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">final</code> by default, clearly separates immutable and mutable collections, and prohibits inheritance of <a href="https://kotlinlang.org/docs/data-classes.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Data Classes</a>.</p>
+<h2 id="MVVM" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">MVVM</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">In the MVVM architecture, <em style="font-style:italic;color:#1f2937;">Data Models</em> are generally recommended to be immutable. Since this isn't enforced, developers with different understandings of the architecture end up mixing mutable and immutable <em style="font-style:italic;color:#1f2937;">Data Models</em> inconsistently. Some might ask: what's wrong with mutable objects?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">For simple business logic, mutability may not matter much. But once logic gets complex and multiple consumers share the same data, if someone "accidentally" or "unexpectedly" mutates the <em style="font-style:italic;color:#1f2937;">Data Model</em> directly instead of going through <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">LiveData</code> or <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">StateFlow</code>, a cascade of problems follows:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Changes to the <em style="font-style:italic;color:#1f2937;">Data Model</em> become unobservable</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Data flow and control flow become tangled, and complexity explodes</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The tangled dependencies lead to bizarre bugs everywhere. Because the <em style="font-style:italic;color:#1f2937;">Data Model</em> is mutable, every call site must assume something somewhere might modify it. This makes architecture design and development far more complex. Imagine if everything were immutable by default: no need to worry about multithreaded access. But with mutability, you must carefully handle every possible concurrent access scenario -- a real cognitive burden. The situations and edge cases pile up. Every habit I described earlier was learned the hard way, one pitfall at a time. If we can eliminate these problems at the root, development becomes dramatically simpler.</p>
+<h2 id="Is-Immutability-Really-That-Good" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Is Immutability Really That Good?</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">After all this praise for <em style="font-style:italic;color:#1f2937;">Immutable Objects</em>, you might ask: is immutability really that wonderful? That's a topic for next time.</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2022/04/11/the-data-mutability-problem/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2022/04/11/the-data-mutability-problem/</a></p>
+    </section>
+  </main>
+</body>
+</html>

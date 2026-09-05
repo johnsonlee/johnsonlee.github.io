@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/03/02/claude-code-background-subagent/">
+  <title>Claude Subagent 你用对了吗？ | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Claude Subagent 你用对了吗？</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-03-02 · Johnson Lee · Independent Thinking</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">之前聊过，AI 的工程能力已经达到了 Staff Engineer 的水平。但用了几个月 Claude Code，我发现一个反直觉的事实：<strong style="font-weight:700;color:#111827;">这位 Staff Engineer 天天在画 UI 写 CRUD。</strong> 你让它改一个文件，它在主 session 里一路干到底——读代码、分析依赖、写 patch、跑测试。整个 context window 被塞得满满当当，你想插一句"顺便看看另一个 bug"，得等它干完才行。明明手下有人，非要自己撸代码。</p>
+<h2 id="为什么它不愿意放手？" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  为什么它不愿意放手？</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Claude Code 明明有 subagent 机制——主 session 可以把任务委派给独立的子 agent，每个子 agent 有自己的 context window，互不干扰，还能跑在后台。但默认情况下，主 agent 不会主动委派。它的本能是"自己动手"。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这合理。对于一个通用工具来说，"自己干"是最安全的默认策略——不需要判断哪些该委派，不需要处理子任务之间的协调，不需要考虑并行写文件的冲突。所有事情在一个 context 里完成，简单、可控、不出错。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">默认值永远服务最大公约数。</strong> Claude Code 不知道你是同时推进三件事的老手，还是只想让它帮忙补个函数的初学者。面对不确定性，保守是对的。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但"对"不等于"最优"。</p>
+<h2 id="Planner-not-Executor" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  Planner, not Executor</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">既然主 agent 的默认行为是"什么都自己干"，那就告诉它别这样。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Claude Code 的 CLAUDE.md 是主 agent 每次启动都会读的行为指南。我在项目的 CLAUDE.md 里加了一条 convention：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">- **Planner, not executor**: When handling tasks, default to launching
+  subagents for implementation. The main conversation's role is planning,
+  coordination, and review -- not direct execution. Always launch subagents
+  in the background (`run_in_background: true`) so the main conversation
+  stays responsive to user input.</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">核心思想就一句话：<strong style="font-weight:700;color:#111827;">主 agent 的角色是规划和协调，不是亲自执行。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">效果立竿见影。给一个复杂任务，主 agent 不再自己闷头干，而是先拆解，再把子任务派发给 background subagent。研究性任务跑后台，主 session 保持空闲，可以同时推进别的事。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但有个问题——这条规则写在项目的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">.claude/CLAUDE.md</code> 里，只对当前项目生效。换一个项目，主 agent 又变回那个"什么都自己干"的状态。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">每个项目都抄一遍？不现实。</p>
+<h2 id="从项目级到全局级" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  从项目级到全局级</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">那怎么让这条规则对所有项目生效？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">答案很简单：把配置从项目目录搬到用户目录。Claude Code 会先读 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">~/.claude/CLAUDE.md</code>，再读项目级的。全局配置对所有项目生效，项目级配置可以覆盖或补充。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">于是有了<a href="https://github.com/johnsonlee/-/pull/3" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">这个 PR</a>——把 routing rules 和 worker agent 定义直接写在 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">~/.claude/</code> 下。routing rules 告诉主 agent"大部分任务优先走 background dispatch"，worker agent 定义让委派有地方落。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这里有个措辞上的细节：worker agent 的 description 里要写 "PROACTIVELY"。Claude Code 的调度逻辑会读这个字段来决定是否主动委派。不加这个词，agent 只是"可用"但不"主动"——相当于雇了个人但从来不派活。这跟在 job description 里写"主动推进"还是"配合完成"一样，措辞决定了角色是找活干还是等分配。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">顺手再设一个 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">CLAUDE_CODE_SUBAGENT_MODEL</code> 环境变量，主 session 跑 Opus、subagent 跑 Sonnet，推理能力和成本各取所需。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这套从项目级到全局级的配置体系，本质上是在构建 <strong style="font-weight:700;color:#111827;">AI 工具链的 convention</strong>——跟在团队里推 code style、commit convention、CI pipeline 一个道理。convention 建立了，每个新项目直接继承，不需要从零开始。</p>
+<h2 id="几个坑" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  几个坑</h2><h3 id="后台无法交互" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">4.1.  后台无法交互</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">后台 subagent 不支持交互式确认。涉及文件写入的任务，Claude Code 会在启动前统一问你授权。忘了给权限，它会卡住。</p>
+<h3 id="Prompt-必须自解释" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">4.2.  Prompt 必须自解释</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">subagent 没有 stepwise plan，收到任务直接执行，没有中间输出。<strong style="font-weight:700;color:#111827;">prompt 必须足够清晰——模糊的指令加上没有交互，等于翻车。</strong></p>
+<h3 id="文件边界要划清" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">4.3.  文件边界要划清</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">多个 subagent 并行写同一组文件会冲突。委派时注意文件边界，跟给团队分任务时避免两个人改同一个文件是一回事。</p>
+<h3 id="主-agent-偶尔-失忆" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">4.4.  主 agent 偶尔"失忆"</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">主 agent 偶尔还是会"忘记"委派。手动按 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Ctrl+B</code> 可以把当前任务移到后台，<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">/tasks</code> 查看进度。不优雅，但有效。</p>
+<h2 id="使用方式本身就是架构设计" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  使用方式本身就是架构设计</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">回头看，一条写在 CLAUDE.md 里的 convention，表面上只是改了个配置。但你在做的事情是：定义谁负责规划、谁负责执行、什么时候并行、什么时候串行、前台和后台怎么分工。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这不是"配置"，这是架构设计。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">过去做架构，设计的是代码怎么组织、模块怎么分、接口怎么定义。这些决策的对象是没有智能的——类不会自作主张去调用另一个类，函数不会"觉得"自己应该跑在后台。你画好了图，它们就老老实实地按图执行。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但当工具有了智能，事情就变了。主 agent 会自己判断"这件事我能干"然后就干了。subagent 的 description 里少一个"PROACTIVELY"，它就真的坐在那等着被调用。你写的每一条规则、每一个措辞，都在塑造一个有自主判断能力的系统的行为边界。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">当工具有了智能，使用方式本身就是架构设计。</strong> 工具还是那个工具，但你可以决定它是继续埋头写 feature，还是带团队。</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/03/02/claude-code-background-subagent/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/03/02/claude-code-background-subagent/</a></p>
+    </section>
+  </main>
+</body>
+</html>

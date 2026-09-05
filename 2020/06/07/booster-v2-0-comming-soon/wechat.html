@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2020/06/07/booster-v2-0-comming-soon/">
+  <title>即将推出 Booster 2.0 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">即将推出 Booster 2.0</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2020-06-07 · Johnson Lee · Computer Science / Open Source / Booster</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">前不久 <em style="font-style:italic;color:#1f2937;">Android</em> 官方终于正式发布了 <em style="font-style:italic;color:#1f2937;">Android Gradle Plugin</em> <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">v4.0</code>，在体验了一把 <em style="font-style:italic;color:#1f2937;">Android Studio 4.0</em> 的构建速度之快后，<em style="font-style:italic;color:#1f2937;">Booster</em> 团队决定加速 <em style="font-style:italic;color:#1f2937;">Android Gradle Plugin</em> 版本适配工作，一方面，为了解决现有的特性在 <em style="font-style:italic;color:#1f2937;">Android Gradle Plugin</em> <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">v4.0</code> 上的问题，另一方面，推出自 <em style="font-style:italic;color:#1f2937;">Android Gradle Plugin</em> <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">v3.0</code> 以来全版本适配方案，以解决开发者对 <em style="font-style:italic;color:#1f2937;">Android Gradle Plugin</em> 的适配问题。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">从 <em style="font-style:italic;color:#1f2937;">Andriod Gradle Plugin</em> <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">v3.6</code> 开始发生了很大的变化，例如：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">构建中间产物及相关的 API 的变更</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"> 调用 <em style="font-style:italic;color:#1f2937;">Android Gradle Plugin</em> 内部 API 的地方将会受到影响</p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">App</em> 工程 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">R</code> 的生成</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"> 所有 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">R</code> 相关的类被整体打成 <em style="font-style:italic;color:#1f2937;">JAR</em> 包</p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">资源的合并</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"> <em style="font-style:italic;color:#1f2937;">App</em> 工程的资源合并后的中间产物只有 <em style="font-style:italic;color:#1f2937;">App</em> 工程本身的资源，不再包含 <em style="font-style:italic;color:#1f2937;">Library</em> 的资源，这会影响到图片资源的压缩和去冗余</p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">AAPT2</em> 依赖的 <em style="font-style:italic;color:#1f2937;">Protobuf</em> 版本升级</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"> 高版本 <em style="font-style:italic;color:#1f2937;">Protobuf</em> 生成的 <em style="font-style:italic;color:#1f2937;">Java</em> 代码与现有的 <em style="font-style:italic;color:#1f2937;">Java</em> 代码不兼容</p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">移除了 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">com.android.feature</code> 和 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">com.android.instantapp</code> 插件</p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">增加了 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">buildFeature</code> 对构建进行更细粒度的控制</p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在没有 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">minSdkVersion</code> 限制的情况下支持 <em style="font-style:italic;color:#1f2937;">Java 8 API</em> ，如：<em style="font-style:italic;color:#1f2937;">Stream API</em> 等</p>
+</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">变化太多，就不一一列举，总结下来，<em style="font-style:italic;color:#1f2937;">Android Gradle Plugin</em> <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">v4.0</code> 影响到的模块如下：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://github.com/didi/booster/tree/master/booster-aapt2" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-aapt2</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://github.com/didi/booster/tree/master/booster-task-compression-cwebp" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-task-compression-cwebp</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://github.com/didi/booster/tree/master/booster-task-compression-pngquant" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-task-compression-pngquant</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://github.com/didi/booster/tree/master/booster-transform-r-inline" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-transform-r-inline</a></li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">目前已经完成了 <a href="https://github.com/didi/booster/tree/master/booster-aapt2" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-aapt2</a> &amp; <a href="https://github.com/didi/booster/tree/master/booster-transform-r-inline" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-transform-r-inline</a> 的适配工作，感兴趣的同学可以参考：<a href="https://github.com/didi/booster/tree/v2.x" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">v2.x</a> 分支最新的代码。</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2020/06/07/booster-v2-0-comming-soon/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2020/06/07/booster-v2-0-comming-soon/</a></p>
+    </section>
+  </main>
+</body>
+</html>

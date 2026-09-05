@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2021/10/07/sonatype-publish-plugin/">
+  <title>Publish to Maven Central in One Line | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Publish to Maven Central in One Line</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2021-10-07 · Johnson Lee · Computer Science / Gradle</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Anyone who has published an open source library knows the pain: getting a library published to <strong style="font-weight:700;color:#111827;">Maven Central</strong> through <a href="https://oss.sonatype.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Sonatype</a> is far from simple. You need to meet a long list of <a href="https://central.sonatype.org/publish/requirements/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">requirements</a>, and for <strong style="font-weight:700;color:#111827;">Gradle</strong> projects, even though everything uses the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">maven-publish</code> plugin, the configuration differs across project types -- <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong>, <strong style="font-weight:700;color:#111827;">Android Library</strong>, and <strong style="font-weight:700;color:#111827;">Java Library</strong> all have their quirks. In a multi-module <strong style="font-weight:700;color:#111827;">Gradle</strong> project, writing nearly identical but subtly different <strong style="font-weight:700;color:#111827;">DSL</strong> blocks for each module is tedious, and <strong style="font-weight:700;color:#111827;">Gradle</strong>'s <strong style="font-weight:700;color:#111827;">DSL</strong> can be bewildering for newcomers.</p>
+<h2 id="Sonatype" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Sonatype</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><a href="https://oss.sonatype.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Sonatype</a> provides automatic syncing to <strong style="font-weight:700;color:#111827;">Maven Central</strong>, but publishing to it requires several steps:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://issues.sonatype.org/secure/Signup!default.jspa" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Register an account</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Submit a <a href="https://issues.sonatype.org/secure/CreateIssue.jspa?issuetype=21&amp;pid=10134" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">new project</a> <strong style="font-weight:700;color:#111827;">JIRA</strong> ticket</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Reply to the JIRA ticket from step 2 to prove you have admin access to the domain namespace corresponding to your <strong style="font-weight:700;color:#111827;">groupId</strong></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Generate a GPG key</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Configure your <strong style="font-weight:700;color:#111827;">Gradle</strong> project so that uploaded artifacts satisfy the following <a href="https://central.sonatype.org/publish/requirements/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">requirements</a>:</li>
+</ol>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Sources <strong style="font-weight:700;color:#111827;">JAR</strong> file</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">Javadoc JAR</strong> file</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">POM</strong> file containing:<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">Maven</strong> coordinates<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">groupId</strong></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">artifactId</strong></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">version</strong></li>
+</ul>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Project information<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">name</strong></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">description</strong></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">url</strong></li>
+</ul>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">License information</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Developer information</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">SCM</strong> (Source Code Management) information</li>
+</ul>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">A signature (<strong style="font-weight:700;color:#111827;">.asc</strong>) file for each of the above</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Steps 1-4 are one-time tasks. The last step is required for every project.</p>
+<h2 id="Java-Kotlin-Library-Projects" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Java/Kotlin Library Projects</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">publishing</code> configuration for <strong style="font-weight:700;color:#111827;">Java/Kotlin Library</strong> projects is the simplest, requiring roughly 3 steps:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Create <strong style="font-weight:700;color:#111827;">JAR Tasks</strong> for <strong style="font-weight:700;color:#111827;">sources</strong> and <strong style="font-weight:700;color:#111827;">javadoc</strong>. For <strong style="font-weight:700;color:#111827;">Kotlin</strong> projects, use <a href="https://github.com/Kotlin/dokka" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Kotlin/dokka</a> to generate <strong style="font-weight:700;color:#111827;">Javadoc</strong></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Register a <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">MavenPublication</code> named <strong style="font-weight:700;color:#111827;">mavenJava</strong> in <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">publications</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Sign <strong style="font-weight:700;color:#111827;">mavenJava</strong></li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Here is a complete example:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">project.run {
+  val sourceSets = the&lt;SourceSetContainer&gt;()
+  val javadocJar = tasks.register("packageJavadocFor${name.capitalize()}", Jar::class.java) {
+    archiveClassifier.set("javadoc")
+    from(tasks["dokkaHtml"])
+  }
+  val sourcesJar = tasks.register("packageSourcesFor${name.capitalize()}", Jar::class.java) {
+    dependsOn(JavaPlugin.CLASSES_TASK_NAME)
+    archiveClassifier.set("sources")
+    from(sourceSets["main"].allSource)
+  }
+
+  publishing {
+    repositories {
+      maven {
+        url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+      }
+    }
+    publications {
+      register("mavenJava", MavenPublication::class) {
+        groupId = "${project.group}"
+        artifactId = project.name
+        version = "${project.version}"
+
+        from(components["java"])
+
+        artifact(sourcesJar.get())
+        artifact(javadocJar.get())
+
+        pom.withXml {
+          asNode().apply {
+            appendNode("name", project.name)
+            appendNode("url", "https://github.com/johnsonlee/${project.name}")
+            appendNode("description", project.description ?: project.name)
+            appendNode("scm").apply {
+              appendNode("connection", "scm:git:git://github.com/johnsonlee/${project.name}.git")
+              appendNode("developerConnection", "scm:git:git@github.com:johnsonlee/${project.name}.git")
+              appendNode("url", "https://github.com/johnsonlee/${project.name}")
+            }
+            appendNode("licenses").apply {
+              appendNode("license").apply {
+                appendNode("name", "Apache License")
+                appendNode("url", "http://www.apache.org/licenses/LICENSE-2.0")
+              }
+            }
+            appendNode("developers").apply {
+              appendNode("developer").apply {
+                appendNode("id", "johnsonlee")
+                appendNode("name", "Johnson Lee")
+                appendNode("email", "g.johnsonlee@gmail.com")
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  signing {
+    sign(publishing.publications["mavenJava"])
+  }
+}</code></pre>
+
+<h2 id="Android-Library-Projects" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Android Library Projects</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Unlike <strong style="font-weight:700;color:#111827;">Java/Kotlin Library</strong> projects, <strong style="font-weight:700;color:#111827;">Android Library</strong> projects need to generate <strong style="font-weight:700;color:#111827;">sources</strong> and <strong style="font-weight:700;color:#111827;">javadoc</strong> JARs for each <strong style="font-weight:700;color:#111827;">variant</strong>. When necessary, you also need to publish an <strong style="font-weight:700;color:#111827;">AAR</strong> for each <strong style="font-weight:700;color:#111827;">variant</strong>. This is typically done by iterating over all variants via <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">android.libraryVariants</code>:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">val android = extensions.getByName("android") as LibraryExtension
+
+android.libraryVariants.forEach { variant -&gt;
+  // Register a MavenPublication for each variant
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Since <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">libraryVariants</code> is configured lazily, this must be executed inside a <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">project.afterEvaluate</code> callback. The complete code looks like this:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">project.run {
+  val android = extensions.getByName("android") as LibraryExtension
+
+  afterEvaluate {
+    publishing {
+      publications {
+        android.libraryVariants.forEach { variant -&gt;
+          val javadoc = tasks.register("javadocFor${variant.name.capitalize()}", Javadoc::class.java) {
+            dependsOn("dokkaHtml")
+            source(android.sourceSets["main"].java.srcDirs)
+            classpath += files(android.bootClasspath + variant.javaCompileProvider.get().classpath)
+            exclude("**/R.html", "**/R.*.html", "**/index.html")
+          }
+
+          val javadocJar = tasks.register("packageJavadocFor${variant.name.capitalize()}", Jar::class.java) {
+            dependsOn(javadoc)
+            archiveClassifier.set("javadoc")
+            from(tasks["dokkaHtml"])
+          }
+
+          val sourcesJar = tasks.register("packageSourcesFor${variant.name.capitalize()}", Jar::class.java) {
+            archiveClassifier.set("sources")
+            from(android.sourceSets["main"].java.srcDirs)
+          }
+
+          create(variant.name, MavenPublication::class.java) {
+            groupId = project.group
+            artifactId = project.name
+            version = project.version
+            from(components[variant.name])
+            artifact(javadocJar)
+            artifact(sourcesJar)
+
+            pom.withXml {
+              asNode().apply {
+                appendNode("name", project.name)
+                appendNode("url", "https://github.com/johnsonlee/${project.name}")
+                appendNode("description", project.description ?: project.name)
+                appendNode("scm").apply {
+                  appendNode("connection", "scm:git:git://github.com/johnsonlee/${project.name}.git")
+                  appendNode("developerConnection", "scm:git:git@github.com:johnsonlee/${project.name}.git")
+                  appendNode("url", "https://github.com/johnsonlee/${project.name}")
+                }
+                appendNode("licenses").apply {
+                  appendNode("license").apply {
+                    appendNode("name", "Apache License")
+                    appendNode("url", "http://www.apache.org/licenses/LICENSE-2.0")
+                  }
+                }
+                appendNode("developers").apply {
+                  appendNode("developer").apply {
+                    appendNode("id", "johnsonlee")
+                    appendNode("name", "Johnson Lee")
+                    appendNode("email", "g.johnsonlee@gmail.com")
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  signing {
+    sign(publishing.publications)
+  }
+}</code></pre>
+
+<h2 id="Gradle-Plugin-Projects" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Gradle Plugin Projects</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Gradle officially provides <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">java-gradle-plugin</code> for generating <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong>-related <strong style="font-weight:700;color:#111827;">POM</strong> files, but its output only includes <strong style="font-weight:700;color:#111827;">Maven</strong> coordinates and basic project info -- nowhere near enough for <a href="https://oss.sonatype.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Sonatype</a>'s requirements. Developers need to configure the rest manually, but Gradle's official documentation doesn't explain how to modify the <strong style="font-weight:700;color:#111827;">POM</strong> generated by <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">java-gradle-plugin</code>. It's actually not hard -- just different from <strong style="font-weight:700;color:#111827;">Java/Kotlin Library</strong> and <strong style="font-weight:700;color:#111827;">Android Library</strong> projects. Since <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">java-gradle-plugin</code> already creates <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">MavenPublication</code> instances automatically, you don't need to create or register new ones. Just iterate over the existing ones and append the required POM information. The complete code:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">project.run {
+  publishing {
+    publications {
+      val sourceSets = the&lt;SourceSetContainer&gt;()
+      val javadocJar = tasks.register("packageJavadocFor${name.capitalize()}", Jar::class.java) {
+          dependsOn("dokkaHtml")
+          archiveClassifier.set("javadoc")
+          from(tasks["dokkaHtml"])
+      }
+      val sourcesJar = tasks.register("packageSourcesFor${name.capitalize()}", Jar::class.java) {
+          archiveClassifier.set("sources")
+          from(sourceSets["main"].allSource)
+      }
+
+      withType&lt;MavenPublication&gt;().configureEach {
+        groupId = "${project.group}"
+        version = "${project.version}"
+        artifact(javadocJar)
+        artifact(sourcesJar)
+      }
+    }
+  }
+
+  signing {
+    sign(publishing.publications)
+  }
+}</code></pre>
+
+<h2 id="Once-and-for-All" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Once and for All</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">After looking at the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">publishing</code> configurations for different project types above, you'll notice that most of the code is nearly identical. In a multi-module project, this becomes a real hassle -- some modules need to be published and others don't, and using <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">allprojects</code> or <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">subprojects</code> doesn't simplify things much. Since the code is so similar, can we make the whole thing simpler? The answer is yes -- and that's exactly what <a href="https://github.com/johnsonlee/sonatype-publish-plugin" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">sonatype-publish-plugin</a> was built for. It truly takes just one line:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">plugins {
+  id("io.johnsonlee.sonatype-publish-plugin") version "1.3.0"
+}
+
+group = "io.johnsonlee"
+version = "1.0.0"</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Just configure the appropriate environment variables and you can upload directly via command line:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">./gradlew clean publishToSonatype \
+    -POSSRH_USERNAME=johnsonlee \
+    -POSSRH_PASSWORD=********** \
+    -POSSRH_PACKAGE_GROUP=io.johnsonlee \
+    -Psinging.keyId=xxxxxxxx \
+    -Psinging.password=******** \
+    -Psinging.secretKeyRingFile=/Users/johnsonlee/.gnupg/secring.gpg</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">After uploading to <a href="https://oss.sonatype.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Sonatype</a>'s <strong style="font-weight:700;color:#111827;">staging</strong> repository, publish to the release repository with:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">./gradlew closeAndReleaseRepository \
+    -POSSRH_USERNAME=johnsonlee \
+    -POSSRH_PASSWORD=********** \
+    -POSSRH_PACKAGE_GROUP=io.johnsonlee</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Once published, you can find it on <a href="https://search.maven.org/search" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Maven Central</a>. For more details, see the <a href="https://github.com/johnsonlee/sonatype-publish-plugin" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">project page</a>.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The plugin also supports publishing to private Nexus repositories, such as a company's internal Nexus server. Just configure these properties or environment variables:</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">NEXUS_URL</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">NEXUS_USERNAME</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">NEXUS_PASSWORD</code></li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Then publish to your private Nexus repository with:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">./gradlew clean publish \
+    -PNEXUS_URL=http://nexus.johnsonlee.io/ \
+    -PNEXUS_USERNAME=johnsonlee \
+    -PNEXUS_PASSWORD=**********</code></pre>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2021/10/07/sonatype-publish-plugin/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2021/10/07/sonatype-publish-plugin/</a></p>
+    </section>
+  </main>
+</body>
+</html>

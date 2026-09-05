@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2020/01/17/booster-v1-3-0-released/">
+  <title>Booster v1.3.0 发布 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Booster v1.3.0 发布</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2020-01-17 · Johnson Lee · Computer Science / Open Source / Booster</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">为了庆祝 Booster 荣获「滴滴 2019 年优秀开源项目」奖项，Booster 又双叒叕发布了新的版本—— v1.3.0，本次更新内容如下：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">新增 <a href="https://github.com/didi/booster/blob/master/booster-command" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-command</a> 模块，用于执行外部提供的预编译好的命令</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">  很多优秀的工具采用了 GPL 开源协议授权，不能直接内置到 booster 中，例如：<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">pngquant</code>、<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">7-zip</code> 等，为了解决这一问题，<a href="https://github.com/didi/booster/blob/master/booster-command" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-command</a> 提供了 <a href="https://github.com/didi/booster/blob/master/booster-command/src/main/kotlin/com/didiglobal/booster/command/CommandProvider.kt" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">CommandProvider</a> SPI，参考例子：<a href="https://github.com/johnsonlee/booster-pngquant-provider/blob/master/src/main/kotlin/io/johnsonlee/booster/command/pngquant/PngquantProvider.kt" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">PngquantProvider</a>，<a href="https://github.com/didi/booster/blob/master/booster-task-compression-cwebp/src/main/kotlin/com/didiglobal/booster/task/compression/cwebp/CWebpProvider.kt" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">CwebpProvider</a></p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">资源压缩优化</li>
+</ol>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">保留 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">res/raw/</code> 资源 <em style="font-style:italic;color:#1f2937;"><a href="https://github.com/xwc520" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">@xwc520</a></em></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">支持 <a href="https://github.com/didi/booster/blob/master/booster-task-compression-cwebp" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-task-compression-cweb</a> 与 <a href="https://github.com/didi/booster/blob/master/booster-task-compression-pngquant" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-task-compression-pngquant</a> 同时使用，在 API Level 14 及以上，优先采用 <em style="font-style:italic;color:#1f2937;">cwebp</em> 压缩， <em style="font-style:italic;color:#1f2937;">cwebp</em> 未能压缩的（API Level 14~17 不支持带 alpha 的图片）将采用 <em style="font-style:italic;color:#1f2937;">pngquant</em> 进行压缩</li>
+</ul>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://github.com/didi/booster/blob/master/booster-task-spi/src/main/kotlin/com/didiglobal/booster/task/spi/VariantProcessor.kt" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">VariantProcessor</a> 支持通过 <a href="https://github.com/didi/booster/blob/master/booster-annotations/src/main/kotlin/com/didiglobal/booster/annotations/Priority.kt" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">@Priority</a> 进行排序</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">Transform</em> 性能优化</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">另外，与 <a href="https://github.com/didi/booster/blob/master/booster-task-compression-pngquant" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-task-compression-pngquant</a> 搭配使用的 <a href="https://github.com/johnsonlee/booster-pngquant-provider" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-pngquant-provider</a> 已发布 <a href="https://github.com/johnsonlee/booster-pngquant-provider/releases/tag/v1.0.0" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">v1.0.0</a> 版本</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2020/01/17/booster-v1-3-0-released/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2020/01/17/booster-v1-3-0-released/</a></p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2021/05/07/java-8-new-features/">
+  <title>Java 8 新特性 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Java 8 新特性</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2021-05-07 · Johnson Lee · Computer Science / Java</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Java 8 于 2014 年 3 月 18 日发布，包含了一些原本计划在 Java 7 中发布但后来却推迟的功能。Java 8 不再支持 <em style="font-style:italic;color:#1f2937;">Windows XP</em> ，但 <em style="font-style:italic;color:#1f2937;">JDK 8</em> 第 25 版更新仍然可以在 <em style="font-style:italic;color:#1f2937;">Windows XP</em> 上安装和运行。先前 <em style="font-style:italic;color:#1f2937;">JDK 8</em> 的更新版本可以在 <em style="font-style:italic;color:#1f2937;">Windows XP</em> 中运行，但必须通过强制解压安装程序来进行安装。2014 年 10 月后，Java 8 成为官方网站上默认的下载版本。</p>
+<h2 id="Lambda-Expressions" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  Lambda Expressions</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Lambda 表达式算是 Java 8 最大的亮点了，它提供了一种使用表达式来清晰而简明的表示仅有单个方法的接口，同时，Lambda 表达式也提供了相应的集合库来简化对集合的遍历、过滤、提取数据操作，而且，新的并发特性极大的提高了在多线程环境中的性能。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">下面是一个 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Runnable</a> 的 Lambda 表达式例子：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class RunnableLambda {
+    public static void main(String[] args) {
+        Runnable runnable = () -&gt; System.out.println("Hello, world");
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">当主体中只有一条语句时，可以省略 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">{}</code> 和 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">return</code></p>
+<h2 id="Method-References" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  Method References</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">为了能在 Lambda 表达式中使用 JDK 中已经存在的 API 而不是为原有的 API 再实现一个 Lambda 表达式，Java 8 引入了方法引用，使得 Java 8 具备了函数式编程的特性。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">静态方法引用语法如下：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">Class::staticMethod</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">实例方法引用语法如下：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">object::instanceMethod</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">以下是一个简单的例子：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class MethodReferenceTest1 {
+    public static void main(String[] args) {
+    	Consumer&lt;String&gt; echo = s -&gt; System.out.println(s);
+    	echo("Hello, world!");
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">上面的例子还可以用方法引用来实现：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class MethodReferenceTest2 {
+    public static void main(String[] args) {
+    	Consumer&lt;String&gt; echo = System.out::println;
+    	echo("Hello, world!");
+    }
+}</code></pre>
+
+<h2 id="Default-Methods" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  Default Methods</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在 Java 8 中引入默认方法的目的是为了让已经存在的接口可以添加新的方法而不需要让已经实现该接口的类做任何修改，甚至不用重新编译就可以使用该接口的最新版本，同时也弥补了 Java 在函数式编程方面的不足，像在 JavaScript 中的 <em style="font-style:italic;color:#1f2937;">for-each</em> 循环，Java 8 通过为 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Iterable</a> 增加了 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html#forEach-java.util.function.Consumer-" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">forEach</a> 默认方法实现了。</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class ForEachTest {
+    public static void main(String[] args) {
+        Arrays.asList(args).forEach(System.out::println);
+    }
+}</code></pre>
+
+<h3 id="Stream-API" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">3.1.  Stream API</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Stream API 作为 Java 8 的一大亮点，旨在为数据流处理提供更高效的方式，而不像 J2EE 那样对数据的聚合操作和批量操作完全依赖于关系型数据库。它提供了串行和并行两种模式，并行模式基于 Java 7 提供的  <a href="https://johnsonlee.io/2021/05/07/java-8-new-features/#Fork-Join-Framework" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Fork/Join 框架</a>，充分利用多核处理器的优势，使得用 Java 8 能轻松的编写高性能的并发程序。</p>
+<h3 id="filter" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">3.2.  filter</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">对数据流进行进滤：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">Integer[] nums = {1, 2, 3, 4, 5, 6};
+Integer[] evens = Stream.of(nums).filter(n -&gt; n % 2 == 0).toArray(Integer[]::new);</code></pre>
+
+<h3 id="map" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">3.3.  map</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">将数据流映射成一个新的数据流：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">String[] words = { "hello", "java 8", "world" };
+List&lt;String&gt; output = Arrays.stream(words)
+		.map(String::toUpperCase)
+		.collect(Collectors.toList());</code></pre>
+
+<h3 id="flatMap" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">3.4.  flatMap</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">对数据流进行降维，使其扁平化：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">List&lt;List&lt;Integer&gt;&gt; numbers = Arrays.asList(
+	Arrays.asList(1),
+	Arrays.asList(2, 3),
+	Arrays.asList(4, 5, 6)
+);
+List&lt;Integer&gt; list = numbers.stream()
+		.flatMap(Collection::stream)
+		.collect(Collectors.toList());</code></pre>
+
+<h3 id="findAny" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">3.5.  findAny</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">从数据流中查找元素：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">String[] words = { "hello", "java 8", "world" };
+Optinal&lt;String&gt; result = Arrays.stream(words)
+		.filter(it -&gt; it.contains("java"))
+		.findAny();</code></pre>
+
+<h3 id="parallelStream" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">3.6.  parallelStream</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">采用并行方式从 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Person</code> 数据流中提取 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">email</code>：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">List&lt;Person&gt; roaster = ...;
+
+List&lt;String&gt; emails = roaster.parallelStream()
+		.filter(it -&gt; it.age &gt; 20)
+		.map(it -&gt; it.email)
+		.collect(Collectors.toList());</code></pre>
+
+<h2 id="Annotations-Improvement" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  Annotations Improvement</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">从 JDK 1.5 开始，Java 就提供了 <em style="font-style:italic;color:#1f2937;">Annotation</em> 的功能，允许开发者定义和使用自定义的 <em style="font-style:italic;color:#1f2937;">Annotation</em> 类型，以及通过 <em style="font-style:italic;color:#1f2937;">Annotation Processing Tool (APT)</em> 实现更多丰富的功能。例如，流行的 <em style="font-style:italic;color:#1f2937;">Spring</em> 框架中的依赖注入、切面编程等。为了更好地帮助开发者提升代码的质量和可读性，以及自动化代码分析的准确性，Java 8 对 <em style="font-style:italic;color:#1f2937;">Annotation</em> 引入了 <em style="font-style:italic;color:#1f2937;">Type Annotation</em> 和 <em style="font-style:italic;color:#1f2937;">Repeating Annotation</em> 。</p>
+<h3 id="Type-Annotation" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">4.1.  Type Annotation</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在 Java 8 中可以在任何使用类型的地方使用 <em style="font-style:italic;color:#1f2937;">Annotation</em></p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">@NonNull Map&lt;String, Node&gt; nodes = createNodes();
+
+TreeNode node = (@NonNull TreeNode) nodes.get("root");</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">自定义 <em style="font-style:italic;color:#1f2937;">Type Annotation</em> ：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">@Target({ElementType.TYPE_PARAMETER, ElementType.TYPE_USE})
+public  @interface MyAnnotation {
+}</code></pre>
+
+<h3 id="Repeating-Annotation" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">4.2.  Repeating Annotation</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在 Java 8 之前，同一个 <em style="font-style:italic;color:#1f2937;">Annotation</em> 在同一个地方只能标注一次，而在 Java 8 中，可以使用重复的 <em style="font-style:italic;color:#1f2937;">Annotation</em></p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">@Schedule(dayOfMonth="last")
+@Schedule(dayOfWeek="Fri", hour="23")
+public void doPeriodicCleanup() { ... }</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">自定义 <em style="font-style:italic;color:#1f2937;">Repeating Annotation</em> ：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">@Repeatable(Schedules.class)
+public @interface Schedule {
+    String dayOfMonth() default "first";
+    String dayOfWeek() default "Mon";
+    int hour() default 12;
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">声明 <em style="font-style:italic;color:#1f2937;">Repeating Annotation</em> 的容器：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public @interface Schedules {
+    Schedule[] value();
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">有了 <em style="font-style:italic;color:#1f2937;">Type Annotation</em> 以及可插拔的类型检查器，开发者可以编写更强大的且更不易出错的代码。</p>
+<h2 id="Type-Inference" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  Type Inference</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Java 8 的编译器在类型推断方面的增强主要表现在对范型的推断上。</p>
+<h3 id="范型方法" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">5.1.  范型方法</h3><pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class BoxDemo {
+
+    public static &lt;U&gt; void addBox(U u, List&lt;Box&lt;U&gt;&gt; boxes) {
+        Box&lt;U&gt; box = new Box&lt;&gt;();
+        box.set(u);
+        boxes.add(box);
+    }
+
+    public static &lt;U&gt; void outputBoxes(java.util.List&lt;Box&lt;U&gt;&gt; boxes) {
+        int counter = 0;
+        for (Box&lt;U&gt; box: boxes) {
+            U content = box.get();
+            System.out.println("Box #" + counter + " contains [" + content.toString() + "]");
+            counter++;
+        }
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">有了类型推断，在调用范型方法的时候便可以像调用普通方法一样：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">BoxDemo.addBox(Integer.valueOf(10), listOfIntegerBoxes);</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">不用像 Java 8 以前需要在尖括号中指定类型：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">BoxDemo.&lt;Integer&gt;addBox(Integer.valueOf(10), listOfIntegerBoxes);</code></pre>
+
+<h3 id="目标类型" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">5.2.  目标类型</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在 Java 7 中编译器就支持利用目标类型来推断泛型方法调用的参数类型，如：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">List&lt;String&gt; empty = Collections.emptyList();</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但是，将范型方法的返回值直接作为另一个方法的范型参数在 Java 8 以前是不支持的，如定义了这样一个方法：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">void processStringList(List&lt;String&gt; stringList) {
+    ...
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在 Java 7 中得这样调用：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">processStringList(Collections.&lt;String&gt;emptyList());</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">而在 Java 8 中，可以像调用普通方法一样：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">processStringList(Collections.emptyList());</code></pre>
+
+<h2 id="Method-Parameter-Reflection" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">6.  Method Parameter Reflection</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在 Java 8 中，任何方法以及构造函数的形参名称可以通过 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Executable.html#getParameters--" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">java.lang.reflect.Executable.getParameters</a> 来获取，然而，默认情况下，*.class* 文件并不存储形参名称，因为很多工具并不希望包含形参名称的 <em style="font-style:italic;color:#1f2937;">.class</em> 文件占用更多的静态和动态的空间。特别是，这些工具处理的 <em style="font-style:italic;color:#1f2937;">.class</em> 文件会变得更大，Java 虚拟机得使用更多的内存加载 <em style="font-style:italic;color:#1f2937;">.class</em> 文件。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果要在 <em style="font-style:italic;color:#1f2937;">.class</em> 文件中保留形参名称，并允许 <em style="font-style:italic;color:#1f2937;">Reflection API</em> 能够获取到形参名称，需要在编译源代码的时候为 <em style="font-style:italic;color:#1f2937;">javac</em> 编译器指定 <em style="font-style:italic;color:#1f2937;">-parameter</em> 选项。</p>
+<h2 id="Nashorn-JavaScript-Engine" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">7.  Nashorn JavaScript Engine</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在 Java 7 之前，JDK 附带了一个基于 <em style="font-style:italic;color:#1f2937;">Mozilla Rhino</em> 的 <em style="font-style:italic;color:#1f2937;">JavaScript</em> 脚本引擎，在 Java 8 中则附带了一个以 <em style="font-style:italic;color:#1f2937;">Oracle Nashorn</em> 命名的新引擎，该引擎基于 <em style="font-style:italic;color:#1f2937;">JSR 292</em> 和 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">invokedynamic</code> 的实现方式更符合 <em style="font-style:italic;color:#1f2937;">ECMA Script</em> 规范，而且运行时性能更好。深入了解 <em style="font-style:italic;color:#1f2937;">Nashorn</em> ，请参见：<a href="https://www.oracle.com/technetwork/articles/java/jf14-nashorn-2126515.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Oracle Nashorn: A Next-Generation JavaScript Engine for the JVM</a></p>
+<h2 id="Concurrent-Accumulators" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">8.  Concurrent Accumulators</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在 Java 8 中引入并发累加器主要是为了弥补 <em style="font-style:italic;color:#1f2937;">Atomic Number</em> 在高竞争情况下的吞吐量问题，在低竞争的情况下，并发累加器与 <em style="font-style:italic;color:#1f2937;">Atomic Number</em> 几乎没有什么不同。并发累加器一般配合 <em style="font-style:italic;color:#1f2937;">Stream API</em> 使用，譬如在收集统计数据方面，而不是在细粒度的同步控制方面。</p>
+<h2 id="Parallel-Operations" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">9.  Parallel Operations</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在 Java 8 中提供了很多并行操作的 API，如 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Collection.parallelStream()</code>，<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Arrays.parallelSort()</code> 等，这些 API 都是基于 Java 7 引入的 <a href="https://johnsonlee.io/2021/05/07/java-8-new-features/#Fork-Join-Framework" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Fork/Join 框架</a>。</p>
+<h2 id="Date-and-Time-API" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">10.  Date and Time API</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在 Java 8 中引入的 <em style="font-style:italic;color:#1f2937;">java.time</em> 包提供了一套日期和时间的综合模型，并在 <a href="http://jcp.org/en/jsr/detail?id=310" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JSR 310: Date and Time API</a> 下开发，虽然是基于国际标准化组织（ISO）的日历系统，但也支持常用的全球日历。</p>
+<h2 id="PermGen-and-Metaspace" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">11.  PermGen and Metaspace</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">为了解决 <em style="font-style:italic;color:#1f2937;">java.lang.OutOfMemoryError: PermGen space ...</em> 的问题， Java 8 彻底移除了永生代，并将类的原数据移到 <em style="font-style:italic;color:#1f2937;">Metaspace</em> 中，用于表示 class 原数据的类也被移除。原有的 <em style="font-style:italic;color:#1f2937;">PermSize</em> 和 <em style="font-style:italic;color:#1f2937;">MaxPermSize</em> 选项也从 JDK 8 中移除，取而代之的是 <em style="font-style:italic;color:#1f2937;">MaxMetaspaceSize</em> 选项，可以通过 <em style="font-style:italic;color:#1f2937;">MaxMetaspaceSize</em> 设置用于类元数据的 <em style="font-style:italic;color:#1f2937;">Native</em> 内存量，默认情况下，<em style="font-style:italic;color:#1f2937;">Metaspace</em> 的大小根据运行时的需要动态调整。一旦类元数据的使用量达到 <em style="font-style:italic;color:#1f2937;">MaxMetaspaceSize</em> 时，将会触发 <em style="font-style:italic;color:#1f2937;">dead class</em> 和 <em style="font-style:italic;color:#1f2937;">class loader</em> 的垃圾回收。显然，为了限制这种垃圾回收的频率和延迟，这种垃圾回收需要进行适当的监测和调整，过多的 <em style="font-style:italic;color:#1f2937;">Metaspace</em> 垃圾回收可能是由于类或者类加载器内存泄漏导致。</p>
+<h2 id="Security-Enhancement" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">12.  Security Enhancement</h2><ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">TLS 1.1 and TLS 1.2 默认开启</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">新增 <a href="https://docs.oracle.com/javase/8/docs/api/java/security/AccessController.html#doPrivileged-java.security.PrivilegedAction-java.security.AccessControlContext-java.security.Permission...-" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">AccessController.doPrivileged</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">更强的基于 AES 的密码加密算法<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">PBEWithSHA256AndAES_128</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">PBEWithSHA512AndAES_256</li>
+</ul>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">SSL/TLS 服务器名称指示（Server Name Indication）</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">支持 AEAD 算法</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">增强版的 keystore </li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">SHA-224 Message Digests</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">加强对国家安全局 B 套件的支持</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">更好的支持高熵随机数生成</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">64-bit PKCS11 for Windows</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">弱加密默认被禁用</li>
+</ul>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">更多详情，请参考：<a href="https://www.oracle.com/java/technologies/javase/8-whats-new.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://www.oracle.com/java/technologies/javase/8-whats-new.html</a></p>
+</blockquote>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2021/05/07/java-8-new-features/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2021/05/07/java-8-new-features/</a></p>
+    </section>
+  </main>
+</body>
+</html>

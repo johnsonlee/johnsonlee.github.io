@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/04/07/ssd-redundancy-beats-sophistication/">
+  <title>蒸馏同事？不如蒸馏自己 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">蒸馏同事？不如蒸馏自己</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-04-07 · Johnson Lee · Computer Science</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">最近“蒸馏同事”这个梗挺火——用 AI 把同事的经验榨干，变成自己的能力。段子归段子，但 Apple 上周放了篇论文，认真回答了一个更离谱的问题：</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">能不能蒸馏自己？</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">答案是能。而且效果好得让作者自己都不好意思——论文标题带了个 “embarrassingly”。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">做的事情是这样的：拿一个代码生成模型，让它用很高的温度（T=2.0）给一批编程题各写一遍答案，不判对错，直接拿这些答案训练自己。结果 Qwen3-30B 在 LiveCodeBench 上从 42.4% 涨到 55.3%。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">没有 reward model，没有 verifier，没有 teacher，没有 RL。<strong style="font-weight:700;color:#111827;">模型抄自己的作业，抄完变强了。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这听起来像玄学。但仔细想想，一点也不。</p>
+<h2 id="一个人做题-vs-十个人做题" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  一个人做题 vs. 十个人做题</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">想象一个场景：你让一个程序员写一个排序函数。他大概率写 quick sort，偶尔写 merge sort，极小概率写 bubble sort。这是他的“分布”。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">现在你让他写十遍。不是复制粘贴十遍——每次都从头想，而且你故意在他旁边放干扰（高温采样）。十个版本里可能有 quick sort、merge sort、heap sort，也有几个跑不通的废稿。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">关键来了：你把这十个版本混在一起，让他“复习”一遍。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">他学到了什么？不是某个具体的正确答案——你都没告诉他哪个是对的。他学到的是：在“选算法”这个位置，有好几条路都值得走；但在写 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">if left &lt; right</code> 这种地方，十个版本全一样，没什么好犹豫的。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">冗余本身就是信号。</strong></p>
+<h2 id="噪音的对立面不是精确，是冗余" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  噪音的对立面不是精确，是冗余</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">模型在生成代码时，每一步都面临两类处境：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">没得选的位置</strong>（论文叫 lock）：语法决定了下一个 token 只有一个合理选项，但模型的概率分布里还是拖着一条长尾巴——那些不该出现的选项占了一点点概率。积少成多，这些噪音会让生成 drift。</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">真得选的位置</strong>（论文叫 fork）：比如决定用递归还是循环，两条路都对，模型需要保留这种多样性。</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这两类位置对温度的需求完全矛盾。降温能压噪音，但也会把 fork 点的多样性压死；升温能保留多样性，但 lock 点的噪音又回来了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">任何一个固定的温度都是妥协。论文做了完整的 temperature sweep，base model 的 pass@1 在不同温度下只波动 2 个百分点——调温度基本没用。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">SSD 的做法等价于什么？<strong style="font-weight:700;color:#111827;">让一群“agent”各自走一遍，然后从群体行为里提炼共识。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">十个 agent 在 lock 点的选择高度一致——共识自动压掉了长尾噪音。在 fork 点，它们各走各的——多样性天然保留。这不是什么精巧的算法设计，就是冗余。冗余天生能区分信号和噪音：信号在重复中被加强，噪音在重复中被稀释。</p>
+<h2 id="连答案都不用对" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  连答案都不用对</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">论文里最反直觉的实验在 Section 4.4：他们把采样温度拉到极端，生成出来的代码几乎是 gibberish——乱码。拿这些乱码训练模型，模型居然还是变强了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这说明 SSD 的收益根本不来自“学到了正确的代码”。它来自分布的重塑——那些在 lock 点一致、在 fork 点分散的统计规律，即使藏在乱码里，依然存在。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">用通信的话说：你不需要每条消息都对，你只需要足够多的冗余消息，就能从噪声信道里恢复出信号。Shannon 七十年前就说清楚了。</p>
+<h2 id="没有新知识，只有更干净的旧知识" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  没有新知识，只有更干净的旧知识</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">SSD 不产生新能力。模型能写出来的代码，训练前就能写出来——只是被噪音埋着。SSD 做的事情是把模型已有的知识从噪音里“洗”出来。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这跟 ensemble 的道理一样。一个模型跑十次取多数票能提升准确率，不是因为模型变强了，而是因为冗余投票滤掉了随机错误。SSD 把这个 inference time 的冗余提前“烧”进了模型权重里，省掉了推理时跑十次的成本。</p>
+<h2 id="该怎么理解这件事" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  该怎么理解这件事</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">SSD 不是什么新范式。它的贡献是用一个极简实验证明了一件大家隐约知道但没人严肃验证过的事：</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">模型的瓶颈不总是能力不够，有时候只是表达不干净。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这对工程实践的启示很直接：在你花大力气搞 RLHF、搞 reward model、搞人工标注之前，先试试让模型自己采样一批、自己训一轮。成本几乎为零，收益可能出乎意料。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">当然，SSD 有天花板。它只能“洗”出已有的能力，不能创造新能力。真正的进化需要闭环验证——需要 compiler 告诉你对不对，需要 test case 告诉你差在哪。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但作为进化的第零步，用冗余把分布先调干净，是个不需要任何理由就该做的事。</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/04/07/ssd-redundancy-beats-sophistication/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/04/07/ssd-redundancy-beats-sophistication/</a></p>
+    </section>
+  </main>
+</body>
+</html>

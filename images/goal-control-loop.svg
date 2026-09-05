@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 980" role="img" aria-labelledby="title desc">
+  <title id="title">Goal、Eval 与 Verifier 的实际分工</title>
+  <desc id="desc">Goal 以 active 状态持久化。Runtime 在线程空闲时启动新一轮，Agent 根据 Eval 定义的标准和 Verifier 取得的证据做完成审计。只有显式调用 update_goal complete 才停止，否则继续循环。</desc>
+  <defs>
+    <filter id="shadow" x="-12%" y="-12%" width="124%" height="132%">
+      <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#475569"/>
+    </marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#ea580c"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#059669"/>
+    </marker>
+    <style>
+      .t{font-family:Arial,"PingFang SC","Microsoft YaHei",sans-serif}.h{font-size:31px;font-weight:700;fill:#0f172a}.sub{font-size:19px;fill:#64748b}.boxh{font-size:25px;font-weight:700}.body{font-size:19px;fill:#334155}.small{font-size:17px;fill:#475569}
+    </style>
+  </defs>
+
+  <rect width="1000" height="980" rx="30" fill="#f8fafc"/>
+  <text class="t h" x="500" y="50" text-anchor="middle">/goal 的控制回路</text>
+  <text class="t sub" x="500" y="82" text-anchor="middle">Goal 决定是否续跑，Eval 定义标准，Verifier 提供事实</text>
+
+  <g filter="url(#shadow)">
+    <rect x="210" y="116" width="580" height="104" rx="18" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5"/>
+    <text class="t boxh" x="500" y="158" text-anchor="middle" fill="#1e3a8a">持久化 Goal 状态</text>
+    <text class="t body" x="500" y="192" text-anchor="middle">objective · status = active · budget · usage</text>
+  </g>
+
+  <line x1="500" y1="220" x2="500" y2="265" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="210" y="265" width="580" height="96" rx="18" fill="#fff7ed" stroke="#ea580c" stroke-width="2.5"/>
+    <text class="t boxh" x="500" y="305" text-anchor="middle" fill="#9a3412">Thread idle callback</text>
+    <text class="t body" x="500" y="337" text-anchor="middle">start_turn_if_idle(continuation prompt)</text>
+  </g>
+
+  <line x1="500" y1="361" x2="500" y2="406" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="210" y="406" width="580" height="104" rx="18" fill="#ecfeff" stroke="#0891b2" stroke-width="2.5"/>
+    <text class="t boxh" x="500" y="448" text-anchor="middle" fill="#155e75">Agent 执行新一轮</text>
+    <text class="t body" x="500" y="482" text-anchor="middle">检查当前状态 · 修改 artifact · 运行工具</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="50" y="572" width="270" height="126" rx="18" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.5"/>
+    <text class="t boxh" x="185" y="615" text-anchor="middle" fill="#5b21b6">Eval</text>
+    <text class="t body" x="185" y="650" text-anchor="middle">定义 cases、rubric</text>
+    <text class="t body" x="185" y="680" text-anchor="middle">threshold 与验收范围</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="365" y="572" width="270" height="126" rx="18" fill="#ecfdf5" stroke="#059669" stroke-width="2.5"/>
+    <text class="t boxh" x="500" y="615" text-anchor="middle" fill="#065f46">Verifier</text>
+    <text class="t body" x="500" y="650" text-anchor="middle">运行检查，接触现场</text>
+    <text class="t body" x="500" y="680" text-anchor="middle">产出可复查证据</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="680" y="572" width="270" height="126" rx="18" fill="#fff7ed" stroke="#ea580c" stroke-width="2.5"/>
+    <text class="t boxh" x="815" y="615" text-anchor="middle" fill="#9a3412">Agent 完成审计</text>
+    <text class="t body" x="815" y="650" text-anchor="middle">证据覆盖了整个</text>
+    <text class="t body" x="815" y="680" text-anchor="middle">原始目标吗？</text>
+  </g>
+
+  <line x1="500" y1="510" x2="500" y2="572" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="320" y1="635" x2="365" y2="635" stroke="#7c3aed" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="635" y1="635" x2="680" y2="635" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <path d="M185 698 V735 H815 V698" fill="none" stroke="#7c3aed" stroke-width="2.5" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
+  <text class="t small" x="500" y="758" text-anchor="middle">Eval 也约束“哪些证据才算覆盖”</text>
+
+  <path d="M760 698 C710 754 655 790 595 824" fill="none" stroke="#ea580c" stroke-width="3" marker-end="url(#arrow-orange)"/>
+  <path d="M870 698 C895 752 900 790 855 824" fill="none" stroke="#059669" stroke-width="3" marker-end="url(#arrow-green)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="260" y="824" width="390" height="106" rx="18" fill="#fff7ed" stroke="#ea580c" stroke-width="2.5"/>
+    <text class="t boxh" x="455" y="866" text-anchor="middle" fill="#9a3412">没有提交 complete</text>
+    <text class="t body" x="455" y="900" text-anchor="middle">Goal 仍为 active → 进入下一轮</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="700" y="824" width="250" height="106" rx="18" fill="#ecfdf5" stroke="#059669" stroke-width="2.5"/>
+    <text class="t boxh" x="825" y="866" text-anchor="middle" fill="#065f46">update_goal</text>
+    <text class="t body" x="825" y="900" text-anchor="middle">complete → 停止</text>
+  </g>
+
+  <path d="M260 877 H25 V313 H210" fill="none" stroke="#ea580c" stroke-width="3" stroke-dasharray="10 8" marker-end="url(#arrow-orange)"/>
+</svg>

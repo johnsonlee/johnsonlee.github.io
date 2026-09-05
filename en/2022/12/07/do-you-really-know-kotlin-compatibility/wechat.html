@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2022/12/07/do-you-really-know-kotlin-compatibility/">
+  <title>Kotlin Pitfalls: Compatibility | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Kotlin Pitfalls: Compatibility</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2022-12-07 · Johnson Lee · Computer Science / Kotlin</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">In the previous post <a href="https://johnsonlee.io/2022/12/03/do-you-really-know-kotlin-function/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Kotlin Pitfalls: FunctionReference</a>, I covered how to solve the compatibility issue caused by <a href="https://github.com/JetBrains/kotlin/blob/master/libraries/stdlib/jvm/runtime/kotlin/jvm/internal/FunctionReference.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">FunctionReference</a> when upgrading Kotlin from 1.3 to 1.5. But that's far from the only compatibility issue in Kotlin. How do we address Kotlin's compatibility problems systematically?</p>
+<h2 id="What-Are-Compatibility-Issues" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">What Are Compatibility Issues</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Software compatibility issues can be broadly divided into two categories: API compatibility and ABI compatibility.</p>
+<h3 id="API-Application-Programming-Interface-Compatibility" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">API (Application Programming Interface) Compatibility</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">In short, this is about interface-level compatibility, which itself falls into two subcategories:</p>
+<h4 id="API-Deprecation" style="margin:24px 0 12px;font-size:17px;line-height:1.5;font-weight:700;color:#111827;">API Deprecation</h4><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">For example, Kotlin 1.5 deprecated the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">String.toUpperCase()</code> API in favor of <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">String.uppercase()</code>. Although the API is deprecated, you can still use it -- the compiler will issue a warning but won't halt compilation.</p>
+<h4 id="API-Removal" style="margin:24px 0 12px;font-size:17px;line-height:1.5;font-weight:700;color:#111827;">API Removal</h4><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">For example, JDK 11 removed the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Thread.destroy()</code> and <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Thread.stop(Throwable)</code> APIs. If your project uses <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Thread.destroy()</code>, upgrading to JDK 11 will break the build. You either find an alternative or rewrite the implementation.</p>
+<h3 id="ABI-Application-Binary-Interface-Compatibility" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">ABI (Application Binary Interface) Compatibility</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">In short, this is about binary-level compatibility. For languages running on the JVM, binary compatibility mainly concerns bytecode compatibility, which also has two subcategories:</p>
+<h4 id="JVM-Bytecode-Version-Compatibility" style="margin:24px 0 12px;font-size:17px;line-height:1.5;font-weight:700;color:#111827;">JVM Bytecode Version Compatibility</h4><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">A typical example is the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">major version</code> of class files.</p>
+<h4 id="Language-Runtime-Version-Compatibility" style="margin:24px 0 12px;font-size:17px;line-height:1.5;font-weight:700;color:#111827;">Language Runtime Version Compatibility</h4><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Some Kotlin language features are implemented at the compiler level. Different versions of the Kotlin compiler may implement things differently. While Kotlin developers all call the Kotlin standard library, the compiler generates additional bytecode and even classes to implement the syntactic sugar that makes Kotlin look elegant -- for instance, the ubiquitous <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Function</code> types.</p>
+<h2 id="The-Real-Headache" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">The Real Headache</h2><h3 id="Incompatible-Bytecode" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Incompatible Bytecode</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Remember the issue from <a href="https://johnsonlee.io/2022/12/03/do-you-really-know-kotlin-function/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Kotlin Pitfalls: FunctionReference</a>?</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">fun f(fn: (Any) -&gt; Unit) {}
+
+fun ff() {
+    f(::println)
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">If we compile the above code with <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31</code>, we get the following bytecode:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">final synthetic class io/johnsonlee/kotlin/TestKt$ff$1 extends kotlin/jvm/internal/FunctionReferenceImpl implements kotlin/jvm/functions/Function1 {
+
+  // access flags 0x0
+  &lt;init&gt;()V
+    ALOAD 0
+    ICONST_1
+    LDC Lkotlin/io/ConsoleKt;.class
+    LDC "println"
+    LDC "println(Ljava/lang/Object;)V"
+    LDC 1
+    INVOKESPECIAL kotlin/jvm/internal/FunctionReferenceImpl.&lt;init&gt; (ILjava/lang/Class;Ljava/lang/String;Ljava/lang/String;I)V
+    RETURN
+    MAXSTACK = 6
+    MAXLOCALS = 1
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The bytecode generated by the Kotlin compiler contains content that doesn't exist in older versions. As a result, other projects using Kotlin below 1.4 will encounter a <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">NoSuchMethodError</code> at runtime when they consume this bytecode.</p>
+<h3 id="Incompatible-Metadata" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Incompatible Metadata</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Beyond class bytecode, Kotlin also generates other binary content:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Metadata (<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">@Metadata</code>)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Module mapping (<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">*.kotlin_module</code>)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">......</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">All of these binary artifacts contain version information and version compatibility constraints.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Taking <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">@Metadata</code> as an example, the default compatibility strategy is that <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">x.y</code> is compatible with <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">x.{y + 1}</code>, unless versions have strict semantics.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">So how are the version numbers for these binary artifacts determined?</p>
+<h4 id="Metadata-Version" style="margin:24px 0 12px;font-size:17px;line-height:1.5;font-weight:700;color:#111827;">Metadata Version</h4><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">@Metadata</code> version is determined by the Kotlin Compiler version. For Gradle projects, this is effectively the <em style="font-style:italic;color:#1f2937;">kotlin-gradle-plugin</em> version. Changing the <em style="font-style:italic;color:#1f2937;">kotlin-gradle-plugin</em> version will affect the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">@Metadata</code> version.</p>
+<h4 id="Module-Mapping-Version" style="margin:24px 0 12px;font-size:17px;line-height:1.5;font-weight:700;color:#111827;">Module Mapping Version</h4><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">*.kotlin_module</code> version is also determined by the Kotlin Compiler version and matches the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">@Metadata</code> version. If there's a version incompatibility, compilation will fail with:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">Module was compiled with an incompatible version of Kotlin. The binary version of its metadata is a.b.c, expected version is x.y.z.</code></pre>
+
+<h2 id="Java-s-Solution" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Java's Solution</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Java has a systematic solution for compatibility issues. If you've used Gradle, you'll remember that Java compile tasks can be configured with these two parameters:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">sourceCompatibility</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">targetCompatibility</code></li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">For example:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetComaptibility = JavaVersion.VERSION_1_8
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">These correspond to the API and ABI levels mentioned earlier:</p>
+<table style="width:100%;border-collapse:collapse;margin:22px 0;font-size:14px;line-height:1.6;color:#1f2937;">
+<thead>
+<tr>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">#</th>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Java Compiler Options</th>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Gradle Compiler Task Options</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">API</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-source</code></td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">sourceCompatibility</code></td>
+</tr>
+<tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">ABI</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-target</code></td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">targetCompatibility</code></td>
+</tr>
+</tbody></table>
+<h2 id="Kotlin-s-Solution" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Kotlin's Solution</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Kotlin also provides compiler options to specify versions:</p>
+<table style="width:100%;border-collapse:collapse;margin:22px 0;font-size:14px;line-height:1.6;color:#1f2937;">
+<thead>
+<tr>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">#</th>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Kotlin Compiler Options</th>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Gradle Compiler Task Options</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">API</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-api-version</code></td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">apiVersion</code></td>
+</tr>
+<tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">ABI</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version</code></td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">languageVersion</code></td>
+</tr>
+</tbody></table>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Usage:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">tasks.withType&lt;KotlinCompile&gt; {
+    kotlinOptions {
+        apiVersion = "1.5"
+        languageVersion = "1.5"
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Important notes:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-api-version</code> cannot be greater than <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Restricting <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version</code> implicitly restricts <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-api-version</code> as well</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The correspondence between Kotlin and Java compiler options:</p>
+<table style="width:100%;border-collapse:collapse;margin:22px 0;font-size:14px;line-height:1.6;color:#1f2937;">
+<thead>
+<tr>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">#</th>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Kotlin Compiler Options</th>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Java Compiler Options</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">API</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-api-version</code></td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-source</code></td>
+</tr>
+<tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">ABI</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version</code></td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-target</code></td>
+</tr>
+</tbody></table>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">So Kotlin's compatibility management is just as straightforward as Java's. But how exactly should you use these two compiler options?</p>
+<h2 id="Best-Practices" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Best Practices</h2><h3 id="Unify-the-Kotlin-Version" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Unify the Kotlin Version</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Your project's Kotlin version should ideally use <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">embeddedKotlinVersion</code> (the version of Kotlin embedded in Gradle). For example:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${embeddedKotlinVersion}")
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Or:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">plugins {
+    kotlin("jvm") version embeddedKotlinVersion
+}</code></pre>
+
+<h3 id="Specify-language-version-or-api-version" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Specify <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version</code> or <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-api-version</code></h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Using the <a href="https://github.com/JetBrains/kotlin/blob/master/libraries/stdlib/jvm/runtime/kotlin/jvm/internal/FunctionReference.java" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">FunctionReference</a> issue as an example, our goal is backward compatibility at the bytecode level -- the ABI level. To ensure the generated bytecode doesn't contain content from Kotlin 1.4 (i.e., backward compatible with Kotlin 1.3), you can specify either <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version</code> or <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-api-version</code>:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">tasks.withType&lt;KotlinCompile&gt; {
+    kotlinOptions {
+        languageVersion = "1.3"
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Or:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">tasks.withType&lt;KotlinCompile&gt; {
+    kotlinOptions {
+        apiVersion = "1.3"
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">With either option, the compiled bytecode becomes:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">io.johnsonlee.kotlin.TestKt$ff$1();
+    descriptor: ()V
+    flags: (0x0000)
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: iconst_1
+         2: invokespecial #57 // Method kotlin/jvm/internal/FunctionReference."&lt;init&gt;":(I)V
+         5: return</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Notice that the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">FunctionReference</code> bytecode representation has changed.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Since both options work, what's the actual difference between <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version</code> and <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-api-version</code>?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The difference is:</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">Bytecode compiled with <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version</code> will have a <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">@Metadata</code> version of <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">1.1.18</code>, while bytecode compiled with <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-api-version</code> will still have a <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">@Metadata</code> version of <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">1.5.1</code>.</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">This tells us that <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-api-version</code> doesn't achieve full ABI-level compatibility. <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version</code> has a broader impact -- it not only restricts language features across versions but also constrains the versions of binary artifacts including metadata.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Although <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version</code> and <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-api-version</code> affect the compiled bytecode content, they do not change the version of the Kotlin <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">stdlib</code> that your project depends on. Even with the 1.5 <em style="font-style:italic;color:#1f2937;">kotlin-gradle-plugin</em>, if you set <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version</code> or <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-api-version</code> to 1.3, the project's dependencies won't change. This is why Kotlin can achieve backward compatibility -- even when some APIs are disallowed in higher versions (e.g., <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">toLowerCase()</code> is disallowed from 1.5 onward), the API hasn't actually been removed. The compiler simply won't let you use it:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">@DeprecatedSinceKotlin(
+    warningSince = "1.3",
+    errorSince = "1.5"
+)</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">If a class has already been compiled with <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">-language-version="1.3"</code>, it will work perfectly fine with the 1.5 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">stdlib</code>.</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2022/12/07/do-you-really-know-kotlin-compatibility/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2022/12/07/do-you-really-know-kotlin-compatibility/</a></p>
+    </section>
+  </main>
+</body>
+</html>

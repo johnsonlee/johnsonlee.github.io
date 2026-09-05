@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2022/04/10/its-time-to-abandon-javapoet-kotlinpoet/">
+  <title>是时候放弃 JavaPoet/KotlinPoet 了 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">是时候放弃 JavaPoet/KotlinPoet 了</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2022-04-10 · Johnson Lee · Computer Science / Architecture Design</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">相信大家对于 <a href="https://github.com/square/javapoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaPoet</a> 和 <a href="https://github.com/square/kotlinpoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KotlinPoet</a> 并不陌生，皆出自大名定鼎鼎的 <a href="https://square.github.io/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Square</a>。一般地，我们在用 <a href="https://docs.oracle.com/javase/7/docs/technotes/guides/apt/index.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">APT (Annotation Processing Toolkit)</a> 或者 <a href="https://kotlinlang.org/docs/kapt.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KAPT</a> 在编译期生成源代码时，一般都会用 <a href="https://github.com/square/javapoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaPoet</a> 来生成 Java 源代码，而用 <a href="https://github.com/square/kotlinpoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KotlinPoet</a> 来生成 Kotlin 源代码，乍一看，哇！好酷，感觉特别有逼格。</p>
+<h2 id="用-JavaPoet-生成代码" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  用 JavaPoet 生成代码</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">正如 <a href="https://github.com/square/javapoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaPoet</a> 的介绍，如果要生成下面这样的代码：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">package com.example.helloworld;
+
+public final class HelloWorld {
+  public static void main(String[] args) {
+    System.out.println("Hello, JavaPoet!");
+  }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">用 <a href="https://github.com/square/javapoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaPoet</a> 就得这样写：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">MethodSpec main = MethodSpec.methodBuilder("main")
+    .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+    .returns(void.class)
+    .addParameter(String[].class, "args")
+    .addStatement("$T.out.println($S)", System.class, "Hello, JavaPoet!")
+    .build();
+
+TypeSpec helloWorld = TypeSpec.classBuilder("HelloWorld")
+    .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+    .addMethod(main)
+    .build();
+
+JavaFile javaFile = JavaFile.builder("com.example.helloworld", helloWorld)
+    .build();
+
+javaFile.writeTo(System.out);</code></pre>
+
+<h2 id="用-KotlinPoet-生成代码" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  用 KotlinPoet 生成代码</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">和 <a href="https://github.com/square/javapoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaPoet</a> 类似，如果要生成下面这样的代码：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">class Greeter(val name: String) {
+  fun greet() {
+    println("""Hello, $name""")
+  }
+}
+
+fun main(vararg args: String) {
+  Greeter(args[0]).greet()
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">用 <a href="https://github.com/square/kotlinpoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KotlinPoet</a> 就得这样写：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">val greeterClass = ClassName("", "Greeter")
+val file = FileSpec.builder("", "HelloWorld")
+  .addType(
+    TypeSpec.classBuilder("Greeter")
+      .primaryConstructor(
+        FunSpec.constructorBuilder()
+          .addParameter("name", String::class)
+          .build()
+      )
+      .addProperty(
+        PropertySpec.builder("name", String::class)
+          .initializer("name")
+          .build()
+      )
+      .addFunction(
+        FunSpec.builder("greet")
+          .addStatement("println(%P)", "Hello, \$name")
+          .build()
+      )
+      .build()
+  )
+  .addFunction(
+    FunSpec.builder("main")
+      .addParameter("args", String::class, VARARG)
+      .addStatement("%T(args[0]).greet()", greeterClass)
+      .build()
+  )
+  .build()
+
+file.writeTo(System.out)</code></pre>
+
+<h2 id="代码可读性与可维护性" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  代码可读性与可维护性</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">上面的两个例子还只是简单得不能再简单的例子，包括括号总共不超过 10 行的源代码，用 <a href="https://github.com/square/javapoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaPoet</a> 和 <a href="https://github.com/square/kotlinpoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KotlinPoet</a> 实现起来洋洋写了一大段，如果不告诉你最终生成的源代码长啥样，要从上面代码来读懂最终生成代码的样子恐怕要费些时间，如此简单的例子都如此晦涩难懂，更别提真实而复杂的项目了，即便是自己写的代码，我相信，三个月后看当初自己写的代码都会怀疑是不是自己写的，如果很不幸，要去修改这一段出自其他人之手的代码，我想大部分人会一边看一边骂：</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">这 TM 是哪个 SB 拉的一坨翔！</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">就这样一边 debug 一边骂，好不容易费了九牛二虎之力才改完，数月之后换了又另一个人接手，这一幕将再次上演，只是换了一个主角。</p>
+<h2 id="模板引擎" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  模板引擎</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">做过前端开发的同学可能对模板引擎比较熟悉，例如：<a href="https://ejs.co/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">EJS (Embedded JavaScript template engine)</a>，像早期的 JSP 技术用到的模板引擎 <a href="https://freemarker.apache.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Freemarker</a> 和 <a href="https://velocity.apache.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Velocity</a> 皆来自大名鼎鼎的 Apache 基金会。大家可能会问，模板引擎跟 <a href="https://github.com/square/javapoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaPoet</a> 和 <a href="https://github.com/square/kotlinpoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KotlinPoet</a> 有什么关系？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">明确地说，模板引擎跟 <a href="https://github.com/square/javapoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaPoet</a> 和 <a href="https://github.com/square/kotlinpoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KotlinPoet</a> 并没有什么关系，但跟我们要解决的问题有关系，对于代码生成这件事情而言，我们最终的目的就是「生成源代码」，这跟我们用模板引擎生成 <em style="font-style:italic;color:#1f2937;">HTML</em> 有什么本质区别吗？答案已经很明了，<em style="font-style:italic;color:#1f2937;">HTML</em> 本身也是一种源代码，既然用模板引擎可以生成 <em style="font-style:italic;color:#1f2937;">HTML</em> 源代码，为什么不能用模板引擎来生成 <em style="font-style:italic;color:#1f2937;">Java</em> 代码、<em style="font-style:italic;color:#1f2937;">Kotlin</em> 代码、<em style="font-style:italic;color:#1f2937;">Swift</em> 代码等等？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">可能大家会想到另一个问题：</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">为什么要有模板引擎？</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">作为程序员界的老鸟，我最早接触 <em style="font-style:italic;color:#1f2937;">Web</em> 技术是从 <em style="font-style:italic;color:#1f2937;">ASP</em> 开始的，然后是 <em style="font-style:italic;color:#1f2937;">JSP</em>，当然 <em style="font-style:italic;color:#1f2937;">PHP</em> 也用过，早期的 <em style="font-style:italic;color:#1f2937;">Web</em> 应用开发并没有做到前后端分离，而是前端跟后端的源代码是高度耦合在一起的，加上框架的能力有限，这样导致了前端 UI 开发都是在 <em style="font-style:italic;color:#1f2937;">ASP/JSP/PHP</em> 中嵌入脚本，以 <em style="font-style:italic;color:#1f2937;">JSP</em> 为例，如果想要用 <em style="font-style:italic;color:#1f2937;">JSP</em> 脚本来生成 <em style="font-style:italic;color:#1f2937;">HTML</em>，就得这样写：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">&lt;%
+  out.println("&lt;p&gt;Hello, world!&lt;/p&gt;")
+%&gt;</code></pre>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果页面内的业务逻辑复杂，页面内就会出现大量的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">&lt;% %&gt;</code> 代码片段，严重的影响代码的可读性，为了将页面的代码更加接近 <em style="font-style:italic;color:#1f2937;">HTML</em> ，所以才有了 <a href="https://www.oracle.com/java/technologies/java-server-tag-library.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaServer Pages Standard Tag Library (JSTL)</a>，大名鼎鼎的 <a href="https://struts.apache.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Struts</a> 就是基于这一技术来实现的，用了 <em style="font-style:italic;color:#1f2937;">JSTL</em> 之后，页面上就不再有 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">&lt;% %&gt;</code>，取而代之的是自定义标签，以 <a href="https://struts.apache.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Struts</a> 为例：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">&lt;%@ taglib prefix="s" uri="/struts-tags" %&gt;
+
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Hello&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+Hello, &lt;s:property value="name"/&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">即便前后端分离已经是当今 <em style="font-style:italic;color:#1f2937;">Web</em> 应用的标准架构，模板引擎也依然很流行，像目前最流行的 <em style="font-style:italic;color:#1f2937;">Web</em> 开发框架之一 —— <a href="https://vuejs.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Vue.js</a>，例如：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">&lt;script&gt;
+export default {
+  data() {
+    return {
+      count: 0
+    }
+  }
+}
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;button @click="count++"&gt;Count is: {{ count }}&lt;/button&gt;
+&lt;/template&gt;
+
+&lt;style scoped&gt;
+button {
+  font-weight: bold;
+}
+&lt;/style&gt;</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">通过以上的例子，我们可以看到，通过模板引擎，我们可以通过定义模板的方式，将最终要呈现的内容与业务逻辑来解耦，通过模板，我们可以很容易的知道最终呈现的内容长什么样子，而不用在脑海里去模拟代码的执行过程来推演最终生成的源代码的模样。</p>
+<h2 id="代码可复用性" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  代码可复用性</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">通过 <a href="https://github.com/square/javapoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaPoet</a> 和 <a href="https://github.com/square/kotlinpoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KotlinPoet</a> 我们不难发现，用它们来生成 <em style="font-style:italic;color:#1f2937;">Java</em> 或者 <em style="font-style:italic;color:#1f2937;">Kotlin</em> 代码，即使是不同的工程，其实有很多的代码都是相似的，例如，我们要先定义 <em style="font-style:italic;color:#1f2937;">AnnotationProcessor</em>，然后还要重写 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">init</code> 和 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">process</code> 方法，可能还要处理 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">multi-round</code> 的问题。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">另外，如果我们一旦决定了用 <a href="https://github.com/square/javapoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaPoet</a> 来生成 <em style="font-style:italic;color:#1f2937;">Java</em> 源代码，如果后续想要切换到 <em style="font-style:italic;color:#1f2937;">Kotlin</em> 源代码，这几乎是要用 <a href="https://github.com/square/kotlinpoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KotlinPoet</a> 重新实现一遍，或者前期决定用 <a href="https://github.com/square/kotlinpoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KotlinPoet</a> 生成了 <em style="font-style:italic;color:#1f2937;">Kotlin</em> 代码，但实现的过程中因为某些原因要切换到 <em style="font-style:italic;color:#1f2937;">Java</em> 源代码，同样也是需要用 <a href="https://github.com/square/javapoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaPoet</a> 重新实现一遍，这对于开发者来说完全不合理，因为逻辑都是一样的，只是最终要呈现的语言不一样而已，如果换一种目标语言就要重新实现一遍，那么，这个架构肯定是不对的。</p>
+<h2 id="基于模板引擎的代码生成框架" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">6.  基于模板引擎的代码生成框架</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">为了解决前面提到的问题：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">代码可维护性</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">代码可读性</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">代码可复用性</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我们完全可以将生成源代码的逻辑与源代码的内容进行分离，也就是 —— <em style="font-style:italic;color:#1f2937;">模板</em> + <em style="font-style:italic;color:#1f2937;">数据模型</em></p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">模板 - 定义要生成的源代码</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">数据模型 - 渲染模板需要的数据</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这样，我们如果需要在编译期生成源代码的话，只需要将主要的关注点集中在「如何构建数据模型」上，对于模板引擎而言，只要数据模型是对的，我们可以通过切换模板来随意切换目标语言而无须重写逻辑，这就是 <a href="https://github.com/johnsonlee/codegen" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">codegen</a> 的设计思路，同时支持 <a href="https://mustache.github.io/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Mustache</a> 和 <a href="https://velocity.apache.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Velocity</a>，例如，我们要为一个类生成 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Factory</code> 类：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">interface Factory&lt;T&gt; {
+
+    val type: Class&lt;T&gt;
+
+    fun newInstance(pool: ObjectPool): T
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果想要生成 <em style="font-style:italic;color:#1f2937;">Java</em> 源代码，基于 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">mustache</code> 的模板定义则如下：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">package io.johnsonlee.codegen.generated;
+
+import io.johnsonlee.codegen.example.Factory;
+import io.johnsonlee.codegen.example.ObjectPool;
+
+class {{simpleName}} implements Factory&lt;{{implementation}}&gt; {
+    @Override
+    public Class&lt;{{implementation}}&gt; getType() {
+        return {{implementation}}.class;
+    }
+
+    @Override
+    public {{implementation}} newInstance(final ObjectPool pool) {
+        return new {{implementation}}(
+        {{#args}}
+            pool.get({{typeErasure}}.class) {{^isLast}},{{/isLast}}
+        {{/args}}
+        );
+    }
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果要生成 <em style="font-style:italic;color:#1f2937;">Kotlin</em> 源代码，基于 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">mustache</code> 的模板定义则如下：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">package io.johnsonlee.codegen.generated
+
+import io.johnsonlee.codegen.example.Factory
+import io.johnsonlee.codegen.example.ObjectPool
+
+class {{simpleName}} : Factory&lt;{{implementation}}&gt; {
+    override val type = {{implementation}}::class.java
+
+    override fun newInstance(pool: ObjectPool) = {{implementation}}(
+        {{#args}}
+            pool.get&lt;{{type}}&gt;() {{^isLast}},{{/isLast}}
+        {{/args}}
+    );
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这两种不同的模板可以复用同一个数据模型：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">data class AutoFactoryModel(
+    val implementation: String,
+    val args: List&lt;Map&lt;String, Any?&gt;&gt; = emptyList()
+) : Model {</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">对于开发者而言，只需要构建好数据模型，然后调用框架提供的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">generate</code> 方法就行了：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">generate(
+    "template/AutoFactory", // 模板名称
+    AutoFactoryModel(implementation.qualifiedName.toString(), args), // 数据模型
+    Language.KOTLIN // 目标语言
+)</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">看到这里，你还觉得 <a href="https://github.com/square/javapoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JavaPoet</a> 和 <a href="https://github.com/square/kotlinpoet" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KotlinPoet</a> 香吗？</p>
+<h2 id="Codegen" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">7.  Codegen</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">项目地址：<a href="https://github.com/johnsonlee/codegen" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://github.com/johnsonlee/codegen</a> 记得 star 哦 ~</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2022/04/10/its-time-to-abandon-javapoet-kotlinpoet/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2022/04/10/its-time-to-abandon-javapoet-kotlinpoet/</a></p>
+    </section>
+  </main>
+</body>
+</html>

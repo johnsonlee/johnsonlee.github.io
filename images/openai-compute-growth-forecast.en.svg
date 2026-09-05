@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="880" viewBox="0 0 1600 880" role="img" aria-labelledby="title desc">
+  <title id="title">OpenAI and Anthropic Available Compute Outlook</title>
+  <desc id="desc">OpenAI reported that available compute rose from 0.2GW in 2023 to 1.9GW in 2025. It expects low-double-digit gigawatts in 2027 and targets 30GW in 2030. Anthropic is estimated at about 1.4GW in 2025 and about 3.7GW by the end of 2026 based on announced capacity additions. OpenAI estimates Anthropic will reach 7GW to 8GW in 2027. Anthropic has not published a company-level available-compute target beyond 2027.</desc>
+  <defs>
+    <style>
+      .bg{fill:#f8fafc}.grid{stroke:#d7dee7;stroke-width:1.5}.axis{stroke:#64748b;stroke-width:2}.openai-actual{fill:none;stroke:#10a37f;stroke-width:8;stroke-linecap:round;stroke-linejoin:round}.openai-outlook{fill:none;stroke:#10a37f;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:17 15}.anthropic-estimate{fill:none;stroke:#d97757;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:17 15}.openai-dot{fill:#10a37f;stroke:#f8fafc;stroke-width:5}.openai-outlook-dot{fill:#f8fafc;stroke:#10a37f;stroke-width:6}.anthropic-dot{fill:#f8fafc;stroke:#d97757;stroke-width:6}.target-dot{fill:#10a37f;stroke:#f8fafc;stroke-width:5}.range-anthropic{stroke:#d97757;stroke-width:6;stroke-linecap:round}.range-cap{stroke-width:4;stroke-linecap:round}
+      .axis-label{font:600 18px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#64748b}.year{font:700 20px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#334155;text-anchor:middle}.value-openai{font:800 23px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#10a37f}.value-anthropic{font:800 23px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#d97757}.legend{font:650 19px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#334155}.unit{font:700 19px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#334155}
+    </style>
+  </defs>
+
+  <rect class="bg" width="1600" height="880"/>
+
+  <g>
+    <text class="unit" x="145" y="72">Available compute (GW)</text>
+    <line class="grid" x1="155" y1="650" x2="1450" y2="650"/>
+    <line class="grid" x1="155" y1="560" x2="1450" y2="560"/>
+    <line class="grid" x1="155" y1="470" x2="1450" y2="470"/>
+    <line class="grid" x1="155" y1="380" x2="1450" y2="380"/>
+    <line class="grid" x1="155" y1="290" x2="1450" y2="290"/>
+    <line class="grid" x1="155" y1="200" x2="1450" y2="200"/>
+    <line class="grid" x1="155" y1="110" x2="1450" y2="110"/>
+    <line class="axis" x1="155" y1="110" x2="155" y2="650"/>
+    <line class="axis" x1="155" y1="650" x2="1450" y2="650"/>
+
+    <text class="axis-label" x="124" y="656">0</text>
+    <text class="axis-label" x="124" y="566">5</text>
+    <text class="axis-label" x="113" y="476">10</text>
+    <text class="axis-label" x="113" y="386">15</text>
+    <text class="axis-label" x="113" y="296">20</text>
+    <text class="axis-label" x="113" y="206">25</text>
+    <text class="axis-label" x="113" y="116">30</text>
+
+    <path class="openai-actual" d="M180 646.4L360 639.2L540 615.8"/>
+    <path class="openai-outlook" d="M540 615.8L900 470L1440 110"/>
+    <path class="anthropic-estimate" d="M540 624.8L720 583.4L900 515"/>
+
+    <line class="range-anthropic" x1="900" y1="506" x2="900" y2="524"/>
+    <line class="range-anthropic range-cap" x1="884" y1="506" x2="916" y2="506"/>
+    <line class="range-anthropic range-cap" x1="884" y1="524" x2="916" y2="524"/>
+
+    <circle class="openai-dot" cx="180" cy="646.4" r="11"/>
+    <circle class="openai-dot" cx="360" cy="639.2" r="11"/>
+    <circle class="openai-dot" cx="540" cy="615.8" r="11"/>
+    <circle class="openai-outlook-dot" cx="900" cy="470" r="11"/>
+    <circle class="target-dot" cx="1440" cy="110" r="13"/>
+    <circle class="anthropic-dot" cx="540" cy="624.8" r="11"/>
+    <circle class="anthropic-dot" cx="720" cy="583.4" r="11"/>
+    <circle class="anthropic-dot" cx="900" cy="515" r="11"/>
+
+    <text class="value-openai" x="180" y="606" text-anchor="middle">0.2</text>
+    <text class="value-openai" x="360" y="596" text-anchor="middle">0.6</text>
+    <text class="value-openai" x="506" y="584" text-anchor="end">1.9</text>
+    <text class="value-anthropic" x="575" y="647">~1.4</text>
+    <text class="value-anthropic" x="720" y="548" text-anchor="middle">3.7E</text>
+    <text class="value-openai" x="930" y="462">10+E</text>
+    <text class="value-anthropic" x="930" y="526">7-8E</text>
+    <text class="value-openai" x="1385" y="76">30 target</text>
+
+    <text class="year" x="180" y="696">2023</text>
+    <text class="year" x="360" y="696">2024</text>
+    <text class="year" x="540" y="696">2025</text>
+    <text class="year" x="720" y="696">2026E</text>
+    <text class="year" x="900" y="696">2027E</text>
+    <text class="year" x="1080" y="696">2028</text>
+    <text class="year" x="1260" y="696">2029</text>
+    <text class="year" x="1440" y="696">2030</text>
+
+  </g>
+
+  <g transform="translate(155 774)">
+    <line class="openai-actual" x1="0" y1="0" x2="56" y2="0"/><text class="legend" x="74" y="7">OpenAI</text>
+    <line class="anthropic-estimate" x1="220" y1="0" x2="276" y2="0"/><text class="legend" x="294" y="7">Anthropic</text>
+    <line class="axis" x1="500" y1="0" x2="556" y2="0"/><text class="legend" x="574" y="7">Company reported</text>
+    <line class="axis" x1="820" y1="0" x2="876" y2="0" stroke-dasharray="17 15"/><text class="legend" x="894" y="7">Estimate or target</text>
+  </g>
+</svg>

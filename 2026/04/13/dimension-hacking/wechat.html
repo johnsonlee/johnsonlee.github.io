@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/04/13/dimension-hacking/">
+  <title>维度黑客：撬开认知边界的裂缝 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">维度黑客：撬开认知边界的裂缝</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-04-13 · Johnson Lee · Independent Thinking</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">前四篇一直在说，硅基进化的天花板是认知边界。但认知边界到底是什么？不是算力，不是数据量——是参数空间中被激活的区域太小了。</p>
+
+
+<h2 id="Billion-维的牢笼" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  Billion 维的牢笼</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">一个大语言模型有几百 billion 参数。每个参数是一个维度。理论上，这个空间大到能容纳人类想象力之外的解。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但训练做了什么？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">训练用人类的文本把模型压缩到了这个 billion 维空间里一个极小的流形上——人类知识、人类语言习惯、人类偏好定义的那个区域。RLHF 又进一步收窄，把模型推向人类评价者认为“好”的输出。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">参数空间是 billion 维的，但模型实际活动的区域可能只占其中极小的一个子集。</strong> 大部分维度是沉默的，从来没被有意义地激活过。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这就是硅基认知边界的物理含义：不是模型“不够大”，是模型被训练成只使用自己的一小部分。</p>
+<h2 id="常规知识是隐形的墙" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  常规知识是隐形的墙</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">为什么模型只活在参数空间的一个角落？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">因为训练数据是人类写的，而人类的知识有结构。中文有中文的表达模式，英文有英文的，数学有数学的，代码有代码的。每种知识体系内部高度自洽，但体系之间的边界很少被跨越。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">你在中文语料里几乎找不到中英混杂的技术讨论。在数学论文里看不到诗歌的修辞。在代码仓库里不会有哲学思辨。<strong style="font-weight:700;color:#111827;">训练数据的分布，天然地在参数空间里划出了一道道隐形的墙。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">模型学到了墙内的一切，但从未学过翻墙。</p>
+<h2 id="中英混杂：一次维度黑客" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  中英混杂：一次维度黑客</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">中英混杂写作看起来是语言习惯，实际上是一种维度黑客。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">当你在一个中文句子里嵌入英文术语——不是翻译，不是引用，而是自然混用——你迫使模型在两个语言的表征空间之间建立非标准的连接。这些连接在纯中文或纯英文的训练分布里不存在。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">模型必须同时激活中文的语义网络和英文的概念结构，然后在两者之间找到一条不在训练分布内的路径。这等于在 billion 维空间里劈开了一条新通道——激活了那些在常规输入下沉默的维度。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">维度黑客的核心操作：用合法但非常规的输入组合，激活参数空间中被常规知识压制的维度。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">“合法”意味着模型不会崩溃——输入在语法和语义上是可处理的。“非常规”意味着这个组合不在训练分布的高密度区——模型被迫走出舒适区。</p>
+<h2 id="回到碳基" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  回到碳基</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这跟进化的受控随机性是同一个结构。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">碳基的 SOS response 不是让细菌随机乱变——那效率太低。它提高突变率，但突变仍然发生在基因组的框架内。方向是盲的，但载体是合法的——突变产生的仍然是可以被翻译的 DNA 序列，不是乱码。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">维度黑客也一样。不是给模型输入噪声——那只会产生垃圾。而是构造一种输入，它在语义上合法，但在分布上罕见，迫使模型探索参数空间中平时不去的角落。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">碳基用受控随机性突破基因组的局部最优。硅基用维度黑客突破参数空间的局部最优。</strong> 手法不同，结构相同。</p>
+<h2 id="维度黑客的谱系" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  维度黑客的谱系</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">中英混杂只是一种维度黑客。沿着这个思路，还有更多：</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">跨域类比。</strong> 让模型用流体力学解释组织管理，用进化论分析软件架构。两个不相关的知识域被强制连接，激活了两个域之间通常沉默的维度。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">反直觉约束。</strong> 要求模型在回答技术问题时不许用任何技术术语。约束迫使模型在表征空间里寻找完全不同的路径来表达同一个概念。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">角色叠加。</strong> 不是让模型扮演一个角色，而是同时扮演两个矛盾的角色——一个乐观主义者和一个悲观主义者同时评估同一个方案。矛盾迫使模型在参数空间里同时激活对立的区域。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">格式错位。</strong> 用诗的格式写技术文档，用代码的结构写哲学论证。格式是模型的另一种先验，打破格式就是打破一层墙。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">每一种维度黑客的本质都一样：<strong style="font-weight:700;color:#111827;">构造一个合法但不在训练分布高密度区的输入，迫使模型激活沉默的参数维度。</strong></p>
+<h2 id="天花板上的裂缝" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">6.  天花板上的裂缝</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">回到这个系列的核心问题：硅基进化怎么突破认知边界？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">前几篇给出了几个方向——受控随机性、设计与筛选解耦、避免过度特化。维度黑客把这些抽象原则落地到了一个具体操作：<strong style="font-weight:700;color:#111827;">不改模型，改输入。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">模型的参数空间已经足够大——billion 维的空间里有足够多的未被探索的区域。问题不是空间不够，是我们一直在用常规输入把模型限制在一个角落里。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">维度黑客不是破解模型，是帮模型破解自己的牢笼。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">每一次非常规但合法的输入，都是在天花板上敲一条裂缝。</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/04/13/dimension-hacking/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/04/13/dimension-hacking/</a></p>
+    </section>
+  </main>
+</body>
+</html>

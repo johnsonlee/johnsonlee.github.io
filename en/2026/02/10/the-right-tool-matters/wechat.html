@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2026/02/10/the-right-tool-matters/">
+  <title>Once You&#39;ve Tasted the Best, There&#39;s No Going Back | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Once You&#39;ve Tasted the Best, There&#39;s No Going Back</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-02-10 · Johnson Lee · Independent Thinking</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">A few days ago I submitted a PR -- an MCP Server implementation. From design to coding to testing, it took about an hour. When my colleague saw the PR, he pinged me on Slack: "That's insanely fast! I've been studying MCP for days and still can't figure out how to wire up the transport."</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Curious, I walked over and glanced at his Windsurf. One look at the model config and I nearly lost it -- ChatGPT.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I said, buddy, you picked the wrong model. You should be using Opus 4.6 -- The Best AI in the world!</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">He looked confused and said ChatGPT was fine, wasn't it? I said, for casual chat, sure. But for engineering code -- especially anything involving protocol comprehension, contextual reasoning, and code architecture -- the gap is night and day. Claude understands the spec you feed it. It gets the JSON-RPC transport layer, the tool registration lifecycle, the edge cases in error handling all in one pass, and the generated code style is remarkably consistent with your existing codebase. No reformatting, no adapting.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">He switched models, skeptical. Tried it. Went silent for about five seconds. Then: "Holy shit."</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I just smiled.</p>
+<h2 id="Buddy-You-Picked-the-Wrong-Tool" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Buddy, You Picked the Wrong Tool</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">This reminded me of an earlier incident. Same guy came over with his laptop, saying he'd written a Spring Boot demo but couldn't get it running in VS Code -- kept getting dependency resolution errors.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I looked at his VS Code. Extensions everywhere -- Java, Kotlin, Spring, a rainbow of them. The <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">.gradle</code> file was drowning in red squiggles. The LSP diagnostics didn't match the source at all.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I said, buddy, you picked the wrong tool. IntelliJ IDEA is the best one for Spring projects.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">He said VS Code was supposed to be universal. I said VS Code is great for frontend and lightweight projects, but for heavyweight JVM projects like Spring, its Java support is fundamentally a patchwork of plugins. Gradle sync, dependency injection navigation, bean auto-discovery, Spring Boot auto-configuration hints -- IntelliJ supports all of this natively from the ground up. You can't patch that together with a handful of extensions.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">He installed IntelliJ. Same code. Opened and ran immediately. He went silent again.</p>
+<h2 id="Choice-Is-the-Biggest-Variable" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Choice Is the Biggest Variable</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">These two incidents seem unrelated, but they're the same problem at their core -- <strong style="font-weight:700;color:#111827;">choice</strong>.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">After all these years as an engineer, I'm increasingly convinced that a person's engineering productivity looks like a difference in technical skill on the surface, but is largely determined by the choices they make at key junctures. Which language, which framework, which tool, which model -- these choices seem small, but compounded over time they create orders-of-magnitude gaps.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">It's like someone who's gotten used to fine food -- going back to coarse meals is hard to swallow. That's not being spoiled. Your palate has been calibrated. You know what good tastes like, and you can no longer tolerate settling.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Someone who's used Claude Opus for engineering code will feel something is off when they go back to other models. Someone who's used IntelliJ for Spring will feel constrained going back to VS Code. It's not that the other tools are bad -- it's that you've seen better.</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">Once You've Tasted the Best, There's No Going Back</p>
+</blockquote>
+<h2 id="100" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">$100</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Later, chatting with a colleague, I asked: if everyone knows Claude is better, why do so many people still not use it? What's stopping them from making the better choice?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">He thought for a moment and gave me two words:</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">Hundred bucks.</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I got it immediately. If you're the kind of person who shares a streaming subscription to save money, asking you to pay $100/month for an AI tool feels like cutting off a piece of yourself.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I thought about it. He had a point -- $100 isn't cheap, especially for someone who hasn't experienced the productivity gap firsthand. The money looks like pure consumption. But flip it around: $100 for 10x efficiency -- is that really expensive?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">An MCP Server took me 1 hour. He spent days and was still stuck. Convert those days into billable hours, and it's way more than $100. Not to mention the frustration, the mental drain of trial and error, the panic as deadlines approach -- those hidden costs are the truly expensive ones.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">What stops us from making better choices usually isn't the cost of the choice itself, but how we perceive cost.</strong> We're naturally sensitive to visible expenses but numb to invisible losses. The $100 subscription is a real deduction from your account. But spending an extra two or three hours a day grinding with an inferior tool -- that's an invoice nobody bothers to calculate.</p>
+<h2 id="A-Good-Blade-Still-Needs-a-Good-Hand" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">A Good Blade Still Needs a Good Hand</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Of course, tools are still just tools. Even the best model needs a capable user to wield it. Claude delivers 10x results in my hands not just because it's smart enough, but because I know how to frame requirements for it, how to decompose tasks, how to review its output. Like a fine blade -- it still depends on who's holding it.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">So don't be stingy about investing in tools, and don't stop sharpening your craft of using them.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">But the prerequisite -- you have to get your hands on that blade first.</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2026/02/10/the-right-tool-matters/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2026/02/10/the-right-tool-matters/</a></p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2019/12/24/booster-roadmap-2020/">
+  <title>Booster 2020 Roadmap | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Booster 2020 Roadmap</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2019-12-24 · Johnson Lee · Computer Science / Open Source / Booster</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Booster was open-sourced on April 23, 2019. In less than half a year, it had already hit 2.3k stars -- honestly, that exceeded expectations and gave me endless motivation to keep improving it. I want Booster to solve real problems for people, not just be another open-source vanity project farming stars. Unfortunately, the second half of the year kept me busy with in-vehicle business, so I could only squeeze in the occasional weekend commit, handle PRs from Zhiguo, and find time to write about the ideas and implementation details behind Booster. If I'd had more time to dedicate, we'd probably be past 3k stars by now.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I've finally had the bandwidth to think about what Booster should tackle next year. Based on the feedback and information I've gathered, while Booster's core framework is quite stable, many optimization features have edge cases where they don't quite fit. The plan is to break features into finer-grained modules that better accommodate various scenarios -- truly plug-and-play, and actually pleasant to use.</p>
+<h2 id="Resources" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Resources</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Resource optimization delivers the most visible gains. Compared to bytecode or instruction-level optimization, resource optimization reduces package size faster and is relatively easier to implement. The plan is to split the current resource optimization into these modules:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">pngquant</em> compression for resources</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">pngquant</em> compression for assets</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">webp</em> compression for resources</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">webp</em> compression for assets</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Resource deduplication</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Assets deduplication</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Resource index inlining</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">ButterKnife</em> resource index inlining</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Due to <em style="font-style:italic;color:#1f2937;">pngquant</em>'s license, all pngquant-related modules will use a <em style="font-style:italic;color:#1f2937;">GPL License</em> separate from the <em style="font-style:italic;color:#1f2937;">Apache License</em>, with <em style="font-style:italic;color:#1f2937;">pngquant</em> bundled inside the <em style="font-style:italic;color:#1f2937;">JAR</em>.</p>
+<h2 id="Threading" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Threading</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Thread optimization is easy to trip over, so the plan is to separate thread renaming into its own module -- renaming alone is extremely valuable for APM sampling. This splits into two modules:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Thread renaming</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Thread pool optimization</li>
+</ol>
+<h2 id="Performance-Bottleneck-Detection" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Performance Bottleneck Detection</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Static analysis is the hardest part, which is why it's last -- let's knock out the easier wins first (just in case this one proves too tough). Booster's current performance bottleneck detection is fairly rudimentary, with poor support for <em style="font-style:italic;color:#1f2937;">Handler</em>, multithreading, interfaces, and other complex scenarios. The plan is to introduce <em style="font-style:italic;color:#1f2937;">IR</em> (Intermediate Representation) to address these limitations.</p>
+<h2 id="Functionality-as-a-Service" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Functionality as a Service</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Deploy performance analysis and detection capabilities server-side: upload an APK for analysis, then get a report covering:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Existing issues</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Optimization opportunities with expected gains</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">...</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">This feels like enough to keep us busy for a year (maybe more). If there are like-minded developers who want to contribute to the open-source community, that would be fantastic. If you're interested, drop a comment or reach out directly -- looking forward to more contributors joining the effort.</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2019/12/24/booster-roadmap-2020/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2019/12/24/booster-roadmap-2020/</a></p>
+    </section>
+  </main>
+</body>
+</html>

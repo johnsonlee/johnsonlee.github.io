@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2019/07/02/booster-prevent-system-from-crash/">
+  <title>Booster 为系统 bug 兜底 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Booster 为系统 bug 兜底</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2019-07-02 · Johnson Lee · Computer Science / Open Source / Booster</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">许多 Android 开发者可能经常遇到这样的情况：测试的时候好好的，一上线，各种系统的 crash 就报上来了，而且很多是偶现的，比如：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">WindowManager$BadTokenException</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Resources.NotFoundException</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">NullPointerException</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">SecurityException</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">IllegalArgumentException</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">RuntimeException</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">......</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">很多情况下，这些异常崩溃并不是由 APP 导致的，而且堆栈中也没有半点 APP 的影子，就拿 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">WindowManager$BadTokenException</code> 来说，一部分是 Android 7.1 的 bug，一部分可能是操作 Dialog 或者 Fragment 导致，如果是 APP 代码逻辑的问题，很容易就能在堆栈中发现，那如果是因为系统导致的崩溃，我们是不是就无能为力了呢？</p>
+<h2 id="修复系统-Bug" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  修复系统 Bug</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">还是拿 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">WindowManager$BadTokenException</code> 来举例子，如果是因为 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Toast</code> 导致的，很多人的第一反应就是自定义 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Toast</code>，当然，这完全能解决问题，但是 Booster 提供了另一种完全不一样的解决方案 —— 在构建期间将代码中所有对 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Toast.show(...)</code> 方法的调用指令替换为 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ShadowToast.show(Toast)</code>：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class ShadowToast {
+
+    /**
+     * Fix {@code WindowManager$BadTokenException} for Android N
+     *
+     * @param toast
+     *         The original toast
+     */
+    public static void show(final Toast toast) {
+        if (Build.VERSION.SDK_INT == 25) {
+            workaround(toast).show();
+        } else {
+            toast.show();
+        }
+    }
+
+    private static Toast workaround(final Toast toast) {
+        final Object tn = getFieldValue(toast, "mTN");
+        if (null == tn) {
+            Log.w(TAG, "Field mTN of " + toast + " is null");
+            return toast;
+        }
+
+        final Object handler = getFieldValue(tn, "mHandler");
+        if (handler instanceof Handler) {
+            if (setFieldValue(handler, "mCallback", new CaughtCallback((Handler) handler))) {
+                return toast;
+            }
+        }
+
+        final Object show = getFieldValue(tn, "mShow");
+        if (show instanceof Runnable) {
+            if (setFieldValue(tn, "mShow", new CaughtRunnable((Runnable) show))) {
+                return toast;
+            }
+        }
+
+        Log.w(TAG, "Neither field mHandler nor mShow of " + tn + " is accessible");
+        return toast;
+    }
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这样做的好处是，所有代码（包括依赖的第三方 Library）都会被替换，而且完全无不侵入，再也不用担心 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Toast</code> 会崩溃了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">除了 Toast 会导致 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">WindowManager$BadTokenException</code> 外，在 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Activity</code> 的生命周期回调中也经常出现，Booster 又有什么样的解决方案呢？—— 拦截 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ActivityThread</code>。</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class ActivityThreadHooker {
+
+    private volatile static boolean hooked;
+
+    public static void hook() {
+        if (hooked) {
+            return;
+        }
+
+        Object thread = null;
+        try {
+            thread = android.app.ActivityThread.currentActivityThread();
+        } catch (final Throwable t1) {
+            Log.w(TAG, "ActivityThread.currentActivityThread() is inaccessible", t1);
+            try {
+                thread = getStaticFieldValue(android.app.ActivityThread.class, "sCurrentActivityThread");
+            } catch (final Throwable t2) {
+                Log.w(TAG, "ActivityThread.sCurrentActivityThread is inaccessible", t1);
+            }
+        }
+
+        if (null == thread) {
+            Log.w(TAG, "ActivityThread instance is inaccessible");
+            return;
+        }
+
+        try {
+            final Handler handler = getHandler(thread);
+            if (null == handler || !(hooked = setFieldValue(handler, "mCallback", new ActivityThreadCallback(handler)))) {
+                Log.i(TAG, "Hook ActivityThread.mH.mCallback failed");
+            }
+        } catch (final Throwable t) {
+            Log.w(TAG, "Hook ActivityThread.mH.mCallback failed", t);
+        }
+        if(hooked) {
+            Log.i(TAG, "Hook ActivityThread.mH.mCallback success!");
+        }
+    }
+
+    private static Handler getHandler(final Object thread) {
+        Handler handler;
+
+        if (null != (handler = getFieldValue(thread, "mH"))) {
+            return handler;
+        }
+
+        if (null != (handler = invokeMethod(thread, "getHandler"))) {
+            return handler;
+        }
+
+        try {
+            if (null != (handler = getFieldValue(thread, Class.forName("android.app.ActivityThread$H")))) {
+                return handler;
+            }
+        } catch (final ClassNotFoundException e) {
+            Log.w(TAG, "Main thread handler is inaccessible", e);
+        }
+
+        return null;
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">有人可能会问，如果跟处理 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Toast</code> 的崩溃一样，直接用 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">try-catch</code> 大法这样粗暴的处理方式的话，那 APP 本身的 bug 是不是就不能及时发现了呢？—— 确实是这样！</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">正是基于这样的考虑，Booster 并不是简单粗暴的一起兜住，虽然这样做可以让崩溃率变得更好看，但是，APP 本身的问题也就被掩盖了，咱们可是对技术有追求的，这种掩耳盗铃的事情咱们怎么可能会干呢，那到底是如何甄别异常是由 APP 引起的呢？—— 堆栈信息</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">class ActivityThreadCallback implements Handler.Callback {
+
+    private static final String LOADED_APK_GET_ASSETS = "android.app.LoadedApk.getAssets";
+
+    private static final String ASSET_MANAGER_GET_RESOURCE_VALUE = "android.content.res.AssetManager.getResourceValue";
+
+    private static final String[] SYSTEM_PACKAGE_PREFIXES = {
+            "java.",
+            "android.",
+            "androidx.",
+            "dalvik.",
+            "com.android.",
+            ActivityThreadCallback.class.getPackage().getName() + "."
+    };
+
+    private final Handler mHandler;
+
+    public ActivityThreadCallback(final Handler handler) {
+        this.mHandler = handler;
+    }
+
+    @Override
+    public final boolean handleMessage(final Message msg) {
+        try {
+            this.mHandler.handleMessage(msg);
+        } catch (final NullPointerException e) {
+            if (hasStackTraceElement(e, ASSET_MANAGER_GET_RESOURCE_VALUE, LOADED_APK_GET_ASSETS)) {
+                abort(e);
+            }
+            rethrowIfNotCausedBySystem(e);
+        } catch (final SecurityException
+                | IllegalArgumentException
+                | AndroidRuntimeException
+                | WindowManager.BadTokenException e) {
+            rethrowIfNotCausedBySystem(e);
+        } catch (final Resources.NotFoundException e) {
+            rethrowIfNotCausedBySystem(e);
+            abort(e);
+        } catch (final RuntimeException e) {
+            final Throwable cause = e.getCause();
+            if (((Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.N) &amp;&amp; isCausedBy(cause, DeadSystemException.class))
+                    || (isCausedBy(cause, NullPointerException.class) &amp;&amp; hasStackTraceElement(e, LOADED_APK_GET_ASSETS))) {
+                abort(e);
+            }
+            rethrowIfNotCausedBySystem(e);
+        } catch (final Error e) {
+            rethrowIfNotCausedBySystem(e);
+            abort(e);
+        }
+
+        return true;
+    }
+
+    private static void rethrowIfNotCausedBySystem(final RuntimeException e) {
+        if (!isCausedBySystem(e)) {
+            throw e;
+        }
+    }
+
+    private static void rethrowIfNotCausedBySystem(final Error e) {
+        if (!isCausedBySystem(e)) {
+            throw e;
+        }
+    }
+
+    private static boolean isCausedBySystem(final Throwable t) {
+        if (null == t) {
+            return false;
+        }
+
+        for (Throwable cause = t; null != cause; cause = cause.getCause()) {
+            for (final StackTraceElement element : cause.getStackTrace()) {
+                if (!isSystemStackTrace(element)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private static boolean isSystemStackTrace(final StackTraceElement element) {
+        final String name = element.getClassName();
+        for (final String prefix : SYSTEM_PACKAGE_PREFIXES) {
+            if (name.startsWith(prefix)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean hasStackTraceElement(final Throwable t, final String... traces) {
+        return hasStackTraceElement(t, new HashSet&lt;&gt;(Arrays.asList(traces)));
+    }
+
+    private static boolean hasStackTraceElement(final Throwable t, final Set&lt;String&gt; traces) {
+        if (null == t || null == traces || traces.isEmpty()) {
+            return false;
+        }
+
+        for (final StackTraceElement element : t.getStackTrace()) {
+            if (traces.contains(element.getClassName() + "." + element.getMethodName())) {
+                return true;
+            }
+        }
+
+        return hasStackTraceElement(t.getCause(), traces);
+    }
+
+    @SafeVarargs
+    private static boolean isCausedBy(final Throwable t, final Class&lt;? extends Throwable&gt;... causes) {
+        return isCausedBy(t, new HashSet&lt;&gt;(Arrays.asList(causes)));
+    }
+
+    private static boolean isCausedBy(final Throwable t, final Set&lt;Class&lt;? extends Throwable&gt;&gt; causes) {
+        if (null == t) {
+            return false;
+        }
+
+        if (causes.contains(t.getClass())) {
+            return true;
+        }
+
+        return isCausedBy(t.getCause(), causes);
+    }
+
+    private static void abort(final Throwable t) {
+        final int pid = Process.myPid();
+        final String msg = "Process " + pid + " is going to be killed";
+
+        if (null != t) {
+            Log.w(TAG, msg, t);
+        } else {
+            Log.w(TAG, msg);
+        }
+
+        Process.killProcess(pid);
+        System.exit(10);
+    }
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">以上的异常处理中，包含了有很多细节的问题，比如：Android N 以上的版本在 APP 升级后首次启动找不到 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">AssetManager</code> 等等。所以针对这些异常的处理办法就是 —— 不是系统导致的，通通抛出去，这样，APP 自身的 bug 就能在第一时间被发现了。</p>
+<h2 id="副作用" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  副作用</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在拦截 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ActivityThread</code> 后，将非系统异常抛出去虽然对于崩溃率来说收益明显，但是给 APM 系统做异常聚合带来了一些麻烦，因为很多 APM 系统的聚合算法也是根据堆栈来聚合的，不巧的是，这些被抛出来的异常最终都会被聚合到 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ActivityThreadCallback</code> 中。</p>
+<h2 id="总结" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  总结</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">以上的这些解决方案，在 Booster 框架中都提供了现成的模块：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://github.com/didi/booster/blob/master/booster-transform-finalizer-watchdog-daemon" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-transform-finalizer-watchdog-daemon</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://github.com/didi/booster/blob/master/booster-transform-media-player" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-transform-media-player</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://github.com/didi/booster/blob/master/booster-transform-res-check" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-transform-res-check</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://github.com/didi/booster/blob/master/booster-transform-toast" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-transform-toast</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://github.com/didi/booster/blob/master/booster-transform-activity-thread" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-transform-activity-thread</a></li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">关于如何集成，请参见：<a href="https://github.com/didi/booster#system-bug%E3%80%82" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://github.com/didi/booster#system-bug。</a></p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2019/07/02/booster-prevent-system-from-crash/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2019/07/02/booster-prevent-system-from-crash/</a></p>
+    </section>
+  </main>
+</body>
+</html>

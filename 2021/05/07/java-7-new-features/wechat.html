@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2021/05/07/java-7-new-features/">
+  <title>Java 7 新特性 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Java 7 新特性</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2021-05-07 · Johnson Lee · Computer Science / Java</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Java 7 代号 <em style="font-style:italic;color:#1f2937;">Dolphin</em> 是一个重大的更新，于 2011 年 7 月 7 日亮相，并在 2011 年7 月 28 日开放给开发者使用。开发周期被分类成十三个重要阶段，最后一个阶段在 2011 年 6 月 6 日完成。平均来看，每个里程碑各有 8 个版本（主要包括功能增强和漏洞修复）。</p>
+<h2 id="String-in-switch-Statement" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  String in switch Statement</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在其它语言中早已支持的特性，在 Java 7 姗姗来迟，无论怎么样，在 switch-case 中使用 String 让代码简洁了许多。这一特性其实是通过 String 的 hashCode() 实现 switch-case，如下面这段代码：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public static int getDayOfWeek(String dayOfWeek) {
+    switch (dayOfWeek) {
+        case "Monday": return 1;
+        case "Tuesday": return 2;
+        case "Wednesday": return 3;
+        case "Thursday": return 4;
+        case "Friday": return 5;
+        case "Saturday": return 6;
+        case "Sunday": return 0;
+        default: throw new IllegalArgumentException("Invalid day of the week: " + dayOfWeekArg);
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">生成的字节码如下：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public static int getDayOfWeek(java.lang.String);
+    descriptor: (Ljava/lang/String;)I
+    flags: ACC_PUBLIC, ACC_STATIC
+    Code:
+      stack=4, locals=3, args_size=1
+         0: aload_0
+         1: astore_1
+         2: iconst_m1
+         3: istore_2
+         4: aload_1
+         5: invokevirtual #2                  // Method java/lang/String.hashCode:()I
+         8: lookupswitch  { // 7
+             -2049557543: 146
+             -1984635600: 76
+             -1807319568: 160
+              -897468618: 104
+               687309357: 90
+              1636699642: 118
+              2112549247: 132
+                 default: 172
+            }
+        76: aload_1
+        77: ldc           #3                  // String Monday
+        79: invokevirtual #4                  // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+        82: ifeq          172
+        85: iconst_0
+        86: istore_2
+        87: goto          172
+        90: aload_1
+        91: ldc           #5                  // String Tuesday
+        93: invokevirtual #4                  // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+        96: ifeq          172
+        99: iconst_1
+       100: istore_2
+       101: goto          172
+       104: aload_1
+       105: ldc           #6                  // String Wednesday
+       107: invokevirtual #4                  // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       110: ifeq          172
+       113: iconst_2
+       114: istore_2
+       115: goto          172
+       118: aload_1
+       119: ldc           #7                  // String Thursday
+       121: invokevirtual #4                  // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       124: ifeq          172
+       127: iconst_3
+       128: istore_2
+       129: goto          172
+       132: aload_1
+       133: ldc           #8                  // String Friday
+       135: invokevirtual #4                  // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       138: ifeq          172
+       141: iconst_4
+       142: istore_2
+       143: goto          172
+       146: aload_1
+       147: ldc           #9                  // String Saturday
+       149: invokevirtual #4                  // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       152: ifeq          172
+       155: iconst_5
+       156: istore_2
+       157: goto          172
+       160: aload_1
+       161: ldc           #10                 // String Sunday
+       163: invokevirtual #4                  // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       166: ifeq          172
+       169: bipush        6
+       171: istore_2
+       172: iload_2
+       173: tableswitch   { // 0 to 6
+                       0: 216
+                       1: 218
+                       2: 220
+                       3: 222
+                       4: 224
+                       5: 226
+                       6: 229
+                 default: 231
+            }
+       216: iconst_1
+       217: ireturn
+       218: iconst_2
+       219: ireturn
+       220: iconst_3
+       221: ireturn
+       222: iconst_4
+       223: ireturn
+       224: iconst_5
+       225: ireturn
+       226: bipush        6
+       228: ireturn
+       229: iconst_0
+       230: ireturn
+       231: new           #11                 // class java/lang/IllegalArgumentException
+       234: dup
+       235: new           #12                 // class java/lang/StringBuilder
+       238: dup
+       239: invokespecial #13                 // Method java/lang/StringBuilder."&lt;init&gt;":()V
+       242: ldc           #14                 // String Invalid day of the week:
+       244: invokevirtual #15                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       247: aload_0
+       248: invokevirtual #15                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       251: invokevirtual #16                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+       254: invokespecial #17                 // Method java/lang/IllegalArgumentException."&lt;init&gt;":(Ljava/lang/String;)V
+       257: athrow</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">不难看出实现的原理其实是：<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">lookuptable</code> + <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">String.equals(Object)</code> + <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">tableswitch</code></p>
+<h2 id="Type-Inference-for-Generic-Instance-Creation" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  Type Inference for Generic Instance Creation</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在 Java 7 之前，范型类的实例化时，都必须要带上类型参数，否则编译器会报 unchecked conversion warning，如在 Java 7 之前：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">ArrayList&lt;String&gt; list = new ArrayList&lt;String&gt;();</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">从 Java 7 开始，范型的类型参数要以省略了：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">ArrayList&lt;String&gt; list = new ArrayList&lt;&gt;();</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在 Java 7 中，为 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">&lt;&gt;</code> 这个符号取了一个好听的名字 -- <em style="font-style:italic;color:#1f2937;">Diamond</em></p>
+<h2 id="Multiple-Exception-Handling" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  Multiple Exception Handling</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Java 7 引入另一个简化语法的功能便是多异常处理，在 Java 7 之前，<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">try-catch</code> 块中，一个 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">catch</code> 块一次只能捕获一个异常，像 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">java.lang.reflect.**</code> 包下的 API，会抛出一系列异常，有了这一特性，一个 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">catch</code> 块就能处理所有的异常了，例如：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">try {
+    Class&lt;?&gt; clazz = Class.forName("com.example.Main");
+    Method method = clazz.getMethod("main", String[].class);
+    method.invoke(clazz, new String[] {});
+} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+    e.printStackTrace();
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">除了能处理多个异常外，Java 7 对于异常重抛也做了更多包容性类型检查，例如，在 Java 7 之前：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">static class FirstException extends Exception { }
+static class SecondException extends Exception { }
+
+public void rethrowException(String exceptionName) throws Exception {
+    try {
+        if (exceptionName.equals("First")) {
+            throw new FirstException();
+        } else {
+            throw new SecondException();
+        }
+    } catch (Exception e) {
+        throw e;
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">然而，在 Java 7 中，可以通过指定抛出的异常类型为 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">FirstException</code> 和 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">SecondException</code>，即使 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">catch</code> 块中是 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Exception</code> 类型，编译器也能够判断出是抛 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">FirstException</code> 还是 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">SecondException</code>，例如：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public void rethrowException(String exceptionName) throws FirstException, SecondException {
+    try {
+          // ...
+    } catch (Exception e) {
+        throw e;
+    }
+}</code></pre>
+
+<h2 id="Support-for-Dynamic-Language" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  Support for Dynamic Language</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">众所周知，Java 语言是静态类型语言，一旦程序被编译完成，程序中的一切类型信息都将确定下来，静态类型对于程序的运行速度来说，优势是显而易见的，但是，在 Java 7 之前想要支持其它动态语言在 JVM 之上高效的运行却很困难，像 <em style="font-style:italic;color:#1f2937;">JavaScript</em> ，<em style="font-style:italic;color:#1f2937;">Ruby</em> 等。因此，Java 7 引入了 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">invokedynamic</code> 指令，将 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">invokedynamic</code> 的调用站点通过一个 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">bootstrap</code> 方法来链接到另一个方法，如下面的例子所示：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">def addtwo(a, b)
+    a + b;
+end</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">+</code> 即为 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">invokedynamic</code> 的调用站点，当编译器发出 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">invokedynamic</code> 指令调用 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">+</code> 时，运行时系统知道有 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">adder(Integer, Integer)</code> 这个方法，便链接 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">invokedynamic</code> 的调用站点到 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">adder</code> 方法上：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">class IntegerOps {
+    public static Integer adder(Integer x, Integer y) {
+        return x + y;
+    }
+}
+
+class Example {
+    public static CallSite mybsm(MethodHandles.Lookup callerClass, String dynMethodName, MethodType dynMethodType) throws Throwable {
+        MethodHandle mh = callerClass.findStatic(Example.class, "IntegerOps.adder", MethodType.methodType(Integer.class, Integer.class, Integer.class));
+
+        if (!dynMethodType.equals(mh.type())) {
+            mh = mh.asType(dynMethodType);
+        }
+
+        return new ConstantCallSite(mh);
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在上面的例子中，<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">IntegerOps</code> 属于动态语言运行系统时附带的库。</p>
+<h2 id="Try-with-Resources" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  Try with Resources</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">try-with-resources</code> 是一个非常实用的特性，特别是 I/O 操作，如在 Java 7 之前，需要主动关闭流：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">static String readFirstLineFromFileWithFinallyBlock(String path) throws IOException {
+    BufferedReader br = new BufferedReader(new FileReader(path));
+    try {
+        return br.readLine();
+    } finally {
+        if (br != null) {
+            br.close();
+        }
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">而在 Java 7 中，可以变得更简洁：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">static String readFirstLineFromFile(String path) throws IOException {
+      try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+        return br.readLine();
+      }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">当然，它唯一的缺点是 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">try</code> 不支持表达式或变量。</p>
+<h2 id="New-I-O" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">6.  New I/O</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Java 7 引入的 New I/O API 亦称 NIO.2 或 AIO（Asynchronous I/O），NIO.2 的更新主要包括：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">File System API<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">java.nio.file.*</em></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">java.nio.file.attribute.*</em></li>
+</ul>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Channels API<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Socket Channel API<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Multicast</li>
+</ul>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Asynchronous I/O<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Future style API</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Callback style API</li>
+</ul>
+</li>
+</ul>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Miscellaneous<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Infinibind (IB) Sockets Direct Protocol (SDP)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Stream Control Transport Protocol (SCTP)</li>
+</ul>
+</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">想要深入了解，请参见：<a href="https://docs.oracle.com/javase/tutorial/essential/io/fileio.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Java Tutorials: Java NIO.2</a></p>
+<h2 id="Binary-Literals" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">7.  Binary Literals</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">Binary Literals</em> 也是一个比较实用特性，在 Java 7 之前，表示二进制只能通过十六进制来实现，而在 Java 7 中可以直接使用二进制（以 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">0b</code> 或者 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">0B</code> 作为前缀），如：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">// An 8-bit 'byte' value:
+byte aByte = (byte)0b00100001;
+
+// A 16-bit 'short' value:
+short aShort = (short)0b1010000101000101;
+
+// Some 32-bit 'int' values:
+int anInt1 = 0b10100001010001011010000101000101;
+int anInt2 = 0b101;
+int anInt3 = 0B101; // The B can be upper or lower case.
+
+// A 64-bit 'long' value. Note the "L" suffix:
+long aLong = 0b1010000101000101101000010100010110100001010001011010000101000101L;</code></pre>
+
+<h3 id="Underscore-in-Number-Literals" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">7.1.  Underscore in Number Literals</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个特性感觉有点鸡肋，可能是为了使长数字具有更好的辨识度，如：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">long creditCardNumber = 1234_5678_9012_3456L;
+long socialSecurityNumber = 999_99_9999L;
+float pi = 	3.14_15F;
+long hexBytes = 0xFF_EC_DE_5E;
+long hexWords = 0xCAFE_BABE;
+long maxLong = 0x7fff_ffff_ffff_ffffL;
+byte nybbles = 0b0010_0101;
+long bytes = 0b11010010_01101001_10010100_10010010;</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">值得注意的是，下划线只能位于数字之间，而不能位于数字的首尾以及小数点两边，如：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">float pi1 = 3_.1415F;      // Invalid; cannot put underscores adjacent to a decimal point
+float pi2 = 3._1415F;      // Invalid; cannot put underscores adjacent to a decimal point
+long socialSecurityNumber1
+  = 999_99_9999_L;         // Invalid; cannot put underscores prior to an L suffix
+
+int x1 = _52;              // This is an identifier, not a numeric literal
+int x2 = 5_2;              // OK (decimal literal)
+int x3 = 52_;              // Invalid; cannot put underscores at the end of a literal
+int x4 = 5_______2;        // OK (decimal literal)
+
+int x5 = 0_x52;            // Invalid; cannot put underscores in the 0x radix prefix
+int x6 = 0x_52;            // Invalid; cannot put underscores at the beginning of a number
+int x7 = 0x5_2;            // OK (hexadecimal literal)
+int x8 = 0x52_;            // Invalid; cannot put underscores at the end of a number
+
+int x9 = 0_52;             // OK (octal literal)
+int x10 = 05_2;            // OK (octal literal)
+int x11 = 052_;            // Invalid; cannot put underscores at the end of a number</code></pre>
+
+<h2 id="Improved-Compiler-Warnings-and-Errors" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">8.  Improved Compiler Warnings and Errors</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Java 7 针对编译器警告和错误主要包括以下几个方面：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Heap Pollution</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Variable Arguments Methods and Non-Reifiable Formal Parameters </li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Potential Vulnerabilities of Varargs Methods with Non-Reifiable Formal Parameters</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Suppressing Warnings from Varargs Methods with Non-Reifiable Formal Parameters</li>
+</ul>
+<h2 id="Fork-Join-Framework" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">9.  Fork/Join Framework</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Java 7 引入的 <em style="font-style:italic;color:#1f2937;">fork/join</em> 框架是 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ExecutorService</code> 接口的一种实现，它充分利用了多核的优势，它被设计用于执行能拆分的任务，利用一切可用的处理能力来提升应用的性能。<em style="font-style:italic;color:#1f2937;">fork/join</em> 框架的核心是 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ForkJoinPool.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">ForkJoinPool</a>，它派生自 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">AbstractExecutorService</code>，并实现了 <em style="font-style:italic;color:#1f2937;">work-stealing</em> 核心算法。使用方式参考下面的例子：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class ForkBlur extends RecursiveAction {
+	protected static int sThreshold = 100000;
+
+    private int[] mSource;
+    private int mStart;
+    private int mLength;
+    private int[] mDestination;
+
+    // Processing window size; should be odd.
+    private int mBlurWidth = 15;
+
+    public ForkBlur(int[] src, int start, int length, int[] dst) {
+        mSource = src;
+        mStart = start;
+        mLength = length;
+        mDestination = dst;
+    }
+
+    protected void computeDirectly() {
+        int sidePixels = (mBlurWidth - 1) / 2;
+        for (int index = mStart; index &lt; mStart + mLength; index++) {
+            // Calculate average.
+            float rt = 0, gt = 0, bt = 0;
+            for (int mi = -sidePixels; mi &lt;= sidePixels; mi++) {
+                int mindex = Math.min(Math.max(mi + index, 0), mSource.length - 1);
+                int pixel = mSource[mindex];
+                rt += (float)((pixel &amp; 0x00ff0000) &gt;&gt; 16) / mBlurWidth;
+                gt += (float)((pixel &amp; 0x0000ff00) &gt;&gt;  8) / mBlurWidth;
+                bt += (float)((pixel &amp; 0x000000ff) &gt;&gt;  0) / mBlurWidth;
+            }
+
+            // Reassemble destination pixel.
+            int dpixel = (0xff000000) | (((int)rt) &lt;&lt; 16) | (((int)gt) &lt;&lt; 8) | ((int)bt);
+            mDestination[index] = dpixel;
+        }
+    }
+
+    protected void compute() {
+        if (mLength &lt; sThreshold) {
+            computeDirectly();
+            return;
+        }
+
+        int split = mLength / 2;
+        invokeAll(new ForkBlur(mSource, mStart, split, mDestination),
+                  new ForkBlur(mSource, mStart + split, mLength - split, mDestination));
+    }
+}
+
+public class Example {
+    public static void main(String[] args) {
+        ForkBlur fb = new ForkBlur(src, 0, src.length, dst);
+        ForkJoinPool pool = new ForkJoinPool();
+        pool.invoke(fb);
+    }
+}</code></pre>
+
+<h2 id="Garbage-First-Collector-G1" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">10.  Garbage-First Collector (G1)</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">直到 <em style="font-style:italic;color:#1f2937;">Oracle JDK 7 update 4</em> 版本才完全支持 G1 垃圾回收器，G1 主要应用于多核、堆内存较大的服务器的垃圾回收。G1 的实现原理是将堆内存划分成一系列大小相同的相邻的堆区域，然后执行并发全局标记阶段以确定整个堆中对象的活跃度，当标记阶段完成后，G1 便知道哪个区域空得多，就优先收集这些区域，这样会释放大量的空间，这也是其名字的由来。顾名思义， G1将其收集和压缩活动集中在堆中可能充满可回收对象的区域，即垃圾。 G1使用暂停预测模型来满足用户定义的暂停时间目标，并根据指定的暂停时间目标选择要收集的区域数。</p>
+<h2 id="PermGen-Removal" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">11.  PermGen Removal</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">从 Java 7 开始，有一部分驻留在永生代的数据被移到了 Java 堆或 Native 堆中：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">符号表移到了本地堆中</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Interned String 移到了 Java 堆中</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">类的静态成员移到了 Java 堆中</li>
+</ul>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">更多详情，请参考：<a href="https://www.oracle.com/java/technologies/javase/jdk7-relnotes.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://www.oracle.com/java/technologies/javase/jdk7-relnotes.html</a></p>
+</blockquote>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2021/05/07/java-7-new-features/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2021/05/07/java-7-new-features/</a></p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2020/10/28/against-dsl/">
+  <title>A Strong Case Against DSL | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">A Strong Case Against DSL</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2020-10-28 · Johnson Lee · Computer Science / Architecture Design</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I've been working on a plugin for testing Gradle plugins -- <a href="https://github.com/bootstage/testkit-gradle-plugin" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">bootstage/testkit-gradle-plugin</a>. Since running unit tests for a Gradle plugin requires using Gradle's <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">plugins</code> DSL to apply the plugin, I reluctantly followed Gradle's officially recommended best practices. And promptly fell into a pit.</p>
+<h2 id="Gradle-Plugin-Portal" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Gradle Plugin Portal</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Gradle has a <a href="https://plugins.gradle.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Gradle Plugin Portal</a>, similar to an App Store. Developers can publish Gradle plugins directly through <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">java-gradle-plugin</code>, making them searchable by keyword. Great idea in theory, but in practice I gave up on it. It was neither mature nor stable. The first version, <a href="https://plugins.gradle.org/plugin/io.bootstage.testkit" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">testkit-gradle-plugin v0.1.0</a>, was published successfully. But when publishing <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">1.0.0</code>, a network timeout caused the publish to fail. When I tried again, it reported that version <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">1.0.0</code> already existed.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I'd long been frustrated with Sonatype's slow console loading and had considered switching to another Maven hosting service. I tried <a href="https://bintray.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">bintray</a>, struggled for a while, and failed to publish. After being burned repeatedly, I finally appreciated Sonatype and went back to publishing there. Using the standard <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">publishing</code> configuration:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">publishing {
+    repositories {
+        maven {
+            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+        }
+    }
+    publications {
+        create&lt;MavenPublication&gt;("mavenJava") {
+            groupId = "${project.group}"
+            artifactId = project.name
+            version = "${project.version}"
+
+            from(components["java"])
+
+            artifact(sourcesJar.get())
+            artifact(generateJavadoc.get())
+
+            pom {
+                ...
+            }
+        }
+    }
+}
+
+signing {
+    sign(publishing.publications["mavenJava"])
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I tested with <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">publishToMavenLocal</code> -- no issues. Then I published to Sonatype. Sonatype's POM signature verification failed with: <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">BAD Signature</code>. I downloaded the uploaded POM and POM.asc files and verified locally with GPG:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">gpg --verify ~/Downloads/testkit-gradle-plugin-1.0.0.pom.asc</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Sure enough:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">gpg: BAD signature from "Johnson Lee &lt;g.johnsonlee@gmail.com&gt;" [ultimate]</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Opening the POM file revealed that all my custom POM properties were missing -- overwritten. After commenting out the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">java-gradle-plugin</code> plugin, the POM was fine, but the published plugin no longer supported the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">plugins</code> DSL. I filed an issue with the Gradle team: <a href="https://github.com/gradle/gradle/issues/14993" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://github.com/gradle/gradle/issues/14993</a>. They responded the next day: turns out <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">java-gradle-plugin</code> auto-generates a <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Publication</code>, so the standard configuration approach doesn't work. You need to use the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Publication</code> generated by <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">java-gradle-plugin</code>. Updated config:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">publishing {
+    repositories {
+        maven {
+            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+        }
+    }
+    publications {
+        withType&lt;MavenPublication&gt;().configureEach {
+            groupId = "${project.group}"
+            artifactId = project.name
+            version = "${project.version}"
+
+            artifact(sourcesJar.get())
+            artifact(javadocJar.get())
+
+            pom {
+                ...
+            }
+
+            signing {
+                sign(this@configureEach)
+            }
+        }
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Published locally -- worked. Custom POM properties all present. Published to Sonatype again. Another error:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">Invalid POM: /io/bootstage/testkit/io.bootstage.testkit.gradle.plugin/1.2.0/io.bootstage.testkit.gradle.plugin-1.2.0.pom: Project name missing, Project description missing</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Opened the local POM: the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">io.bootstage.testkit.gradle.plugin</code> generated by <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">java-gradle-plugin</code> indeed had no <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">name</code> or <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">description</code>. Then I remembered <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">java-gradle-plugin</code>'s <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">gradlePlugin</code> DSL. Checked the API, found <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">displayName</code> and <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">description</code>. Tried it as a Hail Mary:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">gradlePlugin {
+    plugins {
+        create("testkitPlugin") {
+            id = "io.bootstage.testkit"
+            displayName = "${id}.gradle.plugin"
+            description = project.description
+            implementationClass = "io.bootstage.testkit.gradle.TestKitPlugin"
+        }
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Finally, a complete plugin published. Exhausting. Gradle has been brutal lately.</p>
+<h2 id="DSL" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">DSL</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">When writing Gradle scripts, every plugin you integrate requires some DSL configuration. But how is a user supposed to know what DSL each plugin provides? Do I need to read the entire API doc just to add a few lines of config?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">And when things get complex -- when plugins need to interact -- figuring out the DSL becomes pure guesswork. Take the conflict between <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">java-gradle-plugin</code> and <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">maven-publish</code> above. Unless you're on the Gradle team or have hit the exact same problem before, there's no way to know the solution without reading the source code.</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">I just want to write a config script!</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Having to dig through source code just to add a few lines of configuration? I'd rather give up. This is exactly why <a href="https://github.com/didi/booster" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Booster</a> has never supported DSL from the start. There's simply no need. If something can be done in one line of code, never use two. How to minimize onboarding cost should be every developer's concern.</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2020/10/28/against-dsl/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2020/10/28/against-dsl/</a></p>
+    </section>
+  </main>
+</body>
+</html>

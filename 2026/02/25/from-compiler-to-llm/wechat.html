@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/02/25/from-compiler-to-llm/">
+  <title>从编译器到 LLM：软件分层的轮回 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">从编译器到 LLM：软件分层的轮回</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-02-25 · Johnson Lee · Independent Thinking</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">同样是调用 Claude API 写代码，Cursor 做成了估值百亿的产品，而无数“套壳”应用悄无声息地死掉了。区别在哪？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个问题让我想到一个更古老的类比。</p>
+
+
+<h2 id="一个老故事的新版本" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  一个老故事的新版本</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">传统软件工程有一条清晰的分界线：<strong style="font-weight:700;color:#111827;">一边是造工具的人，一边是用工具的人。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">造工具的人写编译器、写运行时、写操作系统 — GCC、JVM、LLVM、Linux。用工具的人拿着这些东西去构建业务软件 — Word、Photoshop、淘宝。两拨人需要的能力完全不同，职业路径几乎不重叠，各自形成了独立的生态。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这条分界线稳定了几十年。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">现在，AI 时代正在重新画这条线。一边是训练基础模型的人 — OpenAI、Anthropic、Google、Meta，他们做的事是预训练、RLHF、推理优化，需要的是大规模分布式训练、数据工程和对齐研究。另一边是拿模型做产品的人 — Cursor、Perplexity、Harvey，他们需要的是 Prompt Engineering、RAG、工具编排和产品设计。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">两拨人，两种能力，两条路径。历史在重演。</p>
+<h2 id="但这次不太一样" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  但这次不太一样</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">类比成立，差异更值得注意。</p>
+<h3 id="接口不再是确定性的" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.1.  接口不再是确定性的</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">编译器的行为是确定性的。同样的源码，同样的编译选项，输出永远一致。你可以对编译器的行为建立完整的心智模型，写测试、做断言、算复杂度。整个软件工程的方法论 — 单元测试、CI/CD、类型系统 — 都建立在这种确定性之上。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">LLM 的“接口”是概率性的。同样的 Prompt，不同的温度参数，甚至同样的参数，输出都可能不同。你没法对一个概率性的系统做传统意义上的断言。<strong style="font-weight:700;color:#111827;">这不是一个工程上可以绕过去的细节，而是改变了“开发”这件事的本质。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">当你的基础设施是概率性的，应用层的工程就不再只是写逻辑和调接口，而是要处理不确定性 — 验证、兜底、重试、约束。这让 AI 应用开发更像是在跟一个聪明但不完全可靠的同事协作，而不是在调用一个有明确契约的 API。</p>
+<h3 id="抽象层迭代得太快" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.2.  抽象层迭代得太快</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">C++ 标准几年出一版，JVM 向后兼容了几十年。你 2005 年学的 Java 知识，2025 年大部分还能用。编译器和语言标准的稳定性，给了应用层充足的时间去积累 — 积累代码、积累最佳实践、积累工程师的经验。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">基础模型几个月一个代际。上一代做不到的事，下一代突然就能做了。你花三个月搭的复杂 Prompt Chain，可能在模型升级后变得完全不必要。你精心设计的 RAG Pipeline，可能被更长的 Context Window 直接淘汰。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">应用层的护城河比传统软件浅得多。</strong> 不是因为应用层的人不够聪明，而是地基在以前所未有的速度移动。</p>
+<h3 id="边界在双向渗透" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.3.  边界在双向渗透</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">传统时代，你不会期望 GCC 帮你写一个 Web 应用。编译器就是编译器，它不越界。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但 LLM 天然具备“应用能力”。Claude 裸用就能帮你分析财报、写代码、做翻译。它不需要一个外壳才能工作。这有点像如果 JVM 自己就能理解用户需求、生成运行结果并直接交付 — 那“应用层”的存在意义就被大大压缩了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">所以我们看到一个有趣的现象：基础模型公司在向上做应用（ChatGPT、Claude.ai），应用公司在向下做模型微调。<strong style="font-weight:700;color:#111827;">边界不是在固化，而是在溶解。</strong></p>
+<h2 id="AI-应用的护城河在哪" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  AI 应用的护城河在哪</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">既然地基不稳、边界模糊，“套壳”当然活不下去。但 Cursor 活下来了，Perplexity 活下来了。它们做对了什么？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">答案不在单一维度上，而是四层深度的组合。</p>
+<h3 id="上下文工程" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">3.1.  上下文工程</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">LLM 是通用的，但用户的问题是具体的。<strong style="font-weight:700;color:#111827;">谁能给模型提供更精准的上下文，谁的产品就更好用。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Cursor 做的第一件事不是写更好的 Prompt，而是做 Codebase Indexing — 让模型理解你的整个项目。这是一个纯粹的工程问题：怎么高效地索引代码、怎么选择相关的上下文、怎么在 Token 限制内塞进最有用的信息。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这件事模型厂商不会帮你做，因为他们不知道你的用户在做什么项目。</p>
+<h3 id="工作流编排" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">3.2.  工作流编排</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">好的 AI 应用不是让用户改变习惯去适应 AI，而是把 AI 嵌入用户已有的工作流。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">还是以 Cursor 为例 — 它没有发明一种新的编程方式，而是在 VS Code 的基础上加了 AI。你还是在写代码、看 Diff、跑测试，只是有些环节 AI 帮你做了。<strong style="font-weight:700;color:#111827;">最好的 AI 应用是隐形的。</strong></p>
+<h3 id="输出约束与验证" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">3.3.  输出约束与验证</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">LLM 会犯错。在聊天窗口里犯错，用户可以自己判断。但嵌入到工作流里犯错，后果可能很严重 — 生成了有 Bug 的代码、给了错误的法律建议、算错了财务数据。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">应用层要对 LLM 的输出做约束和验证 — 类型检查、格式校验、业务规则兜底、人工确认节点。<strong style="font-weight:700;color:#111827;">这是传统软件工程经验最直接的用武之地。</strong></p>
+<h3 id="领域知识注入" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">3.4.  领域知识注入</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">通用模型什么都知道一点，但在专业领域不够深。Harvey 之所以能在法律领域站住脚，是因为它注入了律所真正需要的东西：具体的法律实务流程、合规约束、文档格式规范。这些知识不在模型的预训练数据里，或者在但不够精确。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">领域知识是最传统也最持久的护城河。</strong> 模型会升级，但你对一个行业的理解不会因此贬值。</p>
+<h2 id="被忽视的中间层" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  被忽视的中间层</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">回到开头的分层类比。传统时代不是只有“编译器”和“应用”两层。中间还有一层至关重要的东西 — 运行时、框架、构建工具、包管理器。JVM、Spring、Gradle、Maven。这一层不直接面对用户，但没有它，应用层就无法高效运转。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">AI 时代也在长出自己的中间层：Agent 框架、MCP（Model Context Protocol）、工具调用协议、Prompt 管理系统、评估框架。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这一层做的事情，本质上和传统的运行时与构建工具一样 — <strong style="font-weight:700;color:#111827;">在不确定的基础设施和确定性的工程需求之间架桥。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">LLM 的输出需要被验证、被约束、被路由到正确的工具、被集成到已有的系统中。这些都不是模型本身做的事，也不是最终应用关心的细节。它需要一个中间层来处理。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">有意思的是，传统软件工程里做过编译器、做过静态分析、做过字节码操作的人，在这一层有天然的优势。因为核心问题是一样的：<strong style="font-weight:700;color:#111827;">理解一个系统的输入和输出，在中间施加约束和变换，确保最终结果符合预期。</strong> 只不过过去约束的是字节码，现在约束的是 Token。</p>
+<h2 id="轮回与新生" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  轮回与新生</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">软件工程每隔一段时间就会经历一次分层重构。从汇编到高级语言，从桌面到 Web，从单体到微服务 — 每次重构都会重新划定“谁造工具、谁用工具”的边界。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">AI 是最新的一次。分层的逻辑没变，但具体的形态变了：接口从确定性变成概率性，迭代速度从年变成月，边界从清晰变成模糊。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在这样的格局下，最有价值的位置可能不在两端 — 不是训练更大的模型，也不是做更花哨的应用 — 而是在中间：<strong style="font-weight:700;color:#111827;">在概率性的智能和确定性的工程之间，建造桥梁的人。</strong></p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/02/25/from-compiler-to-llm/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/02/25/from-compiler-to-llm/</a></p>
+    </section>
+  </main>
+</body>
+</html>

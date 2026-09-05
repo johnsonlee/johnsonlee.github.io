@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2021/10/06/integrate-gradle-plugin-and-library-into-one-project/">
+  <title>如何让 Gradle Plugin 与 Library 共存 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">如何让 Gradle Plugin 与 Library 共存</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2021-10-06 · Johnson Lee · Computer Science / Gradle</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">当开发一个 <strong style="font-weight:700;color:#111827;">Android Library</strong> 时，如果还同时还要提供相应的 __Gradle Plugin__，对于 <strong style="font-weight:700;color:#111827;">Gradle</strong> 新手来说，要在一个 <strong style="font-weight:700;color:#111827;">Gradle</strong> 工程中同时集成 <strong style="font-weight:700;color:#111827;">Android Library__，__Gradle Plugin</strong> 和 <strong style="font-weight:700;color:#111827;">Example App</strong> 三个模块，并不是一件很容易的事，主要的问题在于 <strong style="font-weight:700;color:#111827;">Android App</strong> 模块中无法引用同一个工程中的 <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> 模块，这是因为 <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> 需要先于所有的工程进行配置和编译，所以，很多工程师都会将 <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> 作为一个独立的工程进行开发和发布，这对于频繁地开发和调试 <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> 的工程师来说，是非常的痛苦，每次修改了 <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> 都要先发布到 __Maven Local__，然后再跨工程进行调试，效率极低，那有什么优雅的解决方案呢？</p>
+<h2 id="buildSrc-模块" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  buildSrc 模块</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">要让 <strong style="font-weight:700;color:#111827;">Android App</strong> 能引用到同一个工程中的 <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> 模块，那么，这个 <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> 模块就不能是一个普通的模块，正好 <strong style="font-weight:700;color:#111827;">Gradle</strong> 提供了 <strong style="font-weight:700;color:#111827;">buildSrc</strong> 的机制，<strong style="font-weight:700;color:#111827;">Gradle</strong> 默认会将工程根目录下的 <strong style="font-weight:700;color:#111827;">buildSrc</strong> 目录作为 <a href="https://docs.gradle.org/current/userguide/composite_builds.html#composite_build_intro" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Composite Build</a> 自动编译和测试，并将其产物添加到 <strong style="font-weight:700;color:#111827;">buildscript</strong> 的 <strong style="font-weight:700;color:#111827;">classpath</strong> 中，这样就可以访问到 <strong style="font-weight:700;color:#111827;">buildSrc</strong> 中定义的 <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> 了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">虽然引用 <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> 的问题解决了，但是，想要同时发布同一个工程中的 <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> 模块和 <strong style="font-weight:700;color:#111827;">Android Library</strong> 模块是一个问题，因为对于 <strong style="font-weight:700;color:#111827;">buildSrc</strong> 来说，虽然是在同一个工程中，但其实在 <strong style="font-weight:700;color:#111827;">Gradle</strong> 看来，它是一个完全隔离的工程，这就意味着：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">buildSrc</strong> 模块与普通模块不能同时进行发布</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">所有的配置和属性都不能在 <strong style="font-weight:700;color:#111827;">buildSrc</strong> 和普通模块间共享，例如：版本号</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">那如何才能上述的问题呢？</p>
+<h2 id="影子模块" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  影子模块</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">要想「鱼和熊掌兼得」，就必须将 <strong style="font-weight:700;color:#111827;">buildSrc</strong> 模块变成一个普通模块，所以，我们可以再创建一个普通的 <strong style="font-weight:700;color:#111827;">Java/Kotlin Library</strong> 模块，用来解决 <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> 的发布问题，工程目录结构如下：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">.
+├── app
+│&nbsp;&nbsp; ├── build.gradle.kts
+│&nbsp;&nbsp; ├── proguard-rules.pro
+│&nbsp;&nbsp; └── src
+├── sdk
+│&nbsp;&nbsp; ├── build.gradle.kts
+│&nbsp;&nbsp; ├── proguard-rules.pro
+│&nbsp;&nbsp; └── src
+├── plugin (影子模块)
+│&nbsp;&nbsp; └── build.gradle.kts
+├── gradle
+│&nbsp;&nbsp; └── wrapper
+├── gradle.properties
+├── gradlew
+├── gradlew.bat
+├── build.gradle.kts
+├── buildSrc
+│&nbsp;&nbsp; ├── build.gradle.kts
+│&nbsp;&nbsp; └── src
+└── settings.gradle.kts</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但问题是，如何让这个普通模块共享 <strong style="font-weight:700;color:#111827;">buildSrc</strong> 中的代码呢？</p>
+<h3 id="软链接" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.1.  软链接</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">熟悉 <strong style="font-weight:700;color:#111827;">Linux</strong> 的用户可能会想到一个比较便捷的方式 —— 软链接（Soft Link），有点类似于 <strong style="font-weight:700;color:#111827;">Windows</strong> 中的「快捷方式」，通过 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ln</code> 命令来创建，我们可以在 <strong style="font-weight:700;color:#111827;">plugin</strong> 模块下创建一个 <strong style="font-weight:700;color:#111827;">src</strong> 的软链接到 __buildSrc/src__：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">$ cd plugin
+$ ln -s ../buildSrc/src src </code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">工程结构如下所示：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">.
+├── app
+│&nbsp;&nbsp; ├── build.gradle.kts
+│&nbsp;&nbsp; ├── proguard-rules.pro
+│&nbsp;&nbsp; └── src
+├── sdk
+│&nbsp;&nbsp; ├── build.gradle.kts
+│&nbsp;&nbsp; ├── proguard-rules.pro
+│&nbsp;&nbsp; └── src
+├── plugin (影子模块)
+│&nbsp;&nbsp; ├── src -&gt; ../buildSrc/src (软链接)
+│&nbsp;&nbsp; └── build.gradle.kts
+├── gradle
+│&nbsp;&nbsp; └── wrapper
+├── gradle.properties
+├── gradlew
+├── gradlew.bat
+├── build.gradle.kts
+├── buildSrc
+│&nbsp;&nbsp; ├── build.gradle.kts
+│&nbsp;&nbsp; └── src
+└── settings.gradle.kts</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这样就很好的解决了普通 <strong style="font-weight:700;color:#111827;">Gradle</strong> 模块与 <strong style="font-weight:700;color:#111827;">buildSrc</strong> 模块共享代码的问题了。</p>
+<h3 id="Source-Set" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.2.  Source Set</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">由于存在平台间的差异性，例如 <strong style="font-weight:700;color:#111827;">Windows</strong> 和 <strong style="font-weight:700;color:#111827;">*nix</strong> 系统之间是否都能很好的兼容软链接，不是很确定（还未在 <strong style="font-weight:700;color:#111827;">Windows</strong> 上测试过），有没有一种兼容性更好的方案呢？答案是肯定的 —— __Source Set__，我们可以为 <strong style="font-weight:700;color:#111827;">plugin</strong> 模块配置额外的 <strong style="font-weight:700;color:#111827;">SourceSet</strong> ：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">sourceSets {
+    main {
+        java {
+            srcDirs("../buildSrc/src/main/java")
+        }
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这样就完美的解决了所有问题，对于版本号的问题，我们可以在根目录下的 <strong style="font-weight:700;color:#111827;">build.gradle.kts</strong> 中通过 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">allprojects</code> 或者 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">subprojects</code> 来统一配置：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">allprojects {
+    group = "io.johnsonlee"
+    version = "1.0.0"
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">所以，<strong style="font-weight:700;color:#111827;">plugin</strong> 模块用来解决 <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> 的发布问题，而 <strong style="font-weight:700;color:#111827;">buildSrc</strong> 用来解决同一个工程中的 <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> 的引用问题，<strong style="font-weight:700;color:#111827;">plugin</strong> 模块与 <strong style="font-weight:700;color:#111827;">buildSrc</strong> 模块共享同一份代码，但 <strong style="font-weight:700;color:#111827;">build.gradle.kts</strong> 除外，稍微有点细微的差别：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">由于 <strong style="font-weight:700;color:#111827;">buildSrc</strong> 是一个完全独立的工程，如果使用 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">plugins</code> DSL 来启用插件需要指定版本号</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">plugin</strong> 模块中使用 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">plugins</code> DSL 来启用插件不用指定版本号（因为在根目录中的 <strong style="font-weight:700;color:#111827;">build.gradel.kts</strong> 已经指定过）</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">buildSrc</strong> 模块不需要发布，所以，不需要启用 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">maven-publish</code> 等跟发布相关的插件</li>
+</ul>
+<h4 id="buildSrc-build-gradle-kts" style="margin:24px 0 12px;font-size:17px;line-height:1.5;font-weight:700;color:#111827;">2.2.1.  buildSrc/build.gradle.kts</h4><pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">plugins {
+    `java-gradle-plugin`
+    `kotlin-dsl`
+    kotlin("jvm") version "1.5.30"
+    kotlin("kapt") version "1.5.30"
+}</code></pre>
+
+<h4 id="plugin-build-gradle-kts" style="margin:24px 0 12px;font-size:17px;line-height:1.5;font-weight:700;color:#111827;">2.2.2.  plugin/build.gradle.kts</h4><pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">plugins {
+    `java-gradle-plugin`
+    `maven-publish`
+    `signing`
+    kotlin("jvm")
+    kotlin("kapt")
+}</code></pre>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2021/10/06/integrate-gradle-plugin-and-library-into-one-project/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2021/10/06/integrate-gradle-plugin-and-library-into-one-project/</a></p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2021/05/07/java-6-new-features/">
+  <title>Java 6 新特性 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Java 6 新特性</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2021-05-07 · Johnson Lee · Computer Science / Java</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Java 6 代号为 <em style="font-style:italic;color:#1f2937;">Mustang</em> 。版本发布于 2006 年 12 月 11 日，<em style="font-style:italic;color:#1f2937;">Sun</em> 把原本的名称 <em style="font-style:italic;color:#1f2937;">“J2SE”</em> 改为 <em style="font-style:italic;color:#1f2937;">“Java SE”</em> ，然后再从版本号中去掉 <em style="font-style:italic;color:#1f2937;">“.0”</em> ，而开发者内部编号仍然是 <em style="font-style:italic;color:#1f2937;">1.6.0</em> 。这个版本是根据 <em style="font-style:italic;color:#1f2937;">JSR 270</em> 开发。</p>
+<h2 id="Scripting" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  Scripting</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">Java SE 6.0</em> 中增加了对脚本语言的支持，脚本框架通过服务发现机制支持第三方脚本引擎，并将基于 <em style="font-style:italic;color:#1f2937;">Mozilla Rhino</em> 的 <em style="font-style:italic;color:#1f2937;">JavaScript</em> 引擎作为默认的脚本引擎，这使得在 <em style="font-style:italic;color:#1f2937;">Java</em> 中调用 <em style="font-style:italic;color:#1f2937;">JavaScript</em> 成为可能</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">import javax.script.*;
+public class EvalScript {
+    public static void main(String[] args) throws Exception {
+        ScriptEngineManager factory = new ScriptEngineManager();
+        ScriptEngine engine = factory.getEngineByName("JavaScript");
+        engine.eval("print('Hello, World')");
+    }
+}</code></pre>
+
+<h2 id="Java-Compiler-API" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  Java Compiler API</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">很多应用会在运行时动态生成和编译代码，比如：<em style="font-style:italic;color:#1f2937;">JSP web server</em> ，在 <em style="font-style:italic;color:#1f2937;">Java SE 6.0</em> 之前，想要动态生成代码只能通过这 2 种方式：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">临时生成 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">.java</code> 文件，然后通过 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Runtime.exec()</code> 来调用 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">javac</code>，这种方法是相当的不优雅</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Hack <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">javac</code> 的内部结构，并使用 <em style="font-style:italic;color:#1f2937;">Java</em> 接口，虽然可以工作，但是没有文档，也不受支持，还不能使用第三方供应商的编译器</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">事实上，在 <em style="font-style:italic;color:#1f2937;">Java SE 5.0</em> 中，<em style="font-style:italic;color:#1f2937;">Sun</em> 已经提供了 <em style="font-style:italic;color:#1f2937;">Java Compiler API</em> ，只不过是非标准的 API，在 <em style="font-style:italic;color:#1f2937;">Java SE 6.0</em> 中，<em style="font-style:italic;color:#1f2937;">Java Compiler API</em> 被标准化了</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class Compiler {
+    public static void main(String[] args) throws Exception {
+        String fullQuanlifiedFileName = "compile" + java.io.File.separator + "Target.java";     
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        FileOutputStream err = new FileOutputStream("err.txt");
+        int compilationResult = compiler.run(null, null, err, fullQuanlifiedFileName);
+        if (compilationResult == 0) {
+            System.out.println("Done");
+        } else {
+            System.out.println("Fail");
+        }
+    }
+}</code></pre>
+
+<h2 id="JDBC-4-0" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  JDBC 4.0</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">JDBC 4.0</em> 主要包括：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">增加了新的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">javax.sql.DataSource</code> 实现</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">自动加载 <em style="font-style:italic;color:#1f2937;">JDBC</em> 驱动，从 <em style="font-style:italic;color:#1f2937;">Java SE 6.0</em> 开始，不需要在应用中手动调用 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Class.forName(String)</code> 来加载驱动了，当应用请求连接的时候，<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">DriverManager</code> 会自动查找合适的 <em style="font-style:italic;color:#1f2937;">JDBC</em> 驱动</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">新增了更优雅的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">SQLException</code> 的子类</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">引入了包装的 JDBC 对象的概念，应用可以通过该机制在标准 JDBC 对象（例如 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Connections</code>，<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Statement</code> 和 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ResultSets</code>）中查找特定于供应商的扩展</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">新增了 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Statement</code> 事件，它允许连接池监听 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Statement</code> 的关闭和错误事件</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">为 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">CallableStatement</code>, <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">PreparedStatement</code>, 和 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ResultSet</code> 增加了 <em style="font-style:italic;color:#1f2937;">Streaming API</em></li>
+</ul>
+<h2 id="Collection-Framework-Enhancements" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  Collection Framework Enhancements</h2><h3 id="新增的接口" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">4.1.  新增的接口</h3><ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/util/Deque.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Deque</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/util/concurrent/BlockingDeque.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">BlockingDeque</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/util/NavigableSet.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">NavigableSet</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/util/NavigableMap.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">NavigableMap</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/util/concurrent/ConcurrentNavigableMap.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">ConcurrentNavigableMap</a></li>
+</ul>
+<h3 id="新增的类" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">4.2.  新增的类</h3><ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/util/ArrayDeque.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">ArrayDeque</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/util/concurrent/ConcurrentSkipListSet.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">ConcurrentSkipListSet</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/util/concurrent/ConcurrentSkipListMap.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">ConcurrentSkipListMap</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/util/concurrent/LinkedBlockingDeque.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">LinkedBlockingDeque</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/util/AbstractMap.SimpleEntry.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">AbstractMap.SimpleEntry</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/util/AbstractMap.SimpleImmutableEntry.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">AbstractMap.SimpleImmutableEntry</a></li>
+</ul>
+<h3 id="实现新增接口的类" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">4.3.  实现新增接口的类</h3><ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/util/LinkedList.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">LinkedList</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/util/TreeSet.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">TreeSet</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/util/TreeMap.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">TreeMap</a></li>
+</ul>
+<h3 id="新增的方法" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">4.4.  新增的方法</h3><ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/util/Collections.html#newSetFromMap(java.util.Map)" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">newSetFromMap(Map)</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/util/Collections.html#asLifoQueue(java.util.Deque)" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">asLifoQueue(Deque)</a></li>
+</ul>
+<h2 id="Jar-Zip-Enhancements" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  Jar &amp; Zip Enhancements</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">新增两个带压缩功能的流：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/util/zip/DeflaterInputStream.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">DeflaterInputStream</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/util/zip/InflaterOutputStream.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">InflaterOutputStream</a></li>
+</ul>
+<h2 id="Reflection-Enhancements" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">6.  Reflection Enhancements</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在 <em style="font-style:italic;color:#1f2937;">Java SE 5.0</em> 中，<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">java.lang.Class</code> 类中与反射相关的方法的返回值或参数都是泛化的</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Class.html#getInterfaces()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">getInterfaces()</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Class.html#getClasses()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">getClasses()</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Class.html#getConstructors()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">getConstructors()</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Class.html#getMethod(java.lang.String,%20java.lang.Class...)" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">getMethod(String, Class...)</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Class.html#getConstructor(java.lang.Class...)" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">getConstructor(Class...)</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Class.html#getDeclaredClasses()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">getDeclaredClasses()</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Class.html#getDeclaredConstructors()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">getDeclaredConstructors()</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Class.html#getDeclaredMethod(java.lang.String,%20java.lang.Class...)" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">getDeclaredMethod(String, Class...)</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/1.5.0/docs/api/java/lang/Class.html#getDeclaredConstructor(java.lang.Class...)" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">getDeclaredConstructor(Class...)</a></li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">使用这些方法的代码在编译的过程中会产生警告，为了消除这些警告，在 <em style="font-style:italic;color:#1f2937;">Java SE 6.0</em> 中，这些方法的返回值和参数类型增加了范型类型。</p>
+<h2 id="Serialization-Enhancements" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">7.  Serialization Enhancements</h2><ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">新增了 <a href="https://docs.oracle.com/javase/6/docs/api/java/io/ObjectStreamClass.html#lookupAny(java.lang.Class)" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">java.io.ObjectStreamClass.lookupAny(Class)</a> 用于获取不可序列化类的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ObjectStreamClass</code> 实例</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">修复延迟 GC 的 bug, 这是由于 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ObjectOutputStream</code> 和 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ObjectInputStream</code> 的可序列化类和子类在序列化操作中被长时间的强引用，因此可能无限期地延迟定义该类的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ClassLoader</code> 的垃圾回收</li>
+</ul>
+<h2 id="VM-Enhancements" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">8.  VM Enhancements</h2><ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">增加了 <em style="font-style:italic;color:#1f2937;">DTrace</em> 探针</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">在原有的并行 GC 的基础之上增加了并行压缩，在 <em style="font-style:italic;color:#1f2937;">Java SE 5.0</em> 中，并行收集器会并行执行年轻代的收集，但 full GC 是单线程执行，在 <em style="font-style:italic;color:#1f2937;">Java SE 6.0</em> 中，并行压缩通过并行执行 full GC 将 GC 性能大大提升</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">对 <em style="font-style:italic;color:#1f2937;">CMS (Concurrent Mark Sweep)</em> 收集器进行了增强，通过 <em style="font-style:italic;color:#1f2937;">-XX:+ExplicitGCInvokesConcurrent</em> 可以让 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">System.gc()</code> 或 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Runtime.getRuntime().gc()</code> 并行执行</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">将年轻代的默认大小从 <em style="font-style:italic;color:#1f2937;">4MB</em> 调到 <em style="font-style:italic;color:#1f2937;">16MB</em></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">用于年轻代的总堆的比例从1/15增加到1/7</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">默认情况下会使用幸存者空间，并且其默认大小已增加。(在以前的版本中，默认情况下，<em style="font-style:italic;color:#1f2937;">CMS</em> 收集器禁用了幸存者空间）</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">CMS</em> 收集器使用多个线程在具有多个处理器的平台上并行执行并发标记任务（先前的版本中仅使用单个线程进行并发标记）</li>
+</ul>
+<h2 id="Instrumentation-Enhancements" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">9.  Instrumentation Enhancements</h2><ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">支持 <em style="font-style:italic;color:#1f2937;">class</em> 文件重新转换<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/lang/instrument/Instrumentation.html#retransformClasses(java.lang.Class...)" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Instrumentation.retransformClasses(Class...)</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/lang/instrument/Instrumentation.html#addTransformer(java.lang.instrument.ClassFileTransformer,%20boolean)" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Instrumentation.addTransformer(ClassFileTransformer, boolean)</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/lang/instrument/Instrumentation.html#isModifiableClass(java.lang.Class)" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Instrumentation.isModifiableClass(Class)</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/lang/instrument/Instrumentation.html#isRetransformClassesSupported()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Instrumentation.isRetransformClassesSupported()</a></li>
+</ul>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">支持 native 方法注入<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/lang/instrument/Instrumentation.html#setNativeMethodPrefix(java.lang.instrument.ClassFileTransformer,%20java.lang.String)" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Instrumentation.setNativeMethodPrefix(ClassFileTransformer, String)</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/lang/instrument/Instrumentation.html#isNativeMethodPrefixSupported()" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Instrumentation.isNativeMethodPrefixSupported()</a></li>
+</ul>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">支持向 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ClassLoader</code> 的搜索路径中追加 <em style="font-style:italic;color:#1f2937;">JAR</em><ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/lang/instrument/Instrumentation.html#appendToBootstrapClassLoaderSearch(java.util.jar.JarFile)" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Instrumentation.appendToBootstrapClassLoaderSearch(JarFile)</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://docs.oracle.com/javase/6/docs/api/java/lang/instrument/Instrumentation.html#appendToSystemClassLoaderSearch(java.util.jar.JarFile)" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Instrumentation.appendToSystemClassLoaderSearch(JarFile)</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="JVM-TI-Tool-Interface" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">10.  JVM TI (Tool Interface)</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">Java SE 6.0</em> 对 <em style="font-style:italic;color:#1f2937;">JVM TI</em> 进行了增强</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Support for transformation of class files</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Enhanced heap walking support <ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">allows access to primitive values (the value of Strings, arrays, and primitive fields)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">allows the tag of the referrer to be set, thus enabling more efficient localized reference graph building</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">provides more extensive filtering abilities</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">is extensible, allowing abilities to grow in future versions of JVM TI</li>
+</ul>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">More class information</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Support for instrumenting native methods</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Enhanced support for instrumentation under the system class loader</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Support for early return from a method</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Monitor stack depth information</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Support for resource exhaustion notification</li>
+</ul>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">更多详情，请参考：<a href="https://www.oracle.com/java/technologies/javase/features.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://www.oracle.com/java/technologies/javase/features.html</a></p>
+</blockquote>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2021/05/07/java-6-new-features/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2021/05/07/java-6-new-features/</a></p>
+    </section>
+  </main>
+</body>
+</html>

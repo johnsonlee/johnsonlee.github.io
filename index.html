@@ -1,0 +1,187 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta name="theme-color" content="#FFF" id="theme-color"><meta content="telephone=no" name="format-detection"><meta name="description" content="AI 原生工程实践 — Agent 架构、LLM 工程化、Harness Engineering"><meta name="baidu-site-verification" content="sSd2p2uQfO"><meta name="keywords" content="李景森,johnsonlee,johnson,lijingsen,jingsen,ai,agent,llm,claude,claude code,ai工程化,harness,harness engineering,autoevolve,prompt engineering,RAG,agentic,MCP,AGI,vibe coding,ai coding,copilot,cursor,chatgpt,openai,anthropic,transformer,fine-tuning,embedding,multimodal,chain of thought,function calling,tool use,RLHF,ai native,架构设计,性能优化,滴滴,快手,我在滴滴做架构,booster,virtualapk,android,java,kotlin,performance,optimizer,flutter,javascript,typescript,node.js"><link rel="canonical" href="https://johnsonlee.io/index.html"><meta property="og:title" content="Johnson Lee"><meta property="og:description" content="AI 原生工程实践 — Agent 架构、LLM 工程化、Harness Engineering"><meta property="og:type" content="website"><meta property="og:url" content="https://johnsonlee.io/index.html"><meta property="og:image" content="https://johnsonlee.io/logo.png"><meta property="og:site_name" content="Johnson Lee"><meta property="og:locale" content="zh_CN"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Johnson Lee"><meta name="twitter:description" content="AI 原生工程实践 — Agent 架构、LLM 工程化、Harness Engineering"><meta name="twitter:image" content="https://johnsonlee.io/logo.png"><title>Johnson Lee | Get into trouble, make mistakes, fight, love, live</title><script>(function(){var h=new Date().getHours();if(h<6||h>=19){document.documentElement.setAttribute('data-weather','night');var m=document.getElementById('theme-color');if(m)m.setAttribute('content','#020617')}})();</script><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&amp;display=swap"><link rel="stylesheet" type="text/css" href="/css/style.css"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/pure-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" type="text/css" href="/libs/pure/1.0.0/grids-responsive-min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="preload" href="/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel=&quot;stylesheet&quot;"><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Johnson Lee"><link rel="alternate" type="application/atom+xml" href="/atom.en.xml" title="Johnson Lee (English)" hreflang="en"><script type="text/javascript" src="/js/weather-theme.js" defer></script><script type="text/javascript" src="/js/weather-canvas.js" defer></script><script type="text/javascript" src="/js/i18n-switch.js" defer></script><script type="text/javascript" src="/libs/loadCSS/2.1.0/loadCSS.js" async></script><script>function load() {
+  return Promise.all(Array.prototype.map.call(arguments, (src) => {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement("script");
+      script.asrc = 1;
+      script.src = src;
+      var sibling = document.getElementsByTagName("script")[0];
+      sibling.parentNode.insertBefore(script, sibling);
+      script.onload = function() {
+        resolve();
+      }
+    })
+  }));
+}
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.split(search).join(replacement);
+};</script><meta name="generator" content="Hexo 8.1.1"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head><body><div class="body_container"><img src="/logo.png" style="display:none"><div id="header"><div class="site-name"><h1 class="hidden">Johnson Lee</h1><a id="logo" href="/.">Johnson Lee</a><p class="description">Get into trouble, make mistakes, fight, love, live</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a target="_blank" rel="noopener" href="https://about.johnsonlee.io/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div><button class="lang-switch" type="button" data-target-lang="en" title="English">EN</button></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title"><a href="/2026/08/30/test-case-is-the-core-asset/">Test Case 才是软件的核心资产</a></h1><div class="post-meta">2026-08-30</div><div class="post-content"><p>最近几天，<a target="_blank" rel="noopener" href="https://github.com/johnsonlee/graphite">Graphite</a> 一口气合了十几个 PR。Cross-graph Search、Large Corpus Gate、Topology OOM、Query Budget、Parallel Search、Memory、Cancellation、Timeout，几乎都在做性能优化和 Benchmark。</p>
+<p>一开始看得很爽。发现一个慢 Query，Agent 找到 Hot Path，改实现、补测试、跑 Benchmark，然后交出 36 倍甚至 87 万倍的提升。以前要折腾几天的 Performance Optimization，现在几个小时就能跑完一轮。</p>
+<p>但 PR 越合越多，越看越觉得不对劲：为什么每个“优化完成”后面，都紧跟着另一个 PR 补 Benchmark？Graphite 每个主要模块的 Unit Test Line Coverage 门槛已经是 98%，到底还有什么没测到？</p></div><p class="readmore"><a href="/2026/08/30/test-case-is-the-core-asset/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2026/08/25/how-goal-keeps-agents-working/">/goal 如何做到 7×24 小时推进目标？</a></h1><div class="post-meta">2026-08-25</div><div class="post-content"><p>相信所有把长任务交给 Agent 的人，都有过这样的经历：睡觉前把任务交给 Agent，期待它趁人休息时继续推进。第二天醒来，Agent 早就停了，却留下一份煞有介事的总结：任务已经完成。打开代码一看，连 10% 都没做完。</p>
+<p>问题不只在模型偷懒。普通 Agent 默认只管这一轮回答，回答结束，它就把任务也算作结束。<code>/goal</code> 要解决的，是人离开以后，谁来检查原始目标到底完成没有，没完成又由谁启动下一轮。</p></div><p class="readmore"><a href="/2026/08/25/how-goal-keeps-agents-working/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2026/08/23/is-harness-the-agent-moat/">Harness 还是 Agent 的壁垒吗？</a></h1><div class="post-meta">2026-08-23</div><div class="post-content"><p>过去一年，Agent 圈逐渐形成了一个共识：模型会商品化，Harness 才是壁垒。</p>
+<p>这个判断有足够多的证据。相同模型接上不同的 context management、tool routing、memory、subagent、sandbox 和 approval，结果可以差很多。<a target="_blank" rel="noopener" href="https://developers.openai.com/blog/codex-as-a-platform">OpenAI 公布的一个例子</a>很直接：在 ARC-AGI-3 上，保留 reasoning state 和压缩 context，把 GPT-5.6 Sol 的得分从 13.3% 提高到 38.3%，同时把 output token 降到六分之一。</p>
+<p>既然 Harness 能制造这么大的差异，它自然应该成为 Agent 团队投入最多、最不愿交给厂商的一层。可就在大家开始谈 Harness Engineering 的时候，厂商也开始把 Harness 做成 SDK。</p></div><p class="readmore"><a href="/2026/08/23/is-harness-the-agent-moat/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2026/08/22/ai-data-center-alpha-map/">为什么 OpenAI 总是缺算力？</a></h1><div class="post-meta">2026-08-22</div><div class="post-content"><p><a target="_blank" rel="noopener" href="https://openai.com/index/a-business-that-scales-with-the-value-of-intelligence/">2023 年，OpenAI 的可用算力只有 0.2GW</a>。2024 年升到 0.6GW，2025 年再到约 1.9GW。两年涨了 9.5 倍，仍然不够。2026 年 4 月，OpenAI 又把目标推到了 <a target="_blank" rel="noopener" href="https://x.com/OpenAINewsroom/status/2046951726683455866">2030 年 30GW</a>。</p>
+<p>30GW 是 2025 年可用算力的近 16 倍。可就在这个目标公布四个月后，OpenAI 又签下 PORTS-Pike，一座规划容量约 8 IT-GW 的数据中心。</p>
+<p>已经签了多少座数据中心，为什么还在继续签，这 8GW 放进 30GW 以后又算多大？</p></div><p class="readmore"><a href="/2026/08/22/ai-data-center-alpha-map/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2026/08/18/the-real-bottleneck-is-replication/">复制速度才是真正的瓶颈</a></h1><div class="post-meta">2026-08-18</div><div class="post-content"><p>最近我一直在找下一批能把估值体系打穿的 high alpha。起点很俗：GEV 之后还有谁？SK hynix 之后还有谁？候选清单列了一长串，我扫到最后，发现里面没有 SpaceX。</p>
+<p>SpaceX 未必应该进这张清单。可一套方法如果说不清它为什么被排除，给再多 ticker 也只是在排列答案。我没有急着把 SpaceX 塞回去，只追问了一句：它为什么不在？</p>
+<p>SpaceX 这家公司有个毛病：太容易让人忘记自己是在做投资。一聊它，火星、星辰大海、人类多行星文明全来了。可在资本面前，情怀一文不值。把 mission 拿掉，SpaceX 留下的是一条很硬的成本曲线：launch cadence、reuse 和 $&#x2F;kg。原来只能做一次的东西，能不能稳定、便宜、快速地做一百次，这才决定故事值多少钱。</p></div><p class="readmore"><a href="/2026/08/18/the-real-bottleneck-is-replication/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2026/08/13/agent-tdd-is-self-verification/">Agent 真的需要 TDD 吗？</a></h1><div class="post-meta">2026-08-13</div><div class="post-content"><p>前两天在 Martin Fowler 网站看到一篇文章。作者把同一批任务交给 Sonnet 4.6，一组要求严格按 TDD 做，一组随它写，再让 Opus 4.8 盲评。结果有点打脸：TDD 组没写得更好，Token 至少多烧 3 倍。看到这里，我第一反应不是 TDD 过时了，而是我们可能让 Agent 做了一件看起来很工程、其实很奇怪的事：自己出题，自己答题，再自己宣布通过。</p></div><p class="readmore"><a href="/2026/08/13/agent-tdd-is-self-verification/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2026/07/25/what-engineers-are-still-for/">还要工程师干什么？</a></h1><div class="post-meta">2026-07-25</div><div class="post-content"><p>前段时间我在用 Codex 的 <code>/goal</code> 推一个 side project。晚上把目标丢进去，早上起来看一眼，任务还在跑：读文档、拆模块、改 Kotlin、补 React、跑 <code>./gradlew :backend:check</code>，失败了自己修，再继续。</p>
+<p>我第一次有点恍惚，是看到它半夜还在沿着同一个目标往前滚。那一刻它不像一个聊天窗口，更像一个挂在 repo 里的无人值守工程队。于是那个问题就绕不过去了：如果 Codex 能不眠不休地推进项目，直到目标达成，还要工程师干什么？</p></div><p class="readmore"><a href="/2026/07/25/what-engineers-are-still-for/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2026/06/26/fooled-by-loop-engineering/">别被 Loop Engineering 忽悠瘸了</a></h1><div class="post-meta">2026-06-26</div><div class="post-content"><p>硅谷发明新词的速度，已经快过 Agent 写代码的速度。<a target="_blank" rel="noopener" href="https://openai.com/index/harness-engineering/">Harness Engineering</a> 还没捂热，前段时间 Addy Osmani 又发了一篇 <a target="_blank" rel="noopener" href="https://addyosmani.com/blog/loop-engineering/">《Loop Engineering》</a>。</p>
+<p>所谓 Loop Engineering，是把 automation、worktree、Skill、connector、sub-agent 和外部状态拼成一个闭环：系统自己找活、派活、执行、检查、记录，再进入下一轮。听起来很完整，零件也都能用。</p>
+<p>原文其实没回避风险。Addy 明说 verification 仍然落在人身上，loop 跑偏会越挖越深。可这个名字依然危险：它把一种调度结构包装成了能力跃迁，仿佛把 Agent 塞进 <code>while (true)</code>，持续运行便会自然变成持续进步。</p>
+<p>当然不会。<strong>Loop 能增加尝试次数，不能增加正确答案的密度。</strong></p>
+<p>Agentic Coding 最难的，从来不是让 Agent 继续跑。真正卡住它的，是每一轮结束后，谁能证明结果更接近正确。</p></div><p class="readmore"><a href="/2026/06/26/fooled-by-loop-engineering/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2026/06/21/token-efficiency-way-forward/">Token Efficiency 的出路在哪里？</a></h1><div class="post-meta">2026-06-21</div><div class="post-content"><p>想象一下这个场景：工程师把一次 Agent 任务从 10 万 Token 压到 4 万，仪表盘绿了六成。月底账单到了，云成本一分钱没少。公司租了 8 张 GPU，包月。模型少说了 6 万 Token，机器照样开着，合同照样付钱。</p>
+<p>工程师优化出一大片空闲算力，财务却找不到一美元 Savings。Token Efficiency 的问题就这样暴露了：<strong>它从来不是一个孤立的技术指标，计费方式一变，财务含义就跟着变。</strong></p></div><p class="readmore"><a href="/2026/06/21/token-efficiency-way-forward/">阅读全文</a></p></div><div class="post"><h1 class="post-title"><a href="/2026/06/21/smart-money-after-memory/">存储之后，聪明钱会流向哪里？</a></h1><div class="post-meta">2026-06-21</div><div class="post-content"><p>前几天，国内一个朋友拿我开涮：“你们韩国现在是不是人均资产都翻了三倍？”他当然在开玩笑，但这个玩笑在韩国已经有了一整套民间叙事。</p>
+<p>最出名的叫“传说中的海力士员工”。2008 年前后，公司里的人觉得买自家股票是疯了，他却拿 4,446 万韩元，以 7,800 韩元买下 5,700 股。如果一直没卖，到 2026 年 1 月已经值 41 亿韩元。</p></div><p class="readmore"><a href="/2026/06/21/smart-money-after-memory/">阅读全文</a></p></div><nav class="page-navigator"><span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/2/">下一页</a></nav><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+</script><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML" async></script></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://johnsonlee.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul><li><a href="/categories/biology/">Biology (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/career/">Career (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Cognitive-Science/">Cognitive Science (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/">Computer Science (107)</a><ul style="padding:revert"><li><a href="/categories/computer-science/architecture-design/">Architecture Design (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/cloud/">Cloud (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/Engineering/">Engineering (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/gradle/">Gradle (4)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/graphics/">Graphics (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/java/">Java (12)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/kotlin/">Kotlin (7)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/mobile/">Mobile (10)</a><ul style="padding:revert"><li><a href="/categories/computer-science/mobile/android/">Android (5)</a></li><li><a href="/categories/computer-science/mobile/flutter/">Flutter (1)</a></li></ul></li><li><a href="/categories/computer-science/observability/">Observability (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/computer-science/open-source/">Open Source (56)</a><ul style="padding:revert"><li><a href="/categories/computer-science/open-source/booster/">Booster (56)</a></li></ul></li><li><a href="/categories/computer-science/Programming/">Programming (2)</a><ul style="padding:revert"></ul></li></ul></li><li><a href="/categories/diy/">DIY (1)</a><ul style="padding:revert"></ul></li><li><a href="/categories/harness-engineering/">Harness Engineering (5)</a><ul style="padding:revert"></ul></li><li><a href="/categories/Independent-Thinking/">Independent Thinking (65)</a><ul style="padding:revert"></ul></li><li><a href="/categories/investing/">Investing (9)</a><ul style="padding:revert"></ul></li><li><a href="/categories/life/">Life (10)</a><ul style="padding:revert"></ul></li><li><a href="/categories/reading/">Reading (2)</a><ul style="padding:revert"></ul></li><li><a href="/categories/UI-UX/">UI/UX (1)</a><ul style="padding:revert"><li><a href="/categories/UI-UX/Design-System/">Design System (1)</a><ul style="padding:revert"></ul></li></ul></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Developer-Tools/" style="font-size: 15px;">Developer Tools</a> <a href="/tags/Dotfiles/" style="font-size: 15px;">Dotfiles</a> <a href="/tags/Claude-Code/" style="font-size: 15px;">Claude Code</a> <a href="/tags/Productivity/" style="font-size: 15px;">Productivity</a> <a href="/tags/AI/" style="font-size: 15px;">AI</a> <a href="/tags/Korea/" style="font-size: 15px;">Korea</a> <a href="/tags/Seoul/" style="font-size: 15px;">Seoul</a> <a href="/tags/Independent-Thinking/" style="font-size: 15px;">Independent Thinking</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a> <a href="/tags/AI-PC/" style="font-size: 15px;">AI PC</a> <a href="/tags/Wintel/" style="font-size: 15px;">Wintel</a> <a href="/tags/NVIDIA/" style="font-size: 15px;">NVIDIA</a> <a href="/tags/Microsoft/" style="font-size: 15px;">Microsoft</a> <a href="/tags/Local-LLM/" style="font-size: 15px;">Local LLM</a> <a href="/tags/Token/" style="font-size: 15px;">Token</a> <a href="/tags/Gradle/" style="font-size: 15px;">Gradle</a> <a href="/tags/java-gradle-plugin/" style="font-size: 15px;">java-gradle-plugin</a> <a href="/tags/Agent/" style="font-size: 15px;">Agent</a> <a href="/tags/Claude/" style="font-size: 15px;">Claude</a> <a href="/tags/Career/" style="font-size: 15px;">Career</a> <a href="/tags/Agentic-Coding/" style="font-size: 15px;">Agentic Coding</a> <a href="/tags/TDD/" style="font-size: 15px;">TDD</a> <a href="/tags/Testing/" style="font-size: 15px;">Testing</a> <a href="/tags/Browser-Automation/" style="font-size: 15px;">Browser Automation</a> <a href="/tags/Puppeteer/" style="font-size: 15px;">Puppeteer</a> <a href="/tags/CDP/" style="font-size: 15px;">CDP</a> <a href="/tags/DOM/" style="font-size: 15px;">DOM</a> <a href="/tags/Web-Scraping/" style="font-size: 15px;">Web Scraping</a> <a href="/tags/Self-Reflection/" style="font-size: 15px;">Self-Reflection</a> <a href="/tags/Consciousness/" style="font-size: 15px;">Consciousness</a> <a href="/tags/Self-Reference/" style="font-size: 15px;">Self-Reference</a> <a href="/tags/LLM/" style="font-size: 15px;">LLM</a> <a href="/tags/Attention/" style="font-size: 15px;">Attention</a> <a href="/tags/Gemini/" style="font-size: 15px;">Gemini</a> <a href="/tags/Alignment/" style="font-size: 15px;">Alignment</a> <a href="/tags/Communication/" style="font-size: 15px;">Communication</a> <a href="/tags/Data-Center/" style="font-size: 15px;">Data Center</a> <a href="/tags/Infrastructure/" style="font-size: 15px;">Infrastructure</a> <a href="/tags/Bottleneck/" style="font-size: 15px;">Bottleneck</a> <a href="/tags/Investing/" style="font-size: 15px;">Investing</a> <a href="/tags/ROI/" style="font-size: 15px;">ROI</a> <a href="/tags/Big-Tech/" style="font-size: 15px;">Big Tech</a> <a href="/tags/Enterprise/" style="font-size: 15px;">Enterprise</a> <a href="/tags/Buddhism/" style="font-size: 15px;">Buddhism</a> <a href="/tags/Taoism/" style="font-size: 15px;">Taoism</a> <a href="/tags/Physics/" style="font-size: 15px;">Physics</a> <a href="/tags/Philosophy/" style="font-size: 15px;">Philosophy</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/Workflow/" style="font-size: 15px;">Workflow</a> <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Build/" style="font-size: 15px;">Build</a> <a href="/tags/Compiler/" style="font-size: 15px;">Compiler</a> <a href="/tags/Automation/" style="font-size: 15px;">Automation</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/Kotlin/" style="font-size: 15px;">Kotlin</a> <a href="/tags/ES5/" style="font-size: 15px;">ES5</a> <a href="/tags/ES6/" style="font-size: 15px;">ES6</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Booster/" style="font-size: 15px;">Booster</a> <a href="/tags/Performance-Optimization/" style="font-size: 15px;">Performance Optimization</a> <a href="/tags/ReleaseNote/" style="font-size: 15px;">ReleaseNote</a> <a href="/tags/Evolution/" style="font-size: 15px;">Evolution</a> <a href="/tags/Cognitive-Boundary/" style="font-size: 15px;">Cognitive Boundary</a> <a href="/tags/Randomness/" style="font-size: 15px;">Randomness</a> <a href="/tags/Self-Evolution/" style="font-size: 15px;">Self-Evolution</a> <a href="/tags/Stock/" style="font-size: 15px;">Stock</a> <a href="/tags/ChatGPT/" style="font-size: 15px;">ChatGPT</a> <a href="/tags/Financial-Analysis/" style="font-size: 15px;">Financial Analysis</a> <a href="/tags/Model-Evaluation/" style="font-size: 15px;">Model Evaluation</a> <a href="/tags/UX/" style="font-size: 15px;">UX</a> <a href="/tags/Dimension-Hacking/" style="font-size: 15px;">Dimension Hacking</a> <a href="/tags/Compatibility/" style="font-size: 15px;">Compatibility</a> <a href="/tags/Lambda/" style="font-size: 15px;">Lambda</a> <a href="/tags/Education/" style="font-size: 15px;">Education</a> <a href="/tags/Economy/" style="font-size: 15px;">Economy</a> <a href="/tags/Future/" style="font-size: 15px;">Future</a> <a href="/tags/UBI/" style="font-size: 15px;">UBI</a> <a href="/tags/Product-Strategy/" style="font-size: 15px;">Product Strategy</a> <a href="/tags/Copilot/" style="font-size: 15px;">Copilot</a> <a href="/tags/Google/" style="font-size: 15px;">Google</a> <a href="/tags/Technology/" style="font-size: 15px;">Technology</a> <a href="/tags/Software-Engineering/" style="font-size: 15px;">Software Engineering</a> <a href="/tags/Product-Management/" style="font-size: 15px;">Product Management</a> <a href="/tags/Project-Management/" style="font-size: 15px;">Project Management</a> <a href="/tags/AI-Agent/" style="font-size: 15px;">AI Agent</a> <a href="/tags/Memory/" style="font-size: 15px;">Memory</a> <a href="/tags/Loop-Engineering/" style="font-size: 15px;">Loop Engineering</a> <a href="/tags/Harness-Engineering/" style="font-size: 15px;">Harness Engineering</a> <a href="/tags/Eval/" style="font-size: 15px;">Eval</a> <a href="/tags/Architecture/" style="font-size: 15px;">Architecture</a> <a href="/tags/Prompt-Engineering/" style="font-size: 15px;">Prompt Engineering</a> <a href="/tags/AGP/" style="font-size: 15px;">AGP</a> <a href="/tags/Graphite/" style="font-size: 15px;">Graphite</a> <a href="/tags/MCP/" style="font-size: 15px;">MCP</a> <a href="/tags/Bytecode/" style="font-size: 15px;">Bytecode</a> <a href="/tags/Static-Analysis/" style="font-size: 15px;">Static Analysis</a> <a href="/tags/Ground-Truth/" style="font-size: 15px;">Ground Truth</a> <a href="/tags/Codex/" style="font-size: 15px;">Codex</a> <a href="/tags/Context/" style="font-size: 15px;">Context</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2026/08/30/test-case-is-the-core-asset.en/">Test Cases Are Software's Core Asset</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/08/30/test-case-is-the-core-asset/">Test Case 才是软件的核心资产</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/08/25/how-goal-keeps-agents-working.en/">How /goal Keeps Agents Working 24/7</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/08/25/how-goal-keeps-agents-working/">/goal 如何做到 7×24 小时推进目标？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/08/23/is-harness-the-agent-moat.en/">Is the Harness Still an Agent's Moat?</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/08/23/is-harness-the-agent-moat/">Harness 还是 Agent 的壁垒吗？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/08/22/ai-data-center-alpha-map.en/">Why Is OpenAI Always Short on Compute?</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/08/22/ai-data-center-alpha-map/">为什么 OpenAI 总是缺算力？</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/08/18/the-real-bottleneck-is-replication/">复制速度才是真正的瓶颈</a></li><li class="post-list-item"><a class="post-list-link" href="/2026/08/18/the-real-bottleneck-is-replication.en/">Replication Speed Is the Real Bottleneck</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/johnsonlee" title="GitHub" target="_blank">GitHub</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2026 <a href="/." rel="nofollow">Johnson Lee.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-154930895-1','auto');ga('send','pageview');
+</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.async = 1;
+  hm.src = 'https://hm.baidu.com/hm.js?' + 'bceb83a2d24731111cbcf93ac3960952';
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>load('/libs/viz/2.1.2/viz.js').then(() => {
+  let graphs = document.querySelectorAll('.graphviz')
+
+  if (graphs.length > 0) {
+    for (let graph of graphs) {
+      let svg = undefined;
+      try {
+        svg = Viz(graph.textContent.replaceAll('–', '--'), 'svg');
+      } catch(e) {
+        svg = `<pre class="error">${e}</pre>`;
+      }
+      graph.outerHTML = svg;
+    }
+  }
+});
+</script><script>load('/libs/jquery/3.4.0/jquery.min.js').then(() => {
+  load(
+    '/js/search.js',
+    '/js/share.js',
+    '/js/smartresize.js',
+    '/js/totop.js'
+  ).then(() => {
+    load('/js/codeblock-resizer.js').then(() => {});
+    ('function' == typeof setupSearch) && setupSearch();
+  });
+});</script></div></body></html>

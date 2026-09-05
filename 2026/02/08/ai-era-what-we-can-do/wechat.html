@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/02/08/ai-era-what-we-can-do/">
+  <title>AI 时代，我们还能做什么？ | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">AI 时代，我们还能做什么？</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-02-08 · Johnson Lee · Independent Thinking</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">前段时间写完《亲眼见证程序员职业的终结》后，收到不少私信。有人问技术细节，有人讨论 Claude Code 的用法，但问得最多的是一个更根本的问题：</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">如果 AI 真能做到 Staff Engineer 的水平，那我们还能做什么？</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个问题我自己也在想。</p>
+<h2 id="职业危机" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  职业危机</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">先说让人焦虑的部分。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><a href="https://github.com/johnsonlee/graphite" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Graphite</a> 那个项目，一小时被 Claude 写完。两天的活，一小时搞定，代码质量不输我自己写的。这还只是开始。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">前几天试了另一个场景：让 Claude 写一份 PPT，提示词大概是:</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">以华尔街投行的风格，写一份关于 XXX 的 PPT 给投资人演示</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">出来的东西，从结构到措辞到图表建议，像是一个经验极其丰富的分析师写的。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这两个例子，一个是技术活，一个是商业沟通。一个靠硬技能，一个靠软技能。但 AI 都能做到八九十分。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这意味着什么？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">意味着大量“可学习的技能”正在贬值。写代码是可学习的，写 PPT 是可学习的，做数据分析是可学习的，写报告是可学习的。这些技能之所以值钱，是因为学习成本高、熟练周期长。但当 AI 能在几秒钟内输出一个“五年经验”水平的结果时，这些技能的护城河就塌了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">不只是程序员，投行分析师、咨询顾问、产品经理、市场营销——几乎所有白领岗位都会被波及。</p>
+<h2 id="新的机会" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  新的机会</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但硬币有另一面。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">以前不敢想的事情，现在可以想了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我一直想做一个基于字节码的静态分析框架，能追踪数据流，能自动清理代理。这个想法在脑子里躺了好几年，因为工程量太大——设计数据结构、实现 dataflow analysis、处理各种 edge case、写 CLI、写测试——一个人根本做不完。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">现在呢？一小时。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">以前需要一个团队花几个月才能做的事，现在一个人指挥一个 agent team 就能搞定。我说需求，Claude 写代码、跑测试、修 bug，我只需要 review 和纠偏。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这不是效率提升，这是<strong style="font-weight:700;color:#111827;">能力边界的扩展</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我儿子十岁，用 Claude Code 捣鼓了一小时，做出一个多人在线对战游戏——三种角色、物理弹道、P2P 联机。一个十岁的孩子，一小时，一个完整的游戏。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这让我意识到一件事：<strong style="font-weight:700;color:#111827;">我们可以 Dream Bigger。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">那些看似大胆的想法——以前觉得“算了吧，太复杂了，做不了”的想法——现在可以重新拿出来看看了。不是因为你变强了，而是因为你有了一支随叫随到的团队。</p>
+<h2 id="那我们还能做什么？" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  那我们还能做什么？</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">AI 能做大部分“可学习的事”。那人还剩下什么？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我的答案是：<strong style="font-weight:700;color:#111827;">去做那些“学不来的事”。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但问题马上来了：什么是学不来的？怎么知道自己擅长什么学不来的事？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我想到一个线索——<strong style="font-weight:700;color:#111827;">直觉</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">直觉这东西很微妙。你看一段代码，直觉告诉你“这里会出问题”。你看一个商业计划，直觉告诉你“这个方向不对”。你说不清具体哪里不对，但就是有感觉。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">表面上看，直觉是经验的产物——见得多了，大脑把判断逻辑压缩成了瞬时反应。但问题是：同样的经验暴露量，为什么有人形成了直觉，有人没有？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我见过干了十年的工程师，看代码还是一行一行读，读完说不出哪里有问题。也见过干了三年的人，扫一眼就能指出架构的软肋。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">差别在哪？在天赋。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">天赋不是让你“做得好”，而是让你“学得快”。更准确地说，天赋决定了三件事：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">感知的敏感度：</strong>同样的信息摆在面前，有些人天然更容易注意到某些信号。就像有人对颜色敏感，有人对节奏敏感，有人对结构敏感。</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">压缩的效率：</strong>把经验转化成可复用的直觉，这个过程的速度差异很大。有人需要踩十次坑才能记住，有人踩一次就刻进骨子里了。</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">方向：</strong>你的大脑更容易对什么类型的模式形成直觉？有人对人际关系敏锐，有人对数字敏锐，有人对时机敏锐，有人对结构敏锐。这不是选择的结果，更像是出厂设置。</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">所以，直觉其实是天赋和经验的交汇点。天赋决定了方向和效率，经验填充了内容。<strong style="font-weight:700;color:#111827;">直觉是天赋的显影剂</strong>——它把那些藏在底层的倾向，通过具体的场景显现出来。你对什么有敏锐直觉，那里可能就是你天赋所在的地方。</p>
+<h2 id="一个务实的策略" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  一个务实的策略</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">回到开头的问题：AI 时代，我们还能做什么？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">两件事。</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">Dream Bigger：</strong>那些以前觉得“做不了”的想法，重新拿出来。你现在有了一支 agent 团队，执行力不再是瓶颈。瓶颈是你的想象力。</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">找到你的直觉所在：</strong> 观察自己：对什么事情的判断不需要思考就能准？什么场景下能看到别人看不到的东西？那个方向，可能就是你最不可被替代的地方。</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">AI 可以学习任何可以被形式化的东西。它有无限的算力、无限的记忆、无限的耐心。但它没有的是方向——它不知道该往哪走、该对什么形成直觉。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">而你知道。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">与其焦虑被替代，不如认真观察自己的直觉，然后把时间砸进去。让你的直觉变得更准、更深、更不可替代。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这可能是 AI 时代，普通人最务实的应对方式。</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/02/08/ai-era-what-we-can-do/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/02/08/ai-era-what-we-can-do/</a></p>
+    </section>
+  </main>
+</body>
+</html>

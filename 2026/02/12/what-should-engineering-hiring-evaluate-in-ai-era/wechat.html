@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/02/12/what-should-engineering-hiring-evaluate-in-ai-era/">
+  <title>都 2026 了，还在考算法？ | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">都 2026 了，还在考算法？</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-02-12 · Johnson Lee · Independent Thinking</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">最近被邀请去帮其他部门面试。题目一看，还是熟悉的配方：两轮 coding、一轮 design、一轮 leadership principle。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Zoom 里，candidate 正在共享屏幕手写 LRU Cache，我脑子里却在想另一件事：这个人如果入职了，他每天的工作有多少跟眼前这道题有关系？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">答案接近零。2026 年了，我身边的工程师——包括我自己——大部分时间在跟 AI pair programming。读 AI 生成的代码，判断该不该用，在复杂系统里做 trade-off。<strong style="font-weight:700;color:#111827;">但我们筛选人的方式，还停留在 AI 之前的范式。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个错位，值得认真想一想。</p>
+<h2 id="AI-替代的是-Execution，不是-Judgment" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  AI 替代的是 Execution，不是 Judgment</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">先说一个基本判断：<strong style="font-weight:700;color:#111827;">Coding 和 Design 正在被 AI 快速 commodity 化，大部分只会写代码的工程师会被替代——这不是危言耸听，而是正在发生的事。</strong> 能留下来的，是那些 AI 替代不了的人。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">那什么是 AI 替代不了的？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">“把需求翻译成代码”这件事，价值已经接近归零。以前一个 senior Android engineer 的稀缺性很大程度上来自“写得又快又好”。现在呢？你花半小时手写的一段 ViewModel + Coroutine + Flow 的数据加载逻辑，Cursor 十秒钟就能生成一个质量不差的版本。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但你会因此把整个项目交给 AI 吗？不会。因为真正难的从来不是“怎么写”，而是“写什么”和“为什么这么写”。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这就是 execution 和 judgment 的区别。AI 极大地加速了 execution，但 judgment——在不确定性中做出好的技术决策——这件事不但没有被替代，反而因为 AI 放大了每个决策的杠杆效应而变得更重要。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">那如果我们认同这个判断，面试流程为什么还在重度考察 execution 能力？</p>
+<h2 id="算法题测的到底是什么？" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  算法题测的到底是什么？</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我不是说算法题完全没有价值。它能快速筛掉基础不扎实的人，标准化，易于评估，不容易出现面试官主观偏差。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但，<strong style="font-weight:700;color:#111827;">它测的信号和我们实际需要的信号之间，mismatch 越来越大了。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">一个 candidate 能在 40 分钟内写出一道 LeetCode Hard 的最优解，这说明什么？说明他算法基础好、coding 熟练度高、在压力下能快速产出。这些能力在 2015 年确实是强信号——那时候工程师的核心产出就是代码本身。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但 2026 年，Android 工程师日常面对的挑战更可能是这样的：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">AI 生成了一段 Compose UI 代码和一段传统 View 的实现，该选哪个？在你这个项目里选哪个？为什么？</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">一个看起来很优雅的模块化重构方案，会不会在某个你没想到的地方拖慢构建速度或者引入循环依赖？</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">产品经理说“这个页面要快”，你怎么把它转化成一个可量化、可追踪的性能优化问题？</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">这坨历史遗留的自定义 View 要不要迁移到 Compose？现在迁还是以后迁？迁到什么程度？</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这些问题，算法题一个都测不到。</p>
+<h2 id="按技术栈招聘还有意义吗？" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  按技术栈招聘还有意义吗？</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">顺着这个逻辑再往前走一步：如果 coding 本身正在被 commodity 化，那“精通某个技术栈”作为招聘硬门槛，是不是也该重新审视了？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">以前招 Android 工程师，JD 上写的是“精通 Kotlin、熟悉 Jetpack 组件、有大型 App 架构经验”。这些要求在 2015 年完全合理——掌握一个技术栈的细节需要大量时间积累，这本身就是壁垒。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但现在，一个有扎实工程基础的后端工程师，借助 AI 上手 Android 开发的速度比以前快了一个数量级。API 不熟？问 AI。Compose 没写过？AI 能边教边写。真正卡住他的不是语法和框架，而是对移动端场景的理解——电量、内存、网络不稳定、碎片化设备、用户随时可能把 App 切到后台。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">这些是领域知识，不是技术栈知识。</strong> 领域知识迁移慢，技术栈知识迁移快。我们招聘时重度筛选的，恰好是迁移越来越快的那部分。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这不是说技术栈完全不重要。一个对 Android 生态一无所知的人，短期内确实没法高效产出。但“了解”和“精通”之间的差距，正在被 AI 急速压缩。也许未来的 JD 应该写的是：“有移动端性能优化的思维方式”，而不是“5 年以上 Android 开发经验”。</p>
+<h2 id="该考什么：五个被忽视的维度" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  该考什么：五个被忽视的维度</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果让我重新设计面试，我会重点考察这几个方向：</p>
+<h3 id="Problem-Framing-—-在模糊中定义问题" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">4.1.  Problem Framing — 在模糊中定义问题</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">大部分真实的工程问题一开始都是模糊的。需求互相矛盾，约束条件不完整，stakeholders 各有各的诉求。<strong style="font-weight:700;color:#111827;">在混沌中找到正确的问题定义</strong>，是工程师最值钱的能力之一。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个怎么考？给 candidate 一个真实的、deliberately 模糊的场景——比如“我们的 App 在低端机上卡顿严重，用户投诉很多，你来负责这件事”——看他怎么提问、怎么拆解、怎么在信息不足的情况下做 reasonable assumptions。他会先问“卡顿是指哪些场景”还是直接上来就说“我们上 Baseline Profile”？过程比结论重要。</p>
+<h3 id="System-Level-Judgment-—-看到二阶效应" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">4.2.  System-Level Judgment — 看到二阶效应</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">AI 生成的代码在局部几乎总是正确的，但放到一个几十个 module 的 Android 工程里，ripple effect 是什么？把一个公共模块的数据类从 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">data class</code> 改成 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">sealed interface</code>，下游十几个 feature module 的序列化会不会炸？在主线程加一个看似无害的 SharedPreferences 读取，冷启动时间会不会劣化 200ms？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">好的工程师脑子里永远有一张系统的全景图。这张图不是画出来的，是靠踩坑积累出来的。</p>
+<h3 id="Technical-Taste-—-在多个“正确”答案中选最合适的" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">4.3.  Technical Taste — 在多个“正确”答案中选最合适的</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">AI 时代最不缺的就是方案。你问 AI 一个问题，它能给你五种实现方式，每种都能 work。但“能 work”和“应该这么做”之间有巨大的鸿沟。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Technical taste 是一种很难量化但极其重要的能力。它决定了你在做图片加载选型时选 Coil 不选 Glide 的那个直觉，决定了你在 Navigation 方案上选 type-safe route 还是 deeplink 的判断——这些直觉背后是对性能、可维护性、团队能力、业务演进方向的综合判断。</p>
+<h3 id="Meta-Engineering-—-设计让-AI-越用越好的系统" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">4.4.  Meta-Engineering — 设计让 AI 越用越好的系统</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个维度比较新，但会越来越重要。未来最有价值的工程师，不是“用 AI 工具的人”，而是“设计一套机制让 AI 在特定领域持续变强的人”。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">比如：你怎么设计一个 feedback loop，让 AI 生成的代码在 code review 中被纠正后，这些纠正能反过来提升未来的生成质量？你怎么把团队的 coding convention、模块边界规则、踩过的 ProGuard 混淆坑结构化地喂给 AI，让它真正理解你的 Android 工程？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这是 engineering on top of AI，而不仅仅是 engineering with AI。</p>
+<h3 id="Ownership-Under-Uncertainty-—-在信息不完整时敢于决策" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">4.5.  Ownership Under Uncertainty — 在信息不完整时敢于决策</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">AI 不承担后果，人承担。当一个线上 crash 影响百万用户时，需要有人能在信息不完整的情况下快速做出判断：是紧急发 hotfix 版本还是走服务端降级？crash 的 scope 有多大？要不要通知 Google Play 做加急审核？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这种在压力下做决策、承担责任的能力，永远无法被 AI 替代。</p>
+<h2 id="面试方法需要同步进化" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  面试方法需要同步进化</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">知道该考什么还不够，怎么考同样重要。几个值得尝试的方向：</p>
+<h3 id="Code-Review-式面试" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">5.1.  Code Review 式面试</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">与其让 candidate 从零写代码，不如给他一段 AI 生成的“看起来不错”的 Android 代码——比如一个用 Coroutine + Flow 实现的数据加载方案，让他 review。看他能不能发现生命周期管理的隐患，能不能判断哪些地方“能 work 但在 configuration change 时会出问题”，能不能给出更好的替代方案和理由。</p>
+<h3 id="Scenario-Based-Discussion" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">5.2.  Scenario-Based Discussion</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">给一个真实的、有冲突约束的场景——比如“App 冷启动要从 3 秒优化到 1.5 秒，但同时产品要求在启动阶段加一个新的广告 SDK 初始化，团队只有两周时间，而且不能动现有的初始化框架”——看 candidate 怎么 navigate 这些 trade-off。不是要“标准答案”，是要看推理过程。</p>
+<h3 id="Decision-History-复盘" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">5.3.  Decision History 复盘</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">让 candidate 讲一个他做过的重要技术决策，追问细节：当时还有什么其他选项？你为什么排除了它们？如果回到那个时间点，你会做不同的选择吗？为什么？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这些方法对面试官的要求更高——你不能靠标准答案来评分，需要面试官自己有足够的 judgment 来评估 candidate 的 judgment。但这恰恰是对的：<strong style="font-weight:700;color:#111827;">如果一种面试方式不需要面试官动脑子，那它大概率也测不到 candidate 是否会动脑子。</strong></p>
+<h2 id="不是降低-Bar，是转移-Bar" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">6.  不是降低 Bar，是转移 Bar</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我知道一定会有人说：你这样搞，是不是在降低技术标准？没有算法题，怎么保证基础功？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">担忧合理，但恰恰相反。<strong style="font-weight:700;color:#111827;">算法题考的是一个越来越容易被 AI 替代的维度，而我说的这些维度是 AI 越强、人越需要强的能力。</strong> 这是在把 bar 转移到真正重要的地方。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">基础功依然重要，但“基础功”的定义在变。以前 Android 工程师的基础功是手写自定义 View、背 Activity 生命周期、默写 Handler 消息机制。现在的基础功是：你能不能读懂 AI 生成的 Compose 代码背后的 recomposition 策略？你能不能判断这段代码放到你的多模块工程里会不会引入不必要的依赖？你知不知道什么时候该信任 AI 的建议，什么时候不该？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这些才是 2026 年的基础功。</p>
+<h2 id="变化总是从一小步开始" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">7.  变化总是从一小步开始</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我并不指望整个行业一夜之间改变面试方式。标准化的算法面试有它的组织惯性和存在理由。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但如果你是有话语权的技术面试官，完全可以从自己开始。在你的面试环节里多问一个 trade-off 的问题，少出一道背诵性质的算法题。在 debrief 的时候多 push 一句“这个 candidate 的 judgment 怎么样”，少纠结“他这道题的时间复杂度是不是最优”。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">工具在变，工作在变，但我们筛选人的方式还停在原地。</strong> 这个 gap 越大，我们招到的人和我们真正需要的人之间的距离就越远。</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/02/12/what-should-engineering-hiring-evaluate-in-ai-era/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/02/12/what-should-engineering-hiring-evaluate-in-ai-era/</a></p>
+    </section>
+  </main>
+</body>
+</html>

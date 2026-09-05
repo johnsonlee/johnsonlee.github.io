@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/02/26/from-llm-to-effective-communication/">
+  <title>从 LLM 到高效沟通 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">从 LLM 到高效沟通</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-02-26 · Johnson Lee · Independent Thinking</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">最近在给儿子讲 LLM 的工作原理，做了一套 <a href="https://llm.johnsonlee.io/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">PPT</a> 。讲到 context window 的时候，我随手举了个例子：</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">你跟 AI 说“帮我推荐一部电影”，它只能给你一个大众化的答案。但如果你说“我喜欢悬疑片，偏好非线性叙事，最近刚看完《穆赫兰道》想找类似的，但节奏可以稍快一点”——它给出的推荐会精准得多。</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">儿子问：为什么？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我说：因为你给了它更多的特征维度。它对你的理解从一维变成了多维，自然就能在更小的范围里找到更匹配的答案。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">说完这句话，我愣了一下。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这不就是人与人之间沟通的底层逻辑吗？</p>
+<h2 id="LLM-让沟通规律变得可观测" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  LLM 让沟通规律变得可观测</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">人与人之间的沟通效率，一直是一件很“玄”的事。有人天生善于表达，有人说了半天别人还是一头雾水，但很少有人能说清楚，差距到底在哪。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">LLM 把这件事变得可量化了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">你给模型的 prompt 越精确、维度越丰富，输出质量就越高。这不是玄学，是数学——<strong style="font-weight:700;color:#111827;">更多的特征维度意味着更小的搜索空间，更少的歧义，更高的匹配精度。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">反过来，如果你给一个模糊的指令，模型只能在一个巨大的可能性空间里“猜”。猜对了是运气，猜错了你还觉得“AI 不行”。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但问题真的出在 AI 身上吗？</p>
+<h2 id="人与人之间的“低维沟通”" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  人与人之间的“低维沟通”</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">把这个逻辑映射到人际沟通，你会发现大部分低效沟通的根因是一样的——<strong style="font-weight:700;color:#111827;">信息维度不够。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">举个工作中常见的例子：</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">“这个页面加载太慢了，优化一下。”</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这句话有多少维度？一个——“慢”。接到这个需求的工程师，脑子里至少会冒出十个问题：哪个页面？什么场景下慢？慢到什么程度？是首次加载还是每次都慢？有 profiling 数据吗？目标是多少？优先级呢？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果换一种说法：</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">“商品详情页在弱网（3G）环境下首屏渲染超过 5 秒，用户跳出率比 Wi-Fi 场景高 40%。目标是把弱网场景的 TTI 压到 3 秒以内，P1 优先级，这个季度内完成。”</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">同样是“优化页面加载”，第二种表达至少多了六个维度：页面、场景、指标、对比基准、目标、优先级。接收者几乎不需要追问就能开始行动。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">沟通效率的差异，本质上就是特征维度的差异。</strong></p>
+<h2 id="维度越多，歧义越少" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  维度越多，歧义越少</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">LLM 处理语言的方式，给了这个规律一个非常直观的解释。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Token 进入模型后，会被映射成一个高维向量。单独看一个 token，它可能有无数种含义；但当它和上下文中的其他 token 组合在一起，每增加一个维度，可能的语义空间就被压缩一次。最终，模型能在一个足够小的范围内“锁定”你的意图。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">人脑处理信息的方式也类似。你跟对方说“帮我订个会议室”，对方脑中浮现的可能是任何一间会议室、任何一个时间段。但你说“明天下午两点到三点，6 人，需要投屏，最好靠窗”——每多一个约束条件，对方的决策空间就缩小一圈，执行的准确率就高一截。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这不是“沟通技巧”，这是信息论。</p>
+<h2 id="为什么大多数人不这么做？" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  为什么大多数人不这么做？</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">既然多维沟通这么好，为什么大多数人还是习惯一维表达？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">因为提供多维信息是有认知成本的。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">你要先在自己脑子里把需求想清楚——哪些维度是关键的、哪些是噪音、什么粒度合适。这需要你在表达之前完成一次“内部建模”，把模糊的感受转化成结构化的信息。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">大多数人跳过了这一步。不是因为懒，是因为他们自己都没想清楚。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这也是为什么"prompt engineering"说起来简单，但很多人还是写不好 prompt——<strong style="font-weight:700;color:#111827;">不是不会跟 AI 说话，是不会跟自己说话。</strong> 你没法输出你脑中不存在的结构。</p>
+<h2 id="教-LLM-原理的意外收获" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  教 LLM 原理的意外收获</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">回到给儿子讲课的场景。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我原本只是想让他理解 LLM 怎么工作的，但讲着讲着发现，这堂课最有价值的部分不是技术原理本身，而是它揭示的沟通规律：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">你想让对方（无论是人还是 AI）准确理解你，就必须提供足够多的有效维度</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">有效维度不是信息量的堆砌，而是<strong style="font-weight:700;color:#111827;">跟目标相关的、能缩小搜索空间的约束条件</strong></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">表达能力的上限，取决于你对自己需求的理解深度</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这些规律在 LLM 身上是即时可验证的——你改一下 prompt，输出马上变化，因果关系清晰可见。而在人与人之间的沟通中，反馈是延迟的、模糊的，你很难精确归因。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">LLM 就像一个沟通实验室。</strong> 它把“表达越精确，理解越到位”这个规律从玄学变成了可复现的实验。</p>
+<h2 id="真正的沟通力是什么？" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">6.  真正的沟通力是什么？</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">很多人把沟通力等同于口才、表达力、甚至情商。这些都是手段，不是本质。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">真正的沟通力，是把脑中模糊的意图转化成多维结构化信息的能力。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">你对自己的需求理解得越深，能提取出的有效维度就越多，对方需要猜测的空间就越小，沟通的效率就越高。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这跟你是在跟人说话还是跟 AI 说话无关。信息传递的物理定律不会因为接收者是碳基还是硅基而改变。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">所以下次沟通效率低的时候，先别急着怪对方“理解力差”。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">先问自己：我给了几个维度？</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/02/26/from-llm-to-effective-communication/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/02/26/from-llm-to-effective-communication/</a></p>
+    </section>
+  </main>
+</body>
+</html>

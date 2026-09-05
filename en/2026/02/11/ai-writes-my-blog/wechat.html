@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2026/02/11/ai-writes-my-blog/">
+  <title>I Won&#39;t Pretend Anymore — AI Writes My Blog | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">I Won&#39;t Pretend Anymore — AI Writes My Blog</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-02-11 · Johnson Lee · Independent Thinking</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Last week a friend read my blog and messaged me: "Where do you find the time to write all these long posts?"</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I replied with two words: I don't.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">That confused him even more.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The truth is, I did "write" these posts -- but I didn't type them out word by word. They're the product of conversations between me and AI. I supply the ideas and judgment; AI turns them into finished articles.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The whole process takes 5 minutes.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I know what you're thinking: aren't AI-written articles just the kind of boilerplate that opens with "as technology continues to evolve" and closes with "let's wait and see"?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Not really. The key is how you make AI write.</p>
+<h2 id="Good-tools-make-good-work" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Good tools make good work</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">If you just tell AI "write me a blog post about XXX," what you get is almost certainly a generic press release. AI doesn't know your writing style, your blog's tech stack, or your front matter format. Having to teach it from scratch every time -- you might as well write it yourself.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">So the first thing I did was build Claude a dedicated "Blog Writer Skill."</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Think of a Skill as a work manual for AI. It tells AI: what format your blog uses, what your writing style looks like, how articles should be structured, and how to publish them. <strong style="font-weight:700;color:#111827;">Configure once, effective forever.</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The best part: the process of building this Skill is itself just chatting with Claude.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I said "I want to build a Skill for writing blog posts," and Claude started asking me questions: What's the tech stack? Hexo. Front matter format? I pasted an existing post for it to see. Writing language? Primarily Chinese. Where does it push to? GitHub Pages, repo <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">johnsonlee/blog</code>, <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">master</code> branch.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Just like that, back and forth, and a few minutes later Claude generated a complete Skill with two files:</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">SKILL.md</strong> -- the core instruction file, looks like this (excerpt):</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">---
+name: blog-writer
+description: &gt;
+  Write tech blog posts and publish to johnsonlee.io (Hexo + GitHub Pages).
+  Use this skill when the user mentions "write a blog", "write a post",
+  "publish a post", "blog", "write a tech share", or after discussing
+  a topic says "turn this into a blog post".
+---</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">It defines the front matter format, file naming conventions, writing style (including tone, structure, and what to avoid), and even the workflow for pushing to GitHub.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">push_to_github.sh</strong> -- a push script that commits the generated Markdown file directly to my blog repo via the GitHub API. No cloning, no local operations -- one API call and done.</p>
+<h2 id="Writing-style-matters" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Writing style matters</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The part of the Skill I spent the most thought on was defining the writing style.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I pasted several of my previous articles for Claude to analyze my writing characteristics. What it distilled was surprisingly accurate:</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Primarily Chinese, but technical terms stay in English, with natural code-switching</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Conversational but with depth, like talking to a peer</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Fond of using rhetorical questions to drive arguments forward</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Uses scenario imagination to ground abstract concepts</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Bold text highlights core judgments, not decoration</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Then it also summarized what I don't do: no "as we all know," no "first... second... finally" textbook structure, no referring to myself as "the author," no PR-speak tone.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">Once these rules are written into the Skill, every future article automatically follows them.</strong> I don't need to remind AI every time to "not sound too formal."</p>
+<h2 id="What-writing-a-blog-post-in-5-minutes-actually-looks-like" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">What writing a blog post in 5 minutes actually looks like</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">With the Skill in place, the blogging workflow becomes:</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">Minute 1: Throw out a topic.</strong></p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">"Write a blog post on 'When Agents become the entry point, where do Apps go?'"</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">One sentence. Claude generates a complete article following the style and structure defined in the Skill.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">Minutes 2-3: Review and adjust.</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The AI-generated first draft usually has sound structure, but some arguments might not be sharp enough, or an example might not quite fit. I give feedback:</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">"The argument in section three is too mild, make it more aggressive"<br>"Replace the e-commerce example with a food delivery scenario"</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Claude revises, I review once more.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">Minute 4: Confirm and publish.</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Claude shows the final version, confirms the filename, tells me which repo and branch it'll push to. I say "ship it," and it pushes the article via the GitHub API.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">Minute 5: GitHub Pages auto-builds, article goes live.</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">No editor needed, no <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">git clone</code>, no <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">hexo new post</code>.</p>
+<h2 id="Is-this-cheating" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Is this cheating?</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I bet some people will say: isn't this just having AI ghostwrite for you? What's there to show off?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Here's how I see it: <strong style="font-weight:700;color:#111827;">the core of writing has never been typing -- it's thinking.</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The value of a good article lies in its perspective, its insight, its mental framework. AI can't fabricate those -- it just helps me turn what I've already thought through into a format readers can consume.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Just like no one considers using a typewriter "cheating," and no one considers using Word's spell checker "cheating." AI writing simply raises efficiency by another order of magnitude.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">And honestly, the process of conversing with AI is itself thinking. I need to be clear about what I want to express, what my core argument is, what I want readers to take away. If I can't articulate these things myself, AI can't write them either.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">AI is an amplifier, not a replacement. What it amplifies is your thinking ability, not your typing speed.</strong></p>
+<h2 id="You-can-do-it-in-5-minutes-too" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">You can do it in 5 minutes too</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">If you have your own tech blog and want this workflow, the steps are simple:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">Chat with Claude and build your Blog Writer Skill</strong> -- tell it your blog's tech stack, writing style, and publishing workflow; it'll generate a SKILL.md and push script for you</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">Generate a Personal Access Token on GitHub</strong> -- go to <a href="https://github.com/settings/tokens" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://github.com/settings/tokens</a>, check the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">repo</code> permission, dedicated to pushing blog posts</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">Write blog posts</strong> -- open Claude, say "write a blog post on XXX," review, adjust, push, done</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The entire setup takes under 10 minutes. After that, each article takes 5 minutes.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Of course, this workflow assumes you have something worth writing. AI can help you organize language, but it can't generate insight for you. If you have no opinions in your head, AI will just help you produce nonsense more efficiently.</p>
+<h2 id="One-last-thing" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">One last thing</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">This article itself was written using this exact workflow.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">From the moment I told Claude "write a blog post titled 'I won't pretend anymore -- AI writes my blog'" to the article you're reading now, what happened in between? One conversation, a few rounds of adjustment, one API call.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Some might feel something's missing from writing this way -- the ritual of weighing every word, the sense of accomplishment from finishing a long piece.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">But I think <strong style="font-weight:700;color:#111827;">spending the saved time thinking about more problems is far more valuable than spending it on formatting and word choice.</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">After all, writing is for conveying ideas, not for proving how many words you can type.</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2026/02/11/ai-writes-my-blog/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2026/02/11/ai-writes-my-blog/</a></p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2021/08/02/the-deprecation-of-agp-transform-api/">
+  <title>AGP Transform API 被废弃意味着什么？ | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">AGP Transform API 被废弃意味着什么？</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2021-08-02 · Johnson Lee · Computer Science / Mobile / Android</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">前几天 AGP 7.0 正式发布，细心的同学可能已经发现 从 AGP 1.3 一直存在的 Transform API 被标记为废弃了，但从注释中并没有说明应该用哪个 API 来替代，发现了这个问题，有同学就不淡定了，连 AGP 中最稳定的 Transform API 都被废弃了，以后是不让用字节码插桩了吗？</p>
+<h2 id="初见端倪" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  初见端倪</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">从 AGP 4.2 开始，就出现了几个跟操作字节码相关的新 API ，比如：<em style="font-style:italic;color:#1f2937;">com.android.gradle.instrumentation</em> 包下的 <em style="font-style:italic;color:#1f2937;">AsmClassVisitorFactory</em> ，咋一看，不知道这玩意儿是干啥的，第一次见到这个 API ，我的第一反应是 AGP 不会是搞了个跟 Booster 类似的东西吧，然而研究了一番发现，是我想多了，AGP 团队压根儿就还没到这份儿上呢，自己的 bug 都修不过来，还有心思整字节码注入，况且单从在 Android 上玩字节码这件事情上来看，全球范围内，中国在这方面的经验要甩其他区域甚至硅谷大厂好几条街，都已经丧心病狂到拿 ASM 写业务代码，卷到你开始怀疑人生，这一项技术的应用，连硅谷的移动端团队都望尘莫及。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">经过一番研究，终于有了眉目，AGP 新增的这几个跟 Instrumentation 相关的 API 是来自 Gradle，并不是 AGP 原创，这么一来，也就解释了为什么 AGP 的版本要与 Gradle 的版本保持一致，从 4.2 直接跳到 7.0 了，不光是 AGP 需要 Transform，Java 也需要，所以由  Gradle 来提供统一的 Transform API 也合情合理。</p>
+<h2 id="何去何从" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  何去何从</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">国内很多团队都或多或少的用 AGP 的 Transform API 来搞点儿黑科技，那么问题来了，如果 AGP 8.0 要彻底废弃 Transform API 会怎样？尤其是那些重度依赖字节码插桩的项目，有人说，什么 AGP 7.0，我们连4.0 都还没用上呢！</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">虽然 AGP 官方没有明确给出 Transform API 的替代品，但从新增的 API 来看，方向已经很明确了，用 Gradle 提供的 <a href="https://docs.gradle.org/current/dsl/org.gradle.api.artifacts.transform.TransformAction.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">TransformAction</a> 来替代原来的 Transform API，而且，AGP 很早就已经开始使用 Gradle <a href="https://docs.gradle.org/current/dsl/org.gradle.api.artifacts.transform.TransformAction.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">TransformAction</a> 来对依赖项进行 transform 了。</p>
+<h2 id="TransformAction" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  TransformAction</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">关于 <a href="https://docs.gradle.org/current/dsl/org.gradle.api.artifacts.transform.TransformAction.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">TransformAction</a> 如何使用，Gradle 官方已经提供了很详细的文档--<a href="https://docs.gradle.org/current/userguide/artifact_transforms.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Transforming dependency artifacts on resolution</a>，与 AGP 类似，也是需要先注册，只不过 AGP 是通过 <em style="font-style:italic;color:#1f2937;">Android Extension</em> 来注册 <em style="font-style:italic;color:#1f2937;">Transform</em> ，Gradle 是通过 <em style="font-style:italic;color:#1f2937;">DependencyHandler</em> 来注册 <em style="font-style:italic;color:#1f2937;">TransformAction</em> ，差异并不算很大</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">对于使用了 Booster 的插件来说，迁移到 AGP 7.0 几乎没什么成本，毕竟 Booster 中间抽象了一层，底层是用 AGP 的 Transform API 还是 Gradle 的 TransformAction ，开发者并不需要关心，能正确 transform 就行了。</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2021/08/02/the-deprecation-of-agp-transform-api/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2021/08/02/the-deprecation-of-agp-transform-api/</a></p>
+    </section>
+  </main>
+</body>
+</html>

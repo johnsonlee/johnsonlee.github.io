@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2020/01/23/service-provider-interface-optimization/">
+  <title>SPI 性能优化 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">SPI 性能优化</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2020-01-23 · Johnson Lee · Computer Science / Open Source / Booster</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">做 Java 开发的同学应该对 <a href="https://docs.oracle.com/javase/tutorial/ext/basics/spi.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SPI (Service Provider Interface)</a> 不会陌生，无论是 JDK、Gradle 亦或是一些第三方框架，都或多或少的用它来实现可扩展的能力，为什么在 Android 平台上却鲜为人知呢？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">个人认为原因有 2 点：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Android 与 Java 应用的分发方式不同</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"> Java 应用采用 JAR 分发，扩展起来非常容易，而 Android APK 一旦打好包，就相当于固化下来了，实现可扩展需要借助于其它非官方推荐的手段</p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">SPI 在 Android 平台上的性能堪忧</p>
+</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">  由于 Android 设备的性能普遍低于 PC ，加上 Android 平台特有的 ANR 机制，使得 SPI 很容易在 Android 上发生 卡顿甚至 ANR</p>
+<h2 id="什么是-SPI" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  什么是 SPI</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Java 官方的定义是：</p>
+<h3 id="Service" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">1.1.  Service</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">提供访问特定应用功能和特性的一系列编程接口和类</p>
+<h3 id="Service-Provider-Interface-SPI" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">1.2.  Service Provider Interface (SPI)</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">由 Service 定义的一系列公共接口和抽象类</p>
+<h3 id="Service-Provider" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">1.3.  Service Provider</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">SPI 的实现</p>
+<h2 id="SPI-的性能缺陷" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  SPI 的性能缺陷</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Java 原生的 SPI 是通过 <em style="font-style:italic;color:#1f2937;">ClassLoader</em> 在 <em style="font-style:italic;color:#1f2937;">CLASSPATH</em> 中搜索 <em style="font-style:italic;color:#1f2937;">META-INF/services/</em> 下 SPI 配置文件，然后读取配置文件中的内容，所以需要解析 JAR 文件（Android 平台是解析 APK），而这个过程需要遍历整个 JAR/APK 中所有的条目，因此非常耗时（当年就被它坑得很惨）</p>
+<h2 id="选择-SPI-的理由" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  选择 SPI 的理由</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">既然 SPI 在 Android 上表现这么差，为什么还要用它呢？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在应用开发的过程中，难免因为应用架构的原因，需要支持非运行时可扩展能力，比如：接口与实现分离、一个接口对应多个实现需要动态查找、反向依赖等等，相对于 <a href="https://github.com/google/dagger" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Dagger</a> 来说，它简单、原生 API 支持、不需要依赖额外的第三方库。</p>
+<h2 id="如何优化" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  如何优化</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">既然选择了 SPI，如何解决 SPI 在 Android 平台上的性能瓶颈？——去 I/O</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">方法其实也很简单，分为如下几个步骤，我们不妨用逆向思维来看：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">在构建期间生成一个服务注册表—— <em style="font-style:italic;color:#1f2937;">ServiceRegistry</em></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">将代码中所有调用 <em style="font-style:italic;color:#1f2937;">ServiceLoader</em> 的指令替换成调用自定义的 <em style="font-style:italic;color:#1f2937;">ShadowServiceLoader</em></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">ShadowServiceLoader</em> 从 <em style="font-style:italic;color:#1f2937;">ServiceRegistry</em> 中获取 <em style="font-style:italic;color:#1f2937;">Service Provider Interface</em> 与 <em style="font-style:italic;color:#1f2937;">Service Provider</em> 的映射关系</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但是这里有几个问题：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">ServiceRegistry</em> 中存储的是 <em style="font-style:italic;color:#1f2937;">Class&lt;Service&gt;</em> 与 <em style="font-style:italic;color:#1f2937;">Class&lt;ServiceProvider&gt;</em> 的映射还是别的映射方式？</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">  可以是 <em style="font-style:italic;color:#1f2937;">Class</em> 的映射，但是，如果要实例化 <em style="font-style:italic;color:#1f2937;">Service Provider</em> 就得需要反射</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">ServiceLoader</em> 通过 <em style="font-style:italic;color:#1f2937;">ServiceRegistry</em> 加载的时候，能否完全避免反射？</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">  当然是可以的，这样 <em style="font-style:italic;color:#1f2937;">ServiceRegistry</em> 中存储的映射关系就需要调整为 <em style="font-style:italic;color:#1f2937;">Class&lt;Service&gt;</em> 与 <em style="font-style:italic;color:#1f2937;">Creator&lt;ServiceProvider&gt;</em> 之间的映射关系，内容大致如下：</p>
+  <pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class ServiceRegistry {
+
+    static final Map&lt;Class&lt;?&gt;, List&lt;Callable&lt;?&gt;&gt;&gt; registry = new HashMap&lt;&gt;();
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">  <em style="font-style:italic;color:#1f2937;">Creator</em> 的内容大致如下：</p>
+  <pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class ServiceProviderCreator implements Callable&lt;ServiceProvider&gt; {
+
+    @Override
+    public ServiceProvider call() {
+        return new ServiceProvider();
+    }
+
+}</code></pre>
+
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">如何将映射关系注册到 <em style="font-style:italic;color:#1f2937;">ServiceRegistry</em> 里面呢？——静态代码块，内容大致如下：</li>
+</ol>
+  <pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class ServiceRegistry {
+
+    static final Map&lt;Class&lt;?&gt;, List&lt;Callable&lt;?&gt;&gt;&gt; registry = new HashMap&lt;&gt;();
+
+    static {
+        register(InterfaceA.class, new InterfaceACreator())
+    }
+
+}</code></pre>
+
+<h2 id="示例" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  示例</h2><h3 id="HttpProtocolConfig-kt" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">5.1.  HttpProtocolConfig.kt</h3><pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">interface HttpProtocolConfig {
+
+    fun getProtocol(): String
+
+}</code></pre>
+
+<h3 id="HttpProtocolConfigProvider-kt" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">5.2.  HttpProtocolConfigProvider.kt</h3><pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">@Service(HttpProtocolConfig.class)
+class HttpProtocolConfigProvider : HttpProtocolConfig {
+
+    override fun getProtocol() = if (BuildConfig.DEBUG) "http" else "https"
+
+}</code></pre>
+
+<h3 id="HomePresenter-kt" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">5.3.  HomePresenter.kt</h3><pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">class HomePresenter : Presenter() {
+
+    private val config = ServiceLoader.load(HttpProtocolConfig::class.java).first()
+
+    fun loadConfig() {
+        println(config.getProtocol())
+    }
+
+}</code></pre>
+
+<h2 id="源代码" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">6.  源代码</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">该方案已经完全开源，项目地址：<a href="https://github.com/johnsonlee/service-loader-android" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://github.com/johnsonlee/service-loader-android</a></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">示例代码详见：<a href="https://github.com/johnsonlee/service-loader-android/tree/master/example" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://github.com/johnsonlee/service-loader-android/tree/master/example</a></p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2020/01/23/service-provider-interface-optimization/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2020/01/23/service-provider-interface-optimization/</a></p>
+    </section>
+  </main>
+</body>
+</html>

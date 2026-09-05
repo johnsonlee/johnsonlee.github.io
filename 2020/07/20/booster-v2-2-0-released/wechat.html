@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2020/07/20/booster-v2-2-0-released/">
+  <title>Booster 2.3.0 正式发布 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Booster 2.3.0 正式发布</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2020-07-20 · Johnson Lee · Computer Science / Open Source / Booster</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Booster 最近的两个版本主要是以修 bug 为主，所以，未发布正式的 <em style="font-style:italic;color:#1f2937;">Release Note</em> ，本次发布的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">2.3.0</code> 版本可谓是一个重量级的版本，主要的更新内容如下：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">多线程优化</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"> 在之前的版本中，线程优化可能会存在漏掉或者因为指令重排导致字节码注入失效的情况，为了彻底的解决这一问题，在 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">2.3.0</code> 中采用了更可靠、更安全的实现方案，在稳定性方面的表现更加出色，并增加了对 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ForkJoinPool</code> 的支持</p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">Transform</em> 产出物校验</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"> 在之前的版本中，如果 <em style="font-style:italic;color:#1f2937;">Transformer</em> 本身有 bug 或者第三库的字节码有问题，会导致构建失败，而且，从堆栈信息根本无法定位具体是哪个 <em style="font-style:italic;color:#1f2937;">JAR</em> 或者哪个 <em style="font-style:italic;color:#1f2937;">class</em> ，因此，为了帮助开发者定位像 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">SimException</code> 这样的构建异常，在 <em style="font-style:italic;color:#1f2937;">2.3.0</em> 中，增加了 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">booster.transform.verifiy</code> 开关（默认为 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">false</code>），当出现 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">SimException</code> 时，可以通过此开关来启用 <em style="font-style:italic;color:#1f2937;">Transform</em> 校验功能</p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">修复了 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">WebView</code> 预加载模块 API 兼容性问题</p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">优化 <a href="https://github.com/didi/booster/blob/master/booster-transform-shared-preferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-transform-shared-preferences</a> 模块的线程管理</p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">升级注入类库的 <em style="font-style:italic;color:#1f2937;">sourceCompatibility</em> 和 <em style="font-style:italic;color:#1f2937;">targetCompatibility</em> 至 <em style="font-style:italic;color:#1f2937;">Java 1.8</em> ，包括：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://github.com/didi/booster/blob/master/booster-android-instrument" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-android-instrument</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://github.com/didi/booster/blob/master/booster-android-instrument-activity-thread" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-android-instrument-activity-thread</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://github.com/didi/booster/blob/master/booster-android-instrument-finalizer-watchdog-daemon" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-android-instrument-finalizer-watchdog-daemon</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://github.com/didi/booster/blob/master/booster-android-instrument-logcat" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-android-instrument-logcat</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://github.com/didi/booster/blob/master/booster-android-instrument-media-player" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-android-instrument-media-player</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://github.com/didi/booster/blob/master/booster-android-instrument-res-check" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-android-instrument-res-check</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://github.com/didi/booster/blob/master/booster-android-instrument-shared-preferences" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-android-instrument-shared-preferences</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://github.com/didi/booster/blob/master/booster-android-instrument-thread" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-android-instrument-thread</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://github.com/didi/booster/blob/master/booster-android-instrument-toast" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-android-instrument-toast</a></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><a href="https://github.com/didi/booster/blob/master/booster-android-instrument-webview" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">booster-android-instrument-webview</a></li>
+</ul>
+</li>
+</ol>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2020/07/20/booster-v2-2-0-released/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2020/07/20/booster-v2-2-0-released/</a></p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2020/04/01/asynchronous-programming/">
+  <title>不懂 Kotlin Coroutines ？ | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">不懂 Kotlin Coroutines ？</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2020-04-01 · Johnson Lee · Computer Science / Kotlin</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">还记得在 <em style="font-style:italic;color:#1f2937;">jQuery</em> 还没有诞生的年代，我在大学宿舍用一个通宵撸出了 <em style="font-style:italic;color:#1f2937;">Tree</em> 组件，足足令我兴奋了一整天，自此之后，感觉自己已经深得 <em style="font-style:italic;color:#1f2937;">JavaScript</em> 之精髓，工作多年后，因为项目的缘故，又重拾 <em style="font-style:italic;color:#1f2937;">JavaScript</em> 发现 <em style="font-style:italic;color:#1f2937;">Node.js</em> 竟然如此让人着迷，就好像一把尘封了多年的利剑再现峰芒，一周的时间便撸了一个前端插件化框架，尽管是在 <em style="font-style:italic;color:#1f2937;">require.js</em> 流行的年代，但 <em style="font-style:italic;color:#1f2937;">require.js</em> 依然无法解决按依赖顺序动态加载插件模块的问题（因为模块中不仅仅只有 <em style="font-style:italic;color:#1f2937;">js</em> 代码，还有 <em style="font-style:italic;color:#1f2937;">css</em> ，<em style="font-style:italic;color:#1f2937;">json</em> 等资源），没办法，只好自己动手造轮子了（要是那时候有 <em style="font-style:italic;color:#1f2937;">webpack</em> 该多好啊）。</p>
+<h2 id="Promise-vs-Callback-Hell" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  Promise vs Callback Hell</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">其实早在 1976 年，<em style="font-style:italic;color:#1f2937;">Promise</em> 的概念就已被提出来，然而，它真正的流行起来还是因为 <a href="https://api.jquery.com/category/deferred-object/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">jQuery Deferred Objects</a>，在 2012 年的时候，<em style="font-style:italic;color:#1f2937;">Promise</em> 被作为规范提了出来，最终被 <em style="font-style:italic;color:#1f2937;">ES 2015</em> 所采纳，为什么当年 <em style="font-style:italic;color:#1f2937;">Promise</em> 会如此流行呢？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">咱们还是先看看下面这个简单的例子：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">／**
+  * 异步加载资源
+  *／
+function loadResources(res, callback) {
+    xhr.get(res, function(e, resp) {
+        if (e) {
+            callback(e);
+        } else {
+            callback(resp.responseText);
+        }
+    })
+}
+
+/**
+ * 异步加载模块
+ */
+function loadModule(name, callback) {
+    loadResources(name + "/manifest.json", function(manifest) {
+        var style = manifest.getStyle();
+        var script = manifest.getScript();
+        var layout = manifest.getLayout();
+
+        loadResources(layout, function() {
+            loadResources(script, function() {
+                loadResources(style, function() {
+                    'function' === typeof callback &amp;&amp; callback();
+                });
+            });
+        });
+    });
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这就是传说中的 <a href="http://callbackhell.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Callback Hell</a>，当年 <em style="font-style:italic;color:#1f2937;">Node.js</em> 之父也拿它没办法，只好将代码缩进由 4 个空格变成 2 个空格（这就是为什么 <em style="font-style:italic;color:#1f2937;">Node.js</em> 的世界很流行 2 个空格缩进的原因），咱们再来看看 <em style="font-style:italic;color:#1f2937;">Promise</em> 是如何解决 <a href="http://callbackhell.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Callback Hell</a> 的：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">function loadResources(res) {
+    return new Promise(function(resolve, reject) {
+        xhr.get(res, function(e, resp) {
+            if (e) {
+                reject(e);
+            } else {
+                resolve(resp.responseText);
+            }
+        });
+    });
+}
+
+function loadModule(name) {
+    return loadResources(name + "/manifest.json").then(function(manifest) {
+        return Promise.all(manifest.getStyle(), manifest.getScript(), manifest.getLayout());
+    });
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">怎么样？是不是有种耳目一新的感觉？从此，<em style="font-style:italic;color:#1f2937;">JavaScript</em> 的世界里再也没有那烦人的 <a href="http://callbackhell.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Callback Hell</a> 了，看到 <em style="font-style:italic;color:#1f2937;">ES 5</em> 的 <em style="font-style:italic;color:#1f2937;">Promise</em> 这么好用，<em style="font-style:italic;color:#1f2937;">Java</em> 世界的同学就按耐不住了，为何不把 <em style="font-style:italic;color:#1f2937;">Promise</em> 用 <em style="font-style:italic;color:#1f2937;">Java</em> 实现呢？我当年就这么干过，只不过呢那时候还没有 <em style="font-style:italic;color:#1f2937;">Java 8</em> 的 <em style="font-style:italic;color:#1f2937;">lambda</em> ，如果用 <em style="font-style:italic;color:#1f2937;">Java 7</em> 或者更早的版本来实现，语法表达上更是蹩脚，还不如用 <em style="font-style:italic;color:#1f2937;">Java</em> 原生的 <em style="font-style:italic;color:#1f2937;">Fork/Join</em> 框架呢，所以，干脆放弃了。自从玩转了 <em style="font-style:italic;color:#1f2937;">Kotlin</em> ，加上 <em style="font-style:italic;color:#1f2937;">Kotlin</em> 比 <em style="font-style:italic;color:#1f2937;">Java</em> 语法更简洁，又激发了造轮子的欲望，于是，周末的时候，撸了一个 <a href="https://github.com/johnsonlee/promise/tree/demo" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Kotlin 版的 Promise</a>，<a href="https://github.com/johnsonlee/promise/blob/demo/src/main/kotlin/io/johnsonlee/promise/Main.kt" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Main.kt</a> 中的例子来自 <a href="https://github.com/johnsonlee/stargazer/blob/master/src/github/api/v3.js" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Stargazer</a> 这个项目（当时用来监测 <a href="https://johnsonlee.github.io/stargazer/#/didi/booster" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Booster star 趋势</a>）。</p>
+<h2 id="Generator-Function-vs-Callback-Hell" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  Generator Function vs Callback Hell</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在当年用 <em style="font-style:italic;color:#1f2937;">Node.js</em> 写后端，<a href="https://expressjs.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Express</a> 是首选，简直是不要太简单，然而 <em style="font-style:italic;color:#1f2937;">JavaScript</em> 的世界总是不乏创造力，<a href="https://expressjs.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Express</a> 的作者后来又造了一个新的轮子 —— <a href="https://koajs.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KOA</a>，并号称是 "Next generation web framework for node.js"，同样的是 "web framework for node.js"，<a href="https://koajs.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KOA</a> 跟 <a href="https://expressjs.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Express</a> 到底有什么区别呢？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这还得从 <em style="font-style:italic;color:#1f2937;">Express</em> 说起，<em style="font-style:italic;color:#1f2937;">Express</em> 中有一个 <em style="font-style:italic;color:#1f2937;">middleware</em> 的概念，有点类似 <em style="font-style:italic;color:#1f2937;">Java EE</em> 中的 <em style="font-style:italic;color:#1f2937;">Filter</em> 或者 <em style="font-style:italic;color:#1f2937;">OkHttp</em> 中的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Interceptor</code>，采用 <a href="https://en.wikipedia.org/wiki/Chain-of-responsibility_pattern" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Chain of Responsibility（责任链）</a> 的方式处理请求和响应，在 <em style="font-style:italic;color:#1f2937;">Express</em> 中是这样使用的：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">var express = require('express');
+var app = express();
+
+/**
+ * 为每个请求加上 `requestTime`
+ */
+app.use(function(req, res, next) {
+    req.requestTime = new Date();
+    next();
+});
+
+app.listen(3000);</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">再来看看 <a href="https://koajs.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KOA</a> 的黑魔法：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">var koa = require('koa');
+var app = koa();
+
+app.use(function* (next) {
+    this.requestTime = new Date();
+    yield next;
+});
+
+app.listen(3000);</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">function*</code> 就是 <em style="font-style:italic;color:#1f2937;">ES 6</em> 推出的 <em style="font-style:italic;color:#1f2937;">Generator Function</em> ，<a href="https://koajs.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KOA</a> 用它替代了 <a href="https://expressjs.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Express</a> 中的 <a href="http://callbackhell.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Callback Hell</a>。</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">考虑到 API 兼容性问题，在 <em style="font-style:italic;color:#656d76;">JavaScript</em> 的世界里，<em style="font-style:italic;color:#656d76;">Generator Function</em> 是可以和 <em style="font-style:italic;color:#656d76;">Promise</em> 互转的</p>
+</blockquote>
+<h2 id="async-await-vs-Coroutines" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  async/await vs Coroutines</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">JavaScript</em> 的创造精神远不止于此，虽然 <em style="font-style:italic;color:#1f2937;">Promise</em> ，<em style="font-style:italic;color:#1f2937;">Generator Function</em> 解决了 <a href="http://callbackhell.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Callback Hell</a> 的问题，但是新的问题来了 —— 如何在 <em style="font-style:italic;color:#1f2937;">JavaScript</em> 的世界里让异步变成同步呢？—— 这就是 <em style="font-style:italic;color:#1f2937;">ES 6</em> 的另一个特性 —— <em style="font-style:italic;color:#1f2937;">async/await</em> ，看到这里，<em style="font-style:italic;color:#1f2937;">Kotlin</em> 世界的同学是不是有种似曾相识的感觉？—— 没错，就是 <em style="font-style:italic;color:#1f2937;">Kotlin Coroutines</em> 推出的 <em style="font-style:italic;color:#1f2937;">suspend</em> 方法，我对 <em style="font-style:italic;color:#1f2937;">Coroutines</em> 这个命名的来历深表怀疑，因为 <em style="font-style:italic;color:#1f2937;">JavaScript</em> 界的 <a href="http://bluebirdjs.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Bluebird</a> 也有 <a href="http://bluebirdjs.com/docs/api/promise.coroutine.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">coroutine</a>，<em style="font-style:italic;color:#1f2937;">async/await</em> 是如何让大家用同步编程的方式实现异步执行的呢？请看下面的例子：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">async function loadResources(res) {
+    let resp = await fetch(res);
+    return await rsponse.json();
+}
+
+async function loadModule(name) {
+    let manifest = loadResources(name + "/manifest.json")
+    await loadResources(manifest.getStyle());
+    await loadResources(manifest.getScript());
+    await loadResources(manifest.getLayout());
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">看起来是不是比 <em style="font-style:italic;color:#1f2937;">Promise</em> 清爽了许多？其实这只是 <em style="font-style:italic;color:#1f2937;">ES 6</em> 语法糖而已，实际上支持 <em style="font-style:italic;color:#1f2937;">ES 6</em> 的编译器（比如：TypeScript Compiler）将 <em style="font-style:italic;color:#1f2937;">TypeScript</em> 编译成 <em style="font-style:italic;color:#1f2937;">ES 2015</em> 时，会将 <em style="font-style:italic;color:#1f2937;">async/await</em> 翻译成 <em style="font-style:italic;color:#1f2937;">Promise</em> 。了解了 <em style="font-style:italic;color:#1f2937;">JavaScript</em> 世界的异步编程方式，再来看 <em style="font-style:italic;color:#1f2937;">Kotlin Coroutines</em> ：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">class DownloadAsyncActivity : AppCompatActivity() {
+
+    private suspend fun downloadDataAsync(url): String {
+        return suspendCoroutine { cont -&gt;
+            val client = OkHttpClient()
+            val request = Request.Builder()
+                    .url(url)
+                    .build()
+
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    cont.resumeWithException(e)
+                }
+                override fun onResponse(call: Call, response: Response) {
+                    cont.resume(response.body()?.string() ?: "")
+                }
+            })
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        val textView = findViewById(R.id.text_view)
+        val btnDownload = findViewById(R.id.btn_download)
+
+        btnDownload.setOnClickListener {
+            launch(UI) {
+                textView.text = downloadDataAsync()
+            }
+        }
+    }
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">看完是不是想说？这不就是 <em style="font-style:italic;color:#1f2937;">ES 6</em> 的 <em style="font-style:italic;color:#1f2937;">async/await</em> 嘛！</p>
+<h2 id="ECMA-Script-vs-Kotlin" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  ECMA Script vs Kotlin</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">了解了 <em style="font-style:italic;color:#1f2937;">ES 5</em> , <em style="font-style:italic;color:#1f2937;">ES 6</em> 和 <em style="font-style:italic;color:#1f2937;">Kotlin</em> 的异步编程，基本上可以得出这样的结论：</p>
+<table style="width:100%;border-collapse:collapse;margin:22px 0;font-size:14px;line-height:1.6;color:#1f2937;">
+<thead>
+<tr>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">ECMA Script</th>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Kotlin</th>
+</tr>
+</thead>
+<tbody><tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Promise</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><a href="https://kotlinlang.org/docs/reference/coroutines/flow.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Flow</a></td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Genrator Function</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines.experimental/-sequence-builder/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Sequence</a></td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">async/await</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><a href="https://kotlinlang.org/docs/reference/coroutines/flow.html#suspending-functions" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Suspend Function</a></td>
+</tr>
+</tbody></table>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">看到这里，大家还会觉得 <em style="font-style:italic;color:#1f2937;">Kotlin Coroutines</em> 很难吗？可能有人会问，异步编程搞得这么花哨，到底能干什么呢？</p>
+<h2 id="异步编程的应用" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  异步编程的应用</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">做移动端开发的同学可能深有体会，每当 <em style="font-style:italic;color:#1f2937;">App</em> 工程复杂度达到一定水平时，就要搞一次性能优化，常见的就是 <em style="font-style:italic;color:#1f2937;">启动优化</em> ，因为 <em style="font-style:italic;color:#1f2937;">App</em> 启动阶段，要干的事情太多了，一堆的 <em style="font-style:italic;color:#1f2937;">SDK</em> 要初始化，一堆的业务要初始化，有人会说，把不必要的初始化延后，或者能在子线程初始化的，异步不就行了吗？—— 思路是对的，但是，实现起来是困难的，因为没有一个很好用的异步编程模型，如果在启动阶段，要初始化的模块之间还有依赖顺序，比如有些基础模块就最先初始化（如：埋点、网络、A/B 等），这时候，一个简洁的异步编程模型就能让我们从繁琐的逻辑中释放出来，将注意力集中在业务流程上来，这也是为什么 <em style="font-style:italic;color:#1f2937;">JavaScript</em> 的世界创造了如此多优秀的异步编程模型的原因。</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2020/04/01/asynchronous-programming/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2020/04/01/asynchronous-programming/</a></p>
+    </section>
+  </main>
+</body>
+</html>

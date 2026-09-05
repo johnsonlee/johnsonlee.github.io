@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/04/17/ssd-selection-trap/">
+  <title>SSD 最优解陷阱 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">SSD 最优解陷阱</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-04-17 · Johnson Lee · Computer Science</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">SSD（<a href="https://github.com/apple/ml-ssd" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Simple Self-Distillation</a>）是 Apple 提出的一种自蒸馏方法——从 frozen 模型里多 sample，在自己的原始输出上做 SFT，让模型自我改进。本文讨论的是 SSD 的一个变种场景：<strong style="font-weight:700;color:#111827;">inference-time 的 multi-sample selection</strong>——多 sample 之后怎么选那个“最优”。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">SSD 的逻辑很直接：多 sample，选最优。但在一个结构化输出的场景下，我撞到了一个看起来小、实际上很深的问题——<strong style="font-weight:700;color:#111827;">“最优” sample 在关键 section 上往往不是最强的</strong>。</p>
+<h2 id="问题是什么" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  问题是什么</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">场景是 planning——agent 根据需求产出一个结构化的 plan，里面有几个 section。SSD 跑 N 次，每个 sample 得到一个 scalar score，取 top-1。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">打开 per-section 的分数看：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Sample A：section 1 得 90、section 2 得 70、section 3 得 80</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Sample B：section 1 得 80、section 2 得 85、section 3 得 75</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Sample C：section 1 得 95、section 2 得 60、section 3 得 85</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">三个 sample 的总分非常接近。<strong style="font-weight:700;color:#111827;">但没有任何一个在所有 section 上最强。</strong> argmax 选出来的那个，在某些 section 上其实有明显短板。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">最朴素的解法是跨 sample 拼接——每个 section 挑各 sample 里最强的那份拼起来。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">想过之后，不成立。section 之间有语义耦合：后面的 section 引用、依赖前面 section 里的判断。跨 sample 拼接会破坏单个 sample 内部原本自然形成的一致性，结果是<strong style="font-weight:700;color:#111827;">结构合法、语义错配</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">拼接这条路走不通，真问题浮出水面：<strong style="font-weight:700;color:#111827;">怎么让 SSD 产出的那个 top-1，真的是全面最优的 sample？</strong></p>
+<h2 id="错方向之一：用-token-数当-effort-的-proxy" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  错方向之一：用 token 数当 effort 的 proxy</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">一个直觉反应是：如果某 section 的 token 少，说明 agent 没在上面花力气，应该打低分。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个想法在 LLM 身上是错的，而且错得很典型。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Token 消耗衡量的是 verbosity，不是 effort。LLM 在“想得深”的时候输出未必长——一个精确的架构理解可能 50 个 token 就讲清核心。而“想得浅”时 LLM 反而更容易产出长——它会填充、列举、加限定词，因为在没有 strong insight 时，fluency 会自动把字数堆起来。RLHF 还给了模型一个 verbose bias——更长的回答常常被打更高分。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">Token 数和思考深度的相关系数，在 LLM 上可能接近零甚至为负。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">把 token 作为打分 signal 的后果是可预测的 Goodhart：生成过程学到的是<strong style="font-weight:700;color:#111827;">写得更长</strong>，而不是<strong style="font-weight:700;color:#111827;">想得更深</strong>。精确的判断被稀释成可能性枚举，核心结论被埋在大段限定和铺陈里。外观更饱满，实质更差。</p>
+<h2 id="错方向之二：推理深度" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  错方向之二：推理深度</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">意识到 token 的问题后，下一个想法是——那用推理深度呢？CoT 长度、推理步骤数、概念密度。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个方向比 token 好一些——它至少指向了一个真正该测的东西。但更危险，因为<strong style="font-weight:700;color:#111827;">它更难测，更容易自欺</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">核心事实：LLM 没有“推理深度”的物理对应物。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">CoT 写出来的 "step 1, step 2, step 3" 不保证对应任何 discrete 推理过程。已经有 paper 证实模型可以直接生成答案、再编造一个 self-consistent 的 CoT 作为事后解释。网络的前向传递深度对每个 token 都是一样的，所谓“深度”是一个 anthropomorphic projection。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">更严重的是，任何你定义的“深度 proxy”，agent 都能学会生成满足 proxy 的<strong style="font-weight:700;color:#111827;">表面特征</strong>：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">拆成更多小步骤 → 每步几乎无信息量，但计数多</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">往 CoT 里塞 entity → entity 被列出，但不参与推理</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">让 CoT 和最终输出 self-consistent → 两者都肤浅但互相印证</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Gaming 一个“推理深度”的 proxy，产出来的东西<strong style="font-weight:700;color:#111827;">看起来就像深度推理</strong>。这比 token-gaming 更阴险。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">想测“深度”这个方向本身就是个陷阱。<strong style="font-weight:700;color:#111827;">在一个不存在的量上找 proxy，不论找什么都会是错的。</strong></p>
+<h2 id="真正的方向是-grounding-不是-effort" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  真正的方向是 grounding 不是 effort</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">把 "effort" 这个 framing 彻底扔掉，换一个问题：<strong style="font-weight:700;color:#111827;">除了 verifier 的 scalar score，还有什么 deterministic 信号可以用来交叉验证 sample 的质量？</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个问题有一个干净的答案——<strong style="font-weight:700;color:#111827;">基于真实环境的 grounding</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">planning 涉及的“真实环境”是 codebase。如果你能用 static analysis 拿到 call graph，那对 plan 里所有涉及代码结构的判断，你有了一个独立于 verifier 的 deterministic 判据：plan 引用的 entity 是否真的存在、依赖关系是否对得上、变更的传递影响是否被识别完整。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这些问题都是 structural facts，答案完全 deterministic，不依赖任何主观判断。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这给了你 per-section 的第二条 signal。<strong style="font-weight:700;color:#111827;">和 verifier 的 scalar score 独立。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">两个 signal 独立这件事本身就是 information。当两者一致——verifier 说 sample A 最好、grounding 也说 sample A 在所有 section 上 grounded 得最深——这个“最好”是真的。当两者冲突——verifier 选了 A，但 grounding 显示 A 在 section 1 上比 B 差一大截——这个冲突暴露的是 <strong style="font-weight:700;color:#111827;">verifier 可能在被 gaming 或者信号不够细</strong>。</p>
+<h2 id="但不要用-grounding-替代-selection" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  但不要用 grounding 替代 selection</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这里有一个关键判断：grounding signal 的正确用法<strong style="font-weight:700;color:#111827;">不是</strong>加进 verifier score 做新的 scalar argmax。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">两个原因。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">一</strong>、grounding 只覆盖 plan 里涉及代码结构的部分。那些不涉及结构的 section，grounding 沉默。如果 grounding 成为 selection 主 signal，这些盲区的质量会<strong style="font-weight:700;color:#111827;">从 signal 里消失</strong>——agent 会学到“只要 grounded 的部分强，其他无所谓”。新的 Goodhart，换了位置而已。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">二</strong>、把 grounding 和 verifier 合成一个 scalar 会丢失两种 signal 的独立性。两者本来衡量的是不同维度——verifier 看“plan 是否 well-formed”，grounding 看“plan 和 real code 对接正确度”。独立的两个轴比一个加权和提供的信息多得多。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">所以正确的用法是：<strong style="font-weight:700;color:#111827;">grounding 作为 diagnostic layer，不是 gatekeeper</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">具体工作方式：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">SSD 跑完，按 verifier scalar 选 top-1——这一步不变</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">对所有 N 个 sample，<strong style="font-weight:700;color:#111827;">额外</strong>跑 grounding-based per-section scoring</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">对比 top-1 的 per-section grounding 分数和<strong style="font-weight:700;color:#111827;">各 section 的最高分</strong></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">如果 top-1 在某 section 上显著低于该 section 的最高分——<strong style="font-weight:700;color:#111827;">记录这个 gap</strong></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">gap 不改变当前 selection，作为独立 signal 留下来</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">长期目标：让 SSD 下一轮的 top-1 在每个 section 的 grounding 分数上都接近 sample 集合的最高分</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">selection 机制不变，保持简单。grounding 是 observer，不是 judge。gap 引发的是 signal，不是 selection 回滚。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">优化目标从“最大化 verifier scalar”升级为“最大化 verifier scalar 且 grounding-per-section 无显著 gap”。</strong></p>
+<h2 id="signal-形状决定生成方向" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">6.  signal 形状决定生成方向</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这是最关键的问题。signal 的形状决定了 sample 会朝哪个方向集中。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">当前的 scalar argmax，鼓励的模式是<strong style="font-weight:700;color:#111827;">“把总分拉高”</strong>——生成过程会优先在容易拿分的 section 投入，难拿分的 section 保持基础水平，因为边际收益这么算最优。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">加了 grounding-based gap signal 之后，鼓励的模式是<strong style="font-weight:700;color:#111827;">“每个 section 都不要被其他 sample 甩开”</strong>。这个目标函数更接近“全面最优”，而不是“总分最优”。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Gaming 这个 signal 需要什么？要想在 grounding 分数上不被甩开，sample 得真的引用更多真实存在的代码结构、真的覆盖更多真实存在的依赖路径——而这些是 static analysis 验证的，编不了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">gaming 策略和真实质量提升在这里是同一件事——没有分叉。</strong></p>
+<h2 id="回到更大的问题" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">7.  回到更大的问题</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个 SSD selection 的具体问题底下，是一个更大的方法论问题。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Self-improvement 系统的核心风险从来不是“能力不够”，是“signal 结构错了，生成过程被错误的 signal 引向错误的方向”。scalar 总分、token 数、推理深度——它们失败的方式都是同一个：<strong style="font-weight:700;color:#111827;">把一个高维质量问题压缩成低维数字，然后在那个低维数字上做 optimization</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">真正的出路是反过来——<strong style="font-weight:700;color:#111827;">保持 signal 的高维结构，让 deterministic 的多源信号互相 check，而不是合成一个标量</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Grounding 之所以是正确答案，不是因为它比其他 signal “更好”。是因为它是<strong style="font-weight:700;color:#111827;">独立的、deterministic 的、难以 gaming 的第二根轴</strong>。两根独立的硬轴永远强于一根加权的软轴。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个原则不限于 planning。任何 self-improvement 系统，只要你打算 autonomous 地评估产物质量，就必须问自己：<strong style="font-weight:700;color:#111827;">我的 verifier 的 grounding 在哪里？它和我其他 signal 相关还是独立？</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">相关的话，全是假的冗余。独立的才是真的 check。</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/04/17/ssd-selection-trap/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/04/17/ssd-selection-trap/</a></p>
+    </section>
+  </main>
+</body>
+</html>

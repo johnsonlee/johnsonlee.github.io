@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2019/06/04/booster-gradle-plugin/">
+  <title>Booster: A Quality Optimization Framework | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Booster: A Quality Optimization Framework</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2019-06-04 · Johnson Lee · Computer Science / Open Source / Booster</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Booster is an easy-to-use, lightweight, and extensible quality optimization framework designed specifically for mobile applications. It aims to tackle the performance, stability, and package size challenges that come with growing app complexity.</p>
+<h2 id="Why-Booster" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Why Booster?</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Quality optimization is a universal concern for app developers. For apps with tens of millions of DAU, a crash rate of 0.01% still means thousands of affected users. For ride-hailing drivers who stay online for extended periods, the stability of the driver-side app directly impacts their safety and income -- not something to take lightly.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">As business grew rapidly and complexity increased, we started asking ourselves:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">How can we continuously ensure app quality?</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">When the app crashes, how do we quickly identify which business line owns the issue?</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Can we detect potential quality problems before release?</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Can we apply global quality optimizations non-invasively, without pushing every business line to make changes?</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">These questions led to the creation of Booster. After over a year of refinement, Booster delivered impressive results. Since open-source projects in the quality optimization space based on static analysis are few and far between, and the barrier to entry for quality optimization is relatively high, we decided to open-source Booster -- hoping more developers and users can benefit from it.</p>
+<h2 id="Features" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Features</h2><h3 id="Dynamic-Module-Loading" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Dynamic Module Loading</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">To support diverse optimization needs, Booster implements dynamic module loading, allowing developers to select specific modules without configuration. See: booster-task-all, booster-transform-all.</p>
+<h3 id="Third-Party-Library-Injection" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Third-Party Library Injection</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">During optimization, Booster may need to inject specific classes or libraries. To manage injected class dependencies, Booster provides a VariantProcessor SPI that makes extension straightforward.</p>
+<h3 id="Performance-Detection" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Performance Detection</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Jank rate is a key metric for runtime performance. To catch potential jank issues early, Booster uses static analysis to detect performance bottlenecks and generates visual reports to help developers pinpoint problems:</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><img src="https://github.com/didi/booster/blob/master/assets/com.didiglobal.booster.demo.MainActivity.dot.png?raw=true" style="display:block;max-width:100%;height:auto;margin:24px auto;border-radius:6px;"></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The underlying principle: analyze all class files to build a global Call Graph, identify call chains executing on the main thread (methods related to Application, the four major components, View, Widget, etc.), then output reports grouped by class.</p>
+<h3 id="Thread-Optimization" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Thread Optimization</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Apps with many business lines commonly suffer from thread overload. Thread management has always been a headache -- while strict code conventions can help, they're costly to enforce in large organizations with complex structures, and completely powerless against third-party SDKs. To solve this once and for all, Booster optimizes global thread pools through compile-time bytecode modification and renames threads for better traceability.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Here's a sample:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        getSharedPreferences("demo", MODE_PRIVATE).edit().commit()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Thread({
+            while (true) {
+                Thread.sleep(5)
+            }
+        }, "#Booster").start()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        HandlerThread("Booster").start()
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Thread renaming in action:</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><img src="https://github.com/didi/booster/blob/master/assets/screenshot-booster-transform-thread.png?raw=true" style="display:block;max-width:100%;height:auto;margin:24px auto;border-radius:6px;"></p>
+<h3 id="Resource-Index-Inlining" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Resource Index Inlining</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Resource index fields serve no purpose after compilation (except for reflection). Booster replaces resource index field access instructions with constant instructions. This improves runtime performance and reduces package size. Resource index (R) classes may seem insignificant, but they actually occupy considerable space. Take DiDi Driver as an example -- there were over a thousand resource index classes, and after constant field deletion, the package shrank by about 1MB.</p>
+<h3 id="SharedPreferences-Optimization" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">SharedPreferences Optimization</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">For Android developers, SharedPreferences is everywhere. Modifying SharedPreferences on the main thread causes jank or even ANR. To eliminate this problem entirely, Booster performs global instruction replacement across the app.</p>
+<h3 id="Toast-Bug-Fix" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Toast Bug Fix</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">To thoroughly fix bug 30150688 on Android 7.1, Booster globally replaces all <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Toast.show()</code> method call instructions in the app.</p>
+<h3 id="Resource-Compression" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Resource Compression</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Package size is a critical metric. Images make up a significant portion of the installation package. Typically, reducing image quality by 10%-20% has no visible impact, so Booster uses lossy compression to reduce image sizes. Smaller images also load faster and consume less memory.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Booster provides two compression options:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">pngquant lossy compression (requires installing the pngquant CLI tool)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">cwebp lossy compression (built-in)</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Each has trade-offs: pngquant has no compatibility issues but slightly lower compression ratios than WebP, while WebP has system version compatibility concerns. Overall, lossy compression yields significant results -- for DiDi Driver, the package size decreased by about 10MB.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Additionally, libraries like Android Support Library contain numerous image resources supporting multiple screen densities. For an app, keeping only the largest density is sufficient. After deduplication of Android Support Library resources alone, package size dropped by about 1MB.</p>
+<h3 id="WebView-Preloading" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">WebView Preloading</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">To address jank caused by WebView initialization, Booster injects instructions to preload WebView during main thread idle time.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Beyond these features, Booster also provides development utilities such as checking whether dependencies contain SNAPSHOT versions.</p>
+<h2 id="Getting-Started" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Getting Started</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Add the Booster plugin to your <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">buildscript</code> <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">classpath</code>, then apply it:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">buildscript {
+    ext.booster_version = '0.27.0'
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+        maven { url 'https://oss.sonatype.org/content/repositories/public' }
+    }
+    dependencies {
+        classpath "com.didiglobal.booster:booster-gradle-plugin:$booster_version"
+        classpath "com.didiglobal.booster:booster-task-all:$booster_version"
+        classpath "com.didiglobal.booster:booster-transform-all:$booster_version"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+        maven { url 'https://oss.sonatype.org/content/repositories/public' }
+    }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'com.didiglobal.booster'</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Then run the assemble task to build an optimized application package. After the build completes, reports will be generated in the <em style="font-style:italic;color:#1f2937;">build/reports/</em> directory.</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">$ ./gradlew assembleRelease</code></pre>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2019/06/04/booster-gradle-plugin/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2019/06/04/booster-gradle-plugin/</a></p>
+    </section>
+  </main>
+</body>
+</html>

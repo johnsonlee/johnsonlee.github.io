@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2021/12/19/my-first-ui-widget/">
+  <title>My First UI Widget | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">My First UI Widget</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2021-12-19 · Johnson Lee · Computer Science / Graphics</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Although I've been programming in <em style="font-style:italic;color:#1f2937;">Java</em> for well over a decade, <em style="font-style:italic;color:#1f2937;">JavaScript</em> was actually the first programming language I ever learned. <em style="font-style:italic;color:#1f2937;">C</em> was a required course in college, but I can't honestly say I had mastered it at that point. In the <em style="font-style:italic;color:#1f2937;">Web 2.0</em> era, the most popular development tools were the "Big Three" -- and <em style="font-style:italic;color:#1f2937;">Dreamweaver</em>'s WYSIWYG editor made it possible for even beginners to build a working web application. I was one of them.</p>
+<h2 id="The-Secret-Manual" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">The Secret Manual</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">When I first started learning web development, page layouts were mostly done through <em style="font-style:italic;color:#1f2937;">Dreamweaver</em>'s visual designer. If you wanted dynamic effects, you had to find someone else's <em style="font-style:italic;color:#1f2937;">JavaScript</em> snippets online. As a self-taught non-CS-major, I could roughly follow the logic, but had no idea where the properties and methods used in those scripts came from. How was I supposed to know what else was available? This question plagued me for a long time -- until one day, a friend gave me an electronic document in <em style="font-style:italic;color:#1f2937;">CHM</em> format: <em style="font-style:italic;color:#1f2937;">"The HTML Programming Guide."</em></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">That guide was like a martial-arts manual to me. For the first time, I learned that something called an <em style="font-style:italic;color:#1f2937;">API</em> specification existed, and this document laid out every <em style="font-style:italic;color:#1f2937;">API</em> definition in <em style="font-style:italic;color:#1f2937;">HTML</em> along with usage examples. From it, I learned how to manipulate the <em style="font-style:italic;color:#1f2937;">HTML DOM</em> to create dynamic effects, how to handle events for interactive behavior, and the hottest web technology of the time -- <em style="font-style:italic;color:#1f2937;">AJAX (Asynchronous JavaScript and XML)</em>. Rumor had it that knowing <em style="font-style:italic;color:#1f2937;">AJAX</em> alone could land you a decent web development job back then.</p>
+<h2 id="The-Tree-Menu" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">The Tree Menu</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Going from copying other people's code to independently implementing dynamic effects was a major milestone for me. One day, while logging into my university's intranet course system, I noticed the tree-structured menu on the page and found it fascinating. Could I build one myself? I went straight back to the dorm and got to work. After some research, I realized that creating a static tree structure visually wasn't hard -- you could nest HTML <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">&lt;DIV&gt;</code> or <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">&lt;UL&gt;</code> elements with a bit of <em style="font-style:italic;color:#1f2937;">CSS</em>. The real question was: how do you dynamically create a tree menu with <em style="font-style:italic;color:#1f2937;">JavaScript</em>, allowing nodes to be added and removed on the fly?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Since <em style="font-style:italic;color:#1f2937;">HTML</em> only has <em style="font-style:italic;color:#1f2937;">DOM Elements</em> and no built-in concept of a tree widget, implementing one requires assembling multiple <em style="font-style:italic;color:#1f2937;">DOM</em> elements. A tree widget is less about visual tree structure and more about logical tree structure. From the <em style="font-style:italic;color:#1f2937;">DOM</em>'s perspective, the relationships between <em style="font-style:italic;color:#1f2937;">DOM</em> nodes don't map directly to tree widget node relationships. For example, parent-child nodes in the tree widget can't simply be represented by nesting one <em style="font-style:italic;color:#1f2937;">DOM</em> element inside another, because each tree node has a title, an icon, a state indicator (expanded or collapsed), child nodes, and more. A single <em style="font-style:italic;color:#1f2937;">DOM</em> element can't express all that information -- multiple elements are needed, as shown below:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">+------------------------------ Node Container ----------------------------+
+|                                                                          |
+| +------------------------ Node Self Container -------------------------+ |
+| |                                                                      | |
+| | +- indent -+ +- icon --+ +- state -+ +---------- label -----------+ | |
+| | |          | |         | |         | |                            | | |
+| | |          | |         | |         | |                            | | |
+| | +----------+ +---------+ +---------+ +----------------------------+ | |
+| |                                                                      | |
+| +----------------------------------------------------------------------+ |
+|                                                                          |
+| +---------------------- Node Children Container -----------------------+ |
+| |                                                                      | |
+| |                                                                      | |
+| +----------------------------------------------------------------------+ |
+|                                                                          |
++--------------------------------------------------------------------------+</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">To implement a tree widget, we need to separate the visual structure from the logical structure and use the logical structure to organize the visual one. The visual structure consists of <em style="font-style:italic;color:#1f2937;">HTML DOM</em> elements; the logical structure is the object-oriented concept of a <em style="font-style:italic;color:#1f2937;">Class</em>. For example, we can use <em style="font-style:italic;color:#1f2937;">TreeView</em> to represent the whole tree widget and <em style="font-style:italic;color:#1f2937;">TreeNode</em> for each node, where every node has a parent and a list of children:</p>
+<h3 id="TreeNode" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">TreeNode</h3><pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">function TreeNode(label, parent) {
+  // Parent node
+  this.parent = parent;
+  // List of child nodes
+  this.children = [];
+  // Outermost DOM container for this node
+  this.container = document.createElement("DIV");
+  // DOM container for this node's own content
+  this.selfContainer = document.createElement("DIV");
+  // DOM container for all child nodes
+  this.childrenContainer = document.createElement("DIV");
+  // DOM element representing indentation
+  this.indent = document.createElement("SPAN");
+  // DOM element representing expand/collapse state
+  this.state = document.createElement("IMG");
+  // DOM element representing the icon
+  this.icon = document.createElement("IMG");
+  // DOM element representing the label
+  this.label = document.createElement("SPAN");
+  this.label.innerText = label;
+  // Whether the node is collapsed
+  this.isFolded = false;
+
+  this.container.appendChild(this.selfContainer);
+  this.container.appendChild(this.childrenContainer);
+  this.selfContainer.appendChild(this.indent);
+  this.selfContainer.appendChild(this.state);
+  this.selfContainer.appendChild(this.icon);
+  this.selfContainer.appendChild(this.label);
+
+  // ...
+
+  // Click the state icon to expand or collapse this node
+  this.state.onclick = this.toggle;
+  // Double-click the label to expand or collapse this node
+  this.label.ondblclick = this.toggle;
+
+  /**
+   * Toggle this node between collapsed and expanded
+   */
+  this.toggle = function (event) {
+    if (isFolded) {
+      unfold(event);
+    } else {
+      fold(event);
+    }
+  }
+
+  /**
+   * Collapse this node
+   */
+  this.fold = function (event) {
+    // TODO: ...
+    this.isFolded = true;
+  }
+
+  /**
+   * Expand this node
+   */
+  this.unfold = function (event) {
+    // TODO: ...
+    this.isFolded = false;
+  }
+
+  /**
+   * Calculate the depth of this node
+   */
+  this.getDepth = function () {
+    var depth = 0;
+    for (var p = this.parent; p != null; p = p.parent) {
+      depth++;
+    }
+    return depth;
+  }
+
+}</code></pre>
+
+<h3 id="TreeView" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">TreeView</h3><pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">function TreeView(root) {
+  this.root = root; // Root node of the tree widget
+
+  // ...
+
+  /**
+   * Attach this tree widget to the specified DOM element
+   */
+  this.attachTo = function (element) {
+    element.appendChild(root.container);
+  }
+
+  /**
+   * Detach this tree widget from the specified DOM element
+   */
+  this.detachFrom = function (element) {
+    element.removeChild(root.container);
+  }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Now we can dynamically build a tree widget with code:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">function createTreeView() {
+  var root = new TreeNode("Root Node", null);
+  var treeView = new TreeView(root);
+  var node1 = new TreeNode("Child Node 1", root);
+  var node2 = new TreeNode("Child Node 2",  root);
+
+  // TODO: ...
+
+  treeView.attachTo(document.body);
+}</code></pre>
+
+<h2 id="The-Origin-of-Architecture" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">The Origin of Architecture</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Through simple abstraction and encapsulation, a reusable tree widget becomes straightforward to implement. At the time, I felt that mastering object-oriented programming and abstraction meant mastering the essence of architecture design. In reality, it was only the beginning. For complex systems, we need higher levels of abstraction -- which is exactly why architectural patterns like <em style="font-style:italic;color:#1f2937;">MVC</em>, <em style="font-style:italic;color:#1f2937;">MVP</em>, and <em style="font-style:italic;color:#1f2937;">MVVM</em> exist.</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2021/12/19/my-first-ui-widget/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2021/12/19/my-first-ui-widget/</a></p>
+    </section>
+  </main>
+</body>
+</html>

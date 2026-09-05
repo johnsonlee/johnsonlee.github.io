@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 980" role="img" aria-labelledby="title desc">
+  <title id="title">The actual roles of Goal, Eval, and Verifier</title>
+  <desc id="desc">The Goal persists as active. When the thread becomes idle, the runtime starts another turn. The Agent performs a completion audit using standards from the Eval and evidence from the Verifier. Only an explicit update_goal complete call stops the loop.</desc>
+  <defs>
+    <filter id="shadow" x="-12%" y="-12%" width="124%" height="132%">
+      <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#475569"/>
+    </marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#ea580c"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#059669"/>
+    </marker>
+    <style>
+      .t{font-family:Arial,Helvetica,sans-serif}.h{font-size:31px;font-weight:700;fill:#0f172a}.sub{font-size:19px;fill:#64748b}.boxh{font-size:25px;font-weight:700}.body{font-size:19px;fill:#334155}.small{font-size:17px;fill:#475569}
+    </style>
+  </defs>
+
+  <rect width="1000" height="980" rx="30" fill="#f8fafc"/>
+  <text class="t h" x="500" y="50" text-anchor="middle">The /goal Control Loop</text>
+  <text class="t sub" x="500" y="82" text-anchor="middle">Goal controls continuation; Eval defines standards; Verifier establishes facts</text>
+
+  <g filter="url(#shadow)">
+    <rect x="210" y="116" width="580" height="104" rx="18" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5"/>
+    <text class="t boxh" x="500" y="158" text-anchor="middle" fill="#1e3a8a">Persisted Goal State</text>
+    <text class="t body" x="500" y="192" text-anchor="middle">objective · status = active · budget · usage</text>
+  </g>
+
+  <line x1="500" y1="220" x2="500" y2="265" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="210" y="265" width="580" height="96" rx="18" fill="#fff7ed" stroke="#ea580c" stroke-width="2.5"/>
+    <text class="t boxh" x="500" y="305" text-anchor="middle" fill="#9a3412">Thread Idle Callback</text>
+    <text class="t body" x="500" y="337" text-anchor="middle">start_turn_if_idle(continuation prompt)</text>
+  </g>
+
+  <line x1="500" y1="361" x2="500" y2="406" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="210" y="406" width="580" height="104" rx="18" fill="#ecfeff" stroke="#0891b2" stroke-width="2.5"/>
+    <text class="t boxh" x="500" y="448" text-anchor="middle" fill="#155e75">Agent Executes Another Turn</text>
+    <text class="t body" x="500" y="482" text-anchor="middle">Inspect current state · change artifacts · run tools</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="50" y="572" width="270" height="126" rx="18" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.5"/>
+    <text class="t boxh" x="185" y="615" text-anchor="middle" fill="#5b21b6">Eval</text>
+    <text class="t body" x="185" y="650" text-anchor="middle">Define cases, rubric,</text>
+    <text class="t body" x="185" y="680" text-anchor="middle">thresholds, and scope</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="365" y="572" width="270" height="126" rx="18" fill="#ecfdf5" stroke="#059669" stroke-width="2.5"/>
+    <text class="t boxh" x="500" y="615" text-anchor="middle" fill="#065f46">Verifier</text>
+    <text class="t body" x="500" y="650" text-anchor="middle">Run checks against</text>
+    <text class="t body" x="500" y="680" text-anchor="middle">authoritative state</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="680" y="572" width="270" height="126" rx="18" fill="#fff7ed" stroke="#ea580c" stroke-width="2.5"/>
+    <text class="t" x="815" y="615" text-anchor="middle" font-size="22" font-weight="700" fill="#9a3412">Agent Completion Audit</text>
+    <text class="t body" x="815" y="650" text-anchor="middle">Does the evidence cover</text>
+    <text class="t body" x="815" y="680" text-anchor="middle">the full objective?</text>
+  </g>
+
+  <line x1="500" y1="510" x2="500" y2="572" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="320" y1="635" x2="365" y2="635" stroke="#7c3aed" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="635" y1="635" x2="680" y2="635" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <path d="M185 698 V735 H815 V698" fill="none" stroke="#7c3aed" stroke-width="2.5" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
+  <text class="t small" x="500" y="758" text-anchor="middle">Eval also defines what counts as sufficient coverage</text>
+
+  <path d="M760 698 C710 754 655 790 595 824" fill="none" stroke="#ea580c" stroke-width="3" marker-end="url(#arrow-orange)"/>
+  <path d="M870 698 C895 752 900 790 855 824" fill="none" stroke="#059669" stroke-width="3" marker-end="url(#arrow-green)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="260" y="824" width="390" height="106" rx="18" fill="#fff7ed" stroke="#ea580c" stroke-width="2.5"/>
+    <text class="t boxh" x="455" y="866" text-anchor="middle" fill="#9a3412">No Complete Submission</text>
+    <text class="t body" x="455" y="900" text-anchor="middle">Goal stays active → another turn</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="700" y="824" width="250" height="106" rx="18" fill="#ecfdf5" stroke="#059669" stroke-width="2.5"/>
+    <text class="t boxh" x="825" y="866" text-anchor="middle" fill="#065f46">update_goal</text>
+    <text class="t body" x="825" y="900" text-anchor="middle">complete → stop</text>
+  </g>
+
+  <path d="M260 877 H25 V313 H210" fill="none" stroke="#ea580c" stroke-width="3" stroke-dasharray="10 8" marker-end="url(#arrow-orange)"/>
+</svg>

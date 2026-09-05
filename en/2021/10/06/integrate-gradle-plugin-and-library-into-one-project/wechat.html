@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2021/10/06/integrate-gradle-plugin-and-library-into-one-project/">
+  <title>How to Make a Gradle Plugin and Library Coexist in One Project | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">How to Make a Gradle Plugin and Library Coexist in One Project</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2021-10-06 · Johnson Lee · Computer Science / Gradle</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">When developing an <strong style="font-weight:700;color:#111827;">Android Library</strong> that also needs a corresponding <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong>, it is not easy for Gradle beginners to integrate an <strong style="font-weight:700;color:#111827;">Android Library</strong>, a <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong>, and an <strong style="font-weight:700;color:#111827;">Example App</strong> all in a single <strong style="font-weight:700;color:#111827;">Gradle</strong> project. The main issue is that the <strong style="font-weight:700;color:#111827;">Android App</strong> module cannot reference a <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> module within the same project, because the <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> must be configured and compiled before all other modules. As a result, many engineers develop and publish the <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> as a separate project. For those who frequently develop and debug <strong style="font-weight:700;color:#111827;">Gradle Plugins</strong>, this is extremely painful -- every change to the <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> requires publishing to <strong style="font-weight:700;color:#111827;">Maven Local</strong> first, then debugging across projects. The efficiency is terrible. So is there an elegant solution?</p>
+<h2 id="The-buildSrc-Module" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">The buildSrc Module</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">To let an <strong style="font-weight:700;color:#111827;">Android App</strong> reference a <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> module in the same project, the <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> module cannot be a regular module. Fortunately, <strong style="font-weight:700;color:#111827;">Gradle</strong> provides the <strong style="font-weight:700;color:#111827;">buildSrc</strong> mechanism -- <strong style="font-weight:700;color:#111827;">Gradle</strong> automatically compiles and tests the <strong style="font-weight:700;color:#111827;">buildSrc</strong> directory under the project root as a <a href="https://docs.gradle.org/current/userguide/composite_builds.html#composite_build_intro" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Composite Build</a>, and adds its output to the <strong style="font-weight:700;color:#111827;">buildscript</strong> <strong style="font-weight:700;color:#111827;">classpath</strong>. This makes the <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> defined in <strong style="font-weight:700;color:#111827;">buildSrc</strong> accessible.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Although referencing the <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> is solved, publishing the <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> module and the <strong style="font-weight:700;color:#111827;">Android Library</strong> module from the same project is still a problem. For <strong style="font-weight:700;color:#111827;">buildSrc</strong>, even though it is in the same project, <strong style="font-weight:700;color:#111827;">Gradle</strong> treats it as a completely isolated project. This means:</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">buildSrc</strong> modules and regular modules cannot be published simultaneously</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">All configurations and properties cannot be shared between <strong style="font-weight:700;color:#111827;">buildSrc</strong> and regular modules, e.g., version numbers</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">So how do we solve these problems?</p>
+<h2 id="The-Shadow-Module" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">The Shadow Module</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">To have our cake and eat it too, we must turn the <strong style="font-weight:700;color:#111827;">buildSrc</strong> module into a regular module. We can create an additional <strong style="font-weight:700;color:#111827;">Java/Kotlin Library</strong> module to handle the <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> publishing problem. The project structure looks like:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">.
+├── app
+│   ├── build.gradle.kts
+│   ├── proguard-rules.pro
+│   └── src
+├── sdk
+│   ├── build.gradle.kts
+│   ├── proguard-rules.pro
+│   └── src
+├── plugin (shadow module)
+│   └── build.gradle.kts
+├── gradle
+│   └── wrapper
+├── gradle.properties
+├── gradlew
+├── gradlew.bat
+├── build.gradle.kts
+├── buildSrc
+│   ├── build.gradle.kts
+│   └── src
+└── settings.gradle.kts</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">But the question is, how do we let this regular module share code from <strong style="font-weight:700;color:#111827;">buildSrc</strong>?</p>
+<h3 id="Symbolic-Links" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Symbolic Links</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Those familiar with <strong style="font-weight:700;color:#111827;">Linux</strong> might think of a convenient approach -- symbolic links (soft links), somewhat like "shortcuts" in <strong style="font-weight:700;color:#111827;">Windows</strong>. We can create a <strong style="font-weight:700;color:#111827;">src</strong> symlink in the <strong style="font-weight:700;color:#111827;">plugin</strong> module pointing to <strong style="font-weight:700;color:#111827;">buildSrc/src</strong> using the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ln</code> command:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">$ cd plugin
+$ ln -s ../buildSrc/src src</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The project structure then looks like:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">.
+├── app
+│   ├── build.gradle.kts
+│   ├── proguard-rules.pro
+│   └── src
+├── sdk
+│   ├── build.gradle.kts
+│   ├── proguard-rules.pro
+│   └── src
+├── plugin (shadow module)
+│   ├── src -&gt; ../buildSrc/src (symlink)
+│   └── build.gradle.kts
+├── gradle
+│   └── wrapper
+├── gradle.properties
+├── gradlew
+├── gradlew.bat
+├── build.gradle.kts
+├── buildSrc
+│   ├── build.gradle.kts
+│   └── src
+└── settings.gradle.kts</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">This neatly solves the code-sharing problem between a regular <strong style="font-weight:700;color:#111827;">Gradle</strong> module and the <strong style="font-weight:700;color:#111827;">buildSrc</strong> module.</p>
+<h3 id="Source-Set" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Source Set</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Due to cross-platform differences -- for example, it is uncertain whether <strong style="font-weight:700;color:#111827;">Windows</strong> and <strong style="font-weight:700;color:#111827;">*nix</strong> systems both handle symlinks well (I have not tested on <strong style="font-weight:700;color:#111827;">Windows</strong>) -- is there a more compatible solution? The answer is yes: <strong style="font-weight:700;color:#111827;">Source Set</strong>. We can configure an additional <strong style="font-weight:700;color:#111827;">SourceSet</strong> for the <strong style="font-weight:700;color:#111827;">plugin</strong> module:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">sourceSets {
+    main {
+        java {
+            srcDirs("../buildSrc/src/main/java")
+        }
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">This perfectly solves all the problems. For the version number issue, we can configure it uniformly through <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">allprojects</code> or <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">subprojects</code> in the root <strong style="font-weight:700;color:#111827;">build.gradle.kts</strong>:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">allprojects {
+    group = "io.johnsonlee"
+    version = "1.0.0"
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">So the <strong style="font-weight:700;color:#111827;">plugin</strong> module handles <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> publishing, while <strong style="font-weight:700;color:#111827;">buildSrc</strong> handles <strong style="font-weight:700;color:#111827;">Gradle Plugin</strong> referencing within the same project. The <strong style="font-weight:700;color:#111827;">plugin</strong> module and the <strong style="font-weight:700;color:#111827;">buildSrc</strong> module share the same code, except for <strong style="font-weight:700;color:#111827;">build.gradle.kts</strong>, which has slight differences:</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Since <strong style="font-weight:700;color:#111827;">buildSrc</strong> is a completely independent project, using the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">plugins</code> DSL to enable plugins requires specifying the version number</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">The <strong style="font-weight:700;color:#111827;">plugin</strong> module does not need to specify the version number in the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">plugins</code> DSL (because it is already specified in the root <strong style="font-weight:700;color:#111827;">build.gradle.kts</strong>)</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">The <strong style="font-weight:700;color:#111827;">buildSrc</strong> module does not need publishing, so it does not need to enable publishing-related plugins like <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">maven-publish</code></li>
+</ul>
+<h4 id="buildSrc-build-gradle-kts" style="margin:24px 0 12px;font-size:17px;line-height:1.5;font-weight:700;color:#111827;">buildSrc/build.gradle.kts</h4><pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">plugins {
+    `java-gradle-plugin`
+    `kotlin-dsl`
+    kotlin("jvm") version "1.5.30"
+    kotlin("kapt") version "1.5.30"
+}</code></pre>
+
+<h4 id="plugin-build-gradle-kts" style="margin:24px 0 12px;font-size:17px;line-height:1.5;font-weight:700;color:#111827;">plugin/build.gradle.kts</h4><pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">plugins {
+    `java-gradle-plugin`
+    `maven-publish`
+    `signing`
+    kotlin("jvm")
+    kotlin("kapt")
+}</code></pre>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2021/10/06/integrate-gradle-plugin-and-library-into-one-project/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2021/10/06/integrate-gradle-plugin-and-library-into-one-project/</a></p>
+    </section>
+  </main>
+</body>
+</html>

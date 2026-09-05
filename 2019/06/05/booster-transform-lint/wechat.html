@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2019/06/05/booster-transform-lint/">
+  <title>Booster 性能瓶颈检测 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Booster 性能瓶颈检测</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2019-06-05 · Johnson Lee · Computer Science / Open Source / Booster</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">对于一款 APP 来说，卡顿率、ANR 率是衡量这个 APP 质量的两个重要指标，目前已经有很多成熟的 APM 工具和平台来统计 APP 的运行时性能，但是对于实行敏捷开发的产品来说，从 APP 开发，到灰度发布，再到全量，要经历一个漫长的过程，等到收集到上报的卡顿和 ANR，再去修复，又要经历灰度、全量这一漫长的过程。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果能在上线之前就能发现代码中的性能问题并进行修复，将大大的加速了产品迭代的效率，一般来说，实现的方式可能有以下几种：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">代码审查</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">代码扫描</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">静态分析</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">而 Booster 选择了静态分析，之所以采用静态分析的方案，原因是因为前两种方案都无法解决无代码访问权限的情况</p>
+<h2 id="性能测量" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  性能测量</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Android 官方提供了很多 Profiling 工具，尽管这些工具非常强大，但是对于开发者来说，都需要太多的人工介入，而且门槛比较高，如：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><a href="https://developer.android.com/studio/profile/generate-trace-logs" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Method Tracing</a></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">启用 <em style="font-style:italic;color:#1f2937;">Method Tracing</em> 需要在想要测量的代码段中加上这两行代码：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">Debug.startMethodTracing("booster")
+// ...
+Debug.stopMethodTracing()</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">而且 <em style="font-style:italic;color:#1f2937;">Method Tracing</em> 严重损耗运行时性能，如果测量的范围过大，使用起来卡到不能忍受。</p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><a href="https://developer.android.com/studio/command-line/systrace" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">systrace</a></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">启用 systrace 需要启动 adb 连上设备进入 debug 模式，并在代码段中加上这两行代码：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">Trace.beginSection("Activity.onCreate()")
+// ...
+Trace.endSection()</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">虽然性能开销比 <em style="font-style:italic;color:#1f2937;">Method Tracing</em> 少了许多，但是测量的范围受 buffer 的限制，只能测量一段代码的性能。</p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><a href="https://developer.android.com/studio/profile/android-profiler" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Android Profiler</a></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Android Studio 3.0 虽然提供了强大的 <em style="font-style:italic;color:#1f2937;">Android Profiler</em> 来帮助开发者定位分析问题，但是只有 debug 覆盖到的代码分支才能被检测到，而且范围有限。</p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><a href="https://developer.android.com/studio/profile/benchmark" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Benchmark</a></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Android 提供的 <em style="font-style:italic;color:#1f2937;">Jetpack Benchmark Library</em> 可以通过写单元测试来测量代码的性能，对于快速迭代的产品来说，无疑是个摆设。</p>
+</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">为了能够在上线之前快速的发现所有代码中潜在的性能问题，我们提出了通过静态分析来检测代码中存在的性能瓶颈。</p>
+<h2 id="如何确定性能瓶颈？" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  如何确定性能瓶颈？</h2><h3 id="主线程" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.1.  主线程</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">对 APP 来说，ANR 和卡顿问题的根源在于主线程被阻塞，因此，对于基于 event-loop 的系统来说，任何阻塞主线程的方法调用都可以认为是性能瓶颈。除此之外，还有其它影响运行时性能和稳定性的因素，比如：线程过载、使用 <em style="font-style:italic;color:#1f2937;">finalizer</em> 等等。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">基于静态分析的性能瓶颈检测的关键在于确定方法运行的线程是否是主线程。几乎所有基于 event-loop 的GUI 系统，操作 UI 都是在主线程/UI 线程中进行，这就意味着：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">只要能找到跟 UI 相关的方法调用，就可以认为该方法是在主线程中运行；</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">只要一条调用链路中的任意一个方法在主线程中调用，就可以认为该链路是在主线程中运行。</li>
+</ul>
+<h3 id="主线程入口" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.2.  主线程入口</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">经过分析，最终我们确定了如下规则：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">以 <em style="font-style:italic;color:#1f2937;">Application</em> 的模板方法为起点的调用链路，详见：<a href="https://github.com/didi/booster/blob/master/booster-transform-lint/src/main/kotlin/com/didiglobal/booster/transform/lint/constants.kt#L27" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Application Entry Points</a></p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">以 <em style="font-style:italic;color:#1f2937;">Activity</em> 的模板方法为起点的调用链路，详见：<a href="https://github.com/didi/booster/blob/master/booster-transform-lint/src/main/kotlin/com/didiglobal/booster/transform/lint/constants.kt#L38" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Activity Entry Points</a></p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">以 <em style="font-style:italic;color:#1f2937;">Service</em> 的模板方法为起点的调用链路，说见：<a href="https://github.com/didi/booster/blob/master/booster-transform-lint/src/main/kotlin/com/didiglobal/booster/transform/lint/constants.kt#L137" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Service Entry Points</a></p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">以 <em style="font-style:italic;color:#1f2937;">BroadcastReceiver</em> 的模板方法为起点的调用链路，详见：<a href="https://github.com/didi/booster/blob/master/booster-transform-lint/src/main/kotlin/com/didiglobal/booster/transform/lint/constants.kt#L153" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Receiver Entry Points</a></p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">以 <em style="font-style:italic;color:#1f2937;">ContentProvider</em> 的模板方法为起点的调用链路，详见：<a href="https://github.com/didi/booster/blob/master/booster-transform-lint/src/main/kotlin/com/didiglobal/booster/transform/lint/constants.kt#L153" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Provider Entry Points</a></p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">以参数列表及返回值中包含下列类型的方法为起点的调用链路</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Fragment</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Dialog</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">View</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Widget</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Layout</li>
+</ul>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">通过 <em style="font-style:italic;color:#1f2937;">Main Handler</em> 提交的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Runnable</code> 的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">run()</code> 方法</p>
+</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">以上规则虽然不能命中所有的主线程入口，但至少解决了 80% 的问题，而且，每个 APP 的架构不一样，如果要做到更加精准，需要针对地性的对 Booster 进行扩展了。</p>
+<h3 id="方法调用链路" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">2.3.  方法调用链路</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">经过前面的分析，我们能够从整个 Call Graph 中分离出所有在主线程中的调用链路了，但是，如何确定哪些调用链路是存在性能瓶颈的呢？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在经过大量的统计分析之后，我们确定了会阻塞主线程的方法列表，由于篇幅原因，以下只列举了一部分 API，详细列表请参见：<a href="https://github.com/didi/booster/blob/master/booster-transform-lint/src/main/kotlin/com/didiglobal/booster/transform/lint/constants.kt#L170" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">LINT_APIS</a>：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">"java/lang/Object.wait()V",
+"java/lang/Object.wait(J)V",
+"java/lang/Object.wait(JI)V",
+"java/lang/Thread.start()V",
+"java/lang/ClassLoader.getResource(Ljava/lang/String;)Ljava/net/URL;",
+"java/lang/ClassLoader.getResources(Ljava/lang/String;)Ljava/util/Enumeration;",
+"java/lang/ClassLoader.getResourceAsStream(Ljava/lang/String;)Ljava/io/InputStream;",
+"java/lang/ClassLoader.getSystemResource(Ljava/lang/String;)Ljava/net/URL;",
+"java/lang/ClassLoader.getSystemResources(Ljava/lang/String;)Ljava/util/Enumeration;",
+"java/lang/ClassLoader.getSystemResourceAsStream(Ljava/lang/String;)Ljava/io/InputStream;",
+// ...
+"java/util/zip/ZipFile.&lt;init&gt;(Ljava/lang/String;)",
+"java/util/zip/ZipFile.getInputStream(Ljava/util/zip/ZipEntry;)",
+"java/util/jar/JarFile.&lt;init&gt;(Ljava/lang/String;)",
+"java/util/jar/JarFile.getInputStream(Ljava/util/jar/JarEntry;)",
+// ...
+"android/content/Context.getSharedPreferences(Ljava/lang/String;I)Landroid/content/SharedPreferences;",
+"android/content/SharedPreferences$Editor.apply()V",
+"android/content/SharedPreferences$Editor.commit()B",
+// ...
+"android/content/res/AssetManager.list(Ljava/lang/String;)[Ljava/lang/String;",
+"android/content/res/AssetManager.open(Ljava/lang/String;)Ljava/io/InputStream;",
+"android/content/res/AssetManager.open(Ljava/lang/String;I)Ljava/io/InputStream;",
+"android/content/res/AssetManager.openFd(Ljava/lang/String;)Landroid/content/res/AssetFileDescriptor;",
+"android/content/res/AssetManager.openNonAssetFd(Ljava/lang/String;)Landroid/content/res/AssetFileDescriptor;",
+"android/content/res/AssetManager.openNonAssetFd(ILjava/lang/String;)Landroid/content/res/AssetFileDescriptor;",
+"android/content/res/AssetManager.openXmlResourceParser(Ljava/lang/String;)Landroid/content/res/XmlResourceParser;",
+"android/content/res/AssetManager.openXmlResourceParser(ILjava/lang/String;)Landroid/content/res/XmlResourceParser;",
+// ...
+"android/graphics/BitmapFactory.decodeByteArray([BIILandroid/graphics/BitmapFactory$Options;)Landroid/graphics/Bitmap;",
+"android/graphics/BitmapFactory.decodeByteArray([BII)Landroid/graphics/Bitmap;",
+"android/graphics/BitmapFactory.decodeFile(Ljava/lang/String;Landroid/graphics/BitmapFactory$Options;)Landroid/graphics/Bitmap;",
+"android/graphics/BitmapFactory.decodeFile(Ljava/lang/String;)Landroid/graphics/Bitmap;",
+"android/graphics/BitmapFactory.decodeFileDescriptor(Ljava/io/FileDescriptor;)Landroid/graphics/Bitmap;",
+"android/graphics/BitmapFactory.decodeFileDescriptor(Ljava/io/FileDescriptor;Landroid/graphics/Rect;Landroid/graphics/BitmapFactory$Options;)Landroid/graphics/Bitmap;",
+"android/graphics/BitmapFactory.decodeResource(Landroid/content/res/Resources;I)Landroid/graphics/Bitmap;",
+"android/graphics/BitmapFactory.decodeResource(Landroid/content/res/Resources;ILandroid/graphics/BitmapFactory$Options;)Landroid/graphics/Bitmap;",
+"android/graphics/BitmapFactory.decodeResourceStream(Landroid/content/res/Resources;Landroid/util/TypedValue;Ljava/io/InputStream;Landroid/graphics/Rect;Landroid/graphics/BitmapFactory$Options;)Landroid/graphics/Bitmap;",
+"android/graphics/BitmapFactory.decodeStream(Ljava/io/InputStream;)Landroid/graphics/Bitmap;",
+"android/graphics/BitmapFactory.decodeStream(Ljava/io/InputStream;Landroid/graphics/Rect;Landroid/graphics/BitmapFactory$Options;)Landroid/graphics/Bitmap;"</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">根据前面得出的结论，我们就可以通过在所有在主线程调用的链路中去匹配上面定义的 API 列表来找出有性能瓶颈的链路了。</p>
+<h2 id="总结" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  总结</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">对于性能瓶颈检测来说，其首要任务是构建 <em style="font-style:italic;color:#1f2937;">Call Graph</em> ， <em style="font-style:italic;color:#1f2937;">Lint Transformer</em> 按如下步骤进行：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">解析 <em style="font-style:italic;color:#1f2937;">AndroidManifest.xml</em> ，得到 <em style="font-style:italic;color:#1f2937;">Application</em> 以及四大组件的类名；</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">创建 <em style="font-style:italic;color:#1f2937;">Globa Call Graph</em> 和 <em style="font-style:italic;color:#1f2937;">Lint Call Graph</em> ，以 <em style="font-style:italic;color:#1f2937;">ROOT</em> 节点作为所有主线程入口方法的父节点，便于后续分离出主线程的调用链路， <em style="font-style:italic;color:#1f2937;">Global Call Graph</em> 的结构如下图所示；</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">  <img src="https://github.com/didi/booster/blob/master/assets/booster-global-callgraph.dot.png?raw=true" alt="Global Call Graph" style="display:block;max-width:100%;height:auto;margin:24px auto;border-radius:6px;"></p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">解析所有的 <em style="font-style:italic;color:#1f2937;">class</em> 文件，从方法体指令序列中提取 <em style="font-style:italic;color:#1f2937;">invoke</em> 指令，构建 <em style="font-style:italic;color:#1f2937;">Edge</em> ，并加入到 <em style="font-style:italic;color:#1f2937;">Call Graph</em> 中；</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">以 <em style="font-style:italic;color:#1f2937;">ROOT</em> 节点的一级子节点为根，开始遍历整个 <em style="font-style:italic;color:#1f2937;">Call Graph</em> 来匹配前面确定的方法列表，如果匹配成功，则将该链路加到 <em style="font-style:italic;color:#1f2937;">Lint Call Graph</em> 中；</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">最后将 <em style="font-style:italic;color:#1f2937;">Lint Call Graph</em> 以入口类单位分成更小的 <em style="font-style:italic;color:#1f2937;">Call Graph</em> ，生成 <em style="font-style:italic;color:#1f2937;">dot</em> 格式的报告，转换为 <em style="font-style:italic;color:#1f2937;">PNG</em> 格式后，如下图所示：</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">  <img src="https://github.com/didi/booster/blob/master/assets/com.didiglobal.booster.demo.MainActivity.dot.png?raw=true" alt="Lint Call Graph" style="display:block;max-width:100%;height:auto;margin:24px auto;border-radius:6px;"></p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2019/06/05/booster-transform-lint/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2019/06/05/booster-transform-lint/</a></p>
+    </section>
+  </main>
+</body>
+</html>

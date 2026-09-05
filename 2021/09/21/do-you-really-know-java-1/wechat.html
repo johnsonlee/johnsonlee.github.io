@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2021/09/21/do-you-really-know-java-1/">
+  <title>你真的会 Java 吗？（一） | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">你真的会 Java 吗？（一）</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2021-09-21 · Johnson Lee · Computer Science / Java</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">正在开车呢，收到一条微信：“森哥，这段代码为啥输出是 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">0</code>？...”，由于开着车，实在没功夫回信息，过了一会儿，又收到一条微信：“森哥，字节码大神，说下原理呗？[捂脸表情]”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我继续开着车，又收到一条微信：“森哥懒得理我了[捂脸]”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">借着等红绿灯的功夫，打开信息一看，原来是这样一段代码：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public static void main(String[] args) {
+  int i = 0;
+  for (j = 0; j &lt; 50; j++) {
+    i = i++;
+  }
+  System.out.println(i);
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">果然是一段“有毒”的代码，我回了一句：“开车呢”。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">“专心驾车吧[得意]”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">回到家，想起来刚才的问题，其实，很多人会被这个陷阱给迷惑住，虽然关于 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">i++</code> 与 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">++i</code> 的解释一搜一大把，比如：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">i++</code> 是先读取 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">i</code> 的值，再自增</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">++i</code> 是先自增，然后再读取 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">i</code> 的值</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但我觉得还是没有说到问题的本质，那什么是问题的本质呢？要解释这一问题，还得从 JVM 的栈（Stack）说起。</p>
+<h2 id="Java-Stack" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  Java Stack</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">每启动一个线程，Java 虚拟机就会为这个线程创建一个栈（Stack），以前在面试的时候，我经常会问候选人：“一个进程有多少个线程？每个线程有多少个栈？”，对于每个进程所能拥有的线程数会受很多因素的影响，不在今天的讨论范围。对于第 2 个问题，即便是科班出身的程序员，也经常会被问懵，搞不清楚到底是 1 个还是多个。答案就是 —— 每个线程对应一个栈。之所以我们的操作系统能够在多个线程间来回切换，是因为线程的状态信息是存储在栈帧（Stack Frame）中，对于栈帧这个概念，可能不太好容易理解，如果非要举一个例子，我觉得盗梦空间这部电影就挺合适的。</p>
+<h3 id="Stack-Frame" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">1.1.  Stack Frame</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果我们把每个人的梦境活动当成一个线程，我们可以用如下代码来演示梦境与栈桢：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">class Human {
+
+  open fun fallInto(dreamland: Dreamland) {
+    // 普通人的梦开始的地方
+
+    // do something in dreamland
+
+    // 普通人的梦结束的地方
+  }
+
+}
+
+class DreamBuilder : Human {
+
+  private fun buildDreamland(original: Dreamland?, objects: Set&lt;Any&gt;): Dreamland {
+    ...
+  }
+
+  override fun fallInto(dreamland: Dreamland) {
+    // 造梦师的梦开始的地方
+    if (isControlledByMySelf(dreamland) &amp;&amp; shouldFallIntoDeeper(dreamland)) {
+      val objects = prepareObjects(...)
+      val newDreamland = buildDreamland(dreamland, objects)
+
+      // 一起进入下一层梦境
+      newDreamland.humans.forEach { human -&gt;
+        human.fallInto(dreamland)
+      }
+      // 一起从深层的梦境中回来
+    }
+    // 造梦师的梦结束的地方
+  }
+
+  fun fallIntoDreamland(objects: Set&lt;Any&gt;) {
+    // 把自己作为梦境的一部分
+    val elements = objects + this
+    // 在现实中构造梦境
+    val dreamland = buildDreamland(null, elements)
+    // 一起进入梦境
+    val threads = dreamland.humans.map { human -&gt;
+      thread {
+       human.fallInto(dreamland)
+      }
+    }
+    // 一起回到现实
+    threads.forEach { thread -&gt;
+      thread.join()
+    }
+    // 销毁梦境
+  }
+}
+
+fun main(args: Array&lt;String&gt;) {
+  val dreamBuilder = ...
+  val objects = ...
+  ...
+  dreamBuilder.fallIntoDreamland(objects)
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">造梦师（<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">DreamBuilder</code>）在现实中造梦，并将所有人一起带入第 1 层梦境，大家进入梦境前的所有状态都保留在现实中，当大家从梦境中醒来后回到现实，周围环境还是跟进入梦境之前一模一样。我们可以把现实当作第 0 层梦境，当通过 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">fallIntoDreamland</code> 方法调用从第 0 层梦境进入第 1 层梦境时，这时候就会产生一个栈帧用来记录上下文，当从第 1 层梦境进入第 2 层梦境时，又会产生一个栈帧，推而广之，每进入一层梦境都会产生一个栈帧，相应地，每个方法调用都会产生一个栈帧，方法调用就像梦境一样，一层套一层，然而，在线程的栈中，栈帧并不是嵌套的结构，而是平铺的结构，只不过由于栈 LIFO/FILO 的特殊性，可以用来模拟嵌套结构，所以，这也是为什么会用栈来实现递归转非递归。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">造梦师可以不断地让大家做梦，把大家从第 0 层梦境（现实）带入第 N 层梦境，是不是有点递归的感觉？能不能从深层次的梦境中顺利出来取决于造梦师能不能控制退出梦境（结束递归）的条件，对于程序来说，编写递归的那个程序员就是那个造梦师。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">对于线程来说，当进入一个方法后，再返回的时候，参数、变量等都还是原来的状态，上下文还是原来的上下文，那线程是如何存储这些信息的呢？这得从栈帧的结构说起，每个栈帧都有自己的本地变量（局部）数组（Local Variable Array）、操作数栈（Operand Stack）和对当前方法所属的类的常量池的引用，本地变量数组用于存储方法中声明的本地变量，操作数栈用于存储方法的参数（成员方法的操作数栈中的第 0 个元素为 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">this</code> 引用，而静态方法而没有实例引用）和其它指令的返回值（方法调用、表达式计算等）。</p>
+<h2 id="问题的本质" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  问题的本质</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">了解了 Java 栈的结构，我们再回到前面的问题，这个问题的关键在于这行代码：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">i = i++;</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我们可以通过 <em style="font-style:italic;color:#1f2937;">javap</em> 来反编译这段代码生成的字节码：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">iload_1
+iinc          1, 1
+istore_1</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">看起来，这 3 个指令貌似没什么毛病呀，为什么 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">iinc</code> 指令并没有“生效”呢？我们来看看 <a href="https://en.wikipedia.org/wiki/List_of_Java_bytecode_instructions" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JVM 字节码指令</a> 中关于这 3 个指令的定义：</p>
+<table style="width:100%;border-collapse:collapse;margin:22px 0;font-size:14px;line-height:1.6;color:#1f2937;">
+<thead>
+<tr>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Mnemonic</th>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Opcode</th>
+<th align="left" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Other bytes</th>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Stack</th>
+<th align="left" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">iinc</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">0x84</td>
+<td align="left" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">2:index,const</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"></td>
+<td align="left" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">increment local variable #index by signed byte const</td>
+</tr>
+<tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">iload_1</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">0x1b</td>
+<td align="left" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"></td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">-&gt; value</td>
+<td align="left" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">load an int value from local variable 1</td>
+</tr>
+<tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">istore_1</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">0x3c</td>
+<td align="left" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"></td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">value -&gt;</td>
+<td align="left" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">store int value into variable 1</td>
+</tr>
+</tbody></table>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">根据指令的定义，我们不难发现：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">iinc</code> 操作的对象是 Local Variable Array</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">iload_1</code> 和 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">istore_1</code> 操作的对象是 Operand Stack</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">那么，再来看上面三个指令，似乎答案已经被揭晓了，假设在 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">iload_1</code> 执行之前，栈的结构为 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">...</code>（左边为栈底，右边为栈顶），那么：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">iload_1</code> 将 Local Variable Array [1]（变量 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">i</code>）的值加载到了 Operand Stack 中，栈的结构从 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">...</code> 变为 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">..., 0</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">iinc</code> 直接对 Local Variable Array [1]（变量 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">i</code>）进行自增，变成了 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">1</code>，然而，这时候，Operand Stack 中，栈的结构还是 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">..., 0</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">istore_1</code> 将栈顶的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">0</code> 弹出来，存入 Local Variable Array [1]（变量 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">i</code>）中，栈的结构变为 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">...</code></li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">所以，问题的根源在于 —— <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">iinc</code> 的结果没有同步到 Operand Stack 中！如果要解决这一问题，就需要在 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">iinc</code> 之后，执行 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">iload_1</code> 将 Local Variable Array [1]（变量 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">i</code>）的值加载到 Operand Stack 中，即：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">iinc          1, 1
+iload_1
+istore_1</code></pre>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">其实就是将 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">iinc</code> 与 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">iload_1</code> 调换了一下顺序而已，而反编译成 Java 代码则为：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">i = ++i;</code></pre>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2021/09/21/do-you-really-know-java-1/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2021/09/21/do-you-really-know-java-1/</a></p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2019/06/05/booster-transform-lint/">
+  <title>Booster: Performance Bottleneck Detection | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Booster: Performance Bottleneck Detection</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2019-06-05 · Johnson Lee · Computer Science / Open Source / Booster</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">For any app, jank rate and ANR rate are two critical metrics for measuring quality. There are already many mature APM tools and platforms for tracking runtime performance, but for products practicing agile development, the cycle from development to canary release to full rollout is a long one. By the time you collect jank and ANR reports and ship fixes, you have to go through the canary-to-full-rollout cycle all over again.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">If we could catch performance issues in code before release, product iteration speed would improve dramatically. Generally speaking, there are a few approaches:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Code review</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Code scanning</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Static analysis</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Booster chose static analysis because the first two approaches cannot handle cases where you have no access to the source code.</p>
+<h2 id="Performance-Measurement" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Performance Measurement</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Android officially provides many profiling tools. While powerful, they all require too much manual intervention and have a high barrier to entry:</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><a href="https://developer.android.com/studio/profile/generate-trace-logs" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Method Tracing</a></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Enabling <em style="font-style:italic;color:#1f2937;">Method Tracing</em> requires adding these two lines around the code you want to measure:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">Debug.startMethodTracing("booster")
+// ...
+Debug.stopMethodTracing()</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Moreover, <em style="font-style:italic;color:#1f2937;">Method Tracing</em> severely degrades runtime performance. If the measurement scope is too broad, the lag becomes unbearable.</p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><a href="https://developer.android.com/studio/command-line/systrace" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">systrace</a></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Enabling systrace requires starting adb, connecting to a device in debug mode, and adding these two lines around the code:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">Trace.beginSection("Activity.onCreate()")
+// ...
+Trace.endSection()</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Although the performance overhead is much lower than <em style="font-style:italic;color:#1f2937;">Method Tracing</em>, the measurement scope is limited by the buffer size, so you can only measure a single code section.</p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><a href="https://developer.android.com/studio/profile/android-profiler" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Android Profiler</a></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Android Studio 3.0 introduced the powerful <em style="font-style:italic;color:#1f2937;">Android Profiler</em> for locating and analyzing issues, but only code branches covered during debugging can be detected, and the scope is limited.</p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><a href="https://developer.android.com/studio/profile/benchmark" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Benchmark</a></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The <em style="font-style:italic;color:#1f2937;">Jetpack Benchmark Library</em> allows measuring code performance through unit tests. For products with rapid iteration cycles, this is practically a non-starter.</p>
+</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">To quickly discover potential performance issues across the entire codebase before release, we proposed using static analysis to detect performance bottlenecks in code.</p>
+<h2 id="How-to-Identify-Performance-Bottlenecks" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">How to Identify Performance Bottlenecks?</h2><h3 id="The-Main-Thread" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">The Main Thread</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">For an app, the root cause of ANR and jank is the main thread being blocked. In any event-loop-based system, any method call that blocks the main thread can be considered a performance bottleneck. Beyond that, there are other factors affecting runtime performance and stability, such as thread overload, use of <em style="font-style:italic;color:#1f2937;">finalizers</em>, and so on.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The key to static-analysis-based performance bottleneck detection is determining whether a method runs on the main thread. In virtually all event-loop-based GUI systems, UI operations happen on the main/UI thread, which means:</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">If we can find method calls related to UI, we can assume the method runs on the main thread.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">If any method in a call chain runs on the main thread, the entire chain can be considered as running on the main thread.</li>
+</ul>
+<h3 id="Main-Thread-Entry-Points" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Main Thread Entry Points</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">After analysis, we settled on the following rules:</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Call chains starting from <em style="font-style:italic;color:#1f2937;">Application</em> template methods. See: <a href="https://github.com/didi/booster/blob/master/booster-transform-lint/src/main/kotlin/com/didiglobal/booster/transform/lint/constants.kt#L27" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Application Entry Points</a></p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Call chains starting from <em style="font-style:italic;color:#1f2937;">Activity</em> template methods. See: <a href="https://github.com/didi/booster/blob/master/booster-transform-lint/src/main/kotlin/com/didiglobal/booster/transform/lint/constants.kt#L38" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Activity Entry Points</a></p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Call chains starting from <em style="font-style:italic;color:#1f2937;">Service</em> template methods. See: <a href="https://github.com/didi/booster/blob/master/booster-transform-lint/src/main/kotlin/com/didiglobal/booster/transform/lint/constants.kt#L137" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Service Entry Points</a></p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Call chains starting from <em style="font-style:italic;color:#1f2937;">BroadcastReceiver</em> template methods. See: <a href="https://github.com/didi/booster/blob/master/booster-transform-lint/src/main/kotlin/com/didiglobal/booster/transform/lint/constants.kt#L153" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Receiver Entry Points</a></p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Call chains starting from <em style="font-style:italic;color:#1f2937;">ContentProvider</em> template methods. See: <a href="https://github.com/didi/booster/blob/master/booster-transform-lint/src/main/kotlin/com/didiglobal/booster/transform/lint/constants.kt#L153" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Provider Entry Points</a></p>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Call chains starting from methods whose parameter list or return type includes the following types:</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Fragment</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Dialog</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">View</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Widget</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Layout</li>
+</ul>
+</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">run()</code> method of <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Runnable</code> submitted via the <em style="font-style:italic;color:#1f2937;">Main Handler</em></p>
+</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">While these rules may not cover every main thread entry point, they address at least 80% of cases. Since every app's architecture is different, achieving greater precision would require app-specific extensions to Booster.</p>
+<h3 id="Method-Call-Chains" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Method Call Chains</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">With the analysis above, we can isolate all call chains running on the main thread from the overall Call Graph. But how do we determine which of those chains have performance bottlenecks?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">After extensive statistical analysis, we compiled a list of methods that block the main thread. Due to space constraints, only a subset of APIs is listed here. For the full list, see: <a href="https://github.com/didi/booster/blob/master/booster-transform-lint/src/main/kotlin/com/didiglobal/booster/transform/lint/constants.kt#L170" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">LINT_APIS</a>:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">"java/lang/Object.wait()V",
+"java/lang/Object.wait(J)V",
+"java/lang/Object.wait(JI)V",
+"java/lang/Thread.start()V",
+"java/lang/ClassLoader.getResource(Ljava/lang/String;)Ljava/net/URL;",
+"java/lang/ClassLoader.getResources(Ljava/lang/String;)Ljava/util/Enumeration;",
+"java/lang/ClassLoader.getResourceAsStream(Ljava/lang/String;)Ljava/io/InputStream;",
+"java/lang/ClassLoader.getSystemResource(Ljava/lang/String;)Ljava/net/URL;",
+"java/lang/ClassLoader.getSystemResources(Ljava/lang/String;)Ljava/util/Enumeration;",
+"java/lang/ClassLoader.getSystemResourceAsStream(Ljava/lang/String;)Ljava/io/InputStream;",
+// ...
+"java/util/zip/ZipFile.&lt;init&gt;(Ljava/lang/String;)",
+"java/util/zip/ZipFile.getInputStream(Ljava/util/zip/ZipEntry;)",
+"java/util/jar/JarFile.&lt;init&gt;(Ljava/lang/String;)",
+"java/util/jar/JarFile.getInputStream(Ljava/util/jar/JarEntry;)",
+// ...
+"android/content/Context.getSharedPreferences(Ljava/lang/String;I)Landroid/content/SharedPreferences;",
+"android/content/SharedPreferences$Editor.apply()V",
+"android/content/SharedPreferences$Editor.commit()B",
+// ...
+"android/content/res/AssetManager.list(Ljava/lang/String;)[Ljava/lang/String;",
+"android/content/res/AssetManager.open(Ljava/lang/String;)Ljava/io/InputStream;",
+"android/content/res/AssetManager.open(Ljava/lang/String;I)Ljava/io/InputStream;",
+"android/content/res/AssetManager.openFd(Ljava/lang/String;)Landroid/content/res/AssetFileDescriptor;",
+"android/content/res/AssetManager.openNonAssetFd(Ljava/lang/String;)Landroid/content/res/AssetFileDescriptor;",
+"android/content/res/AssetManager.openNonAssetFd(ILjava/lang/String;)Landroid/content/res/AssetFileDescriptor;",
+"android/content/res/AssetManager.openXmlResourceParser(Ljava/lang/String;)Landroid/content/res/XmlResourceParser;",
+"android/content/res/AssetManager.openXmlResourceParser(ILjava/lang/String;)Landroid/content/res/XmlResourceParser;",
+// ...
+"android/graphics/BitmapFactory.decodeByteArray([BIILandroid/graphics/BitmapFactory$Options;)Landroid/graphics/Bitmap;",
+"android/graphics/BitmapFactory.decodeByteArray([BII)Landroid/graphics/Bitmap;",
+"android/graphics/BitmapFactory.decodeFile(Ljava/lang/String;Landroid/graphics/BitmapFactory$Options;)Landroid/graphics/Bitmap;",
+"android/graphics/BitmapFactory.decodeFile(Ljava/lang/String;)Landroid/graphics/Bitmap;",
+"android/graphics/BitmapFactory.decodeFileDescriptor(Ljava/io/FileDescriptor;)Landroid/graphics/Bitmap;",
+"android/graphics/BitmapFactory.decodeFileDescriptor(Ljava/io/FileDescriptor;Landroid/graphics/Rect;Landroid/graphics/BitmapFactory$Options;)Landroid/graphics/Bitmap;",
+"android/graphics/BitmapFactory.decodeResource(Landroid/content/res/Resources;I)Landroid/graphics/Bitmap;",
+"android/graphics/BitmapFactory.decodeResource(Landroid/content/res/Resources;ILandroid/graphics/BitmapFactory$Options;)Landroid/graphics/Bitmap;",
+"android/graphics/BitmapFactory.decodeResourceStream(Landroid/content/res/Resources;Landroid/util/TypedValue;Ljava/io/InputStream;Landroid/graphics/Rect;Landroid/graphics/BitmapFactory$Options;)Landroid/graphics/Bitmap;",
+"android/graphics/BitmapFactory.decodeStream(Ljava/io/InputStream;)Landroid/graphics/Bitmap;",
+"android/graphics/BitmapFactory.decodeStream(Ljava/io/InputStream;Landroid/graphics/Rect;Landroid/graphics/BitmapFactory$Options;)Landroid/graphics/Bitmap;"</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Based on the conclusions above, we can match the API list against all call chains running on the main thread to identify the ones with performance bottlenecks.</p>
+<h2 id="Summary" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Summary</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">For performance bottleneck detection, the primary task is constructing a <em style="font-style:italic;color:#1f2937;">Call Graph</em>. The <em style="font-style:italic;color:#1f2937;">Lint Transformer</em> proceeds as follows:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Parse <em style="font-style:italic;color:#1f2937;">AndroidManifest.xml</em> to obtain the class names of the <em style="font-style:italic;color:#1f2937;">Application</em> and the four major components.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Create a <em style="font-style:italic;color:#1f2937;">Global Call Graph</em> and a <em style="font-style:italic;color:#1f2937;">Lint Call Graph</em>, using a <em style="font-style:italic;color:#1f2937;">ROOT</em> node as the parent of all main thread entry methods, making it easy to later isolate main thread call chains. The <em style="font-style:italic;color:#1f2937;">Global Call Graph</em> structure looks like this:</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">  <img src="https://github.com/didi/booster/blob/master/assets/booster-global-callgraph.dot.png?raw=true" alt="Global Call Graph" style="display:block;max-width:100%;height:auto;margin:24px auto;border-radius:6px;"></p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Parse all <em style="font-style:italic;color:#1f2937;">class</em> files, extract <em style="font-style:italic;color:#1f2937;">invoke</em> instructions from method body instruction sequences, build <em style="font-style:italic;color:#1f2937;">Edges</em>, and add them to the <em style="font-style:italic;color:#1f2937;">Call Graph</em>.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Starting from the first-level children of the <em style="font-style:italic;color:#1f2937;">ROOT</em> node, traverse the entire <em style="font-style:italic;color:#1f2937;">Call Graph</em> to match against the method list defined earlier. If a match is found, add that chain to the <em style="font-style:italic;color:#1f2937;">Lint Call Graph</em>.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Finally, split the <em style="font-style:italic;color:#1f2937;">Lint Call Graph</em> into smaller graphs by entry class, generating reports in <em style="font-style:italic;color:#1f2937;">dot</em> format. After converting to <em style="font-style:italic;color:#1f2937;">PNG</em>, the result looks like this:</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">  <img src="https://github.com/didi/booster/blob/master/assets/com.didiglobal.booster.demo.MainActivity.dot.png?raw=true" alt="Lint Call Graph" style="display:block;max-width:100%;height:auto;margin:24px auto;border-radius:6px;"></p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2019/06/05/booster-transform-lint/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2019/06/05/booster-transform-lint/</a></p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2020/04/01/asynchronous-programming/">
+  <title>Don&#39;t Understand Kotlin Coroutines? | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Don&#39;t Understand Kotlin Coroutines?</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2020-04-01 · Johnson Lee · Computer Science / Kotlin</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I still remember the pre-jQuery era, when I pulled an all-nighter in my college dorm to build a Tree component. It kept me excited for an entire day. From that point on, I felt I'd truly mastered the essence of JavaScript. Years into my career, a project brought me back to JavaScript, and I discovered that Node.js was utterly fascinating -- like an ancient sword unsealed after years of dormancy. Within a week I'd built a front-end plugin framework. Even though this was during the require.js era, require.js still couldn't handle loading plugin modules dynamically in dependency order (because modules contained not just JS but also CSS, JSON, and other resources). So I had no choice but to build my own wheel. (If only webpack had existed back then.)</p>
+<h2 id="Promise-vs-Callback-Hell" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Promise vs Callback Hell</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The concept of Promise was actually proposed as early as 1976. But it didn't truly gain popularity until <a href="https://api.jquery.com/category/deferred-object/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">jQuery Deferred Objects</a>. In 2012, Promise was formalized as a specification and eventually adopted by ES 2015. Why was Promise so popular back then?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Let's look at a simple example first:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">／**
+  * Load resources asynchronously
+  *／
+function loadResources(res, callback) {
+    xhr.get(res, function(e, resp) {
+        if (e) {
+            callback(e);
+        } else {
+            callback(resp.responseText);
+        }
+    })
+}
+
+/**
+ * Load module asynchronously
+ */
+function loadModule(name, callback) {
+    loadResources(name + "/manifest.json", function(manifest) {
+        var style = manifest.getStyle();
+        var script = manifest.getScript();
+        var layout = manifest.getLayout();
+
+        loadResources(layout, function() {
+            loadResources(script, function() {
+                loadResources(style, function() {
+                    'function' === typeof callback &amp;&amp; callback();
+                });
+            });
+        });
+    });
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">This is the legendary <a href="http://callbackhell.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Callback Hell</a>. Back in the day, even the creator of Node.js couldn't do much about it -- his solution was to change indentation from 4 spaces to 2 (which is why 2-space indentation became so popular in the Node.js world). Now let's see how Promise solves <a href="http://callbackhell.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Callback Hell</a>:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">function loadResources(res) {
+    return new Promise(function(resolve, reject) {
+        xhr.get(res, function(e, resp) {
+            if (e) {
+                reject(e);
+            } else {
+                resolve(resp.responseText);
+            }
+        });
+    });
+}
+
+function loadModule(name) {
+    return loadResources(name + "/manifest.json").then(function(manifest) {
+        return Promise.all(manifest.getStyle(), manifest.getScript(), manifest.getLayout());
+    });
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Refreshing, isn't it? From then on, the JavaScript world was free of that annoying <a href="http://callbackhell.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Callback Hell</a>. Seeing how great ES 5's Promise was, Java developers couldn't resist -- why not implement Promise in Java? I tried exactly that back in the day, but without Java 8's lambda, implementing it in Java 7 or earlier was syntactically clunky -- worse than just using Java's native Fork/Join framework. So I gave up. After getting comfortable with Kotlin, its cleaner syntax rekindled my urge to build wheels. One weekend, I built a <a href="https://github.com/johnsonlee/promise/tree/demo" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Kotlin version of Promise</a>. The example in <a href="https://github.com/johnsonlee/promise/blob/demo/src/main/kotlin/io/johnsonlee/promise/Main.kt" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Main.kt</a> comes from the <a href="https://github.com/johnsonlee/stargazer/blob/master/src/github/api/v3.js" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Stargazer</a> project (which I used to track <a href="https://johnsonlee.github.io/stargazer/#/didi/booster" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Booster's star trend</a>).</p>
+<h2 id="Generator-Function-vs-Callback-Hell" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Generator Function vs Callback Hell</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Back when I was writing backends with Node.js, <a href="https://expressjs.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Express</a> was the go-to choice -- couldn't be simpler. But the JavaScript world never runs short on creativity. The author of Express later built a new wheel -- <a href="https://koajs.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KOA</a>, claiming to be the "Next generation web framework for node.js." Both are "web framework for node.js," so what's the difference between <a href="https://koajs.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KOA</a> and <a href="https://expressjs.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Express</a>?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">This starts with Express. Express has a middleware concept, similar to Java EE's Filter or OkHttp's <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Interceptor</code>, using a <a href="https://en.wikipedia.org/wiki/Chain-of-responsibility_pattern" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Chain of Responsibility</a> pattern to handle requests and responses. In Express, it looks like this:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">var express = require('express');
+var app = express();
+
+/**
+ * Add `requestTime` to every request
+ */
+app.use(function(req, res, next) {
+    req.requestTime = new Date();
+    next();
+});
+
+app.listen(3000);</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Now look at <a href="https://koajs.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KOA</a>'s black magic:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">var koa = require('koa');
+var app = koa();
+
+app.use(function* (next) {
+    this.requestTime = new Date();
+    yield next;
+});
+
+app.listen(3000);</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">function*</code> is the Generator Function introduced in ES 6. <a href="https://koajs.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">KOA</a> used it to replace <a href="https://expressjs.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Express</a>'s <a href="http://callbackhell.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Callback Hell</a>.</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">For API compatibility reasons, Generator Functions and Promises are interconvertible in the JavaScript world</p>
+</blockquote>
+<h2 id="async-await-vs-Coroutines" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">async/await vs Coroutines</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">JavaScript's creative spirit goes far beyond this. Although Promise and Generator Functions solved <a href="http://callbackhell.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Callback Hell</a>, a new question emerged -- how do you make asynchronous code look synchronous in JavaScript? Enter ES 6's other feature -- async/await. Kotlin developers, does this look familiar? That's right -- it's essentially what Kotlin Coroutines' <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">suspend</code> functions do. I've always been suspicious about the naming of "Coroutines," since JavaScript's <a href="http://bluebirdjs.com/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Bluebird</a> also has a <a href="http://bluebirdjs.com/docs/api/promise.coroutine.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">coroutine</a>. How does async/await let you write asynchronous code in a synchronous style? Here's an example:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">async function loadResources(res) {
+    let resp = await fetch(res);
+    return await rsponse.json();
+}
+
+async function loadModule(name) {
+    let manifest = loadResources(name + "/manifest.json")
+    await loadResources(manifest.getStyle());
+    await loadResources(manifest.getScript());
+    await loadResources(manifest.getLayout());
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Much cleaner than Promise, right? This is really just ES 6 syntactic sugar. Under the hood, compilers that support ES 6 (such as the TypeScript Compiler) translate async/await into Promise when compiling TypeScript to ES 2015. Now that we understand the JavaScript world's approach to asynchronous programming, let's look at Kotlin Coroutines:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">class DownloadAsyncActivity : AppCompatActivity() {
+
+    private suspend fun downloadDataAsync(url): String {
+        return suspendCoroutine { cont -&gt;
+            val client = OkHttpClient()
+            val request = Request.Builder()
+                    .url(url)
+                    .build()
+
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    cont.resumeWithException(e)
+                }
+                override fun onResponse(call: Call, response: Response) {
+                    cont.resume(response.body()?.string() ?: "")
+                }
+            })
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        val textView = findViewById(R.id.text_view)
+        val btnDownload = findViewById(R.id.btn_download)
+
+        btnDownload.setOnClickListener {
+            launch(UI) {
+                textView.text = downloadDataAsync()
+            }
+        }
+    }
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">After reading this, don't you want to say: "Isn't this just ES 6's async/await!"</p>
+<h2 id="ECMA-Script-vs-Kotlin" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">ECMA Script vs Kotlin</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Now that we understand asynchronous programming in ES 5, ES 6, and Kotlin, we can draw this conclusion:</p>
+<table style="width:100%;border-collapse:collapse;margin:22px 0;font-size:14px;line-height:1.6;color:#1f2937;">
+<thead>
+<tr>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">ECMA Script</th>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Kotlin</th>
+</tr>
+</thead>
+<tbody><tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Promise</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><a href="https://kotlinlang.org/docs/reference/coroutines/flow.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Flow</a></td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Genrator Function</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines.experimental/-sequence-builder/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Sequence</a></td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">async/await</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"><a href="https://kotlinlang.org/docs/reference/coroutines/flow.html#suspending-functions" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Suspend Function</a></td>
+</tr>
+</tbody></table>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Still think Kotlin Coroutines are hard? Some might ask: all these fancy asynchronous programming patterns -- what are they actually good for?</p>
+<h2 id="Practical-Applications-of-Asynchronous-Programming" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Practical Applications of Asynchronous Programming</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Mobile developers know this well: once an app reaches a certain level of complexity, it's time for performance optimization. The most common target is startup optimization. During app launch there's simply too much to do -- a pile of SDKs to initialize, a pile of business modules to set up. Someone might say: just defer unnecessary initialization, or run what you can on background threads -- async, right? The idea is correct, but the execution is hard without a good asynchronous programming model. If modules that need initializing during startup have dependency ordering -- some foundational modules (like analytics, networking, A/B testing) must initialize first -- a clean asynchronous programming model frees you from tangled logic so you can focus on business flow. That's exactly why the JavaScript world has produced so many excellent asynchronous programming models.</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2020/04/01/asynchronous-programming/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2020/04/01/asynchronous-programming/</a></p>
+    </section>
+  </main>
+</body>
+</html>

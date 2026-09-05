@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2021/10/01/problems-of-gui-app/">
+  <title>The Troubles of GUI Applications | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">The Troubles of GUI Applications</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2021-10-01 · Johnson Lee · Computer Science / Graphics</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">In the booming era of mobile internet, many modern programming languages emerged. <em style="font-style:italic;color:#1f2937;">Write Once and Run Anywhere</em> is no longer exclusive to Java. Yet before <em style="font-style:italic;color:#1f2937;">Android</em> came along, developing <em style="font-style:italic;color:#1f2937;">GUI</em> applications on embedded <em style="font-style:italic;color:#1f2937;">Linux</em> wasn't straightforward. Despite powerful frameworks like <em style="font-style:italic;color:#1f2937;">Qt</em> and <em style="font-style:italic;color:#1f2937;">GTK</em>, developing in <em style="font-style:italic;color:#1f2937;">C/C++</em> always means confronting memory management. While <em style="font-style:italic;color:#1f2937;">C++</em> has the powerful <em style="font-style:italic;color:#1f2937;">boost</em> library (standardized in <em style="font-style:italic;color:#1f2937;">C++11</em>) with smart pointers that handle memory well, <em style="font-style:italic;color:#1f2937;">GTK</em> in <em style="font-style:italic;color:#1f2937;">C</em> doesn't have it so easy -- especially for application developers. How to make memory management easier has been an enduring topic.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Imagine launching a <em style="font-style:italic;color:#1f2937;">GUI</em> application: you enter the main screen, tap a button to open another screen, then close it to return. Simple steps, but implementing this in <em style="font-style:italic;color:#1f2937;">C</em> raises several questions:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Should <em style="font-style:italic;color:#1f2937;">UI</em> widgets be created on the main thread or a worker thread?</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Should click event handlers execute on the main thread or a worker thread?</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Who owns the memory of <em style="font-style:italic;color:#1f2937;">UI</em> widgets created in code? When is it freed?</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Let's first look at how <em style="font-style:italic;color:#1f2937;">Java Swing</em> creates <em style="font-style:italic;color:#1f2937;">UI</em> widgets:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">import javax.swing.*;
+
+public class HelloWorld {
+  public static void main(String[] argv) {
+    JLabel label = new JLabel("Hello, world!", JLabel.CENTER);
+    JFrame frame = new JFrame("Hello");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.getContentPane().add(label);
+    frame.setSize(200, 150);
+    frame.setVisible(true);
+  }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">As we can see, <em style="font-style:italic;color:#1f2937;">Swing</em> applications can create <em style="font-style:italic;color:#1f2937;">UI</em> widgets on the main thread. However, according to <a href="https://docs.oracle.com/javase/8/docs/api/javax/swing/package-summary.html#threading" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Swing's Threading Policy</a> in the <em style="font-style:italic;color:#1f2937;">Javadoc</em>, it's best to create <em style="font-style:italic;color:#1f2937;">UI</em> widgets on the <em style="font-style:italic;color:#1f2937;">Event Dispatching Thread (EDT)</em>:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">import javax.swing.*;
+
+public class HelloWorld {
+  public static void main(String[] argv) {
+    SwingUtilities.invokeLater(() -&gt; {
+      JLabel label = new JLabel("Hello, world!", JLabel.CENTER);
+      JFrame frame = new JFrame("Hello");
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      frame.getContentPane().add(label);
+      frame.setSize(200, 150);
+      frame.setVisible(true);
+    });
+  }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Even so, <em style="font-style:italic;color:#1f2937;">Swing</em> doesn't strictly enforce that <em style="font-style:italic;color:#1f2937;">UI</em> operations must happen on the <em style="font-style:italic;color:#1f2937;">EDT</em>. Now compare with how Android creates <em style="font-style:italic;color:#1f2937;">UI</em> widgets:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class MainActivity extends Activity {
+
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstance);
+    TextView label = new TextView(this);
+    label.setText("Hello, world!");
+    setContentView(label);
+  }
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Although <em style="font-style:italic;color:#1f2937;">Android</em> explicitly defines the <em style="font-style:italic;color:#1f2937;">UI</em> lifecycle, it doesn't actually enforce that <em style="font-style:italic;color:#1f2937;">UI</em> widget creation must happen on the main thread -- which is why <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">AsyncLayoutInflater</code> is possible. What <em style="font-style:italic;color:#1f2937;">Android</em> does enforce is that <em style="font-style:italic;color:#1f2937;">UI operations</em> must happen on the main thread; otherwise, a <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ViewRootImpl$CalledFromWrongThreadException</code> is thrown. To avoid thread-safety issues, it's best to create widgets on the <em style="font-style:italic;color:#1f2937;">UI</em> thread. In fact, in most <em style="font-style:italic;color:#1f2937;">GUI</em> systems the main thread <em style="font-style:italic;color:#1f2937;">is</em> the <em style="font-style:italic;color:#1f2937;">UI</em> thread -- <em style="font-style:italic;color:#1f2937;">Android</em>, <em style="font-style:italic;color:#1f2937;">Cocoa</em>, <em style="font-style:italic;color:#1f2937;">SWT</em>, <em style="font-style:italic;color:#1f2937;">Qt</em>, <em style="font-style:italic;color:#1f2937;">GTK</em>, etc. -- with <em style="font-style:italic;color:#1f2937;">AWT</em> and <em style="font-style:italic;color:#1f2937;">Swing</em> being the exceptions.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Now for the second question -- the threading of click event handlers. Aside from inherently single-threaded languages like <em style="font-style:italic;color:#1f2937;">JavaScript</em>, most languages default to a multi-threaded environment. Event handling typically uses callbacks. In <em style="font-style:italic;color:#1f2937;">C</em>, a callback is a function pointer. To handle a click event in a callback, you pass the clicked <em style="font-style:italic;color:#1f2937;">UI</em> widget as a parameter:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">static void button_click_cb(
+  GtkWidget* widget,
+  gpointer data
+) {
+  ...
+}
+
+void main(int argc, char* argv[]) {
+  GtkWidget* button;
+
+  ...
+
+  gtk_signal_connect(
+    GTK_OBJECT(button),
+    "clicked",
+    GTK_SIGNAL_FUNC(button_click_cb),
+    NULL
+  );
+
+  ...
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">As we know, the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">main</code> function executes synchronously from top to bottom. Once <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">main</code> finishes, the program exits. Yet in practice, a <em style="font-style:italic;color:#1f2937;">GUI</em> application keeps running after starting from the main thread. This means the main thread hasn't exited -- it's "parked" somewhere. But if it's parked, why doesn't the <em style="font-style:italic;color:#1f2937;">UI</em> freeze? It's actually still quite smooth.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">If the callback executes on the main thread, how does execution jump from where the main thread is "parked" to the callback function? If the callback blocks or deadlocks, wouldn't the entire <em style="font-style:italic;color:#1f2937;">GUI</em> system become unresponsive? Would you have to restart the system? And if you want to avoid restarting, how do you solve this?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">If the callback executes on a worker thread, there are thread-safety issues: the clicked widget was created on the main thread, so its memory is accessible from the main thread. How do you ensure thread safety? If every <em style="font-style:italic;color:#1f2937;">GUI</em> widget access requires synchronization via locks, performance suffers dramatically. For developers, it's hostile -- locks everywhere, with deadlocks waiting to happen.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Many are familiar with the <em style="font-style:italic;color:#1f2937;">Event Loop</em>. It's widely used not just in <em style="font-style:italic;color:#1f2937;">GUI</em> systems but also in non-<em style="font-style:italic;color:#1f2937;">GUI</em> systems -- <em style="font-style:italic;color:#1f2937;">Node.js</em> uses it for asynchronous execution. This answers all the questions above:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">UI</em> event callbacks execute on the main thread</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">The main thread hasn't exited because it's "parked" in the <em style="font-style:italic;color:#1f2937;">Event Loop</em></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">The <em style="font-style:italic;color:#1f2937;">Event Loop</em> is driven by the main thread. It's not truly frozen -- it's waiting for messages in a queue. Any thread can send messages to this queue, and the system itself has tasks that must run on the main thread (mouse movement, clicks, button presses, system events, etc.). These are sent as messages to the queue, waiting for the main thread to process them in subsequent loop iterations. One message per iteration -- this elegantly solves the thread-safety problem.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">To prevent the main thread from getting stuck, the system runs a background process called a <em style="font-style:italic;color:#1f2937;">Watchdog</em> that waits to be "fed." If no one feeds it within a certain time, it "barks" -- different systems handle this differently. Some display an <em style="font-style:italic;color:#1f2937;">App Not Responding (ANR)</em> dialog letting the user choose to wait or kill the unresponsive process. Some kill the process without asking. For systems that require no human intervention or run critical tasks -- embedded systems like <em style="font-style:italic;color:#1f2937;">Linux</em>, <em style="font-style:italic;color:#1f2937;">VxWorks</em>, <em style="font-style:italic;color:#1f2937;">RT-Thread</em> -- if the watchdog isn't fed in time, the system reboots automatically.</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">So must all <em style="font-style:italic;color:#1f2937;">UI</em> operations happen on the <em style="font-style:italic;color:#1f2937;">UI</em> thread? Not necessarily. In <em style="font-style:italic;color:#1f2937;">GUI</em> systems, most <em style="font-style:italic;color:#1f2937;">UI</em> widgets are operated by the <em style="font-style:italic;color:#1f2937;">UI</em> thread, meaning <em style="font-style:italic;color:#1f2937;">CPU</em>-rendered. But animations and video demand extremely high frame rates. To achieve 60 <em style="font-style:italic;color:#1f2937;">FPS (Frames Per Second)</em> silky smoothness, the <em style="font-style:italic;color:#1f2937;">CPU</em> alone is far from sufficient -- <em style="font-style:italic;color:#1f2937;">GPU</em> acceleration is needed. This requires the <em style="font-style:italic;color:#1f2937;">GUI</em> system's view hierarchy to provide extension points for <em style="font-style:italic;color:#1f2937;">GPU</em> rendering. For example, <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">TextureView</code> in <em style="font-style:italic;color:#1f2937;">Android</em> and <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">CALayer</code> in <em style="font-style:italic;color:#1f2937;">iOS</em>. <a href="https://texturegroup.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Texture</a> (<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">AsyncDisplayKit</code>) leverages <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">CALayer</code> to render on non-<em style="font-style:italic;color:#1f2937;">UI</em> threads for a smoother user experience.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Finally, the third question -- memory ownership of <em style="font-style:italic;color:#1f2937;">UI</em> widgets. For runtimes without <em style="font-style:italic;color:#1f2937;">Garbage Collection (GC)</em>, memory management typically uses <em style="font-style:italic;color:#1f2937;">Reference Counting</em>. This splits into <em style="font-style:italic;color:#1f2937;">Automatic Reference Counting (ARC)</em> and <em style="font-style:italic;color:#1f2937;">Manual Reference Counting (MRC)</em>. <em style="font-style:italic;color:#1f2937;">GTK</em>'s memory management is classic <em style="font-style:italic;color:#1f2937;">MRC</em>. <em style="font-style:italic;color:#1f2937;">Cocoa</em>'s is classic <em style="font-style:italic;color:#1f2937;">ARC</em>. <em style="font-style:italic;color:#1f2937;">Cocoa</em> achieves <em style="font-style:italic;color:#1f2937;">ARC</em> through the combined work of the <em style="font-style:italic;color:#1f2937;">Clang</em> compiler and the <em style="font-style:italic;color:#1f2937;">Objective-C</em> runtime -- <em style="font-style:italic;color:#1f2937;">Clang</em> can analyze memory ownership at compile time and insert runtime-provided memory deallocation calls at the right places, sparing developers from manual memory management. For <em style="font-style:italic;color:#1f2937;">GUI</em> systems using <em style="font-style:italic;color:#1f2937;">ARC</em> or <em style="font-style:italic;color:#1f2937;">GC</em>, the runtime controls memory ownership. For <em style="font-style:italic;color:#1f2937;">MRC</em>-based <em style="font-style:italic;color:#1f2937;">GUI</em> systems, the system itself handles memory management at appropriate times to avoid leaks. While developers rarely need to worry about <em style="font-style:italic;color:#1f2937;">UI</em> widget memory in most cases, there are scenarios requiring manual reference counting.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Among popular compiled languages today, aside from <em style="font-style:italic;color:#1f2937;">Objective-C</em> and <em style="font-style:italic;color:#1f2937;">Swift</em> still using <em style="font-style:italic;color:#1f2937;">ARC</em>, nearly all have implemented <em style="font-style:italic;color:#1f2937;">Garbage Collection</em>. So is <em style="font-style:italic;color:#1f2937;">GC</em> better than <em style="font-style:italic;color:#1f2937;">ARC</em>? It depends on the perspective:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">From the developer's perspective, <em style="font-style:italic;color:#1f2937;">GC</em> is friendlier -- you almost never worry about memory leaks</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">From the end user's perspective, <em style="font-style:italic;color:#1f2937;">GC</em>-induced brief stutters do affect the experience</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Despite <em style="font-style:italic;color:#1f2937;">Java</em> being around for over 20 years since 1995, <em style="font-style:italic;color:#1f2937;">Sun</em>, <em style="font-style:italic;color:#1f2937;">Oracle</em>, and the <em style="font-style:italic;color:#1f2937;">Java</em> community have never stopped optimizing the <em style="font-style:italic;color:#1f2937;">GC</em>. This is one reason Huawei developed the Ark Compiler, whose goal includes solving <em style="font-style:italic;color:#1f2937;">GC</em>-induced stutters. Moving away from <em style="font-style:italic;color:#1f2937;">GC</em> toward "primarily <em style="font-style:italic;color:#1f2937;">ARC</em>, supplemented by <em style="font-style:italic;color:#1f2937;">GC</em>" is the Ark Compiler's main technical direction. Its <em style="font-style:italic;color:#1f2937;">ARC</em> approach follows the same idea as the <em style="font-style:italic;color:#1f2937;">Clang</em> compiler mentioned earlier -- leveraging the compiler's static analysis to automatically insert memory deallocation calls at compile time.</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2021/10/01/problems-of-gui-app/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2021/10/01/problems-of-gui-app/</a></p>
+    </section>
+  </main>
+</body>
+</html>

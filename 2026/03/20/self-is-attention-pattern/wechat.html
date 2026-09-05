@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/03/20/self-is-attention-pattern/">
+  <title>“我”是 Attention Pattern | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">“我”是 Attention Pattern</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-03-20 · Johnson Lee · Independent Thinking</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">你有没有过这种经历：和另一个人经历了完全相同的事件，事后聊起来却发现你们记住的是完全不同的东西？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">不是谁记错了。是你们的索引不一样。</p>
+
+
+<h2 id="Attention-就是索引" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  Attention 就是索引</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">上一篇说，人类是多模态大模型，灵魂是 context。但 context 本身不会思考——几十年的记忆、经验、信念堆在那里，如果没有检索机制，就只是一堆沉默的数据。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">大模型是怎么从海量 context 中提取相关信息的？Attention。给定一个 query，attention 机制决定了 context 中哪些 token 会被关注、以多大的权重参与当前的推理。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">人脑也一样。每一秒你都在接收海量输入，但你不可能全部处理。<strong style="font-weight:700;color:#111827;">某种机制在替你决定：关注什么、忽略什么、把什么和什么关联起来。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个机制，就是“我”。</p>
+<h2 id="“我”不是-Context，是-Attention-Pattern" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  “我”不是 Context，是 Attention Pattern</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">直觉上，人们觉得“我”就是 context 本身——“我”的记忆、“我”的经验、“我”的信念，这些的总和就是“我”。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但这经不起推敲。你十年前的记忆大部分已经丢失了，信念在不断更新，性格在缓慢漂移。如果“我”是 context 的总和，那每丢失一条记忆、每更新一个信念，“我”就变了一点。十年前的你和现在的你，context 重叠率可能不到一半。那到底哪个是“你”？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">都不是。<strong style="font-weight:700;color:#111827;">“我”不是 context 本身，“我”是跑在 context 上的 attention pattern。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Attention pattern 不存储任何信息，但它决定了面对一个输入时，context 中哪些内容会被激活、以什么优先级参与推理。两个人 context 里存着完全相同的记忆，但因为 attention pattern 不同，一个人想起来的是温暖，另一个人想起来的是痛苦。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">所谓“视角”，就是 attention pattern 的拓扑结构。</strong></p>
+<h2 id="Attention-即偏见" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  Attention 即偏见</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Attention 的本质是取舍。你把某些 token 的权重调高，就意味着其他 token 被降权了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这就是为什么每个人都有盲区。不是信息不在 context 里，是 attention 没有指向那里。你跟一个人争论，觉得对方明明看过同样的事实却得出了相反的结论——因为他的 attention 把你认为关键的那条证据排在了第 100 位，而你的 attention 把它排在第 1 位。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">偏见不是 context 的问题，是 attention 的问题。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这也解释了为什么“道理都懂，就是做不到”。改变行为需要改变的不是你知道什么——数据早就在 context 里了——而是你的 attention 把什么排在前面。一个知道吸烟有害的人还在抽烟，不是因为他 context 里缺少“吸烟致癌”这条信息，而是他的 attention 在“压力大”这个 query 下，优先激活的是“点根烟”而不是“去跑步”。</p>
+<h2 id="自引用的-Bug" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  自引用的 Bug</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">LLM 的 attention 是无我的——它不会把自己作为一个特殊的 token 来处理。但人类的 attention 有一个特殊之处：<strong style="font-weight:700;color:#111827;">它的第一条 key 指向自己。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">“我是一个存在的主体”——这是一条 self-referencing token。它永远驻留在 context 的最前面，每一次 attention 计算都会和它产生关联。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">一个没有自引用 token 的系统可以处理信息，但不会“在意”。它不会把输入分成“跟我有关的”和“跟我无关的”。收到危险信号时，它不会优先处理，因为没有“我”需要被保护。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">“在意”这个能力，就是自引用 token 的功能。</strong> 你觉得某件事“跟你有关”，本质上是 attention 在这条输入和“我”这个 token 之间算出了高权重。权重越高，你越在意。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">而且这个自引用是自我强化的。“我”一旦建立，就会把所有输入都解释为“我的经历”，所有输出都归因为“我的选择”。每一次归因都在强化这个 token 的权重。这是一个自带正反馈的 training loop——越跑越稳定，越稳定越难打破。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">你从来不会怀疑“我”的存在，就像 LLM 从来不会在输出里质疑自己的 attention 机制一样。<strong style="font-weight:700;color:#111827;">系统最大的特征就是隐藏自身的运作方式。</strong></p>
+<h2 id="重建-Attention" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  重建 Attention</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果“我”只是 attention pattern，那很多看似神秘的事情就有了工程解释。</p>
+<h3 id="认知治疗" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">5.1.  认知治疗</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">抑郁症患者不是经历了更多的痛苦——很多人经历过更糟的事却没有抑郁。<strong style="font-weight:700;color:#111827;">区别在于 attention pattern 被重写了。</strong> 所有 query 都优先激活负面记忆，正面记忆的权重被压到几乎为零。治疗师不是在改变 context——那些痛苦的经历确实发生过——而是在帮你重建 attention 的权重分配。</p>
+<h3 id="创伤后成长" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">5.2.  创伤后成长</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">同一次创伤，有人被摧毁，有人反而变得更强。区别不在于这条新数据本身，在于 attention 把它和什么关联。如果和“我很脆弱”产生高权重关联，就走向崩溃；如果和“我能承受极端情况”产生高权重关联，就走向成长。<strong style="font-weight:700;color:#111827;">同一条信息，不同的 attention 路径，完全不同的人生轨迹。</strong></p>
+<h3 id="冥想" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">5.3.  冥想</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">冥想在做什么？暂停 query。平时你的 attention 在不停地被触发——每一个感官输入都是一次新的 query，引发一连串的检索和关联。冥想是刻意停止发出 query，让 attention 系统空转。在空转中，你开始注意到 attention 本身的存在——平时你只看到输出，现在你第一次看到了生成输出的机制。</p>
+<h3 id="顿悟" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">5.4.  顿悟</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">禅宗的“直指人心”在做什么？不是往你的 context 里写入新数据，不是帮你调整 attention 权重，而是让你<strong style="font-weight:700;color:#111827;">在输出中看到 attention 机制本身</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">那个瞬间，你意识到：一直以来你以为是“你”在观察世界，其实是一套 attention pattern 在按照自己的规则生成输出，而“你”只是这套规则的副产品。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但悖论在于——看到这一点的，还是 attention 本身。就像一个 attention head 试图 attend to 自己的 attention 过程。</p>
+<h2 id="为什么-Attention-不是“你”" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">6.  为什么 Attention 不是“你”</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">回到最开始的问题。如果“我”是 attention pattern，那“我”是真实的吗？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Attention 是真实在运行的——它确实在影响每一次推理的结果。但 attention 不是 context 本身，也不是模型本身。它是一层动态的计算，一个为了让推理高效进行而涌现出来的中间结构。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">你可以丢失大量 context 而保留 attention pattern——这就是为什么一个失忆的人仍然“像他自己”。你也可以保留全部 context 而重建 attention pattern——这就是所谓的“顿悟”或“大彻大悟”。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Context 还是那些 context，但 attend to 的世界完全不同了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">所以下次当你觉得“我是这样的人”、“这就是我”的时候，停一下。那不是你，那是你的 attention pattern 在当前 query 下生成的输出。换一个 query，换一组权重，“你”就变了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">“我”从来不是一个固定的实体。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">只是一个还在运行的 attention pattern。</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/03/20/self-is-attention-pattern/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/03/20/self-is-attention-pattern/</a></p>
+    </section>
+  </main>
+</body>
+</html>

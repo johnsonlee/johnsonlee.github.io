@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2021/10/01/problems-of-gui-app/">
+  <title>GUI 应用的烦恼 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">GUI 应用的烦恼</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2021-10-01 · Johnson Lee · Computer Science / Graphics</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在移动互联网蓬勃发展的时代，出现了很多现代化的编程语言，<em style="font-style:italic;color:#1f2937;">Write Once and Run Anywhere</em> 早已不再是 Java 所独有的特性，然而在 <em style="font-style:italic;color:#1f2937;">Android</em> 系统推出之前，想要在嵌入式 <em style="font-style:italic;color:#1f2937;">Linux</em> 系统之上比较方便的开发 <em style="font-style:italic;color:#1f2937;">GUI</em> 程序还真不是一件简单的事情，虽然有 <em style="font-style:italic;color:#1f2937;">Qt、GTK</em> 等强大的 <em style="font-style:italic;color:#1f2937;">GUI</em> 开发框架，但是用 <em style="font-style:italic;color:#1f2937;">C/C++</em> 语言开发始终不可避免的要面临的一个问题——内存管理，尽管 <em style="font-style:italic;color:#1f2937;">C++</em> 有强大的 <em style="font-style:italic;color:#1f2937;">boost</em> 库（已在 2011 年成为 <em style="font-style:italic;color:#1f2937;">C++11</em> 的标准库）提供的智能指针能很好的解决内存的问题，但对于采用 <em style="font-style:italic;color:#1f2937;">C</em> 语言来开发 <em style="font-style:italic;color:#1f2937;">GUI</em> 的 <em style="font-style:italic;color:#1f2937;">GTK</em> 来说，就不是那么容易了，尤其是对于要用 <em style="font-style:italic;color:#1f2937;">C</em> 语言来开发应用程序的开发者来说，如何让内存管理变得更容易便成为了一个经久不衰的话题。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">试想一下，当启动一个 <em style="font-style:italic;color:#1f2937;">GUI</em> 应用的时候，首先进入到主界面，然后点击某个按钮，打开另一个界面，然后关闭界面返回到主界面，虽然只是简单的几个步骤，但如果要用 <em style="font-style:italic;color:#1f2937;">C</em> 语言来实现，我们会面临以下的问题：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">UI</em> 控件的创建是应该在主线程还在子线程？</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">处理点击事件的代码是应该在主线程执行还是在子线程执行？</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">代码中创建出来的 <em style="font-style:italic;color:#1f2937;">UI</em> 控件的内存到底由谁来释放？什么时候被释放？</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">首先，我们看一下 <em style="font-style:italic;color:#1f2937;">Java Swing</em> 是如何创建 <em style="font-style:italic;color:#1f2937;">UI</em> 控件的，代码如下所示：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">import javax.swing.*;
+
+public class HelloWorld {
+  public static void main(String[] argv) {
+    JLabel label = new JLabel("Hello, world!", JLabel.CENTER);
+    JFrame frame = new JFrame("Hello");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.getContentPane().add(label);
+    frame.setSize(200, 150);
+    frame.setVisible(true);
+  }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">通过以上的例子，我们可以看到，<em style="font-style:italic;color:#1f2937;">Swing</em> 应用是可以在主线程创建 <em style="font-style:italic;color:#1f2937;">UI</em> 控件的，然而，根据 <em style="font-style:italic;color:#1f2937;">Javadoc</em> 中的 <a href="https://docs.oracle.com/javase/8/docs/api/javax/swing/package-summary.html#threading" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Swing's Threading Policy</a> ，最好是在 <em style="font-style:italic;color:#1f2937;">Swing</em> 的 <em style="font-style:italic;color:#1f2937;">Event Dispatching Thread (EDT)</em> 中创建 <em style="font-style:italic;color:#1f2937;">UI</em> 控件：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">import javax.swing.*;
+
+public class HelloWorld {
+  public static void main(String[] argv) {
+    SwingUtilities.invokeLater(() -&gt; {
+      JLabel label = new JLabel("Hello, world!", JLabel.CENTER);
+      JFrame frame = new JFrame("Hello");
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      frame.getContentPane().add(label);
+      frame.setSize(200, 150);
+      frame.setVisible(true);
+    });
+  }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"> 尽管如此，<em style="font-style:italic;color:#1f2937;">Swing</em> 也并没有强制约束必须在 <em style="font-style:italic;color:#1f2937;">EDT</em> 线程中操作 <em style="font-style:italic;color:#1f2937;">UI</em> ，对比一下 <em style="font-style:italic;color:#1f2937;">Swing</em> ，我们再来看一下 Android 是如何创建 <em style="font-style:italic;color:#1f2937;">UI</em> 控件的：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public class MainActivity extends Activity {
+
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstance);
+    TextView label = new TextView(this);
+    label.setText("Hello, world!");
+    setContentView(label);
+  }
+
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">相比之下，尽管 <em style="font-style:italic;color:#1f2937;">Android</em> 明确规范了 <em style="font-style:italic;color:#1f2937;">UI</em> 的生命周期，但其实也并没有强制约束 <em style="font-style:italic;color:#1f2937;">UI</em> 控件的创建必须在主线程中，这也是为什么 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">AsyncLayoutInflater</code> 得以实现的原因，只不过 <em style="font-style:italic;color:#1f2937;">Android</em> 对操作 <em style="font-style:italic;color:#1f2937;">UI</em> 的行为做了约束 —— 必须在主线程中操作 <em style="font-style:italic;color:#1f2937;">UI</em> ，否则会抛出 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ViewRootImpl$CalledFromWrongThreadException</code>，为了避免线程安全问题，最好还是在 <em style="font-style:italic;color:#1f2937;">UI</em> 线程中创建控件，其实，大多数 <em style="font-style:italic;color:#1f2937;">GUI</em> 系统中主线程就是 <em style="font-style:italic;color:#1f2937;">UI</em> 线程，如：<em style="font-style:italic;color:#1f2937;">Android、Cocoa、SWT、Qt、GTK</em> 等，当然 <em style="font-style:italic;color:#1f2937;">AWT</em> 和 <em style="font-style:italic;color:#1f2937;">Swing</em> 除外。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">接下来，我们来看第 2 个问题 —— 点击事件处理的线程问题，除了像 <em style="font-style:italic;color:#1f2937;">JavaScript</em> 这种天生就是单线程执行的语言以外，大部分编程语言默认就是多线程的环境，事件响应一般都是采用回调 <em style="font-style:italic;color:#1f2937;">(Callback)</em> 的方式，在 <em style="font-style:italic;color:#1f2937;">C</em> 语言中，回调一般是一个函数指针，如果要在回调中处理点击事件响应的逻辑，就需要将被点击的 <em style="font-style:italic;color:#1f2937;">UI</em> 控件以参数的形式传递到回调函数中，代码如下所示：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">static void button_click_cb(
+  GtkWidget* widget,
+  gpointer data
+) {
+  ...
+}
+
+void main(int argc, char* argv[]) {
+  GtkWidget* button;
+
+  ...
+
+  gtk_signal_connect(
+    GTK_OBJECT(button),
+    "clicked",
+    GTK_SIGNAL_FUNC(button_click_cb),
+    NULL
+  );
+
+  ...
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">众所周知，<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">main</code> 方法是从上到下同步执行的，当 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">main</code> 方法执行完成后，程序就会自动退出，而实际上，<em style="font-style:italic;color:#1f2937;">GUI</em> 应用从主线程启动后，会一直运行着，这说明主线程并没有退出，而是“停留”在某一个地方了，既然是“停留”在某一个地方了，那为什么 <em style="font-style:italic;color:#1f2937;">UI</em> 并没有被卡住，反而还很流畅？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果回调函数在主线程中执行，那么主线程是如何从“停留”的那个地方切换到回调函数的位置的呢？如果回调函数长时间不能返回或者死锁了，那整个 <em style="font-style:italic;color:#1f2937;">GUI</em> 系统岂不是会被卡死而导致完全无法响应用户的操作，难道只能重启系统？如果要避免重启系统，如何才能解决呢？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果回调函数在子线程中执行，那么就肯定会涉及到线程安全问题，因为被点击的控件是在主线程中创建的，那么这个控件对应的内存可以被主线程访问到，那如何才保证控件的线程安全问题？如果每次访问 <em style="font-style:italic;color:#1f2937;">GUI</em> 控件都要用加锁的方式进行同步，这对于 <em style="font-style:italic;color:#1f2937;">GUI</em> 应用来说，其性能会大打折扣，而且，对于开发者来说，很不友好，同步锁满天飞，还很容易造成死锁。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">相信很多人对于 <em style="font-style:italic;color:#1f2937;">Event Loop</em> 并不陌生，它不仅仅被广泛应用于 <em style="font-style:italic;color:#1f2937;">GUI</em> 系统中，也被应用于跟 <em style="font-style:italic;color:#1f2937;">GUI</em> 无关的系统中，像 <em style="font-style:italic;color:#1f2937;">Node.js</em> 就是利用 <em style="font-style:italic;color:#1f2937;">Event Loop</em> 来实现异步，这正好也解释了前面的一系列问题：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">UI</em> 事件回调方法在主线程中执行</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">主线程之所以没有退出，是“停留”在 <em style="font-style:italic;color:#1f2937;">Event Loop</em> 这儿了</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">Event Loop</em> 由主线程来驱动，主线程并不是真正的停在 <em style="font-style:italic;color:#1f2937;">Event Loop</em> 这儿不动了，而是在等队列里的消息，这些消息可以由任意线程发送到主线程，系统本身也会有一些任务需要在主线程中处理，例如：鼠标移动、点击、按下按钮以及一些系统事件等，这些任务以消息的形式发送到这个消息队列里，等待主线程在后续的 loop 中执行，每等到一个消息，主线程就会同步处理一个，这样就很好地解决了线程安全问题。</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">   为了防止主线程被卡住，系统会启动一个叫做“看门狗” <em style="font-style:italic;color:#1f2937;">(Watchdog)</em> 的后台进程，等着其它进程来“投食”，如果超过一定时间还没有人来“投食”，看门狗就会“乱叫”——不同的系统其处理方式可能不一样，有的系统会弹出一个应用无响应 <em style="font-style:italic;color:#1f2937;">(App Not Responding, ANR)</em> 的弹窗，让用户去选择是继续等待还是直接杀死无响应的进程，有的系统可能连问都不问直接杀死无响应的进程，而对于无需人工干预或者执行关键任务的系统而言，如嵌入式系统 <em style="font-style:italic;color:#1f2937;">Linux，VxWorks，RT-Thread</em> 等，如果没有及时的“喂狗”，系统就会自动重启。</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">那么，所有的 <em style="font-style:italic;color:#1f2937;">UI</em> 操作都只能在 <em style="font-style:italic;color:#1f2937;">UI</em> 线程中完成吗？其实不尽然，在 <em style="font-style:italic;color:#1f2937;">GUI</em> 系统中，大部分的 <em style="font-style:italic;color:#1f2937;">UI</em> 控件都是通过 <em style="font-style:italic;color:#1f2937;">UI</em> 线程来操作的，也就是说，是由 <em style="font-style:italic;color:#1f2937;">CPU</em> 来完成渲染的，然而，像动画、视频的渲染对流畅度要求极高，为了追求 60 <em style="font-style:italic;color:#1f2937;">FPS (Frames Per Second)</em> 的丝滑体验，仅仅靠 <em style="font-style:italic;color:#1f2937;">CPU</em> 来完成渲染远远达不到要求，需要依靠 <em style="font-style:italic;color:#1f2937;">GPU</em> 来加速，这就需要 <em style="font-style:italic;color:#1f2937;">GUI</em> 系统在其视图体系中为 <em style="font-style:italic;color:#1f2937;">GPU</em> 渲染留出相应的扩展能力，比如：<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Android</code> 中的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">TextureView</code>，iOS 中的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">CALayer</code>，像 <a href="https://texturegroup.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Texture</a> (<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">AsyncDisplayKit</code>) 就是基于 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">CALayer</code> 在非 <em style="font-style:italic;color:#1f2937;">UI</em> 线程中进行渲染从而达到更流畅的用户体验。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">最后，我们来看第 3 个问题 —— <em style="font-style:italic;color:#1f2937;">UI</em> 控件的内存的所有权问题，对于没有垃圾回收 <em style="font-style:italic;color:#1f2937;">(Garbage Collection)</em> 机制的运行时来说，内存管理一般会通过引用计数 <em style="font-style:italic;color:#1f2937;">(Reference Counting)</em> 来实现，只不过引用计数也分为自动引用计数 <em style="font-style:italic;color:#1f2937;">(Automatic Reference Counting，ARC)</em> 和手动引用计数 <em style="font-style:italic;color:#1f2937;">(Manual Reference Counting，MRC)</em> ，<em style="font-style:italic;color:#1f2937;">GTK</em> 的内存管理属于典型的 <em style="font-style:italic;color:#1f2937;">MRC</em> ，<em style="font-style:italic;color:#1f2937;">Cocoa</em> 的内存管理则属于典型的 <em style="font-style:italic;color:#1f2937;">ARC</em> ，之所以 <em style="font-style:italic;color:#1f2937;">Cocoa</em> 能做到 <em style="font-style:italic;color:#1f2937;">ARC</em> ，这也是 <em style="font-style:italic;color:#1f2937;">Clang</em> 编译器和 <em style="font-style:italic;color:#1f2937;">Objective-C</em> 运行时共同作用的结果，<em style="font-style:italic;color:#1f2937;">Clang</em> 编译器能够在编译期间自动分析出内存的所有权，并在合适的位置插入编译器运行时提供的释放内存的函数调用，以代替开发者手动去处理内存释放的工作。对于采用 <em style="font-style:italic;color:#1f2937;">ARC</em> 或者 <em style="font-style:italic;color:#1f2937;">GC</em> 的 <em style="font-style:italic;color:#1f2937;">GUI</em> 系统来说，内存的所有权都交给了运行时来控制，而对于采用 <em style="font-style:italic;color:#1f2937;">MRC</em> 的 <em style="font-style:italic;color:#1f2937;">GUI</em> 系统来说，为了避免内存泄漏，内存的管理工作都是由 <em style="font-style:italic;color:#1f2937;">GUI</em> 系统来完成，<em style="font-style:italic;color:#1f2937;">GUI</em> 系统会在合适的时机自行决定要不要释放内存，尽管大部分情况下开发者并不需要太关心 <em style="font-style:italic;color:#1f2937;">UI</em> 控件的内存问题，但是也会存在一些场景需要开发者手动去处理引用计数问题。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">从目前流行的编译型编程语言来看，除了 <em style="font-style:italic;color:#1f2937;">Objective-C</em> 和 <em style="font-style:italic;color:#1f2937;">Swift</em> 还在使用自动引用计数 <em style="font-style:italic;color:#1f2937;">(ARC)</em> ，几乎都实现了垃圾回收 <em style="font-style:italic;color:#1f2937;">(Garbage Collection)</em> 机制，那是不是 <em style="font-style:italic;color:#1f2937;">GC</em> 比 <em style="font-style:italic;color:#1f2937;">ARC</em> 更好呢？我觉得这个得从不同的角度来看：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">从开发者的角度来看，<em style="font-style:italic;color:#1f2937;">GC</em> 对开发者更友好，几乎不用关心内存泄露问题</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">从终端用户的角度来看，<em style="font-style:italic;color:#1f2937;">GC</em> 带来的短暂的卡顿确实会影响用户的体验</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">尽管 <em style="font-style:italic;color:#1f2937;">Java</em> 于 1995 年发布至今已经 20 多年，但 <em style="font-style:italic;color:#1f2937;">Sun、Oracle</em> 以及 <em style="font-style:italic;color:#1f2937;">Java</em> 社区从 <em style="font-style:italic;color:#1f2937;">Java GC</em> 的优化从未停止过，这也是为什么会华为会推出方舟编译器的原因之一，方舟编译器的其中一个目标就是解决 <em style="font-style:italic;color:#1f2937;">GC</em> 导致的短暂的卡顿问题，去 <em style="font-style:italic;color:#1f2937;">GC</em> 而「以 <em style="font-style:italic;color:#1f2937;">ARC</em> 为主，<em style="font-style:italic;color:#1f2937;">GC</em> 为辅」是方舟编译器的主要技术方向，而 <em style="font-style:italic;color:#1f2937;">ARC</em> 则跟前面提到的 <em style="font-style:italic;color:#1f2937;">Clang</em> 编译器的思路一样 —— 借助编译器的静态分析能力在编译期间自动完成内存释放调用的插入。</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2021/10/01/problems-of-gui-app/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2021/10/01/problems-of-gui-app/</a></p>
+    </section>
+  </main>
+</body>
+</html>

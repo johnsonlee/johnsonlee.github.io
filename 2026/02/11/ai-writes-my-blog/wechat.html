@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/02/11/ai-writes-my-blog/">
+  <title>不装了，文章都是AI写的 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">不装了，文章都是AI写的</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-02-11 · Johnson Lee · Independent Thinking</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">上周有个朋友看完我的博客，发消息问我：“你哪来这么多时间写这些长文？”</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我回了三个字：没时间。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">然后他更困惑了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">事实是，这些文章确实是我“写”的——但不是我一个字一个字敲出来的。它们是我跟 AI 对话的产物。我负责想法和判断，AI 负责把它们变成完整的文章。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">整个过程，5 分钟。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我知道你在想什么：AI 写的文章不就是那种“随着技术的不断发展”开头、“让我们拭目以待”结尾的八股文吗？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">还真不是。关键在于你怎么让 AI 写。</p>
+<h2 id="工欲善其事，必先利其器" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  工欲善其事，必先利其器</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">直接让 AI “帮我写一篇关于 XXX 的博客”，出来的东西大概率是废话连篇的通稿。AI 不知道你的写作风格、不知道你的博客用什么技术栈、不知道你的 front matter 格式是什么样的。每次都要从头教一遍，那还不如自己写。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">所以我做的第一件事，是给 Claude 造了一个专属的 “Blog Writer Skill”。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">你可以把 Skill 理解为给 AI 的一套工作手册。它告诉 AI：你的博客是什么格式、你的写作风格是什么样的、文章该怎么组织、最后怎么发布。<strong style="font-weight:700;color:#111827;">一次配置，永久生效。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">最妙的地方在于：build 这个 Skill 的过程本身，就是跟 Claude 聊天。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我说“我想做一个写博客的 Skill”，Claude 就开始问我问题：技术栈是什么？Hexo。front matter 什么格式？贴一篇现有的文章给它看。写作语言？中文为主。推送到哪？GitHub Pages，repo 是 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">johnsonlee/blog</code>，<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">master</code> 分支。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">就这样一问一答，几分钟后，Claude 就帮我生成了一个完整的 Skill，包含两个文件：</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">SKILL.md</strong> — 核心指令文件，长这样（节选）：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">---
+name: blog-writer
+description: &gt;
+  写技术博客并发布到 johnsonlee.io (Hexo + GitHub Pages)。
+  当用户提到"写博客"、"写一篇文章"、"发一篇 post"、"blog"、
+  "写个技术分享"、或者讨论完一个话题后说"把这个整理成博客"时，
+  使用这个 skill。
+---</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">里面定义了文章的 front matter 格式、文件命名规则、写作风格（包括该用什么语气、怎么组织结构、什么该避免），甚至连推送到 GitHub 的流程都写好了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">push_to_github.sh</strong> — 推送脚本，通过 GitHub API 把生成的 Markdown 文件直接 commit 到我的博客 repo。不用 clone，不用本地操作，一个 API 调用搞定。</p>
+<h2 id="写作风格这件事" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  写作风格这件事</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Skill 里最花心思的部分，是写作风格的定义。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我贴了几篇自己之前写的文章给 Claude，让它分析我的写作特征。它提炼出来的东西还挺准的：</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">中文为主，但技术术语保留英文，偶尔自然地中英混用</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">口语化但有深度，像跟同行聊天</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">喜欢用反问推进论点</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">用场景想象让抽象概念落地</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">加粗用来突出核心判断，不是拿来装饰的</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">然后它还总结了我不会做的事情：不说“众所周知”、不用“首先其次最后”的教科书结构、不自称“笔者”、不写公关稿语气。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">这些规则一旦写进 Skill，以后每次写文章都会自动遵守。</strong> 我不需要每次都提醒 AI “别写得太官方”。</p>
+<h2 id="5-分钟写一篇博客的真实流程" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  5 分钟写一篇博客的真实流程</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">有了 Skill 之后，写博客的流程变成了这样：</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">第 1 分钟：抛出话题。</strong></p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">“以'当 Agent 成为入口，App 何去何从'为话题写个博客”</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">就一句话。Claude 会根据 Skill 里定义的风格和结构，生成一篇完整的文章。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">第 2-3 分钟：审阅和调整。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">AI 生成的初稿通常结构没问题，但某些观点可能不够锐利，或者某个例子不太贴切。我会给反馈：</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">“第三节的论证太温和了，再激进一点”<br>“把那个电商的例子换成外卖场景”</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Claude 改完，再看一遍。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">第 4 分钟：确认发布。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Claude 会展示最终版本，确认文件名，告诉我将要 push 到哪个 repo 的哪个分支。我说“推吧”，它就通过 GitHub API 把文章推上去了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">第 5 分钟：GitHub Pages 自动构建，文章上线。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">全程不需要打开编辑器，不需要 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">git clone</code>，不需要 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">hexo new post</code>。</p>
+<h2 id="这算作弊吗？" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  这算作弊吗？</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我猜有人会说：这不就是让 AI 代写吗？有什么好炫耀的？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我的看法是：<strong style="font-weight:700;color:#111827;">写作的核心从来不是打字，而是思考。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">一篇好文章的价值在于它的观点、它的洞察、它的思维框架。这些东西 AI 编不出来——它只是帮我把已经想清楚的东西变成了读者能消费的格式。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">就像没有人会觉得用打字机写作是“作弊”，也没有人会觉得用 Word 的拼写检查是“作弊”。AI 写作只是把效率又提升了一个数量级而已。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">而且说实话，跟 AI 对话的过程本身也是在思考。我得想清楚我要表达什么、我的核心论点是什么、我希望读者看完之后带走什么。这些东西如果我自己都说不清楚，AI 也写不出来。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">AI 是放大器，不是替代品。它放大的是你的思考能力，不是你的打字速度。</strong></p>
+<h2 id="你也可以-5-分钟搞定" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  你也可以 5 分钟搞定</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果你也有自己的技术博客，想要这套工作流，步骤很简单：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">跟 Claude 聊天，build 你的 Blog Writer Skill</strong> — 告诉它你的博客技术栈、写作风格、发布流程，它会帮你生成 SKILL.md 和推送脚本</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">在 GitHub 上生成一个 Personal Access Token</strong> — 去 <a href="https://github.com/settings/tokens" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://github.com/settings/tokens</a> ，勾上 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">repo</code> 权限，专门用来推送博客</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><strong style="font-weight:700;color:#111827;">写博客</strong> — 打开 Claude，说“以 XXX 为话题写个博客”，审阅、调整、推送，收工</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">整个 setup 过程不超过 10 分钟。之后每篇文章 5 分钟。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">当然，这套流程的前提是你得有东西可写。AI 能帮你组织语言，但帮不了你产生洞察。如果你脑子里没有观点，AI 只会帮你更高效地生产废话。</p>
+<h2 id="写在最后" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">6.  写在最后</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这篇文章本身就是用这套流程写的。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">从我对 Claude 说“以'不装了，文章都是 AI 写的'为题写个博客”到你现在看到的这篇文章，中间经历了什么？一次对话，几轮调整，一个 API 调用。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">有人可能会觉得这样写文章少了点什么——少了那种字斟句酌的仪式感，少了那种写完一篇长文的成就感。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但我觉得，<strong style="font-weight:700;color:#111827;">省下来的时间用来想更多的问题，比花在排版和措辞上有价值得多。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">毕竟，写作是为了传达思想，不是为了证明你能打多少字。</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/02/11/ai-writes-my-blog/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/02/11/ai-writes-my-blog/</a></p>
+    </section>
+  </main>
+</body>
+</html>

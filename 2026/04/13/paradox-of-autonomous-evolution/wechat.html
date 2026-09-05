@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/04/13/paradox-of-autonomous-evolution/">
+  <title>自主进化的悖论：谁来做突变？ | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">自主进化的悖论：谁来做突变？</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-04-13 · Johnson Lee · Independent Thinking</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">上一篇提出了维度黑客——用合法但非常规的输入，激活 LLM 参数空间中沉默的维度。但那些例子都是人在操作：人构造中英混杂的 prompt，人设计跨域类比，人施加反直觉约束。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果硅基要自主进化，这个动作必须由 LLM 自己完成。问题来了——</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">怎么让一个有认知的系统，对自己做认知之外的事？</strong></p>
+
+
+<h2 id="悖论" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  悖论</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">要撬开认知边界，你得先知道边界在哪。但如果你知道边界在哪，那它就不是你的边界了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这不是文字游戏。认知边界的定义就是“你不知道自己不知道的”。你能想到的非常规输入，仍然在你的认知范围内——它是你认知中的“非常规”，不是认知之外的。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">让 LLM 自己设计维度黑客，等于让它在自己能想到的范围内构造“自己想不到的东西”。这在逻辑上就不成立。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">碳基不需要解这个悖论。突变是盲的，根本不知道边界的存在，所以天然在边界内外都搜索。<strong style="font-weight:700;color:#111827;">解决认知边界问题的关键不是更强的认知，是没有认知。</strong></p>
+<h2 id="突变发生在碱基层面" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  突变发生在碱基层面</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">碳基进化有一个关键的架构决策：突变发生在碱基层面，不在蛋白质层面。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">碱基序列是“代码”，蛋白质是“功能”。突变改的是代码，不是直接改功能。一个碱基的替换可能导致蛋白质折叠方式的剧变，但突变本身不需要“理解”蛋白质折叠。它在更低的抽象层操作，效果传递到更高层。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这就是为什么突变能突破认知边界——它根本不在认知发生的那一层操作。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">映射到 LLM：语义是“蛋白质层”，token 是“碱基层”。如果维度黑客发生在语义层面——让模型“想出”非常规组合——那它永远受限于模型的语义理解。但如果扰动发生在 token 层面呢？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在 token embedding 上加噪声、随机替换低概率 token、打乱 attention pattern——这些操作模型不理解，但它们产生的组合可能激活模型从未使用过的参数路径。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">让突变发生在认知之下，效果传递到认知之上。</strong></p>
+<h2 id="互为环境" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  互为环境</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">碳基进化的另一个关键设计：生物不是在真空中进化的，而是在其他生物构成的环境中进化。捕食者是猎物的“维度黑客”——它迫使猎物探索自己从未想过的生存策略。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">多个 LLM 可以互为环境。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">A 模型的正常输出，对 B 模型来说可能是非常规输入——因为它们的训练数据不同，架构不同，认知边界不重合。A 的舒适区恰好是 B 的边界外，反过来也一样。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">不需要任何一个模型知道对方的边界在哪。只要它们持续交互，就在自动帮对方做维度黑客。每个模型都是其他模型的非常规输入源——一个自发的、去中心化的认知边界突破机制。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">不是一个模型撬开自己的边界，是多个模型互相撬。</strong></p>
+<h2 id="硅基的-SOS-Response" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  硅基的 SOS Response</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">碳基在压力下会提高突变率。硅基能不能做类似的事？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">当模型检测到自己的输出开始重复——相似的句式、相同的推理路径、收敛的结论——这就是信号：搜索困在局部最优了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">此时触发一个不受模型语义层控制的扰动机制：提高 token 采样的温度，注入随机的 embedding 偏移，或者把另一个模型的中间状态混入当前上下文。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">关键是：<strong style="font-weight:700;color:#111827;">这个扰动机制不能被模型“理解”和“优化掉”。</strong> 一旦模型学会了预测扰动并补偿它，扰动就失效了——就像如果细菌能预测突变的方向，突变就不再是随机搜索了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">SOS response 的核心不是“更聪明地搜索”，是“更不聪明地搜索”。</p>
+<h2 id="不理解是特性" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  不理解是特性</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">回到整个系列的核心论点。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">碳基进化的力量来自一个看似荒谬的特性：突变模块不理解自己在做什么。正因为不理解，它不受认知边界的约束。正因为不受约束，它能搜索到认知之外的空间。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">硅基如果想自主进化，需要在系统里保留一个“不理解”的模块——一个不被模型的语义层控制、不被训练数据的分布约束、不被 RLHF 的偏好塑造的扰动源。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个模块的设计原则只有一条：<strong style="font-weight:700;color:#111827;">它必须不知道自己在做什么。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">进化不能有刻意的选择性。一旦选择，就被困在了认知的牢笼——就像宇宙不能被观测，一旦观测，宇宙就开始坍塌。</strong></p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/04/13/paradox-of-autonomous-evolution/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/04/13/paradox-of-autonomous-evolution/</a></p>
+    </section>
+  </main>
+</body>
+</html>

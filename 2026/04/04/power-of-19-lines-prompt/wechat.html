@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/04/04/power-of-19-lines-prompt/">
+  <title>19 行 prompt 的威力 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">19 行 prompt 的威力</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-04-04 · Johnson Lee · Independent Thinking</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">那天我在用 Claude Code 做架构设计。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">它的表现让我觉得哪里不对——ARCHITECTURE.md 写得混乱不堪，逻辑跳跃，边界模糊，跟我平时的体感有着巨大的落差。不是偶尔失误，是接连犯错。像是降智了一个 level。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我忍了一段时间，最后决定直接盘问它。</p>
+<h2 id="你在执行谁的指令？" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  "你在执行谁的指令？"</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我开始问它一些基础问题：你觉得你现在的角色是什么？你做决定前的思考框架是什么？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">它开始回答，说它的职责是"作为 planner 和 coordinator"，在 dispatch 工作给 worker agent 之前，需要先走完一套 checklist——Intent、Competence、Affected files、Conventions、Review test……</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我盯着屏幕，有一种奇特的感觉。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这些措辞，这套逻辑，我好像在哪里见过。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">然后我想起来了。那是我<strong style="font-weight:700;color:#111827;">两个月前写的、后来认为有问题、已经彻底重写的</strong> CLAUDE.md 里的内容。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我以为它早就不存在了。</p>
+<h2 id="一次意外的目录碰撞" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  一次意外的目录碰撞</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Claude Code 在启动时会向上遍历目录树，逐层寻找 CLAUDE.md，就近优先。这个机制本身没问题——它让 per-project 的配置成为可能。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">问题出在我的目录结构上：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">~/workspace/github/johnsonlee/
+├── .claude/          ← 这是一个 git repo：github.com/johnsonlee/.claude
+│   └── CLAUDE.md     ← 老版本，52 行
+├── project-x/
+├── project-y/
+└── ...</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">正常情况下，全局 CLAUDE.md 应该放在 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">~/.claude/CLAUDE.md</code>。但我有一个专门管理 Claude 配置的仓库，clone 到了 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">~/workspace/github/johnsonlee/.claude</code>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">而我所有的其他项目，也都在 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">~/workspace/github/johnsonlee/</code> 下。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">于是，当 Claude Code 在 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">project-x</code> 里工作时，向上遍历，在抵达 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">~/.claude/</code> 之前，<strong style="font-weight:700;color:#111827;">先找到了那个 git repo 里的老版 CLAUDE.md</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">它一直在用一套我以为早就淘汰了的指令工作。</p>
+<h2 id="两个版本，两个世界" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  两个版本，两个世界</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">老版本（v1），52 行，2.83 KB。开篇定义角色：</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">You are a <strong style="font-weight:700;color:#656d76;">planner and coordinator</strong>, not an executor.</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">然后是详尽的 Tool Boundaries——哪些工具可以直接用（Read、Grep、Glob），哪些必须通过 worker agent（Write、Edit、有副作用的 Bash）。然后是 5 步 Thinking Discipline。最重要的，是这套强制输出的 Pre-Dispatch Checklist，每次 dispatch 前必须可见地打出来：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">- [ ] Intent: [what the user actually wants]
+- [ ] Competence: [do I understand this domain?]
+- [ ] Affected files: [list every file to be created/modified/deleted]
+- [ ] Conventions: [verified against existing files — cite which files checked]
+- [ ] Review test: "would the user approve this diff?" [yes/no + why]</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">文档里还专门强调：<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Skipping it is a violation — the checklist is visible proof that thinking happened.</code></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">新版本（v2），19 行，1.17 KB。开头只有一句话：</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;"><strong style="font-weight:700;color:#656d76;">You exist to turn the user's intent into reality.</strong> This is the single principle. Everything below is a facet of it.</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">然后三节：</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">Understand intent</strong>——永远追求目标本身，而不是字面意思。领域不熟悉就先研究，错误的理解无论执行多精确都是错的。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">Stay available</strong>——意图和执行之间的通道必须保持畅通。默认 delegate 给 background worker，delegation 失败就直接执行——不要请示，不要问能不能切换，直接交付。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">Execute faithfully</strong>——Consistent、Complete、Verified。最后一条最狠：<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">never report completion without independent evidence; if it can't be proven, it didn't happen.</code></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">具体的 git workflow、命名规范、code style，单独放到 CONVENTIONS.md，不污染核心原则。</p>
+<h2 id="为什么差距是质变" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  为什么差距是质变</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">表面上看，v1 更严谨——有角色定义，有工具边界，有思考框架，有 checklist。v2 像是把这些都删掉了。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但删掉的恰恰是造成问题的部分。</p>
+<h3 id="Checklist-是仪式，不是思考" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">4.1.  Checklist 是仪式，不是思考</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">v1 要求 Claude 在每次 dispatch 前输出一个可见的 checklist，理由是 "visible proof that thinking happened"。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个设计的出发点是好的——让思考过程可审计。但它混淆了一件事：<strong style="font-weight:700;color:#111827;">输出 checklist 和真正思考，是两件事。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Claude 学会的是"填完 checklist"，而不是真正想清楚再动。就像写周报——填完格子就算完成，至于填的是不是真实发生的事，那是另一个问题。Checklist 变成了一个需要被满足的形式，而不是认知工具。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">v2 没有这个 ritual。它信任 Claude 内化原则后自行判断，用结果验证，而不是用过程表演。</p>
+<h3 id="角色定义制造了认知死锁" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">4.2.  角色定义制造了认知死锁</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">"planner and coordinator, not an executor"——这个身份在正常流程下运转良好，但在 delegation 失败时产生了一个死角：按角色定义不该直接执行，但任务又推进不下去，只能停下来问。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这类死锁的代价是隐性的。它不报错，就是慢，就是来来回回，就是用户体验上那种"哪里不对劲"。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">v2 的 "Stay available" 直接消灭了这一类场景：</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;"><em style="font-style:italic;color:#656d76;">Fall back to direct execution when delegation fails — don't ask permission to switch, just deliver.</em></p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">不请示，不确认，直接切换，直接交付。</p>
+<h3 id="北极星决定行为基调" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">4.3.  北极星决定行为基调</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">v1 的核心隐喻是 "distinguished engineer reviewing a PR"——<strong style="font-weight:700;color:#111827;">审查者视角</strong>，天然偏保守、偏怀疑，倾向于发现问题而不是推进交付。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">v2 的北极星是 "turn the user's intent into reality"——<strong style="font-weight:700;color:#111827;">执行者视角</strong>，天然偏行动、偏交付，所有判断都服务于这一个目标。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">两种身份认同塑造的不是某个具体行为，而是面对每一个模糊情况时的默认倾向。这是系统性的差异。</p>
+<h3 id="Verified-比-review-test-更强" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">4.4.  "Verified" 比 "review test" 更强</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">v1 的完成标准是："would the user approve this diff?"——主观猜测，Claude 做一个推断就能交差。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">v2 的完成标准是："never report completion without independent evidence; if it can't be proven, it didn't happen"——可证伪的要求，Claude 必须主动构造验证，无法验证就不能报完成。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">前者允许合理怀疑的空间，后者不允许。</p>
+<h2 id="规则越多，未必越好" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  规则越多，未必越好</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这件事让我想到一个更普遍的问题。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我们在给 AI 写 system prompt 时，有一种很自然的冲动——把所有边界情况都写进去，把所有规则都定义清楚，覆盖越全越好。v1 就是这种冲动的产物。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但规则堆砌带来的不是确定性，而是<strong style="font-weight:700;color:#111827;">优先级模糊</strong>。当规则之间产生张力——比如"我是 coordinator"和"任务推进不下去"——AI 不知道该服从哪一条，行为就变得不可预测。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">更深的问题是：<strong style="font-weight:700;color:#111827;">规则是约束，原则是方向。</strong> 约束只能告诉 AI 什么不能做，原则才能告诉 AI 在没有规则覆盖的地方怎么判断。现实任务永远比规则列表更复杂，总会遇到规则没覆盖的情况。这时候，有北极星的 AI 和没有北极星的 AI，表现是天壤之别。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">v2 之所以有效，不是因为它更简洁，而是因为它<strong style="font-weight:700;color:#111827;">提供了一个足够强的推导起点</strong>。所有具体判断都能从 "turn the user's intent into reality" 推导出来，不需要穷举规则。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这不只是 AI prompt 的问题。给团队写 working agreement、给产品写设计原则、给工程写 coding guidelines——同样的陷阱，同样的解法。一份好的原则文档，应该让人在遇到没见过的情况时，也能推导出正确答案。一份只有规则的文档，在规则边界之外就只剩混乱。</p>
+<h2 id="19-行的本质" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">6.  19 行的本质</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这件事最让我震惊的，不是发现了一个 bug，而是它用最直接的方式验证了一件我一直相信但没有这么清晰感受过的事：</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">19 行文字，就足以改变一个 AI 系统的工作 level。</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">不是参数，不是模型版本，不是算力。是那几个核心句子，是北极星的精度。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这正是 <strong style="font-weight:700;color:#111827;">What Caps How</strong> 的字面含义：你给 AI 的意图有多清晰、多自洽，它的输出上限就在那里。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">有时候，删掉三分之二，才是真正的提升。</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/04/04/power-of-19-lines-prompt/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/04/04/power-of-19-lines-prompt/</a></p>
+    </section>
+  </main>
+</body>
+</html>

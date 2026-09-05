@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2019/07/13/booster-xml-layout-to-code/">
+  <title>Layout: XML vs Code | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Layout: XML vs Code</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2019-07-13 · Johnson Lee · Computer Science / Open Source / Booster</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Any developer who has built UIs knows that writing layouts in XML is dramatically more productive than hand-writing code. Before Anko (a Kotlin library) gained traction, XML was the go-to choice. Performance hiccups happened occasionally, but they were generally tolerable. Anko's rise, however, got us thinking: is there a way to enjoy the productivity of XML while getting Anko-level performance?</p>
+<h2 id="XML-vs-Code" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">XML vs Code</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">XML layouts are parsed at runtime. <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">XmlPullParser</code> reads binary XML files and reflectively constructs View nodes on the fly. A typical app's home screen consists of many XML layouts, resulting in repeated "load-parse" cycles. People say hand-written code performs better -- but how much better? Here is a comparison between Anko and XML:</p>
+<table style="width:100%;border-collapse:collapse;margin:22px 0;font-size:14px;line-height:1.6;color:#1f2937;">
+<thead>
+<tr>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Device</th>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Specs</th>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Anko</th>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">XML</th>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Diff</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Alcatel One Touch</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Mediatek MT6572Dual-core 1.3GHz Cortex-A7512MB RAM</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">169 ms</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">608ms</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">359%</td>
+</tr>
+<tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Huawei Y300</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Qualcomm MSM 8225Dual-core 1.0GHz Cortex-A5512MB RAM</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">593 ms</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">3435ms</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">578%</td>
+</tr>
+<tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Huawei Y330</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Mediatek MT6572Dual-core 1.3GHz Cortex-A7512MB RAM</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">162 ms</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">984ms</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">606%</td>
+</tr>
+<tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Samsung Galaxy S2</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Exynos 4210Dual-core 1.2GHz Cortex-A91GB RAM</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">207 ms</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">753ms</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">363%</td>
+</tr>
+</tbody></table>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">Data source: <a href="https://android.jlelse.eu/400-faster-layouts-with-anko-da17f32c45dd" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://android.jlelse.eu/400-faster-layouts-with-anko-da17f32c45dd</a></p>
+</blockquote>
+<h2 id="Having-It-Both-Ways" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Having It Both Ways</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Since Booster is purpose-built for performance optimization, you can probably guess the solution: transpile XML into bytecode. You might ask: does transpiling to bytecode cause compatibility issues? That depends on the implementation. There are two approaches:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">The hand-written code approach</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">  After parsing the XML, call the corresponding APIs based on the XML element attributes:</p>
+  <pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">RelativeLayout root = new RelativeLayout(context);
+TextView txt = new TextView(context);
+txt.setText(...);
+txt.setTextColor(...);
+txt.setTextSize(...);
+root.addView(txt);</code></pre>
+
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">The runtime XML parsing approach</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">  After parsing the XML, construct an AttributeSet from the XML element attributes:</p>
+  <pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">AttributeSet attr = new AttributeSet(...);
+RelativeLayout root = new RelativeLayout(context, attr);
+TextView txt = new TextView(context, attr);</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Comparing the two approaches:</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Approach 1 requires adapting every <em style="font-style:italic;color:#1f2937;">Layout</em>. For custom <em style="font-style:italic;color:#1f2937;">Layouts</em> or <em style="font-style:italic;color:#1f2937;">Views</em>, the generated code may not match the XML rendering.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Approach 2 only needs to ensure the <em style="font-style:italic;color:#1f2937;">AttributeSet</em> is correct to guarantee the resulting UI matches the XML rendering.</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Therefore, Booster chose Approach 2. For details on the implementation and underlying principles, see this <a href="https://github.com/johnsonlee/layoutlib" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">sample project</a>.</p>
+<h2 id="Layout-Inflater" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Layout Inflater</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The Android SDK provides <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">LayoutInflater</code> to convert XML into Views. If you have read the AOSP source code, you may have noticed that <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">LayoutInflater</code> is a system service. Why make it a system service instead of a utility class? I believe the primary reason is performance.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">"Wait -- system services involve IPC calls. How could that possibly be for performance?"</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">This goes back to XML parsing. XML layouts can reference three types of resources:</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">System resources</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">The current app's resources</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Other apps' resources</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">For system resources:</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">If every <em style="font-style:italic;color:#1f2937;">inflate</em> call had to load system resources from scratch, ANR would be inevitable.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">If a layout references resources from another <em style="font-style:italic;color:#1f2937;">package</em>, the current app normally cannot access them.</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">For these reasons, a higher-level resource management mechanism is needed, making a system service entirely reasonable.</p>
+<h2 id="Layout-Library" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Layout Library</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">To analyze how <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">LayoutInflater</code> constructs <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Views</code>, we turned to <em style="font-style:italic;color:#1f2937;">Android Studio's</em> visual layout designer, which is the origin of this <a href="https://github.com/johnsonlee/layoutlib" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">sample project</a>. It allows step-by-step debugging of the XML rendering process in the IDE.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">Layout Library</em> consists of two parts:</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">layoutlib-api</em>: The interface layer for <em style="font-style:italic;color:#1f2937;">layoutlib</em>, shipped with Android Studio.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">layoutlib</em>: The implementation layer for <em style="font-style:italic;color:#1f2937;">layoutlib-api</em>, shipped with the Android SDK.</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">This design is primarily for backward compatibility.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Another highlight of <em style="font-style:italic;color:#1f2937;">Layout Library</em> is its use of a <a href="http://robolectric.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Robolectric Shadow</a>-like approach to replace APIs in the Android SDK. This way, APIs that originally called native code are implemented in pure Java within <em style="font-style:italic;color:#1f2937;">Layout Library</em>:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">@LayoutlibDelegate
+static void native_drawBitmap(
+        Canvas thisCanvas,
+        long nativeCanvas,
+        Bitmap bitmap,
+        float left,
+        float top,
+        long nativePaintOrZero,
+        int canvasDensity,
+        int screenDensity,
+        int bitmapDensity) {
+    Bitmap_Delegate bitmapDelegate = Bitmap_Delegate.getDelegate(bitmap);
+    if (bitmapDelegate != null) {
+        BufferedImage image = bitmapDelegate.getImage();
+        float right = left + (float)image.getWidth();
+        float bottom = top + (float)image.getHeight();
+        drawBitmap(nativeCanvas, bitmapDelegate, nativePaintOrZero, 0, 0,
+                image.getWidth(), image.getHeight(),
+                (int)left, (int)top, (int)right, (int)bottom);
+    }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Feel free to step through the <a href="https://github.com/johnsonlee/layoutlib" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">sample project</a> in a debugger.</p>
+<h2 id="Summary" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Summary</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Now that you understand how <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">LayoutInflater</code> and <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Layout Library</code> work, you should have a clear picture of how Booster transpiles XML to bytecode. The process is:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Load system resources from the <em style="font-style:italic;color:#1f2937;">platform</em> corresponding to the <em style="font-style:italic;color:#1f2937;">compileSdk</em> in the Android SDK (used in step 2).</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">After the <em style="font-style:italic;color:#1f2937;">mergeRes</em> task, load the app's resources.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Parse layout XMLs from the project and generate corresponding code based on the parsing results.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">During <em style="font-style:italic;color:#1f2937;">compilation</em>, include the generated code in the build.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">During the <em style="font-style:italic;color:#1f2937;">transform</em> pass, scan classes for the following method calls and replace them with calls to the code generated in step 3:</li>
+</ol>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">LayoutInflater.inflate(...)</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Activity.setContentView(int)</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Dialog.setContentView(int)</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">......</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">To be continued...</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2019/07/13/booster-xml-layout-to-code/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2019/07/13/booster-xml-layout-to-code/</a></p>
+    </section>
+  </main>
+</body>
+</html>

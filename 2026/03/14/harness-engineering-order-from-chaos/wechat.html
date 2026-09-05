@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/03/14/harness-engineering-order-from-chaos/">
+  <title>Harness Engineering：在混沌中建立秩序 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Harness Engineering：在混沌中建立秩序</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-03-14 · Johnson Lee · Independent Thinking</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">茱莉亚·罗伯茨在一次访谈中聊到中国麻将，说了一句很妙的话："To create order out of chaos based on random drawing of tiles"——通过随机的抓牌，从混乱中创造秩序。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">开局摸到一手乱牌，看不到别人的牌，每轮只能摸一张打一张，在信息极度不完整的情况下，逐步把手牌理向一个目标牌型。你不能控制摸到什么牌，但你能决定听什么、什么时候换策略、什么时候放弃清一色改打平和。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这跟今天用 AI 写代码的体验，几乎一模一样。</p>
+<h2 id="弼马温不是驯马师" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  弼马温不是驯马师</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">AI 就像一匹烈马。能力极强，但不太听话，偶尔还会把你带到沟里。于是很多工程师自然而然地进入了一种模式：调 prompt、调参数、处理幻觉、格式化输出——日复一日地伺候这匹马。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这让我想起《西游记》里的弼马温。玉帝给孙悟空封了个养马的官，职责是喂草、铲粪、看马厩。悟空嫌官小，大闹天宫。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">但问题不在于养马这件事没价值，**而在于弼马温的职责定义里没有"目的地"**。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">养马的服务于马，驯马师服务于目的地。一个是 How，一个是 What。你天天研究怎么把 prompt 写得更精妙、怎么让 AI 少犯错，那是在养马。你知道系统最终要达到什么行为、满足什么约束、在什么条件下 fail gracefully，那才是驯马。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">玉帝给悟空封弼马温，本质上是一个 What 定义失败的案例——把一个能力极强的资源放进了一个 scope 极小的角色里，output 当然拉胯。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这也是今天很多工程师面临的处境：能力没变，但角色定义变了。如果你还把自己定位成"写代码的人"，那 AI 确实在抢你的活。但如果你是"定义系统行为的人"，AI 反而是你最好的坐骑。</p>
+<h2 id="What-Caps-How" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  What Caps How</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个判断可以更精确地表述：<strong style="font-weight:700;color:#111827;">output 质量的上限不取决于 How 有多强，而取决于 What 定义得有多精确</strong>。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">AI 作为 How 的能力已经很强了——给它清晰的规格，它能生成不错的代码。但它自己不会主动想到边界条件、failure mode、性能约束、安全要求。这些东西需要人来定义。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">换句话说，AI 放大了 What 和 How 之间的杠杆比。以前 What 定义得模糊一点，靠工程师自己写代码时补齐细节，问题不大。现在 What 模糊了，AI 会忠实地把模糊放大成一坨正确但无用的代码。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">能把模糊需求拆解成精确规格的人，是 AI 时代最稀缺的人。</strong></p>
+<h2 id="四个重心迁移" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  四个重心迁移</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">如果 What 才是核心，工程师的日常职责会怎么变？我看到四个方向：</p>
+<h3 id="从实现者到定义者" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">3.1.  从实现者到定义者</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">交付物正在从"代码"变成"可验证的行为规格"。代码只是实现规格的手段之一，AI 生成也好，配置也好，都行。定义 What 的能力比实现 How 的能力更值钱。</p>
+<h3 id="从写代码到设计反馈回路" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">3.2.  从写代码到设计反馈回路</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">怎么知道系统在按预期工作？怎么在偏离时自动纠正？用 STATUS.md 追踪 context drift，用 static analysis 自动发现问题，用 observability 度量真实行为——这些 feedback loop 的设计比代码本身重要得多。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">回到麻将的比喻：高手和新手的差距不是摸到更好的牌，而是每一轮打出去的牌就是一次信息采集——通过观察别人的反应，动态调整自己的策略。这就是 feedback loop。</p>
+<h3 id="从个体贡献者到系统编排者" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">3.3.  从个体贡献者到系统编排者</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">不是说不写代码了，而是写代码在工作中的占比会大幅下降。更多时间花在：定义 agent 之间的协作协议、设计 guardrail、审查 AI 产出的 correctness。有点像从 IC 变成一个人机混合团队的 tech lead。</p>
+<h3 id="从确定性思维到概率性思维" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">3.4.  从确定性思维到概率性思维</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">传统软件工程追求确定性——给定输入，输出确定。但 AI 系统天然是概率性的。工程师需要学会在不确定性中做设计：怎么设定 acceptable error rate，怎么做 graceful degradation，怎么在 AI 输出不可预测的前提下保证系统整体可靠。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">麻将玩家从第一天就在练这个：你永远不知道下一张摸到什么，但你可以在不确定性中做出最优决策。</p>
+<h2 id="在混沌中建立秩序" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  在混沌中建立秩序</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Harness 这个词选得好。它既是"驾驭"，也是"马具"。重点不是马有多野，而是你要去哪，以及你能不能把力量导向那个方向。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">工程师的价值不在于会不会养马，而在于知不知道路。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">最不会被替代的，是那些能在混沌中建立秩序的人。</strong> 这一直是 engineering 的本质，只是现在这个"混沌"的来源从复杂的业务需求，扩展到了不确定的 AI 行为。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">所以下次有人问你做什么的，别说"我是写代码的"。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">说"我是驯马师"。</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/03/14/harness-engineering-order-from-chaos/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/03/14/harness-engineering-order-from-chaos/</a></p>
+    </section>
+  </main>
+</body>
+</html>

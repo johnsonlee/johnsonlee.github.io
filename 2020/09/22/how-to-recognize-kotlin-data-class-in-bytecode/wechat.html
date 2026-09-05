@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2020/09/22/how-to-recognize-kotlin-data-class-in-bytecode/">
+  <title>如何识别 Kotlin 的 data class | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">如何识别 Kotlin 的 data class</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2020-09-22 · Johnson Lee · Computer Science / Kotlin</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">最近做字节码相关的朋友求救：“森哥，ASM 怎么才能识别 kotlin 的 data class?”，我想，这是啥需求还要区分 <em style="font-style:italic;color:#1f2937;">data class</em> 和非 <em style="font-style:italic;color:#1f2937;">data class</em> ，后来一问，原来是要把工程中所有实现了 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Serializable</code> 接口的 <em style="font-style:italic;color:#1f2937;">Java</em> 类和 <em style="font-style:italic;color:#1f2937;">Kotlin</em> 的 <em style="font-style:italic;color:#1f2937;">data class</em> 单独提取出来，将 <em style="font-style:italic;color:#1f2937;">Redis</em> 中的 <em style="font-style:italic;color:#1f2937;">POJO</em> 缓存进行可视化。</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">研究了一下 <em style="font-style:italic;color:#1f2937;">data class</em> 的字节码，发现还是有一些特征的，比如：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">data class User(val name: String, val age: Int)</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">编译成字节码如下：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public final class User
+  minor version: 0
+  major version: 52
+  flags: ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+Constant pool:
+    #1 = Utf8               User
+    #2 = Class              #1            // User
+    #3 = Utf8               java/lang/Object
+    #4 = Class              #3            // java/lang/Object
+    #5 = Utf8               name
+    #6 = Utf8               Ljava/lang/String;
+    #7 = Utf8               Lorg/jetbrains/annotations/NotNull;
+    #8 = Utf8               getName
+    #9 = Utf8               ()Ljava/lang/String;
+   #10 = NameAndType        #5:#6         // name:Ljava/lang/String;
+   #11 = Fieldref           #2.#10        // User.name:Ljava/lang/String;
+   #12 = Utf8               this
+   #13 = Utf8               LUser;
+   #14 = Utf8               age
+   #15 = Utf8               I
+   #16 = Utf8               getAge
+   #17 = Utf8               ()I
+   #18 = NameAndType        #14:#15       // age:I
+   #19 = Fieldref           #2.#18        // User.age:I
+   #20 = Utf8               &lt;init&gt;
+   #21 = Utf8               (Ljava/lang/String;I)V
+   #22 = String             #5            // name
+   #23 = Utf8               kotlin/jvm/internal/Intrinsics
+   #24 = Class              #23           // kotlin/jvm/internal/Intrinsics
+   #25 = Utf8               checkParameterIsNotNull
+   #26 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+   #27 = NameAndType        #25:#26       // checkParameterIsNotNull:(Ljava/lang/Object;Ljava/lang/String;)V
+   #28 = Methodref          #24.#27       // kotlin/jvm/internal/Intrinsics.checkParameterIsNotNull:(Ljava/lang/Object;Ljava/lang/String;)V
+   #29 = Utf8               ()V
+   #30 = NameAndType        #20:#29       // "&lt;init&gt;":()V
+   #31 = Methodref          #4.#30        // java/lang/Object."&lt;init&gt;":()V
+   #32 = Utf8               component1
+   #33 = Utf8               component2
+   #34 = Utf8               copy
+   #35 = Utf8               (Ljava/lang/String;I)LUser;
+   #36 = NameAndType        #20:#21       // "&lt;init&gt;":(Ljava/lang/String;I)V
+   #37 = Methodref          #2.#36        // User."&lt;init&gt;":(Ljava/lang/String;I)V
+   #38 = Utf8               copy$default
+   #39 = Utf8               (LUser;Ljava/lang/String;IILjava/lang/Object;)LUser;
+   #40 = NameAndType        #34:#35       // copy:(Ljava/lang/String;I)LUser;
+   #41 = Methodref          #2.#40        // User.copy:(Ljava/lang/String;I)LUser;
+   #42 = Utf8               toString
+   #43 = Utf8               java/lang/StringBuilder
+   #44 = Class              #43           // java/lang/StringBuilder
+   #45 = Methodref          #44.#30       // java/lang/StringBuilder."&lt;init&gt;":()V
+   #46 = Utf8               User(name=
+   #47 = String             #46           // User(name=
+   #48 = Utf8               append
+   #49 = Utf8               (Ljava/lang/String;)Ljava/lang/StringBuilder;
+   #50 = NameAndType        #48:#49       // append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+   #51 = Methodref          #44.#50       // java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+   #52 = Utf8               , age=
+   #53 = String             #52           // , age=
+   #54 = Utf8               (I)Ljava/lang/StringBuilder;
+   #55 = NameAndType        #48:#54       // append:(I)Ljava/lang/StringBuilder;
+   #56 = Methodref          #44.#55       // java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+   #57 = Utf8               )
+   #58 = String             #57           // )
+   #59 = NameAndType        #42:#9        // toString:()Ljava/lang/String;
+   #60 = Methodref          #44.#59       // java/lang/StringBuilder.toString:()Ljava/lang/String;
+   #61 = Utf8               hashCode
+   #62 = NameAndType        #61:#17       // hashCode:()I
+   #63 = Methodref          #4.#62        // java/lang/Object.hashCode:()I
+   #64 = Utf8               java/lang/Integer
+   #65 = Class              #64           // java/lang/Integer
+   #66 = Utf8               (I)I
+   #67 = NameAndType        #61:#66       // hashCode:(I)I
+   #68 = Methodref          #65.#67       // java/lang/Integer.hashCode:(I)I
+   #69 = Utf8               java/lang/String
+   #70 = Class              #69           // java/lang/String
+   #71 = Utf8               equals
+   #72 = Utf8               (Ljava/lang/Object;)Z
+   #73 = Utf8               Lorg/jetbrains/annotations/Nullable;
+   #74 = Utf8               areEqual
+   #75 = Utf8               (Ljava/lang/Object;Ljava/lang/Object;)Z
+   #76 = NameAndType        #74:#75       // areEqual:(Ljava/lang/Object;Ljava/lang/Object;)Z
+   #77 = Methodref          #24.#76       // kotlin/jvm/internal/Intrinsics.areEqual:(Ljava/lang/Object;Ljava/lang/Object;)Z
+   #78 = Utf8               Lkotlin/Metadata;
+   #79 = Utf8               mv
+   #80 = Integer            1
+   #81 = Integer            16
+   #82 = Utf8               bv
+   #83 = Integer            0
+   #84 = Integer            3
+   #85 = Utf8               k
+   #86 = Utf8               d1
+   #87 = Utf8                \n\n\n\n\n\\\t\n
+                                             20B00¢J\t
+                                                      0HÆJ\t
+                                                            0HÆJ\r0HÆJ00HÖJ\t0HÖJ\t0HÖR0R0\\t\n¨
+   #88 = Utf8               d2
+   #89 = Utf8
+   #90 = Utf8               other
+   #91 = Utf8               kotlinx
+   #92 = Utf8               User.kt
+   #93 = Utf8               RuntimeInvisibleAnnotations
+   #94 = Utf8               Code
+   #95 = Utf8               LineNumberTable
+   #96 = Utf8               LocalVariableTable
+   #97 = Utf8               RuntimeInvisibleParameterAnnotations
+   #98 = Utf8               StackMapTable
+   #99 = Utf8               SourceFile
+  #100 = Utf8               RuntimeVisibleAnnotations
+{
+  public final java.lang.String getName();
+    descriptor: ()Ljava/lang/String;
+    flags: ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: getfield      #11                 // Field name:Ljava/lang/String;
+         4: areturn
+      LineNumberTable:
+        line 1: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   LUser;
+    RuntimeInvisibleAnnotations:
+      0: #7()
+
+  public final int getAge();
+    descriptor: ()I
+    flags: ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: getfield      #19                 // Field age:I
+         4: ireturn
+      LineNumberTable:
+        line 1: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   LUser;
+
+  public User(java.lang.String, int);
+    descriptor: (Ljava/lang/String;I)V
+    flags: ACC_PUBLIC
+    Code:
+      stack=2, locals=3, args_size=3
+         0: aload_1
+         1: ldc           #22                 // String name
+         3: invokestatic  #28                 // Method kotlin/jvm/internal/Intrinsics.checkParameterIsNotNull:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: invokespecial #31                 // Method java/lang/Object."&lt;init&gt;":()V
+        10: aload_0
+        11: aload_1
+        12: putfield      #11                 // Field name:Ljava/lang/String;
+        15: aload_0
+        16: iload_2
+        17: putfield      #19                 // Field age:I
+        20: return
+      LineNumberTable:
+        line 1: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      21     0  this   LUser;
+            0      21     1  name   Ljava/lang/String;
+            0      21     2   age   I
+    RuntimeInvisibleParameterAnnotations:
+      0:
+        0: #7()
+      1:
+
+  public final java.lang.String component1();
+    descriptor: ()Ljava/lang/String;
+    flags: ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: getfield      #11                 // Field name:Ljava/lang/String;
+         4: areturn
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   LUser;
+    RuntimeInvisibleAnnotations:
+      0: #7()
+
+  public final int component2();
+    descriptor: ()I
+    flags: ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: getfield      #19                 // Field age:I
+         4: ireturn
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   LUser;
+
+  public final User copy(java.lang.String, int);
+    descriptor: (Ljava/lang/String;I)LUser;
+    flags: ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=4, locals=3, args_size=3
+         0: aload_1
+         1: ldc           #22                 // String name
+         3: invokestatic  #28                 // Method kotlin/jvm/internal/Intrinsics.checkParameterIsNotNull:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: new           #2                  // class User
+         9: dup
+        10: aload_1
+        11: iload_2
+        12: invokespecial #37                 // Method "&lt;init&gt;":(Ljava/lang/String;I)V
+        15: areturn
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      16     0  this   LUser;
+            0      16     1  name   Ljava/lang/String;
+            0      16     2   age   I
+    RuntimeInvisibleAnnotations:
+      0: #7()
+    RuntimeInvisibleParameterAnnotations:
+      0:
+        0: #7()
+      1:
+
+  public static User copy$default(User, java.lang.String, int, int, java.lang.Object);
+    descriptor: (LUser;Ljava/lang/String;IILjava/lang/Object;)LUser;
+    flags: ACC_PUBLIC, ACC_STATIC, ACC_SYNTHETIC
+    Code:
+      stack=3, locals=5, args_size=5
+         0: iload_3
+         1: iconst_1
+         2: iand
+         3: ifeq          11
+         6: aload_0
+         7: getfield      #11                 // Field name:Ljava/lang/String;
+        10: astore_1
+        11: iload_3
+        12: iconst_2
+        13: iand
+        14: ifeq          22
+        17: aload_0
+        18: getfield      #19                 // Field age:I
+        21: istore_2
+        22: aload_0
+        23: aload_1
+        24: iload_2
+        25: invokevirtual #41                 // Method copy:(Ljava/lang/String;I)LUser;
+        28: areturn
+      StackMapTable: number_of_entries = 2
+        frame_type = 11 /* same */
+        frame_type = 10 /* same */
+
+  public java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+    flags: ACC_PUBLIC
+    Code:
+      stack=2, locals=1, args_size=1
+         0: new           #44                 // class java/lang/StringBuilder
+         3: dup
+         4: invokespecial #45                 // Method java/lang/StringBuilder."&lt;init&gt;":()V
+         7: ldc           #47                 // String User(name=
+         9: invokevirtual #51                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        12: aload_0
+        13: getfield      #11                 // Field name:Ljava/lang/String;
+        16: invokevirtual #51                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        19: ldc           #53                 // String , age=
+        21: invokevirtual #51                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        24: aload_0
+        25: getfield      #19                 // Field age:I
+        28: invokevirtual #56                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+        31: ldc           #58                 // String )
+        33: invokevirtual #51                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        36: invokevirtual #60                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+        39: areturn
+    RuntimeInvisibleAnnotations:
+      0: #7()
+
+  public int hashCode();
+    descriptor: ()I
+    flags: ACC_PUBLIC
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: getfield      #11                 // Field name:Ljava/lang/String;
+         4: dup
+         5: ifnull        14
+         8: invokevirtual #63                 // Method java/lang/Object.hashCode:()I
+        11: goto          16
+        14: pop
+        15: iconst_0
+        16: bipush        31
+        18: imul
+        19: aload_0
+        20: getfield      #19                 // Field age:I
+        23: invokestatic  #68                 // Method java/lang/Integer.hashCode:(I)I
+        26: iadd
+        27: ireturn
+      StackMapTable: number_of_entries = 2
+        frame_type = 78 /* same_locals_1_stack_item */
+          stack = [ class java/lang/String ]
+        frame_type = 65 /* same_locals_1_stack_item */
+          stack = [ int ]
+
+  public boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+    flags: ACC_PUBLIC
+    Code:
+      stack=2, locals=3, args_size=2
+         0: aload_0
+         1: aload_1
+         2: if_acmpeq     42
+         5: aload_1
+         6: instanceof    #2                  // class User
+         9: ifeq          44
+        12: aload_1
+        13: checkcast     #2                  // class User
+        16: astore_2
+        17: aload_0
+        18: getfield      #11                 // Field name:Ljava/lang/String;
+        21: aload_2
+        22: getfield      #11                 // Field name:Ljava/lang/String;
+        25: invokestatic  #77                 // Method kotlin/jvm/internal/Intrinsics.areEqual:(Ljava/lang/Object;Ljava/lang/Object;)Z
+        28: ifeq          44
+        31: aload_0
+        32: getfield      #19                 // Field age:I
+        35: aload_2
+        36: getfield      #19                 // Field age:I
+        39: if_icmpne     44
+        42: iconst_1
+        43: ireturn
+        44: iconst_0
+        45: ireturn
+      StackMapTable: number_of_entries = 2
+        frame_type = 42 /* same */
+        frame_type = 1 /* same */
+    RuntimeInvisibleParameterAnnotations:
+      0:
+        0: #73()
+}
+SourceFile: "User.kt"
+RuntimeVisibleAnnotations:
+  0: #78(#79=[I#80,I#80,I#81],#82=[I#80,I#83,I#84],#85=I#80,#86=[s#87],#88=[s#13,s#89,s#5,s#89,s#14,s#89,s#21,s#16,s#17,s#8,s#9,s#32,s#33,s#34,s#71,s#89,s#90,s#61,s#42,s#91])</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">从上面的字节码中，我们可以发现 <em style="font-style:italic;color:#1f2937;">data class</em> 有这么几个特点：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">类是 <em style="font-style:italic;color:#1f2937;">final</em> 的</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">构造方法是带参数的，参数个数与 <em style="font-style:italic;color:#1f2937;">getter</em> 数量相等</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">重写了 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">equals(Object)</code>, <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">hashCode()</code> 和 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">toString()</code> 方法</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">另外，还发现有几个特别的方法：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">copy(String, int)</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">copy$default(User, String, int, int, Object)</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">component1()</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">component2()</code></li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这算是 <em style="font-style:italic;color:#1f2937;">Kotlin</em> 的 <em style="font-style:italic;color:#1f2937;">data class</em> 的特征吗？让我们来看看 <em style="font-style:italic;color:#1f2937;">Kotlin</em> 官方对 <a href="https://kotlinlang.org/docs/reference/data-classes.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">data class</a> 的描述：</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">编译器会自动根据 <em style="font-style:italic;color:#656d76;">data</em> 类主构造方法中声明的所有属性生成以下成员：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">equals()</code> / <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">hashCode()</code> 方法对</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">格式为 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">"User(name=John, age=42)"</code> 的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">toString()</code> 方法</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">对应声明顺序的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">componentN()</code> 方法</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">copy()</code> 方法</li>
+</ol>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">所以，通过以上特征，已经可以很容易的区分 <em style="font-style:italic;color:#1f2937;">data</em> 类和非 <em style="font-style:italic;color:#1f2937;">data</em> 类了，如果要做到万无一失的话，可以考虑把 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">copy$default(...)</code> 这个 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">ACC_SYNTHETIC</code> 特征加上。</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2020/09/22/how-to-recognize-kotlin-data-class-in-bytecode/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2020/09/22/how-to-recognize-kotlin-data-class-in-bytecode/</a></p>
+    </section>
+  </main>
+</body>
+</html>

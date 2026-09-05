@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2022/04/11/the-data-mutability-problem/">
+  <title>关于数据的（不）可变性问题 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">关于数据的（不）可变性问题</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2022-04-11 · Johnson Lee · Computer Science / Architecture Design</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">关于数据的可变性或者不可变性，是指数据在被创建后，到底支不支持可变（修改），尽管我们知道 <em style="font-style:italic;color:#1f2937;">Java</em> 中的 <em style="font-style:italic;color:#1f2937;">String</em> 采用不可变的设计有诸多的优点，但似乎在我过去的职业生涯中，很少系统性地去思考这个问题，直到最近，看其他同学的代码的时候，才意识到这个问题的严重性。</p>
+<h2 id="编程习惯" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  编程习惯</h2><h3 id="final-关键字" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">1.1.  <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">final</code> 关键字</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">屈指一算，我从事编程工作已有十年有余，写过的代码中，<em style="font-style:italic;color:#1f2937;">Java</em> 占了绝大部分，看过我写的代码的同学可能会发现一个现象，就是我喜欢在变量前面加 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">final</code>，为什么会养成这样的习惯呢？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个习惯很早就养成了，记得当年不光写 <em style="font-style:italic;color:#1f2937;">Java</em> ，也会写 <em style="font-style:italic;color:#1f2937;">C/C++</em> ，尤其是对于 <em style="font-style:italic;color:#1f2937;">C</em> 代码来说，在 <em style="font-style:italic;color:#1f2937;">Java</em> 中一个很简单的操作，在 <em style="font-style:italic;color:#1f2937;">C</em> 中都需要数行甚到数十行代码来实现，而且早期的 <em style="font-style:italic;color:#1f2937;">C</em> 编译器对于变量的声明的位置有一定的要求，不像 <em style="font-style:italic;color:#1f2937;">Java</em> 随用随声明，而是尽可能的在函数的开头声明变量，这样导致的问题是，在代码很长的情况下，不知道变量在什么时候会被修改，很有可能会因为手抖而误改，所以，写起代码来要尤为小心，尽可能的让变量的修改操作更集中。所以，在写 <em style="font-style:italic;color:#1f2937;">Java</em> 的过程中，为了避免非预期的对变量的修改，便自然而然的养成了在变量前加 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">final</code> 的习惯，这样一写就是好多年，当时，我也只是觉得这样写有两个好处：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">防止手误</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">闭包用起来更自然</li>
+</ol>
+<h3 id="Collections-unmodifiableXxxx" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">1.2.  <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">Collections.unmodifiableXxxx</code></h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我在 review 代码的时候，经常会看到这样的写法：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">class Registry {
+  final Map&lt;String, List&lt;Class&lt;*&gt;&gt;&gt; mapping = ...
+
+  public List&lt;Class&lt;*&gt;&gt; getValue(String key) {
+    return this.mapping.get(key);
+  }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">乍一看也没什么毛病，但如果这样写呢？</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public void wtf(Registry registry) {
+  registry.get("key").put("wtf", Wtf.class)
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">所以，为了避免内部的数据被外部修改，我一般会这样写：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public List&lt;Class&lt;*&gt;&gt; getValue(String key) {
+  return Collections.unmodifiableList(this.mapping.get(key));
+}</code></pre>
+
+<h3 id="数据快照" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">1.3.  数据快照</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">还有一个习惯是在阅读了 <em style="font-style:italic;color:#1f2937;">Swing</em> 的源代码后养成的 —— <em style="font-style:italic;color:#1f2937;">Observer</em> 模式中通知 <em style="font-style:italic;color:#1f2937;">Listener</em> ，大部分人都是这样写的：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">void notifyListeners() {
+  for (Listener listener : this.listeners) {
+    listener.onStateChange();
+  }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">乍一看貌似也没什么毛病啊，嗯，一般情况下没有什么毛病，但在多线程的环境中，就可能会有问题，所以，我一般会这样写：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">void notifyListeners() {
+  final Listener[] listeners = this.listeners.toArray(new Listener[0]);
+  for (Listener listener : listeners) {
+    listener.onStateChange();
+  }
+}</code></pre>
+
+<h2 id="函数式编程语言" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  函数式编程语言</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">说起函数式编程语言，<a href="https://www.haskell.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Haskell</a> 算是老祖宗了，在 <a href="https://www.haskell.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Haskell</a> 的世界里，数据都是不可变的，如果要修改，就只能 <em style="font-style:italic;color:#1f2937;">copy</em> ，可能很多人无法理解为什么 <a href="https://www.haskell.org/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Haskell</a> 要这样设计，每次修改都要 <em style="font-style:italic;color:#1f2937;">copy</em> 不会影响性能么？如果用过 <em style="font-style:italic;color:#1f2937;">Java</em> 的闭包或者 <em style="font-style:italic;color:#1f2937;">Lambda</em> ，我想大家都深有体会，在闭包或者 <em style="font-style:italic;color:#1f2937;">Lambda</em> 中引用的局部变量必须是 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">final</code> 的，为什么呢？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">我想写过 <em style="font-style:italic;color:#1f2937;">JavaScript</em> 的同学肯定都有过类似于下面的经历：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">function setupButtons(container) {
+  for (var i = 1; i &lt;= 10; i++) {
+    const btn = document.createElement("A");
+    btn.href = "javascript:void(0)";
+    btn.innerText = `${i}`;
+    btn.onclick = function() {
+      alert(`Button ${i}`);
+    }
+    container.appendChild(btn)
+  }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">上面这段代码的本意是创建 <em style="font-style:italic;color:#1f2937;">10</em> 个 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">&lt;A&gt;</code> 标签作为按钮，当点击到任意一个按钮时，弹出对话框显示该按钮对应的索引，乍一看没啥毛病，但一运行，发现并不是我们所期望的，实际的情况是 —— 所有按钮弹窗显示的都是 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">11</code>。</p>
+<blockquote style="border-left:3px solid #0969da;margin:0;padding:0.2em 1em;color:#656d76;">
+<p style="margin:0 0 10px;font-size:16px;line-height:1.75;color:#656d76;">What The Fuck!!??</p>
+</blockquote>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">这个问题的根本原因就在于 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">btn.onclick</code> 对应的 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">function</code> 存在闭包，而 <em style="font-style:italic;color:#1f2937;">JavaScript</em> 中以闭包引用的变量并没有像 <em style="font-style:italic;color:#1f2937;">Java</em> 那样要求必须是 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">final</code>，而 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">onclick</code> 方法中引用的变量 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">i</code> 在循环执行完之后就变成了 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">11</code>，所以，上面的例子实际执行的结果就是 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">11</code>，而不是其对应的索引，为了解决这一问题，一般会这样写：</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">function setupButtons(container) {
+  for (var i = 1; i &lt;= 10; i++) {
+    (function(index) {
+      const btn = document.createElement("A");
+      btn.href = "javascript:void(0)";
+      btn.innerText = `${index}`;
+      btn.onclick = function() {
+        alert(`Button ${index}`);
+      }
+      container.appendChild(btn)
+    })(i);
+  }
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">随着函数式编程语言的兴起，为了避免类似上面的问题，不可变对象已经成为了首选，像 <em style="font-style:italic;color:#1f2937;">Kotlin</em> 中的方法参数默认就是 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">final</code> 的，不可变集合和可变集合的明确区分，还有 <a href="https://kotlinlang.org/docs/data-classes.html" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Data Class</a> 不允许继承。</p>
+<h2 id="MVVM" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  MVVM</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">在 MVVM 架构中，一般对于 <em style="font-style:italic;color:#1f2937;">Data Model</em> 是推荐用不可变对象，由于并不是强制性的，也就导致了开发者对于架构的理解不一致而出现 <em style="font-style:italic;color:#1f2937;">Data Model</em> 滥用的现象，比如，有的地方用「不可变对象」，而有的地方又是「可变对象」，可能有人会觉得，「可变对象」没什么不好啊？</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">对于简单的业务逻辑，对象可不可变可能没那么重要，但是，一旦业务逻辑变得复杂，同一份数据存在多个消费方的时候，如果这时候因为「不小心」或者「其它非预期的原因」修改了 <em style="font-style:italic;color:#1f2937;">Data Model</em> 而不是通过 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">LiveData</code> 或者 <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">StateFlow</code> 来修改对象，这便会导致一系列的问题：</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><em style="font-style:italic;color:#1f2937;">Data Model</em> 的修改不可观测</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">数据流与控制流混乱，代码复杂度急剧增加</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">因为错综复杂的关系，以至于各种奇怪的 <em style="font-style:italic;color:#1f2937;">bug</em> 满天飞，因为 <em style="font-style:italic;color:#1f2937;">Data Model</em> 是可变的，那我们任何的调用都必须假设有地方会修改它，这就让架构的设计和开发变得更为复杂，试想一下，如果默认就是不可变的话，我们无须考虑多线程访问的情况，但如果是可变的，我们必须小心的处理任何有可能多线程访问的情况，这对于开发者无疑也是一种心理负担，要考虑的情况和场景太多太复杂了，就像前面提到的我的那些编程习惯，都是一个坑一个坑踩出来的，如果能够从根源上避免这些问题，那我们的开发将会变得更简单。</p>
+<h2 id="Immutable-真的香吗？" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  Immutable 真的香吗？</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">前面说了那么多 <em style="font-style:italic;color:#1f2937;">Immutable Object</em> 的好处，可能有人会问，<em style="font-style:italic;color:#1f2937;">Immutable</em> 就真的那么香吗？关于这个问题，我们下期再聊～😝</p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2022/04/11/the-data-mutability-problem/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2022/04/11/the-data-mutability-problem/</a></p>
+    </section>
+  </main>
+</body>
+</html>

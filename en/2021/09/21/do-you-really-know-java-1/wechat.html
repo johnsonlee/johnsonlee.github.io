@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2021/09/21/do-you-really-know-java-1/">
+  <title>Do You Really Know Java? (Part 1) | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">Do You Really Know Java? (Part 1)</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2021-09-21 · Johnson Lee · Computer Science / Java</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I was driving when a WeChat message came in: "Hey, why does this code output <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">0</code>? ..." Since I was behind the wheel, I didn't have time to reply. A moment later, another message: "Come on, bytecode master, explain the principle? [face-palm emoji]"</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I kept driving. Then another one: "Guess you're too lazy to reply [face-palm]"</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">At the next red light, I opened the messages. It was this piece of code:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">public static void main(String[] args) {
+  int i = 0;
+  for (j = 0; j &lt; 50; j++) {
+    i = i++;
+  }
+  System.out.println(i);
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">A classic "toxic" snippet. I replied: "Driving."</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">"Drive safe [smug face]"</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Later at home, I recalled the question. Many people get tripped up by this. Although there are countless explanations of <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">i++</code> vs. <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">++i</code> out there, such as:</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">i++</code> reads the value of <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">i</code> first, then increments</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">++i</code> increments first, then reads the value of <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">i</code></li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I feel these explanations don't get to the root of the problem. So what is the root? To explain this, we need to start with the JVM's Stack.</p>
+<h2 id="Java-Stack" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Java Stack</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Every time a thread starts, the Java Virtual Machine creates a stack for that thread. When I used to interview candidates, I'd often ask: "How many threads does a process have? How many stacks does each thread have?" The number of threads a process can have depends on many factors and is beyond today's scope. For the second question, even CS graduates frequently get confused about whether the answer is one or many. The answer: each thread has exactly one stack. The reason our operating systems can switch between threads is that thread state information is stored in stack frames. Stack frames can be a tricky concept to grasp, so if I had to pick an analogy, I'd go with the movie Inception.</p>
+<h3 id="Stack-Frame" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Stack Frame</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">If we treat each person's dream activity as a thread, we can demonstrate the relationship between dreams and stack frames with the following code:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">class Human {
+
+  open fun fallInto(dreamland: Dreamland) {
+    // Where an ordinary person's dream begins
+
+    // do something in dreamland
+
+    // Where an ordinary person's dream ends
+  }
+
+}
+
+class DreamBuilder : Human {
+
+  private fun buildDreamland(original: Dreamland?, objects: Set&lt;Any&gt;): Dreamland {
+    ...
+  }
+
+  override fun fallInto(dreamland: Dreamland) {
+    // Where the dream architect's dream begins
+    if (isControlledByMySelf(dreamland) &amp;&amp; shouldFallIntoDeeper(dreamland)) {
+      val objects = prepareObjects(...)
+      val newDreamland = buildDreamland(dreamland, objects)
+
+      // Everyone enters the next dream level together
+      newDreamland.humans.forEach { human -&gt;
+        human.fallInto(dreamland)
+      }
+      // Everyone returns from the deeper dream together
+    }
+    // Where the dream architect's dream ends
+  }
+
+  fun fallIntoDreamland(objects: Set&lt;Any&gt;) {
+    // Include yourself as part of the dream
+    val elements = objects + this
+    // Build the dream in reality
+    val dreamland = buildDreamland(null, elements)
+    // Enter the dream together
+    val threads = dreamland.humans.map { human -&gt;
+      thread {
+       human.fallInto(dreamland)
+      }
+    }
+    // Return to reality together
+    threads.forEach { thread -&gt;
+      thread.join()
+    }
+    // Destroy the dream
+  }
+}
+
+fun main(args: Array&lt;String&gt;) {
+  val dreamBuilder = ...
+  val objects = ...
+  ...
+  dreamBuilder.fallIntoDreamland(objects)
+}</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The dream architect (<code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">DreamBuilder</code>) constructs a dream in reality and brings everyone into the first dream level together. Everyone's state before entering the dream is preserved in reality. When they wake up and return, the surrounding environment is exactly the same as before. We can think of reality as dream level 0. When the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">fallIntoDreamland</code> method call takes us from level 0 to level 1, a stack frame is created to record the context. When we go from level 1 to level 2, another stack frame is created. By extension, each dream level produces a stack frame, and correspondingly, each method call produces a stack frame. Method calls are like dreams -- nested layer upon layer. However, in a thread's stack, frames are not actually nested but laid out sequentially. It's the LIFO/FILO nature of the stack that simulates nesting -- which is also why stacks are used to convert recursion into iteration.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The dream architect can keep making everyone dream, taking them from level 0 (reality) all the way to level N. Feels like recursion, doesn't it? Whether they can safely return from deep dream levels depends on whether the dream architect can control the exit condition (terminating the recursion). For a program, the programmer writing the recursion is the dream architect.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">For a thread, when you enter a method and then return, the parameters, variables, and context are all in their original state. How does the thread store this information? This brings us to the structure of a stack frame. Each stack frame has its own Local Variable Array, Operand Stack, and a reference to the constant pool of the current method's class. The Local Variable Array stores local variables declared in the method. The Operand Stack stores method parameters (for instance methods, element 0 of the Operand Stack is the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">this</code> reference, while static methods have no instance reference) and return values from other instructions (method calls, expression evaluations, etc.).</p>
+<h2 id="The-Root-of-the-Problem" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">The Root of the Problem</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Now that we understand the Java stack structure, let's return to the original question. The crux lies in this line:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">i = i++;</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">We can use <em style="font-style:italic;color:#1f2937;">javap</em> to decompile the bytecode generated from this code:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">iload_1
+iinc          1, 1
+istore_1</code></pre>
+
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">These three instructions look fine on the surface. So why doesn't the <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">iinc</code> instruction seem to "take effect"? Let's look at the definitions of these three instructions from the <a href="https://en.wikipedia.org/wiki/List_of_Java_bytecode_instructions" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">JVM bytecode instruction set</a>:</p>
+<table style="width:100%;border-collapse:collapse;margin:22px 0;font-size:14px;line-height:1.6;color:#1f2937;">
+<thead>
+<tr>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Mnemonic</th>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Opcode</th>
+<th align="left" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Other bytes</th>
+<th align="center" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Stack</th>
+<th align="left" style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">iinc</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">0x84</td>
+<td align="left" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">2:index,const</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"></td>
+<td align="left" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">increment local variable #index by signed byte const</td>
+</tr>
+<tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">iload_1</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">0x1b</td>
+<td align="left" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"></td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">-&gt; value</td>
+<td align="left" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">load an int value from local variable 1</td>
+</tr>
+<tr>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">istore_1</td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">0x3c</td>
+<td align="left" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;"></td>
+<td align="center" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">value -&gt;</td>
+<td align="left" style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">store int value into variable 1</td>
+</tr>
+</tbody></table>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">From these definitions, we can see that:</p>
+<ul style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">iinc</code> operates on the Local Variable Array</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">iload_1</code> and <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">istore_1</code> operate on the Operand Stack</li>
+</ul>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Now let's trace through the three instructions. Assume that before <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">iload_1</code> executes, the stack looks like <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">...</code> (left is bottom, right is top):</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">iload_1</code> loads the value of Local Variable Array[1] (variable <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">i</code>) onto the Operand Stack. The stack goes from <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">...</code> to <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">..., 0</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">iinc</code> directly increments Local Variable Array[1] (variable <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">i</code>) to <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">1</code>. However, the Operand Stack still holds <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">..., 0</code></li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">istore_1</code> pops <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">0</code> from the top of the stack and stores it into Local Variable Array[1] (variable <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">i</code>). The stack returns to <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">...</code></li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">So the root cause is that <strong style="font-weight:700;color:#111827;"><code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">iinc</code>'s result is not synced back to the Operand Stack</strong>. To fix this, we'd need to execute <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">iload_1</code> after <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">iinc</code> to reload the updated value of Local Variable Array[1] (variable <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">i</code>) onto the Operand Stack:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">iinc          1, 1
+iload_1
+istore_1</code></pre>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">This simply swaps the order of <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">iinc</code> and <code style="margin:0 2px;padding:2px 5px;border-radius:4px;background:#f3f4f6;color:#be123c;font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:0.92em;">iload_1</code>. Decompiled back to Java, it becomes:</p>
+<pre style="margin:22px 0;padding:14px 16px;background:#f6f8fa;border:1px solid #e5e7eb;border-radius:6px;white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:14px;color:#111827;overflow-x:auto;"><code style="font-family:SFMono-Regular,Consolas,&quot;Liberation Mono&quot;,Menlo,monospace;font-size:14px;line-height:1.65;color:#111827;background:transparent;">i = ++i;</code></pre>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2021/09/21/do-you-really-know-java-1/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2021/09/21/do-you-really-know-java-1/</a></p>
+    </section>
+  </main>
+</body>
+</html>

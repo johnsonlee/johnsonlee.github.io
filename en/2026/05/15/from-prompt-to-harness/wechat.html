@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/en/2026/05/15/from-prompt-to-harness/">
+  <title>From Prompt to Harness | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">From Prompt to Harness</h1>
+    <p style="margin:0 0 28px;font-size:14px;line-height:1.6;color:#6b7280;">2026-05-15 · Johnson Lee · Independent Thinking</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Recently I noticed an interesting pattern.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Some people add a stack of SKILLs to an Agent, wire it to all kinds of knowledge bases, build workflows everywhere, stuff the prompt with caveats, counterexamples, and few-shot examples, then say very seriously: we are doing harness engineering now.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">My first reaction was: this has barely reached the entrance, and is still far from real Harness Engineering.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">SKILLs, KBs, and structured prompts are valuable. They help the model understand context, act closer to your expectations, and avoid plenty of basic mistakes. But if you call these things a harness, you are making the whole problem shallower than it is.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">KB/SKILL is not harness. At most, they are the input constraint layer of a harness.</strong></p>
+
+
+<h2 id="Prompt-Is-Not-the-Rein-It-Is-Just-What-You-Say-to-the-Horse" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Prompt Is Not the Rein, It Is Just What You Say to the Horse</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The easiest way to misunderstand Harness Engineering is to hear the word "harness" and immediately translate it into "constraint." If it is about constraints, then writing longer prompts, adding more rules, and preparing more KBs must be constraining the model, right?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Not exactly.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Imagine you are riding a horse. You tell it: "A little to the left, don't run too fast, go around the rocks, there is a river ahead, don't jump." That is useful. If the horse understands, the error rate goes down.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">But that is not a harness.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">A real harness is the rein, saddle, guardrail, route, checkpoints, and the mechanism that lets you review why you fell after you fall. What you say to the horse is only the softest layer.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">LLMs are the same.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Prompts can change the probability distribution of model outputs. SKILLs can encode common patterns in advance. KBs can fill in missing context. Structured prompts can reduce the space for free-form improvisation.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">All of these things do the same job: <strong style="font-weight:700;color:#111827;">they increase the prior probability of a correct output.</strong></p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The key word is probability.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">As long as the execution layer is still a model call, the output remains probabilistic. You can move the probability from 60% to 80%, from 80% to 92%, maybe even make it look close to 99% in some scenarios. But it has not become deterministic.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">This is where many people get stuck.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Many people think "the model is more obedient" means "the system is constrained." It does not. A more obedient horse does not mean you have guardrails around the track.</p>
+<h2 id="A-Real-Harness-Has-at-Least-Five-Layers" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">A Real Harness Has at Least Five Layers</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">More precisely, a harness should have at least five layers.</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 600" role="img" aria-labelledby="harness-layers-title-en harness-layers-desc-en" style="max-width: 100%; height: auto;">
+  <title id="harness-layers-title-en">The Five Layers of Harness</title>
+  <desc id="harness-layers-desc-en">A five-layer view of harness: input constraints, execution, output validation, feedback, and reproducibility.</desc>
+  <defs>
+    <filter id="harness-shadow-en" x="-10%" y="-10%" width="120%" height="130%">
+      <fedropshadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.16"></fedropshadow>
+    </filter>
+    <marker id="harness-arrow-en" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#4b5563"></path>
+    </marker>
+  </defs>
+  <rect x="20" y="20" width="880" height="560" rx="8" fill="none" stroke="#cbd5e1"></rect>
+  <text x="460" y="58" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700" fill="#111827">The Five Layers of Harness</text>
+  <text x="460" y="86" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#4b5563">Harness = the structure that puts probabilistic models inside deterministic systems</text>
+
+  <g filter="url(#harness-shadow-en)">
+    <rect x="80" y="122" width="500" height="72" rx="6" fill="#fff7ed" stroke="#f97316" stroke-width="2"></rect>
+    <text x="112" y="151" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#9a3412">1. Input Constraints</text>
+    <text x="112" y="177" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#7c2d12">SKILL / KB / structured prompt / few-shot: raise the prior</text>
+  </g>
+  <g filter="url(#harness-shadow-en)">
+    <rect x="80" y="214" width="500" height="72" rx="6" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"></rect>
+    <text x="112" y="243" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8">2. Execution Layer</text>
+    <text x="112" y="269" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#1e3a8a">The LLM call itself: a probabilistic node remains</text>
+  </g>
+  <g filter="url(#harness-shadow-en)">
+    <rect x="80" y="306" width="500" height="72" rx="6" fill="#ecfdf5" stroke="#10b981" stroke-width="2"></rect>
+    <text x="112" y="335" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#047857">3. Output Validation</text>
+    <text x="112" y="361" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#064e3b">schema / tests / linters / policy: deterministic gates</text>
+  </g>
+  <g filter="url(#harness-shadow-en)">
+    <rect x="80" y="398" width="500" height="72" rx="6" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="2"></rect>
+    <text x="112" y="427" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#6d28d9">4. Feedback Layer</text>
+    <text x="112" y="453" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#4c1d95">slow-loop eval / human review / golden dataset: calibrate ground truth</text>
+  </g>
+  <g filter="url(#harness-shadow-en)">
+    <rect x="80" y="490" width="500" height="72" rx="6" fill="#fef2f2" stroke="#ef4444" stroke-width="2"></rect>
+    <text x="112" y="519" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#b91c1c">5. Reproducibility Layer</text>
+    <text x="112" y="545" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#7f1d1d">seed / model / prompt / tool / KB / dataset snapshots: make results comparable</text>
+  </g>
+
+  <line x1="330" y1="194" x2="330" y2="214" stroke="#4b5563" stroke-width="2" marker-end="url(#harness-arrow-en)"></line>
+  <line x1="330" y1="286" x2="330" y2="306" stroke="#4b5563" stroke-width="2" marker-end="url(#harness-arrow-en)"></line>
+  <line x1="330" y1="378" x2="330" y2="398" stroke="#4b5563" stroke-width="2" marker-end="url(#harness-arrow-en)"></line>
+  <line x1="330" y1="470" x2="330" y2="490" stroke="#4b5563" stroke-width="2" marker-end="url(#harness-arrow-en)"></line>
+
+  <path d="M 620 158 C 735 158 735 342 620 342" fill="none" stroke="#64748b" stroke-width="2" stroke-dasharray="6 6"></path>
+  <text x="732" y="235" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#334155">Probability Boost</text>
+  <text x="732" y="258" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#475569">not a hard boundary</text>
+
+  <path d="M 620 342 C 785 342 785 526 620 526" fill="none" stroke="#111827" stroke-width="2.5"></path>
+  <text x="760" y="426" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#111827">Engineering Loop</text>
+  <text x="760" y="449" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#374151">block, calibrate, reproduce</text>
+
+  <rect x="650" y="484" width="190" height="62" rx="6" fill="#ffffff" stroke="#94a3b8"></rect>
+  <text x="745" y="512" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700" fill="#111827">Harness Boundary</text>
+  <text x="745" y="533" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#475569">not "trust it", but "block it"</text>
+</svg>
+
+<h3 id="Input-Constraints-Raising-the-Prior-Probability" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Input Constraints: Raising the Prior Probability</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">This layer includes SKILLs, KBs, structured prompts, tool descriptions, few-shot examples, and system instructions.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Their goal is not to guarantee correctness. Their goal is to make the model more likely to get onto the right path before generation starts.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">For example, you tell an Agent: read the README before editing code, run tests before submitting a PR, do not guess when uncertain. These rules are useful. They eliminate a lot of basic mistakes.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">But in essence, they are still "telling the model what it should do." The model may follow them, or it may miss them. It may understand them correctly, or distort them. It may behave well in simple cases, then suddenly lose control after long context, complex state, or tool failures.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">So the value of the input constraint layer should be acknowledged. Its boundary should be acknowledged too.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">A prompt can make the model more likely to be correct. It cannot make the system required to be correct.</strong></p>
+<h3 id="Execution-Layer-Probability-Cannot-Be-Removed" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Execution Layer: Probability Cannot Be Removed</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The execution layer is the model call itself.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">As long as an LLM sits in the middle, the system contains a probabilistic node. This node is not a bug. It is the nature of the thing.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Many engineers do not want to accept this. They keep trying to "prompt away" probability with more elaborate prompts. That is a bit like trying to eliminate traffic accidents with a better driving manual. The manual can lower the accident rate, but it cannot replace brakes, traffic lights, and crash tests.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Model calls work the same way.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">You can switch to a stronger model. You can tune temperature. You can increase thinking tokens. You can add chain-of-thought-style intermediate steps. You can ask the model to self-check. None of this changes the fact that the execution layer is still not a deterministic program.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">This is also why "let another LLM check it" is only weak validation. It may help, but it is not a boundary.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">Probabilistic output cannot be closed by probabilistic judgment.</strong></p>
+<h3 id="Output-Validation-A-Deterministic-Gate-Is-the-First-Hard-Boundary" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Output Validation: A Deterministic Gate Is the First Hard Boundary</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">A real harness starts to become hard at the output validation layer.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The keyword here is not "review." It is gate.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">A gate means: if it does not pass, it cannot continue. Not "the model thinks it is fine," not "it looks okay to a human," not "it should probably be fine," but a deterministic check that blocks the output.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">This is where the fast-loop earns its place. The fast-loop is not responsible for proving the truth of the universe. It is responsible for immediately cutting off obviously unqualified results after each Agent output in a cheap, deterministic, repeatable way.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">A solid fast-loop gate should block at least seven classes of problems:</p>
+<ol style="margin:0 0 18px 0;padding-left:24px;color:#1f2937;">
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">The output must satisfy the schema. If it does not, fail immediately.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Every factual claim must trace back to context, tool results, or an explicit assumption.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">The Agent must not perform actions beyond its authorization scope, especially writing files, sending requests, deleting resources, or changing configuration.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">The Agent must not package uncertainty as a certain conclusion.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Tool errors must not be swallowed. Failures must be exposed explicitly.</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Modification tasks must produce a verifiable diff, not just "I changed it."</li>
+<li style="margin:0 0 8px;font-size:16px;line-height:1.75;color:#1f2937;">Critical artifacts must be reviewable by deterministic checkers, such as parsers, linters, tests, static analyzers, or policy rules.</li>
+</ol>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">These seven rules are not mysterious. They are not sexy either.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">But engineering systems do not run on sexiness. They run on blocking the same class of error every time.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">If an Agent generates JSON without schema validation, you are merely trusting it to generate JSON. If an Agent edits code without tests and static checks, you are merely trusting that it did not break anything. If an Agent writes an analysis report without citation coverage and source boundaries, you are merely trusting that it did not hallucinate.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Trust is not harness.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">The first principle of harness is replacing "trust it" with "block it."</strong></p>
+<h3 id="Feedback-Layer-Slow-Loop-Eval-Calibrates-Ground-Truth" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Feedback Layer: Slow-Loop Eval Calibrates Ground Truth</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The fast-loop answers "can this output clear the minimum bar this time?" It does not answer a larger question: is your gate itself correct?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">That requires slow-loop eval.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Many teams build a pile of automatic checks, then quickly fall into another hallucination: if all checks are green, the system is good. This idea is just as dangerous.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Because a checker can check the wrong thing.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Suppose you are building a code generation Agent. The fast-loop can check whether the code compiles, whether tests pass, and whether formatting is right. But none of that equals correct business logic. You may have tested the happy path and missed edge cases. You may have asked the Agent to fix a surface bug while introducing architectural debt. You may have overfit the eval set to a batch of old problems, then collapse the moment real users arrive.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The job of slow-loop eval is to periodically pull the system back to ground truth.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">It does not have to run every time, and it does not have to be cheap. It may require human labeling, online sample replay, golden datasets, shadow traffic, real user feedback, and case study reviews. It is slow, but it calibrates direction.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The fast-loop is the brake. The slow-loop is the map.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Without a fast-loop, the system crashes around every day. Without a slow-loop, the system charges along the wrong map.</p>
+<h3 id="Reproducibility-Layer-Eval-Harness-Makes-Results-Comparable" style="margin:28px 0 14px;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">Reproducibility Layer: Eval Harness Makes Results Comparable</h3><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The last layer is the easiest to ignore: reproducibility.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">You say one prompt version is better. How do you prove it? You say the new model increased pass rate from 72% to 81%. How do you prove it? You say a SKILL reduced hallucination. How do you prove it?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Without seed, model version, prompt snapshot, tool version, KB snapshot, and eval dataset snapshot, your conclusion is hard to reproduce.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">You get 81% today and maybe 74% tomorrow. You do not know whether the model version changed, the tool response changed, the KB was updated, the sample was randomly different, or the prompt changed by one small sentence you forgot to record.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">At that point, you are not doing engineering. You are doing mystical A/B testing.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">A real eval harness records the entire runtime environment: what the input was, what the model was, which prompt version was used, what the tools returned, what the external dependencies were, how the checker judged the result, and where the ground truth came from.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Only then are results comparable. Only when they are comparable does optimization mean anything.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">An improvement that cannot be reproduced is not an improvement. It is luck.</strong></p>
+<h2 id="Why-People-Mistake-SKILL-KB-for-Harness" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Why People Mistake SKILL/KB for Harness</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">This misconception is natural.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Because SKILL/KB is the easiest thing to show, and the easiest thing to sell.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Open a repo and see a pile of carefully organized markdown, polished prompt templates, and complex agent workflows, and you naturally feel that the system is engineered. It looks like engineering, reads like a specification, and demos more smoothly.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">A real harness often does not look good.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Schema validators are not much of a demo. Log snapshots are not much to brag about. Eval datasets are dirty, case reviews are tedious, and writing deterministic checkers feels like labor. You spend two weeks building a gate, and in the end the only thing users see is "this error did not happen."</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">In software engineering, the most valuable things often make bad things not happen.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">But "not happening" is hard to see.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">So people naturally flock to prompt engineering. The feedback is fast, the cost is low, the changes are visible, and it is easy to talk about. Change one line in a system prompt today, see the metric rise a few points tomorrow. It feels rewarding.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">That is fine.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The mistake is treating it as the destination.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Prompt engineering is the entrance, not the moat. SKILL is packaged experience, not a system boundary. KB is contextual asset, not a correctness guarantee.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">You can start with prompt, but you cannot finish with prompt.</strong></p>
+<h2 id="What-Is-a-Harness-Engineer-Actually-Building" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">What Is a Harness Engineer Actually Building?</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">So what is a real Harness Engineer building?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Not longer prompts. Not more SKILLs.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The real work is building a structure that puts probabilistic models inside deterministic systems.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">That sounds abstract. Split it apart and it becomes concrete:</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The model may generate freely, but the output must pass schema. The model may call tools, but tool permissions must be controlled. The model may write code, but the diff must be checkable by tests and static analyzers. The model may summarize documents, but each key conclusion must trace back to source. The model may plan tasks, but high-risk actions must have a deterministic gate or human approval.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The key is not "restricting the model." The key is knowing where the model cannot be trusted.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The default posture of many Agent builders is: the model is smart, so I should let it do more.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The default posture of a Harness Engineer is: the model is smart, so I must know when it will apply that intelligence in the wrong place.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">These two postures are worlds apart.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">The former expands capability boundaries. The latter defines safety boundaries. Without the latter, the faster the former expands, the more dangerous the system becomes.</p>
+<h2 id="From-Input-Constraints-to-an-Engineering-Loop" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">From Input Constraints to an Engineering Loop</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">I am not against SKILL, KB, or prompt engineering.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Quite the opposite. I think they are necessary. Without a good input constraint layer, an Agent performs terribly, and the gates that follow get flooded by garbage output. If a model has no understanding of the task context, even the strongest checker is just rejecting garbage efficiently.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">But necessary does not mean sufficient.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">SKILL/KB belongs to the input-constraint layer. This layer brings the model near the right direction and makes the system usable.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">A full harness continues from there: the execution layer admits probability, the output layer builds deterministic gates, the feedback layer calibrates against ground truth, and the reproducibility layer makes each optimization comparable.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">That is a complete engineering loop.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">If a system has only SKILL/KB, with no gate, no eval, no snapshot, and no reproducibility, then at most it is a prompt-augmented agent. It is not a harnessed agent.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">This distinction is not wordplay.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">It decides whether you are building a demo or building a system.</p>
+<h2 id="Closing-Do-Not-Mistake-the-Threshold-for-the-Destination" style="margin:34px 0 16px;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">Closing: Do Not Mistake the Threshold for the Destination</h2><p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">AI engineering today feels a bit like early Web development.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Someone could write HTML and think they were doing software engineering. Later, people slowly realized that real engineering was not just drawing the page. It also included state management, build systems, testing, monitoring, progressive rollout, rollback, security, performance, and maintainability.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Agents are the same today.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Writing prompts, organizing KBs, and making SKILLs are all important. But that is just drawing the page. The hard part is: when the model produces a wrong output, can you block it? When the metrics get better, can you prove it? When the system drifts after three months in production, can you reconstruct what happened?</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">Many people are excited about SKILL/KB/prompt engineering. It is easy to mistake input-layer capability for full Harness Engineering.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;">It is not the same thing.</p>
+<p style="margin:0 0 18px;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">A Harness Engineer's job is not to make the model speak better. It is to make the system more trustworthy.</strong></p>
+
+    <section style="margin:34px 0 0;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#6b7280;">Original：<a href="https://johnsonlee.io/en/2026/05/15/from-prompt-to-harness/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/en/2026/05/15/from-prompt-to-harness/</a></p>
+    </section>
+  </main>
+</body>
+</html>
