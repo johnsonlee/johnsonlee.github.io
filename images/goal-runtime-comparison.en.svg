@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 900" role="img" aria-labelledby="title desc">
+  <title id="title">The Goal control loops in Codex and Claude Code</title>
+  <desc id="desc">Codex continues through persisted active state and an idle callback, with the worker submitting complete. Claude Code starts a tool-blind fresh evaluator from a Stop hook, which returns Not yet met, Met, or Impossible.</desc>
+  <defs>
+    <filter id="shadow" x="-12%" y="-12%" width="124%" height="132%"><feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#475569"/></marker>
+    <marker id="blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#2563eb"/></marker>
+    <marker id="orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#ea580c"/></marker>
+    <style>.t{font-family:Arial,Helvetica,sans-serif}.h{font-size:32px;font-weight:700;fill:#0f172a}.sub{font-size:19px;fill:#64748b}.lane{font-size:27px;font-weight:700}.bh{font-size:23px;font-weight:700}.body{font-size:18px;fill:#334155}.small{font-size:16px;fill:#64748b}</style>
+  </defs>
+  <rect width="1100" height="900" rx="30" fill="#f8fafc"/>
+  <text class="t h" x="550" y="50" text-anchor="middle">One /goal Idea, Two Control Loops</text>
+  <text class="t sub" x="550" y="82" text-anchor="middle">Shared invariant: ending a turn no longer ends the task</text>
+
+  <g filter="url(#shadow)">
+    <rect x="365" y="112" width="370" height="82" rx="17" fill="#f1f5f9" stroke="#475569" stroke-width="2.5"/>
+    <text class="t bh" x="550" y="146" text-anchor="middle" fill="#0f172a">Worker Turn Ends</text>
+    <text class="t body" x="550" y="175" text-anchor="middle">The harness regains control</text>
+  </g>
+
+  <path d="M500 194 C450 228 350 238 290 270" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#blue)"/>
+  <path d="M600 194 C650 228 750 238 810 270" fill="none" stroke="#ea580c" stroke-width="3" marker-end="url(#orange)"/>
+
+  <text class="t lane" x="290" y="250" text-anchor="middle" fill="#1d4ed8">Codex</text>
+  <text class="t lane" x="810" y="250" text-anchor="middle" fill="#c2410c">Claude Code</text>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="270" width="440" height="100" rx="18" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5"/>
+    <text class="t bh" x="290" y="310" text-anchor="middle" fill="#1e3a8a">Read Persisted Goal State</text>
+    <text class="t body" x="290" y="342" text-anchor="middle">Is status still active?</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="590" y="270" width="440" height="100" rx="18" fill="#fff7ed" stroke="#ea580c" stroke-width="2.5"/>
+    <text class="t bh" x="810" y="310" text-anchor="middle" fill="#9a3412">Trigger Prompt-based Stop Hook</text>
+    <text class="t body" x="810" y="342" text-anchor="middle">condition + conversation</text>
+  </g>
+
+  <line x1="290" y1="370" x2="290" y2="420" stroke="#2563eb" stroke-width="3" marker-end="url(#blue)"/>
+  <line x1="810" y1="370" x2="810" y2="420" stroke="#ea580c" stroke-width="3" marker-end="url(#orange)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="420" width="440" height="112" rx="18" fill="#ecfeff" stroke="#0891b2" stroke-width="2.5"/>
+    <text class="t bh" x="290" y="460" text-anchor="middle" fill="#155e75">Idle Callback Starts Another Turn</text>
+    <text class="t body" x="290" y="492" text-anchor="middle">The same Agent runs the completion audit</text>
+    <text class="t small" x="290" y="518" text-anchor="middle">Only update_goal(complete) stops it</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="590" y="420" width="440" height="112" rx="18" fill="#fef3c7" stroke="#d97706" stroke-width="2.5"/>
+    <text class="t bh" x="810" y="460" text-anchor="middle" fill="#92400e">Fresh Evaluator Decides</text>
+    <text class="t body" x="810" y="492" text-anchor="middle">small fast model by default · no tools</text>
+    <text class="t small" x="810" y="518" text-anchor="middle">It sees only evidence already in the transcript</text>
+  </g>
+
+  <line x1="290" y1="532" x2="290" y2="590" stroke="#2563eb" stroke-width="3" marker-end="url(#blue)"/>
+  <line x1="810" y1="532" x2="810" y2="590" stroke="#ea580c" stroke-width="3" marker-end="url(#orange)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="590" width="440" height="112" rx="18" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5"/>
+    <text class="t bh" x="290" y="630" text-anchor="middle" fill="#1e3a8a">No Complete Submission</text>
+    <text class="t body" x="290" y="662" text-anchor="middle">Status remains active → idle again</text>
+    <text class="t small" x="290" y="688" text-anchor="middle">Submit complete / blocked → stop</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="590" y="590" width="440" height="112" rx="18" fill="#fff7ed" stroke="#ea580c" stroke-width="2.5"/>
+    <text class="t bh" x="810" y="630" text-anchor="middle" fill="#9a3412">Three Verdicts</text>
+    <text class="t body" x="810" y="662" text-anchor="middle">Not yet met → reason enters the next turn</text>
+    <text class="t small" x="810" y="688" text-anchor="middle">Met → achieved · Impossible → failed</text>
+  </g>
+
+  <path d="M70 646 H35 V320 H70" fill="none" stroke="#2563eb" stroke-width="3" stroke-dasharray="9 7" marker-end="url(#blue)"/>
+  <path d="M1030 646 H1065 V320 H1030" fill="none" stroke="#ea580c" stroke-width="3" stroke-dasharray="9 7" marker-end="url(#orange)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="185" y="770" width="730" height="88" rx="18" fill="#ecfdf5" stroke="#059669" stroke-width="2.5"/>
+    <text class="t bh" x="550" y="806" text-anchor="middle" fill="#065f46">Eval Defines Standards · Verifier Establishes Facts</text>
+    <text class="t body" x="550" y="837" text-anchor="middle">Without reliable evidence, either loop can stop early or spin uselessly</text>
+  </g>
+  <path d="M400 770 C360 744 325 728 290 702" fill="none" stroke="#059669" stroke-width="2.5" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
+  <path d="M700 770 C740 744 775 728 810 702" fill="none" stroke="#059669" stroke-width="2.5" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
+</svg>

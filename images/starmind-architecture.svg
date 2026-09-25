@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="680" viewBox="0 0 1600 680" role="img" aria-labelledby="title desc">
+  <title id="title">SpaceX StarMind 公开架构</title>
+  <desc id="desc">Gigasat Factory 批量制造计算卫星，经 Starship 部署入轨；太阳能阵列为 AI1 计算载荷供电，散热器通过热辐射排热，计算结果经星间激光与 Starlink 返回地面网络。</desc>
+  <defs>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#c2410c"/></marker>
+    <marker id="arrow-yellow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#a16207"/></marker>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#dc2626"/></marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#7c3aed"/></marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <style>
+      text{font-family:Arial,"Noto Sans SC","PingFang SC",sans-serif;fill:#172033}
+      .lane{font-size:16px;font-weight:700;text-anchor:middle;dominant-baseline:middle}.label{font-size:18px;font-weight:700;text-anchor:middle;dominant-baseline:middle}.sub{font-size:15px;fill:#475569;text-anchor:middle}.metric{font-size:16px;font-weight:700;fill:#4338ca;text-anchor:middle}.legend{font-size:15px;fill:#475569;dominant-baseline:middle}
+      .manufacture{fill:#fed7aa;stroke:#c2410c;stroke-width:2}.power{fill:#fef3c7;stroke:#a16207;stroke-width:2}.compute{fill:#e0e7ff;stroke:#4f46e5;stroke-width:2.5}.thermal{fill:#fee2e2;stroke:#dc2626;stroke-width:2}.delivery{fill:#f3e8ff;stroke:#7c3aed;stroke-width:2}
+      .edge-orange{fill:none;stroke:#c2410c;stroke-width:2.5;marker-end:url(#arrow-orange)}.edge-yellow{fill:none;stroke:#a16207;stroke-width:2.5;marker-end:url(#arrow-yellow)}.edge-red{fill:none;stroke:#dc2626;stroke-width:2.5;marker-end:url(#arrow-red)}.edge-purple{fill:none;stroke:#7c3aed;stroke-width:2.5;marker-end:url(#arrow-purple)}
+    </style>
+  </defs>
+
+  <rect width="1600" height="680" fill="#f8fafc"/>
+
+  <rect x="180" y="78" width="140" height="64" rx="12" class="power" filter="url(#shadow)"/><text x="250" y="111" class="label">太阳</text>
+  <rect x="390" y="78" width="220" height="64" rx="12" class="power" filter="url(#shadow)"/><text x="500" y="111" class="label">太阳能阵列</text>
+  <rect x="670" y="78" width="180" height="64" rx="12" class="power" filter="url(#shadow)"/><text x="760" y="111" class="label">直流供电</text>
+  <path d="M320 110H390" class="edge-yellow"/><path d="M610 110H670" class="edge-yellow"/><path d="M760 142V250" class="edge-yellow"/>
+
+  <rect x="30" y="300" width="210" height="74" rx="12" class="manufacture" filter="url(#shadow)"/>
+  <text x="135" y="329" class="label">Gigasat Factory</text><text x="135" y="355" class="sub">卫星批量制造</text>
+  <rect x="300" y="300" width="190" height="74" rx="12" class="manufacture" filter="url(#shadow)"/><text x="395" y="338" class="label">Starship</text>
+  <path d="M240 337H300" class="edge-orange"/><path d="M490 337H580" class="edge-orange"/>
+
+  <rect x="580" y="250" width="360" height="174" rx="18" class="compute" filter="url(#shadow)"/>
+  <text x="760" y="290" class="label">AI1 · StarMind</text>
+  <text x="760" y="325" class="sub">模块化 AI 计算载荷</text>
+  <line x1="620" y1="347" x2="900" y2="347" stroke="#a5b4fc" stroke-width="2"/>
+  <text x="760" y="377" class="metric">150 kW 峰值 · 120 kW 平均</text>
+  <text x="760" y="405" class="metric">70 kW / 吨</text>
+
+  <text x="1065" y="253" class="lane" fill="#7c3aed">结果交付</text>
+  <rect x="1000" y="300" width="210" height="74" rx="12" class="delivery" filter="url(#shadow)"/><text x="1105" y="338" class="label">星间激光</text>
+  <rect x="1270" y="300" width="140" height="74" rx="12" class="delivery" filter="url(#shadow)"/><text x="1340" y="338" class="label">Starlink</text>
+  <rect x="1460" y="300" width="120" height="74" rx="12" class="delivery" filter="url(#shadow)"/><text x="1520" y="338" class="label">地面网络</text>
+  <path d="M940 337H1000" class="edge-purple"/><path d="M1210 337H1270" class="edge-purple"/><path d="M1410 337H1460" class="edge-purple"/>
+
+  <rect x="640" y="500" width="240" height="70" rx="12" class="thermal" filter="url(#shadow)"/><text x="760" y="536" class="label">散热器</text>
+  <rect x="970" y="500" width="270" height="70" rx="12" class="thermal" filter="url(#shadow)"/><text x="1105" y="536" class="label">热量辐射入太空</text>
+  <path d="M760 424V500" class="edge-red"/><path d="M880 535H970" class="edge-red"/>
+
+  <line x1="540" y1="615" x2="580" y2="615" stroke="#a16207" stroke-width="6" stroke-linecap="round"/><text x="592" y="615" class="legend">能源</text>
+  <line x1="700" y1="615" x2="740" y2="615" stroke="#c2410c" stroke-width="6" stroke-linecap="round"/><text x="752" y="615" class="legend">制造与部署</text>
+  <line x1="940" y1="615" x2="980" y2="615" stroke="#dc2626" stroke-width="6" stroke-linecap="round"/><text x="992" y="615" class="legend">散热</text>
+  <text x="800" y="655" text-anchor="middle" class="sub">依据 SpaceX 公开的 StarMind · AI1 架构</text>
+</svg>

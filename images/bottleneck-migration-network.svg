@@ -1,0 +1,203 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="2300" viewBox="0 0 1600 2300" role="img" aria-labelledby="title desc">
+  <title id="title">瓶颈迁移网络</title>
+  <desc id="desc">外部需求冲击同时进入服务平面、数据中心和交付网络三个 D0 根节点。深度与瓶颈状态彼此独立；紫色虚线表示尚未采用的替代路线。</desc>
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity=".13"/></filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#64748b"/></marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#7c3aed"/></marker>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#dc2626"/></marker>
+    <style>
+      .canvas{fill:#f8fafc}.lane-a{fill:#fff}.lane-b{fill:#f8fafc}.grid{stroke:#cbd5e1;stroke-width:1}
+      .depth-0{fill:#f1f5f9}.depth-1{fill:#fff7ed}.depth-2{fill:#fff7ed}.depth-3{fill:#fefce8}.depth-4{fill:#eff6ff}
+      .title{font:700 27px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#0f172a}.subtitle{font:400 14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#64748b}
+      .depth-label{font:700 14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#334155;letter-spacing:.4px}.depth-note{font:400 11.5px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#64748b}
+      .lane-label{font:700 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#0f172a;letter-spacing:.5px}.lane-note{font:400 11.5px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#64748b}
+      .node{stroke-width:1.5;rx:9;filter:url(#shadow)}.root{fill:#e2e8f0;stroke:#475569}.direct{fill:#fdba74;stroke:#c2410c}.binding{fill:#fca5a5;stroke:#b91c1c}.candidate{fill:#fef3c7;stroke:#a16207}.shared{fill:#bfdbfe;stroke:#1d4ed8}.alt{stroke:#7c3aed;stroke-width:2;stroke-dasharray:8 5}
+      .node-text{font:600 12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#111827;text-anchor:middle}.node-small{font:500 10.5px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#334155;text-anchor:middle}.alt-text{fill:#4c1d95}
+      .edge{fill:none;stroke:#64748b;stroke-width:2;marker-end:url(#arrow)}.edge-trunk{fill:none;stroke:#64748b;stroke-width:2}.alt-edge{fill:none;stroke:#7c3aed;stroke-width:2;stroke-dasharray:6 5;marker-end:url(#arrow-purple)}.alt-trunk{fill:none;stroke:#7c3aed;stroke-width:2;stroke-dasharray:6 5}.pressure{fill:none;stroke:#dc2626;stroke-width:2;stroke-dasharray:7 5;marker-end:url(#arrow-red)}.pressure-trunk{fill:none;stroke:#dc2626;stroke-width:2;stroke-dasharray:7 5}
+      .legend{font:500 12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#334155}.legend-strong{font:700 13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#0f172a}
+    </style>
+  </defs>
+
+  <rect class="canvas" width="1600" height="2300" rx="18"/>
+  <text class="title" x="30" y="40">瓶颈迁移网络</text>
+  <text class="subtitle" x="30" y="64">外部需求同时压向三个 D0 根；有效容量取决于 Serving Plane、Data Center 与 Delivery Network 中最窄的一项。</text>
+
+  <rect class="depth-0" x="175" y="78" width="225" height="2022" rx="10"/><rect class="depth-1" x="400" y="78" width="230" height="2022" rx="10"/>
+  <rect class="depth-2" x="630" y="78" width="295" height="2022" rx="10"/><rect class="depth-3" x="925" y="78" width="330" height="2022" rx="10"/><rect class="depth-4" x="1255" y="78" width="325" height="2022" rx="10"/>
+  <text class="depth-label" x="287.5" y="101" text-anchor="middle">D0 · 需求承接层</text><text class="depth-note" x="287.5" y="119" text-anchor="middle">三个并列根节点</text>
+  <text class="depth-label" x="515" y="101" text-anchor="middle">D1 · 子系统</text><text class="depth-note" x="515" y="119" text-anchor="middle">必须同步扩张的容量</text>
+  <text class="depth-label" x="777.5" y="101" text-anchor="middle">D2 · 技术路线</text><text class="depth-note" x="777.5" y="119" text-anchor="middle">当前路线与替代路线</text>
+  <text class="depth-label" x="1090" y="101" text-anchor="middle">D3 · 复制依赖</text><text class="depth-note" x="1090" y="119" text-anchor="middle">设备、部件、工艺与资格</text>
+  <text class="depth-label" x="1417.5" y="101" text-anchor="middle">D4 · 物理 · 共享</text><text class="depth-note" x="1417.5" y="119" text-anchor="middle">底层产能与跨行业冲突</text>
+
+  <rect class="lane-a" x="20" y="135" width="1560" height="210" rx="8" opacity=".7"/><rect class="lane-b" x="20" y="345" width="1560" height="1540" rx="8" opacity=".7"/><rect class="lane-a" x="20" y="1885" width="1560" height="215" rx="8" opacity=".7"/>
+  <line class="grid" x1="20" y1="345" x2="1580" y2="345"/><line class="grid" x1="20" y1="1885" x2="1580" y2="1885"/>
+  <line class="grid" x1="175" y1="78" x2="175" y2="2100"/><line class="grid" x1="400" y1="78" x2="400" y2="2100"/><line class="grid" x1="630" y1="78" x2="630" y2="2100"/><line class="grid" x1="925" y1="78" x2="925" y2="2100"/><line class="grid" x1="1255" y1="78" x2="1255" y2="2100"/>
+
+  <rect class="node binding" x="20" y="84" width="135" height="44"/><text class="node-text" x="87.5" y="101"><tspan x="87.5">外部需求冲击</tspan><tspan class="node-small" x="87.5" dy="15">10× · 不计入 Depth</tspan></text>
+  <path class="pressure-trunk" d="M155 106H165V1990"/><path class="pressure" d="M165 240H205"/><path class="pressure" d="M165 1115H205"/><path class="pressure" d="M165 1990H205"/>
+
+  <text class="lane-label" x="30" y="165">服务平面</text><text class="lane-note" x="30" y="184">请求进入计算资源之前</text>
+  <text class="lane-label" x="30" y="375">数据中心</text><text class="lane-note" x="30" y="394">卡、网、电、冷却与机房集成</text>
+  <text class="lane-label" x="30" y="1915">交付网络</text><text class="lane-note" x="30" y="1934">数据中心之外的流量交付</text>
+
+  <!-- D0 roots and D0 -> D1 -->
+  <rect class="node root" x="205" y="208" width="180" height="64"/><text class="node-text" x="295" y="234"><tspan x="295">Serving Plane</tspan><tspan class="node-small" x="295" dy="17">服务与控制容量</tspan></text>
+  <path class="edge-trunk" d="M385 240H405V170M405 240V310"/><path class="edge" d="M405 170H430"/><path class="edge" d="M385 240H430"/><path class="edge" d="M405 310H430"/>
+  <rect class="node root" x="205" y="1083" width="180" height="64"/><text class="node-text" x="295" y="1109"><tspan x="295">Data Center</tspan><tspan class="node-small" x="295" dy="17">基础设施集成容量</tspan></text>
+  <path class="edge-trunk" d="M385 1115H405V450M405 1115V1815"/><path class="edge" d="M405 450H430"/><path class="edge" d="M405 835H430"/><path class="edge" d="M405 1220H430"/><path class="edge" d="M405 1430H430"/><path class="edge" d="M405 1640H430"/><path class="edge" d="M405 1815H430"/>
+  <rect class="node root" x="205" y="1958" width="180" height="64"/><text class="node-text" x="295" y="1984"><tspan x="295">Delivery Network</tspan><tspan class="node-small" x="295" dy="17">外部网络交付容量</tspan></text>
+  <path class="edge-trunk" d="M385 1990H405V1920M405 1990V2060"/><path class="edge" d="M405 1920H430"/><path class="edge" d="M385 1990H430"/><path class="edge" d="M405 2060H430"/>
+
+  <!-- D1 subsystem nodes -->
+  <rect class="node direct" x="430" y="143" width="180" height="54"/><text class="node-text" x="520" y="175">流量入口</text>
+  <rect class="node direct" x="430" y="213" width="180" height="54"/><text class="node-text" x="520" y="245">模型服务</text>
+  <rect class="node direct" x="430" y="283" width="180" height="54"/><text class="node-text" x="520" y="315">集群控制</text>
+  <rect class="node direct" x="430" y="423" width="180" height="54"/><text class="node-text" x="520" y="455">算力系统</text>
+  <rect class="node direct" x="430" y="808" width="180" height="54"/><text class="node-text" x="520" y="828"><tspan x="520">电力</tspan><tspan class="node-small" x="520" dy="16">发电 AND 交付</tspan></text>
+  <rect class="node direct" x="430" y="1193" width="180" height="54"/><text class="node-text" x="520" y="1225">散热</text>
+  <rect class="node direct" x="430" y="1403" width="180" height="54"/><text class="node-text" x="520" y="1435">存储</text>
+  <rect class="node direct" x="430" y="1613" width="180" height="54"/><text class="node-text" x="520" y="1645">数据中心网络</text>
+  <rect class="node direct" x="430" y="1788" width="180" height="54"/><text class="node-text" x="520" y="1820">机房集成</text>
+  <rect class="node direct" x="430" y="1893" width="180" height="54"/><text class="node-text" x="520" y="1925">DCI</text>
+  <rect class="node direct" x="430" y="1963" width="180" height="54"/><text class="node-text" x="520" y="1995">骨干网 · Transit · Peering</text>
+  <rect class="node direct" x="430" y="2033" width="180" height="54"/><text class="node-text" x="520" y="2065">CDN · Edge</text>
+
+  <!-- D1 -> D2 route fan-out -->
+  <path class="edge" d="M610 170H660"/><path class="edge" d="M610 240H660"/><path class="edge" d="M610 310H660"/>
+  <path class="edge" d="M610 450H620V380H660"/><path class="alt-trunk" d="M610 450H640V520"/><path class="alt-edge" d="M640 450H660"/><path class="alt-edge" d="M640 520H660"/>
+  <path class="edge" d="M610 835H620V590H660"/><path class="edge" d="M610 835H620V1080H660"/><path class="alt-trunk" d="M610 835H640V660M640 835V1010"/><path class="alt-edge" d="M640 660H660"/><path class="alt-edge" d="M640 730H660"/><path class="alt-edge" d="M640 800H660"/><path class="alt-edge" d="M640 870H660"/><path class="alt-edge" d="M640 940H660"/><path class="alt-edge" d="M640 1010H660"/>
+  <path class="edge" d="M610 1220H620V1150H660"/><path class="alt-trunk" d="M610 1220H640V1290"/><path class="alt-edge" d="M640 1220H660"/><path class="alt-edge" d="M640 1290H660"/>
+  <path class="edge" d="M610 1430H620V1360H660"/><path class="alt-trunk" d="M610 1430H640V1500"/><path class="alt-edge" d="M640 1430H660"/><path class="alt-edge" d="M640 1500H660"/>
+  <path class="edge" d="M610 1640H620V1570H660"/><path class="alt-trunk" d="M610 1640H640V1710"/><path class="alt-edge" d="M640 1640H660"/><path class="alt-edge" d="M640 1710H660"/>
+  <path class="edge" d="M610 1815H620V1780H660"/><path class="alt-edge" d="M610 1815H640V1850H660"/>
+  <path class="edge" d="M610 1920H660"/><path class="edge" d="M610 1990H660"/><path class="edge" d="M610 2060H660"/>
+
+  <!-- D2 -> D3 -> D4 edges -->
+  <path class="edge" d="M900 170H950"/><path class="edge" d="M1230 170H1280"/><path class="edge" d="M900 240H950"/><path class="edge" d="M1230 240H1280"/><path class="edge" d="M900 310H950"/><path class="edge" d="M1230 310H1280"/>
+  <path class="edge" d="M900 380H950"/><path class="edge" d="M1230 380H1280"/><path class="alt-edge" d="M900 450H950"/><path class="alt-edge" d="M1230 450H1280"/><path class="alt-edge" d="M900 520H950"/><path class="alt-edge" d="M1230 520H1280"/>
+  <path class="edge" d="M900 590H950"/><path class="edge" d="M1230 590H1280"/>
+  <path class="alt-edge" d="M900 660H950"/><path class="alt-edge" d="M1230 660H1280"/><path class="alt-edge" d="M900 730H950"/><path class="alt-edge" d="M1230 730H1280"/><path class="alt-edge" d="M900 800H950"/><path class="alt-edge" d="M1230 800H1280"/><path class="alt-edge" d="M900 870H950"/><path class="alt-edge" d="M1230 870H1280"/><path class="alt-edge" d="M900 940H950"/><path class="alt-edge" d="M1230 940H1280"/><path class="alt-edge" d="M900 1010H950"/><path class="alt-edge" d="M1230 1010H1280"/>
+  <path class="edge" d="M900 1080H950"/><path class="edge" d="M1230 1080H1280"/>
+  <path class="edge" d="M900 1150H950"/><path class="edge" d="M1230 1150H1280"/><path class="alt-edge" d="M900 1220H950"/><path class="alt-edge" d="M1230 1220H1280"/><path class="alt-edge" d="M900 1290H950"/><path class="alt-edge" d="M1230 1290H1280"/>
+  <path class="edge" d="M900 1360H950"/><path class="edge" d="M1230 1360H1280"/><path class="alt-edge" d="M900 1430H950"/><path class="alt-edge" d="M1230 1430H1280"/><path class="alt-edge" d="M900 1500H950"/><path class="alt-edge" d="M1230 1500H1280"/>
+  <path class="edge" d="M900 1570H950"/><path class="edge" d="M1230 1570H1280"/><path class="alt-edge" d="M900 1640H950"/><path class="alt-edge" d="M1230 1640H1280"/><path class="alt-edge" d="M900 1710H950"/><path class="alt-edge" d="M1230 1710H1280"/>
+  <path class="edge" d="M900 1780H950"/><path class="edge" d="M1230 1780H1280"/><path class="alt-edge" d="M900 1850H950"/><path class="alt-edge" d="M1230 1850H1280"/>
+  <path class="edge" d="M900 1920H950"/><path class="edge" d="M1230 1920H1280"/><path class="edge" d="M900 1990H950"/><path class="edge" d="M1230 1990H1280"/><path class="edge" d="M900 2060H950"/><path class="edge" d="M1230 2060H1280"/>
+
+  <!-- Serving Plane rows -->
+  <rect class="node direct" x="660" y="143" width="240" height="54"/><text class="node-text" x="780" y="175">API Gateway · Global Load Balancer</text>
+  <rect class="node candidate" x="950" y="143" width="280" height="54"/><text class="node-text" x="1090" y="167"><tspan x="1090">Anycast · TLS 终止</tspan><tspan class="node-small" x="1090" dy="16">限流 · 健康检查 · 故障切换</tspan></text>
+  <rect class="node shared" x="1280" y="143" width="270" height="54"/><text class="node-text" x="1415" y="167"><tspan x="1415">CPU · DRAM · NIC</tspan><tspan class="node-small" x="1415" dy="16">网关实例 · 软件工程能力</tspan></text>
+  <rect class="node direct" x="660" y="213" width="240" height="54"/><text class="node-text" x="780" y="237"><tspan x="780">Inference Runtime</tspan><tspan class="node-small" x="780" dy="16">Batching · KV Cache</tspan></text>
+  <rect class="node candidate" x="950" y="213" width="280" height="54"/><text class="node-text" x="1090" y="237"><tspan x="1090">Kernel · Compiler · Model Format</tspan><tspan class="node-small" x="1090" dy="16">模型加载 · 热更新 · 兼容性</tspan></text>
+  <rect class="node shared" x="1280" y="213" width="270" height="54"/><text class="node-text" x="1415" y="237"><tspan x="1415">CPU · GPU Memory</tspan><tspan class="node-small" x="1415" dy="16">Runtime 工程师 · Qualification</tspan></text>
+  <rect class="node direct" x="660" y="283" width="240" height="54"/><text class="node-text" x="780" y="307"><tspan x="780">Scheduler · Control Plane</tspan><tspan class="node-small" x="780" dy="16">Observability</tspan></text>
+  <rect class="node candidate" x="950" y="283" width="280" height="54"/><text class="node-text" x="1090" y="307"><tspan x="1090">Metadata Store · Failover</tspan><tspan class="node-small" x="1090" dy="16">Telemetry · Capacity Model</tspan></text>
+  <rect class="node shared" x="1280" y="283" width="270" height="54"/><text class="node-text" x="1415" y="307"><tspan x="1415">数据库容量 · Telemetry Storage</tspan><tspan class="node-small" x="1415" dy="16">SRE · 发布与值班能力</tspan></text>
+
+  <!-- Compute rows -->
+  <rect class="node binding" x="660" y="353" width="240" height="54"/><text class="node-text" x="780" y="385">GPU</text>
+  <rect class="node candidate" x="950" y="353" width="280" height="54"/><text class="node-text" x="1090" y="377"><tspan x="1090">HBM · 先进封装</tspan><tspan class="node-small" x="1090" dy="16">Host CPU · I/O</tspan></text>
+  <rect class="node shared" x="1280" y="353" width="270" height="54"/><text class="node-small" x="1415" y="369"><tspan x="1415">DRAM 晶圆 · TSV · 中介层</tspan><tspan x="1415" dy="14">键合 · 光刻 · 量测 · 载板</tspan><tspan x="1415" dy="14">与 CPO 共享先进封装</tspan></text>
+  <rect class="node direct alt" x="660" y="423" width="240" height="54"/><text class="node-text alt-text" x="780" y="455">定制 ASIC</text>
+  <rect class="node candidate alt" x="950" y="423" width="280" height="54"/><text class="node-text alt-text" x="1090" y="447"><tspan x="1090">架构 · Tape-out · 软件迁移</tspan><tspan class="node-small alt-text" x="1090" dy="16">先进封装 · HBM · DRAM</tspan></text>
+  <rect class="node shared alt" x="1280" y="423" width="270" height="54"/><text class="node-small alt-text" x="1415" y="439"><tspan x="1415">EDA · IP · 掩膜 · 先进制程</tspan><tspan x="1415" dy="14">封装测试 · Qualification</tspan><tspan x="1415" dy="14">与 GPU 争抢同一产能</tspan></text>
+  <rect class="node direct alt" x="660" y="493" width="240" height="54"/><text class="node-text alt-text" x="780" y="517"><tspan x="780">CPU</tspan><tspan class="node-small alt-text" x="780" dy="16">部分负载</tspan></text>
+  <rect class="node candidate alt" x="950" y="493" width="280" height="54"/><text class="node-text alt-text" x="1090" y="517"><tspan x="1090">CPU 裸片 · I/O 裸片</tspan><tspan class="node-small alt-text" x="1090" dy="16">DDR5 · PCIe · CXL</tspan></text>
+  <rect class="node shared alt" x="1280" y="493" width="270" height="54"/><text class="node-small alt-text" x="1415" y="509"><tspan x="1415">先进制程 · 载板 · 封装测试</tspan><tspan x="1415" dy="14">内存通道 · 主板验证</tspan><tspan x="1415" dy="14">与 GPU、SSD 控制器共享</tspan></text>
+
+  <!-- Power rows -->
+  <rect class="node direct" x="660" y="563" width="240" height="54"/><text class="node-text" x="780" y="595">燃气发电</text>
+  <rect class="node binding" x="950" y="563" width="280" height="54"/><text class="node-text" x="1090" y="587"><tspan x="1090">重型燃气轮机 · 发电机</tspan><tspan class="node-small" x="1090" dy="16">总装 · 测试台 · 天然气接入</tspan></text>
+  <rect class="node shared" x="1280" y="563" width="270" height="54"/><text class="node-small" x="1415" y="579"><tspan x="1415">大型锻件 · 热通道 · 高温合金</tspan><tspan x="1415" dy="14">单晶 · TBC · 冷却孔</tspan><tspan x="1415" dy="14">重型压力机 · VIM-VAR · 热处理</tspan></text>
+  <rect class="node direct alt" x="660" y="633" width="240" height="54"/><text class="node-text alt-text" x="780" y="665">煤电</text>
+  <rect class="node candidate alt" x="950" y="633" width="280" height="54"/><text class="node-text alt-text" x="1090" y="657"><tspan x="1090">锅炉 · 汽轮机 · 发电机</tspan><tspan class="node-small alt-text" x="1090" dy="16">电煤物流 · 灵活性改造</tspan></text>
+  <rect class="node shared alt" x="1280" y="633" width="270" height="54"/><text class="node-small alt-text" x="1415" y="649"><tspan x="1415">转子锻件 · 锅炉管 · 高压阀</tspan><tspan x="1415" dy="14">水 · 铁路 · 储煤场</tspan><tspan x="1415" dy="14">脱硫 · 脱硝 · 灰渣处理</tspan></text>
+  <rect class="node direct alt" x="660" y="703" width="240" height="54"/><text class="node-text alt-text" x="780" y="735">核电</text>
+  <rect class="node candidate alt" x="950" y="703" width="280" height="54"/><text class="node-text alt-text" x="1090" y="727"><tspan x="1090">核岛 · 汽轮发电机 · 燃料</tspan><tspan class="node-small alt-text" x="1090" dy="16">许可 · 选址 · 长周期建设</tspan></text>
+  <rect class="node shared alt" x="1280" y="703" width="270" height="54"/><text class="node-small alt-text" x="1415" y="719"><tspan x="1415">核级锻件 · 压力容器 · 焊工</tspan><tspan x="1415" dy="14">安全壳 · NDT · 长周期测试</tspan><tspan x="1415" dy="14">与燃机、国防共享重型制造</tspan></text>
+  <rect class="node direct alt" x="660" y="773" width="240" height="54"/><text class="node-text alt-text" x="780" y="805">水电</text>
+  <rect class="node candidate alt" x="950" y="773" width="280" height="54"/><text class="node-text alt-text" x="1090" y="797"><tspan x="1090">水轮机 · 发电机 · 土建</tspan><tspan class="node-small alt-text" x="1090" dy="16">选址 · 环评 · 水文条件</tspan></text>
+  <rect class="node shared alt" x="1280" y="773" width="270" height="54"/><text class="node-small alt-text" x="1415" y="789"><tspan x="1415">大型铸锻件 · 铜 · 电工钢</tspan><tspan x="1415" dy="14">地质 · 水资源 · 水泥</tspan><tspan x="1415" dy="14">大件运输 · 现场施工</tspan></text>
+  <rect class="node direct alt" x="660" y="843" width="240" height="54"/><text class="node-text alt-text" x="780" y="875">风电</text>
+  <rect class="node candidate alt" x="950" y="843" width="280" height="54"/><text class="node-text alt-text" x="1090" y="867"><tspan x="1090">风机 · 叶片 · 塔筒</tspan><tspan class="node-small alt-text" x="1090" dy="16">海缆 · 集电线路 · 场站施工</tspan></text>
+  <rect class="node shared alt" x="1280" y="843" width="270" height="54"/><text class="node-small alt-text" x="1415" y="859"><tspan x="1415">轴承 · 磁材 · 碳纤维</tspan><tspan x="1415" dy="14">铜 · 电工钢 · 大型铸件</tspan><tspan x="1415" dy="14">吊装船 · 吊装能力</tspan></text>
+  <rect class="node direct alt" x="660" y="913" width="240" height="54"/><text class="node-text alt-text" x="780" y="937"><tspan x="780">光伏 + 储能</tspan><tspan class="node-small alt-text" x="780" dy="16">Firming</tspan></text>
+  <rect class="node candidate alt" x="950" y="913" width="280" height="54"/><text class="node-text alt-text" x="1090" y="937"><tspan x="1090">组件 · 逆变器 · BESS</tspan><tspan class="node-small alt-text" x="1090" dy="16">EMS · 消防认证 · 调度控制</tspan></text>
+  <rect class="node shared alt" x="1280" y="913" width="270" height="54"/><text class="node-small alt-text" x="1415" y="929"><tspan x="1415">硅片 · 电池片 · LFP 电芯</tspan><tspan x="1415" dy="14">PCS · 电缆 · 电池舱</tspan><tspan x="1415" dy="14">土地 · 长时储能 · 调度</tspan></text>
+  <rect class="node direct alt" x="660" y="983" width="240" height="54"/><text class="node-text alt-text" x="780" y="1015">燃料电池</text>
+  <rect class="node candidate alt" x="950" y="983" width="280" height="54"/><text class="node-text alt-text" x="1090" y="1007"><tspan x="1090">电堆 · 重整器 · 燃料供应</tspan><tspan class="node-small alt-text" x="1090" dy="16">功率电子 · 热管理</tspan></text>
+  <rect class="node shared alt" x="1280" y="983" width="270" height="54"/><text class="node-small alt-text" x="1415" y="999"><tspan x="1415">催化剂 · 膜 · SOFC 陶瓷</tspan><tspan x="1415" dy="14">压缩机 · 逆变器 · 氢与天然气</tspan><tspan x="1415" dy="14">寿命验证 · 维护能力</tspan></text>
+  <rect class="node direct" x="660" y="1053" width="240" height="54"/><text class="node-text" x="780" y="1085">电力交付</text>
+  <rect class="node candidate" x="950" y="1053" width="280" height="54"/><text class="node-text" x="1090" y="1077"><tspan x="1090">接网 · 输电 · 变电站</tspan><tspan class="node-small" x="1090" dy="16">主变 · GIS · 园区配电</tspan></text>
+  <rect class="node shared" x="1280" y="1053" width="270" height="54"/><text class="node-small" x="1415" y="1069"><tspan x="1415">取向硅钢 · 铜 · 套管 · 开关</tspan><tspan x="1415" dy="14">变压器测试台 · 输电走廊</tspan><tspan x="1415" dy="14">调度 · N-1 · 工业负荷争用</tspan></text>
+
+  <!-- Cooling rows -->
+  <rect class="node direct" x="660" y="1123" width="240" height="54"/><text class="node-text" x="780" y="1155">冷板液冷</text>
+  <rect class="node candidate" x="950" y="1123" width="280" height="54"/><text class="node-text" x="1090" y="1147"><tspan x="1090">Cold Plate · CDU · Manifold</tspan><tspan class="node-small" x="1090" dy="16">漏液检测 · 冷却控制</tspan></text>
+  <rect class="node shared" x="1280" y="1123" width="270" height="54"/><text class="node-text" x="1415" y="1147"><tspan x="1415">泵 · 阀 · 换热器 · 铜</tspan><tspan class="node-small" x="1415" dy="16">洁净装配 · Qualification</tspan></text>
+  <rect class="node direct alt" x="660" y="1193" width="240" height="54"/><text class="node-text alt-text" x="780" y="1225">风冷</text>
+  <rect class="node candidate alt" x="950" y="1193" width="280" height="54"/><text class="node-text alt-text" x="1090" y="1217"><tspan x="1090">Chiller · CRAH · 风机</tspan><tspan class="node-small alt-text" x="1090" dy="16">风道 · 气流组织 · 控制</tspan></text>
+  <rect class="node shared alt" x="1280" y="1193" width="270" height="54"/><text class="node-text alt-text" x="1415" y="1217"><tspan x="1415">压缩机 · 制冷剂 · 风机电机</tspan><tspan class="node-small alt-text" x="1415" dy="16">电力与机房空间</tspan></text>
+  <rect class="node direct alt" x="660" y="1263" width="240" height="54"/><text class="node-text alt-text" x="780" y="1295">浸没式液冷</text>
+  <rect class="node candidate alt" x="950" y="1263" width="280" height="54"/><text class="node-text alt-text" x="1090" y="1287"><tspan x="1090">介电液 · 浸没槽 · 泵</tspan><tspan class="node-small alt-text" x="1090" dy="16">材料兼容 · 维护流程</tspan></text>
+  <rect class="node shared alt" x="1280" y="1263" width="270" height="54"/><text class="node-text alt-text" x="1415" y="1287"><tspan x="1415">特种液体 · 密封件</tspan><tspan class="node-small alt-text" x="1415" dy="16">材料验证 · 服务能力</tspan></text>
+
+  <!-- Storage rows -->
+  <rect class="node binding" x="660" y="1333" width="240" height="54"/><text class="node-text" x="780" y="1365">企业级 SSD</text>
+  <rect class="node candidate" x="950" y="1333" width="280" height="54"/><text class="node-text" x="1090" y="1357"><tspan x="1090">NAND 裸片 · 控制器 ASIC</tspan><tspan class="node-small" x="1090" dy="16">固件 · OEM Qualification</tspan></text>
+  <rect class="node shared" x="1280" y="1333" width="270" height="54"/><text class="node-small" x="1415" y="1349"><tspan x="1415">NAND 刻蚀 · 沉积 · 量测</tspan><tspan x="1415" dy="14">先进制程 · 封装测试</tspan><tspan x="1415" dy="14">与光学 DSP 共享代工</tspan></text>
+  <rect class="node direct alt" x="660" y="1403" width="240" height="54"/><text class="node-text alt-text" x="780" y="1435">HDD</text>
+  <rect class="node candidate alt" x="950" y="1403" width="280" height="54"/><text class="node-text alt-text" x="1090" y="1427"><tspan x="1090">磁盘介质 · 磁头 · 马达</tspan><tspan class="node-small alt-text" x="1090" dy="16">控制器 · 纠错 · Qualification</tspan></text>
+  <rect class="node shared alt" x="1280" y="1403" width="270" height="54"/><text class="node-small alt-text" x="1415" y="1419"><tspan x="1415">磁性材料 · 精密轴承 · 玻璃基板</tspan><tspan x="1415" dy="14">洁净装配 · 伺服调校</tspan><tspan x="1415" dy="14">容量可替代，延迟不可完全替代</tspan></text>
+  <rect class="node direct alt" x="660" y="1473" width="240" height="54"/><text class="node-text alt-text" x="780" y="1505">分层存储</text>
+  <rect class="node candidate alt" x="950" y="1473" width="280" height="54"/><text class="node-text alt-text" x="1090" y="1497"><tspan x="1090">缓存 · 数据放置 · Orchestration</tspan><tspan class="node-small alt-text" x="1090" dy="16">软件集成 · 负载验证</tspan></text>
+  <rect class="node shared alt" x="1280" y="1473" width="270" height="54"/><text class="node-small alt-text" x="1415" y="1489"><tspan x="1415">DRAM · CPU · 网络带宽</tspan><tspan x="1415" dy="14">Telemetry · OEM 验证</tspan><tspan x="1415" dy="14">减少 SSD，用复杂度换容量</tspan></text>
+
+  <!-- Data-center Fabric rows -->
+  <rect class="node binding" x="660" y="1543" width="240" height="54"/><text class="node-text" x="780" y="1567"><tspan x="780">可插拔光模块</tspan><tspan class="node-small" x="780" dy="16">800G · 1.6T</tspan></text>
+  <rect class="node candidate" x="950" y="1543" width="280" height="54"/><text class="node-text" x="1090" y="1567"><tspan x="1090">光学 DSP · 激光器 · SiPh · PIC</tspan><tspan class="node-small" x="1090" dy="16">组装 · 主动对准 · 老化</tspan></text>
+  <rect class="node shared" x="1280" y="1543" width="270" height="54"/><text class="node-small" x="1415" y="1559"><tspan x="1415">3nm 代工 · InP 外延 · 激光良率</tspan><tspan x="1415" dy="14">对准 · 老化 · 量测设备</tspan><tspan x="1415" dy="14">与 SSD 控制器共享先进制程</tspan></text>
+  <rect class="node direct alt" x="660" y="1613" width="240" height="54"/><text class="node-text alt-text" x="780" y="1645">铜互连</text>
+  <rect class="node candidate alt" x="950" y="1613" width="280" height="54"/><text class="node-text alt-text" x="1090" y="1637"><tspan x="1090">高速 SerDes · Retimer</tspan><tspan class="node-small alt-text" x="1090" dy="16">低损耗线缆 · 连接器 · SI</tspan></text>
+  <rect class="node shared alt" x="1280" y="1613" width="270" height="54"/><text class="node-small alt-text" x="1415" y="1629"><tspan x="1415">低损耗介质 · 铜箔 · 连接器模具</tspan><tspan x="1415" dy="14">精密冲压 · 电镀 · 测试</tspan><tspan x="1415" dy="14">距离越长越先触及 SI 极限</tspan></text>
+  <rect class="node direct alt" x="660" y="1683" width="240" height="54"/><text class="node-text alt-text" x="780" y="1715">CPO</text>
+  <rect class="node candidate alt" x="950" y="1683" width="280" height="54"/><text class="node-text alt-text" x="1090" y="1707"><tspan x="1090">光引擎 · 先进封装 · Fiber Attach</tspan><tspan class="node-small alt-text" x="1090" dy="16">热管理 · 测试 · 可维护性</tspan></text>
+  <rect class="node shared alt" x="1280" y="1683" width="270" height="54"/><text class="node-small alt-text" x="1415" y="1699"><tspan x="1415">SiPh 代工 · 光电共封装</tspan><tspan x="1415" dy="14">主动对准 · Known-good-die</tspan><tspan x="1415" dy="14">与 GPU、HBM 共享封装设备</tspan></text>
+
+  <!-- Facility Integration rows -->
+  <rect class="node direct" x="660" y="1753" width="240" height="54"/><text class="node-text" x="780" y="1785">Rack-scale 集成</text>
+  <rect class="node candidate" x="950" y="1753" width="280" height="54"/><text class="node-text" x="1090" y="1777"><tspan x="1090">机柜 · Busway · UPS · PDU</tspan><tspan class="node-small" x="1090" dy="16">布线 · 固件 · Cluster Bring-up</tspan></text>
+  <rect class="node shared" x="1280" y="1753" width="270" height="54"/><text class="node-small" x="1415" y="1769"><tspan x="1415">开关柜 · 断路器 · 铜</tspan><tspan x="1415" dy="14">集成测试 · Commissioning</tspan><tspan x="1415" dy="14">电工 · 网络与现场工程师</tspan></text>
+  <rect class="node direct alt" x="660" y="1823" width="240" height="54"/><text class="node-text alt-text" x="780" y="1855">模块化 · 预制数据中心</text>
+  <rect class="node candidate alt" x="950" y="1823" width="280" height="54"/><text class="node-text alt-text" x="1090" y="1847"><tspan x="1090">预制电力 · 冷却 Skid · 模块</tspan><tspan class="node-small alt-text" x="1090" dy="16">工厂集成 · 现场拼装</tspan></text>
+  <rect class="node shared alt" x="1280" y="1823" width="270" height="54"/><text class="node-small alt-text" x="1415" y="1839"><tspan x="1415">工厂工位 · 大件运输</tspan><tspan x="1415" dy="14">许可 · 场地 · 现场施工</tspan><tspan x="1415" dy="14">供应商 Qualification</tspan></text>
+
+  <!-- Delivery Network rows -->
+  <rect class="node direct" x="660" y="1893" width="240" height="54"/><text class="node-text" x="780" y="1917"><tspan x="780">相干光模块 · Router</tspan><tspan class="node-small" x="780" dy="16">Fiber Pair</tspan></text>
+  <rect class="node candidate" x="950" y="1893" width="280" height="54"/><text class="node-text" x="1090" y="1917"><tspan x="1090">400G · 800G ZR · ROADM</tspan><tspan class="node-small" x="1090" dy="16">Line Card · DCI Port</tspan></text>
+  <rect class="node shared" x="1280" y="1893" width="270" height="54"/><text class="node-small" x="1415" y="1909"><tspan x="1415">DSP · PIC · 激光器 · 光纤</tspan><tspan x="1415" dy="14">光缆施工 · 路由许可</tspan><tspan x="1415" dy="14">与数据中心网络共享器件</tspan></text>
+  <rect class="node direct" x="660" y="1963" width="240" height="54"/><text class="node-text" x="780" y="1987"><tspan x="780">骨干容量 · Transit</tspan><tspan class="node-small" x="780" dy="16">Peering Port</tspan></text>
+  <rect class="node candidate" x="950" y="1963" width="280" height="54"/><text class="node-text" x="1090" y="1987"><tspan x="1090">Router Silicon · Line Card</tspan><tspan class="node-small" x="1090" dy="16">Cross-connect · 长途光纤</tspan></text>
+  <rect class="node shared" x="1280" y="1963" width="270" height="54"/><text class="node-small" x="1415" y="1979"><tspan x="1415">先进制程 ASIC · Colocation</tspan><tspan x="1415" dy="14">光纤路由 · 管道 · 许可</tspan><tspan x="1415" dy="14">运营商扩容与互联协调</tspan></text>
+  <rect class="node direct" x="660" y="2033" width="240" height="54"/><text class="node-text" x="780" y="2057"><tspan x="780">PoP 容量 · Edge Cache</tspan><tspan class="node-small" x="780" dy="16">区域路由</tspan></text>
+  <rect class="node candidate" x="950" y="2033" width="280" height="54"/><text class="node-text" x="1090" y="2057"><tspan x="1090">Edge Server · Cache State</tspan><tspan class="node-small" x="1090" dy="16">容量合同 · 区域部署</tspan></text>
+  <rect class="node shared" x="1280" y="2033" width="270" height="54"/><text class="node-small" x="1415" y="2049"><tspan x="1415">CPU · SSD · NIC · 站点电力</tspan><tspan x="1415" dy="14">机柜空间 · 运维能力</tspan><tspan x="1415" dy="14">与云、CDN、运营商争抢容量</tspan></text>
+
+  <!-- Legend -->
+  <rect x="20" y="2120" width="1560" height="160" rx="10" fill="#fff" stroke="#cbd5e1"/>
+  <text class="legend-strong" x="42" y="2147">怎么看：</text><text class="legend" x="122" y="2147">Depth 是离任一 D0 根的最短依赖距离；填色表示节点角色或状态，紫色虚线表示尚未采用的替代路线。</text>
+  <rect x="42" y="2165" width="22" height="16" rx="4" class="root"/><text class="legend" x="74" y="2178">D0 根</text>
+  <rect x="175" y="2165" width="22" height="16" rx="4" class="direct"/><text class="legend" x="207" y="2178">当前子系统或路线</text>
+  <rect x="405" y="2165" width="22" height="16" rx="4" class="binding"/><text class="legend" x="437" y="2178">已成为约束</text>
+  <rect x="600" y="2165" width="22" height="16" rx="4" class="candidate"/><text class="legend" x="632" y="2178">瓶颈候选</text>
+  <rect x="765" y="2165" width="22" height="16" rx="4" class="shared"/><text class="legend" x="797" y="2178">物理 · 共享产能</text>
+  <rect x="985" y="2165" width="22" height="16" rx="4" class="direct alt"/><text class="legend" x="1017" y="2178">替代路线节点</text>
+  <line x1="42" y1="2210" x2="82" y2="2210" class="edge"/><text class="legend" x="94" y="2215">当前依赖</text>
+  <line x1="235" y1="2210" x2="275" y2="2210" class="alt-edge"/><text class="legend" x="287" y="2215">替代路线</text>
+  <line x1="445" y1="2210" x2="485" y2="2210" class="pressure"/><text class="legend" x="497" y="2215">外部需求压力</text>
+  <text class="legend" x="720" y="2215">三个 D0 是 AND 关系，不需要再增加“服务容量”节点。</text>
+  <text class="legend-strong" x="42" y="2252">关键：</text><text class="legend" x="94" y="2252">D0 不等于红色，红色也可以出现在 D2、D3 或 D4。Bottleneck Migration 移动的是约束状态，不是节点的 Depth。</text>
+</svg>

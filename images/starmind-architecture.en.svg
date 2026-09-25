@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="680" viewBox="0 0 1600 680" role="img" aria-labelledby="title desc">
+  <title id="title">SpaceX StarMind published architecture</title>
+  <desc id="desc">Gigasat Factory manufactures compute satellites at scale for Starship deployment. Solar arrays power the AI1 compute payload, radiators reject heat, and inter-satellite lasers return results through Starlink to terrestrial networks.</desc>
+  <defs>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#c2410c"/></marker>
+    <marker id="arrow-yellow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#a16207"/></marker>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#dc2626"/></marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#7c3aed"/></marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <style>
+      text{font-family:Arial,"Noto Sans",sans-serif;fill:#172033}
+      .lane{font-size:15px;font-weight:700;text-anchor:middle;dominant-baseline:middle}.label{font-size:17px;font-weight:700;text-anchor:middle;dominant-baseline:middle}.sub{font-size:15px;fill:#475569;text-anchor:middle}.metric{font-size:16px;font-weight:700;fill:#4338ca;text-anchor:middle}.legend{font-size:15px;fill:#475569;dominant-baseline:middle}
+      .manufacture{fill:#fed7aa;stroke:#c2410c;stroke-width:2}.power{fill:#fef3c7;stroke:#a16207;stroke-width:2}.compute{fill:#e0e7ff;stroke:#4f46e5;stroke-width:2.5}.thermal{fill:#fee2e2;stroke:#dc2626;stroke-width:2}.delivery{fill:#f3e8ff;stroke:#7c3aed;stroke-width:2}
+      .edge-orange{fill:none;stroke:#c2410c;stroke-width:2.5;marker-end:url(#arrow-orange)}.edge-yellow{fill:none;stroke:#a16207;stroke-width:2.5;marker-end:url(#arrow-yellow)}.edge-red{fill:none;stroke:#dc2626;stroke-width:2.5;marker-end:url(#arrow-red)}.edge-purple{fill:none;stroke:#7c3aed;stroke-width:2.5;marker-end:url(#arrow-purple)}
+    </style>
+  </defs>
+
+  <rect width="1600" height="680" fill="#f8fafc"/>
+
+  <rect x="180" y="78" width="140" height="64" rx="12" class="power" filter="url(#shadow)"/><text x="250" y="111" class="label">SUN</text>
+  <rect x="390" y="78" width="220" height="64" rx="12" class="power" filter="url(#shadow)"/><text x="500" y="111" class="label">SOLAR ARRAY</text>
+  <rect x="670" y="78" width="180" height="64" rx="12" class="power" filter="url(#shadow)"/><text x="760" y="111" class="label">DC POWER</text>
+  <path d="M320 110H390" class="edge-yellow"/><path d="M610 110H670" class="edge-yellow"/><path d="M760 142V250" class="edge-yellow"/>
+
+  <rect x="30" y="300" width="210" height="74" rx="12" class="manufacture" filter="url(#shadow)"/>
+  <text x="135" y="329" class="label">GIGASAT FACTORY</text><text x="135" y="355" class="sub">Satellite mass production</text>
+  <rect x="300" y="300" width="190" height="74" rx="12" class="manufacture" filter="url(#shadow)"/><text x="395" y="338" class="label">STARSHIP</text>
+  <path d="M240 337H300" class="edge-orange"/><path d="M490 337H580" class="edge-orange"/>
+
+  <rect x="580" y="250" width="360" height="174" rx="18" class="compute" filter="url(#shadow)"/>
+  <text x="760" y="290" class="label">AI1 · STARMIND</text>
+  <text x="760" y="325" class="sub">Modular AI compute payload</text>
+  <line x1="620" y1="347" x2="900" y2="347" stroke="#a5b4fc" stroke-width="2"/>
+  <text x="760" y="377" class="metric">150 kW peak · 120 kW average</text>
+  <text x="760" y="405" class="metric">70 kW / metric ton</text>
+
+  <text x="1075" y="253" class="lane" fill="#7c3aed">RESULT DELIVERY</text>
+  <rect x="1000" y="300" width="220" height="74" rx="12" class="delivery" filter="url(#shadow)"/><text x="1110" y="338" class="label">LASER LINKS</text>
+  <rect x="1280" y="300" width="140" height="74" rx="12" class="delivery" filter="url(#shadow)"/><text x="1350" y="338" class="label">STARLINK</text>
+  <rect x="1470" y="300" width="110" height="74" rx="12" class="delivery" filter="url(#shadow)"/><text x="1525" y="329" class="label">GROUND</text><text x="1525" y="355" class="sub">network</text>
+  <path d="M940 337H1000" class="edge-purple"/><path d="M1220 337H1280" class="edge-purple"/><path d="M1420 337H1470" class="edge-purple"/>
+
+  <rect x="640" y="500" width="240" height="70" rx="12" class="thermal" filter="url(#shadow)"/><text x="760" y="536" class="label">RADIATOR</text>
+  <rect x="970" y="500" width="310" height="70" rx="12" class="thermal" filter="url(#shadow)"/><text x="1125" y="536" class="label">THERMAL RADIATION TO SPACE</text>
+  <path d="M760 424V500" class="edge-red"/><path d="M880 535H970" class="edge-red"/>
+
+  <line x1="450" y1="615" x2="490" y2="615" stroke="#a16207" stroke-width="6" stroke-linecap="round"/><text x="502" y="615" class="legend">POWER</text>
+  <line x1="650" y1="615" x2="690" y2="615" stroke="#c2410c" stroke-width="6" stroke-linecap="round"/><text x="702" y="615" class="legend">MANUFACTURE · DEPLOY</text>
+  <line x1="1000" y1="615" x2="1040" y2="615" stroke="#dc2626" stroke-width="6" stroke-linecap="round"/><text x="1052" y="615" class="legend">THERMAL</text>
+  <text x="800" y="655" text-anchor="middle" class="sub">Based on SpaceX's published StarMind · AI1 architecture</text>
+</svg>

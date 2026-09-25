@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1030" viewBox="0 0 1000 1030" role="img" aria-labelledby="title desc">
+  <title id="title">AI Cluster 剖面</title>
+  <desc id="desc">GPU、CPU、HBM、NIC、DPU、Power Shelf 和 NVLink Switch 组成计算机架。多个机架通过 Scale-up 与 Scale-out Fabric 连接存储，完成验证后走到 Production Handoff，再承载 Training、Inference 与 Agent workload，并通过外部网络到达用户。编号六到十二对应系列目录。</desc>
+  <defs>
+    <marker id="d" markerWidth="15" markerHeight="15" refX="9" refY="7.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0L15 7.5L0 15Z" fill="#267a70"/></marker>
+    <style>
+      .bg{fill:#f6f7f8}.panel{fill:#fff;stroke:#a2adb6;stroke-width:2}.rack{fill:#354a5b;stroke:#243542;stroke-width:2}.slot{fill:#9eb0be}.fabric{fill:#e4eef6;stroke:#356b92;stroke-width:2}.storage{fill:#eee7f5;stroke:#755594;stroke-width:2}.workload{fill:#f4eff8;stroke:#84679c;stroke-width:2}.delivery{fill:#e5f1ef;stroke:#267a70;stroke-width:2}.gate{fill:#e7f2ea;stroke:#4d8a5e;stroke-width:2}
+      .ink{fill:#202a33}.muted{fill:#65717c}.label{font:700 23px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.minor{font:600 18px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.tiny{font:600 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.micro{font:600 13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.center{text-anchor:middle}
+      .data{fill:none;stroke:#267a70;stroke-width:6;stroke-linecap:butt;stroke-linejoin:round}.scaleup{fill:none;stroke:#356b92;stroke-width:5;stroke-linecap:round}.marker{fill:#26323c;stroke:#fff;stroke-width:3}.num{fill:#fff;font:700 18px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;text-anchor:middle;dominant-baseline:middle}
+    </style>
+  </defs>
+  <rect class="bg" width="1000" height="1030"/>
+
+  <!-- Rack breakdown -->
+  <rect class="panel" x="45" y="90" width="280" height="650" rx="6"/>
+  <text class="label ink center" x="185" y="130">计算机架</text>
+  <rect class="rack" x="100" y="165" width="170" height="505" rx="4"/>
+  <rect x="115" y="190" width="140" height="58" rx="3" fill="#fff4d9" stroke="#d58a17" stroke-width="2"/>
+  <text class="minor ink center" x="185" y="218">机架供电</text><text class="tiny muted center" x="185" y="239">Power Shelf</text>
+  <rect x="115" y="270" width="140" height="62" rx="3" fill="#e4eef6" stroke="#356b92" stroke-width="2"/>
+  <text class="minor ink center" x="185" y="297">机内互联</text><text class="micro muted center" x="185" y="318">NVLink Switch</text>
+  <rect x="115" y="355" width="140" height="92" rx="3" fill="#edf3f6" stroke="#71808b" stroke-width="2"/>
+  <text class="minor ink center" x="185" y="390">计算托盘</text><text class="micro muted center" x="185" y="417">GPU · CPU · HBM</text>
+  <rect x="115" y="470" width="140" height="75" rx="3" fill="#e5f1ef" stroke="#267a70" stroke-width="2"/>
+  <text class="minor ink center" x="185" y="499">网络接口</text><text class="micro muted center" x="185" y="520">NIC · DPU</text><text class="micro muted center" x="185" y="538">Scale-out</text>
+  <rect x="115" y="568" width="140" height="70" rx="3" fill="#fff0ed" stroke="#d35443" stroke-width="2"/>
+  <text class="minor ink center" x="185" y="600">液冷接口</text><text class="micro muted center" x="185" y="623">Cold Plate</text>
+  <circle class="marker" cx="57" cy="87" r="21"/><text class="num" x="57" y="87">6</text>
+
+  <!-- Cluster fabric -->
+  <rect class="panel" x="345" y="90" width="600" height="410" rx="6"/>
+  <rect class="fabric" x="385" y="135" width="520" height="66" rx="5"/>
+  <text class="label ink center" x="645" y="176">集群网络 Fabric</text>
+  <circle class="marker" cx="347" cy="87" r="21"/><text class="num" x="347" y="87">7</text>
+
+  <g>
+    <rect class="rack" x="390" y="245" width="78" height="170" rx="3"/><rect class="rack" x="485" y="245" width="78" height="170" rx="3"/><rect class="rack" x="580" y="245" width="78" height="170" rx="3"/><rect class="rack" x="675" y="245" width="78" height="170" rx="3"/>
+    <g class="slot"><rect x="404" y="266" width="50" height="12" rx="2"/><rect x="404" y="292" width="50" height="12" rx="2"/><rect x="404" y="318" width="50" height="12" rx="2"/><rect x="404" y="344" width="50" height="12" rx="2"/>
+      <rect x="499" y="266" width="50" height="12" rx="2"/><rect x="499" y="292" width="50" height="12" rx="2"/><rect x="499" y="318" width="50" height="12" rx="2"/><rect x="499" y="344" width="50" height="12" rx="2"/>
+      <rect x="594" y="266" width="50" height="12" rx="2"/><rect x="594" y="292" width="50" height="12" rx="2"/><rect x="594" y="318" width="50" height="12" rx="2"/><rect x="594" y="344" width="50" height="12" rx="2"/>
+      <rect x="689" y="266" width="50" height="12" rx="2"/><rect x="689" y="292" width="50" height="12" rx="2"/><rect x="689" y="318" width="50" height="12" rx="2"/><rect x="689" y="344" width="50" height="12" rx="2"/></g>
+    <text class="tiny center" x="572" y="449" fill="#354a5b">万卡集群</text>
+  </g>
+
+  <rect class="storage" x="790" y="245" width="115" height="170" rx="4"/>
+  <path d="M812 278H883M812 310H883M812 342H883" stroke="#755594" stroke-width="7"/>
+  <text class="minor ink center" x="847" y="382">存储</text>
+  <circle class="marker" cx="906" cy="241" r="21"/><text class="num" x="906" y="241">8</text>
+
+  <!-- Cluster validation -->
+  <rect class="gate" x="345" y="545" width="600" height="82" rx="5"/>
+  <text class="label ink center" x="645" y="580">Fabric 验证 · 集群验收</text>
+  <text class="tiny muted center" x="645" y="608">Production Handoff</text>
+  <circle class="marker" cx="347" cy="553" r="21"/><text class="num" x="347" y="553">9</text>
+  <path d="M345 650H945" stroke="#4d8a5e" stroke-width="5"/>
+
+  <!-- Workloads -->
+  <rect class="workload" x="415" y="705" width="245" height="88" rx="5"/>
+  <text class="label ink center" x="537" y="742">训练 · 推理</text><text class="tiny muted center" x="537" y="769">吞吐 · 延迟 · 利用率</text>
+  <circle class="marker" cx="416" cy="702" r="21"/><text class="num" x="416" y="702">10</text>
+
+  <rect class="workload" x="685" y="705" width="190" height="88" rx="5"/>
+  <text class="label ink center" x="780" y="742">Agent 任务</text><text class="tiny muted center" x="780" y="769">Tool Call · Retry</text>
+  <circle class="marker" cx="686" cy="702" r="21"/><text class="num" x="686" y="702">11</text>
+
+  <!-- Delivery network -->
+  <rect class="delivery" x="415" y="840" width="460" height="70" rx="5"/>
+  <text class="label ink center" x="645" y="872">交付网络</text><text class="tiny muted center" x="645" y="897">Backbone · Edge</text>
+  <circle class="marker" cx="416" cy="837" r="21"/><text class="num" x="416" y="837">12</text>
+  <circle cx="645" cy="965" r="27" fill="#fff" stroke="#59656f" stroke-width="3"/><circle cx="645" cy="954" r="8" fill="#59656f"/><path d="M627 982C629 969 636 963 645 963C654 963 661 969 663 982Z" fill="#59656f"/><text class="minor ink center" x="645" y="1015">用户</text>
+
+  <!-- Data paths -->
+  <path class="scaleup" d="M270 300H385"/>
+  <path class="data" d="M429 245V201M524 245V201M619 245V201M714 245V201M790 330H753M847 245V201"/>
+  <path class="data" d="M645 500V539" marker-end="url(#d)"/><path class="data" d="M537 650V699" marker-end="url(#d)"/><path class="data" d="M780 650V699" marker-end="url(#d)"/><path class="data" d="M537 793V834" marker-end="url(#d)"/><path class="data" d="M780 793V834" marker-end="url(#d)"/><path class="data" d="M645 910V932" marker-end="url(#d)"/>
+</svg>
