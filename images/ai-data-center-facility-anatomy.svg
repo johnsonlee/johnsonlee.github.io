@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="980" viewBox="0 0 1000 980" role="img" aria-labelledby="title desc">
+  <title id="title">数据中心 Facility 剖面</title>
+  <desc id="desc">电力从园区变电站经过开关柜、变压器、ATS、UPS 和 Busway 进入机架。热量从机架经过 TCS、CDU、FWS 和室外散热设备排出。编号二到五对应电网接入、供配电、散热与综合调试。</desc>
+  <defs>
+    <marker id="p" markerWidth="15" markerHeight="15" refX="9" refY="7.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0L15 7.5L0 15Z" fill="#d58a17"/></marker>
+    <marker id="h" markerWidth="15" markerHeight="15" refX="9" refY="7.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0L15 7.5L0 15Z" fill="#d35443"/></marker>
+    <style>
+      .bg{fill:#f6f7f8}.floor{fill:#fff;stroke:#9aa5af;stroke-width:2}.wall{fill:none;stroke:#c1c9cf;stroke-width:8}
+      .equip{fill:#fff;stroke:#71808b;stroke-width:2}.power-equip{fill:#fff7e6}.cool-equip{fill:#fff0ed}.rack-front{fill:#354a5b;stroke:#243542;stroke-width:2}.rack-top{fill:#607687}.rack-side{fill:#2a3d4c}.slot{fill:#9eb0be}
+      .ink{fill:#202a33}.muted{fill:#65717c}.label{font:700 23px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.minor{font:600 18px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.tiny{font:600 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.micro{font:600 13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.center{text-anchor:middle}
+      .power{fill:none;stroke:#d58a17;stroke-width:6;stroke-linecap:butt;stroke-linejoin:round}.heat{fill:none;stroke:#d35443;stroke-width:6;stroke-linecap:butt;stroke-linejoin:round}
+      .marker{fill:#26323c;stroke:#fff;stroke-width:3}.num{fill:#fff;font:700 18px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;text-anchor:middle;dominant-baseline:middle}.gate{fill:#e7f2ea;stroke:#4d8a5e;stroke-width:2}
+    </style>
+  </defs>
+  <rect class="bg" width="1000" height="980"/>
+
+  <!-- Cutaway floor -->
+  <polygon class="floor" points="145,160 855,160 930,835 70,835"/>
+  <path class="wall" d="M145 160L70 835H930L855 160"/>
+  <path d="M210 405H790M165 675H835" fill="none" stroke="#d7dde2" stroke-width="4"/>
+
+  <!-- Utility and backup -->
+  <g stroke="#59656f" stroke-width="4" fill="none"><path d="M62 195L90 75L118 195M72 150H108M68 172H112M78 125H102"/></g>
+  <text class="minor ink center" x="90" y="226">高压电网</text>
+  <rect class="equip power-equip" x="180" y="95" width="150" height="95" rx="4"/>
+  <text class="minor ink center" x="255" y="126">园区变电站</text><text class="tiny muted center" x="255" y="154">HV → MV</text>
+  <circle class="marker" cx="180" cy="92" r="20"/><text class="num" x="180" y="92">2</text>
+
+  <rect class="equip power-equip" x="500" y="90" width="125" height="92" rx="4"/>
+  <text class="minor ink center" x="562" y="124">发电机</text><text class="tiny muted center" x="562" y="151">Backup Power</text>
+
+  <!-- Electrical train -->
+  <rect class="equip power-equip" x="180" y="250" width="150" height="90" rx="4"/>
+  <text class="minor ink center" x="255" y="285">中压开关柜</text><text class="tiny muted center" x="255" y="313">保护 · 分配</text>
+  <rect class="equip power-equip" x="350" y="250" width="120" height="90" rx="4"/>
+  <text class="minor ink center" x="410" y="285">变压器</text><text class="tiny muted center" x="410" y="313">MV → LV</text>
+  <rect class="equip power-equip" x="510" y="250" width="105" height="90" rx="4"/>
+  <text class="minor ink center" x="562" y="285">ATS</text><text class="tiny muted center" x="562" y="313">自动切换</text>
+  <rect class="equip power-equip" x="655" y="250" width="120" height="90" rx="4"/>
+  <text class="minor ink center" x="715" y="285">UPS</text><text class="tiny muted center" x="715" y="313">短时续电</text>
+  <circle class="marker" cx="178" cy="248" r="20"/><text class="num" x="178" y="248">3</text>
+
+  <!-- Cooling train -->
+  <rect class="equip cool-equip" x="190" y="700" width="120" height="86" rx="4"/>
+  <text class="minor ink center" x="250" y="734">TCS</text><text class="tiny muted center" x="250" y="762">技术冷却系统</text>
+  <rect class="equip cool-equip" x="440" y="700" width="120" height="86" rx="4"/>
+  <text class="minor ink center" x="500" y="734">CDU</text><text class="tiny muted center" x="500" y="762">换热器</text>
+  <rect class="equip cool-equip" x="655" y="700" width="120" height="86" rx="4"/>
+  <text class="minor ink center" x="715" y="734">FWS</text><text class="tiny muted center" x="715" y="762">泵 · 冷水机组</text>
+  <circle class="marker" cx="188" cy="697" r="20"/><text class="num" x="188" y="697">4</text>
+
+  <rect class="equip cool-equip" x="820" y="690" width="160" height="105" rx="4"/>
+  <text class="minor ink center" x="900" y="728">室外散热</text><text class="tiny muted center" x="900" y="757">Dry Cooler · Tower</text>
+
+  <!-- Data hall racks -->
+  <text class="label ink center" x="500" y="445">机架区</text>
+  <g>
+    <g transform="translate(195 530)"><polygon class="rack-top" points="0,0 80,0 95,12 15,12"/><rect class="rack-front" x="15" y="12" width="80" height="105"/><polygon class="rack-side" points="0,0 15,12 15,117 0,105"/><rect class="slot" x="28" y="28" width="54" height="10"/><rect class="slot" x="28" y="48" width="54" height="10"/><rect class="slot" x="28" y="68" width="54" height="10"/><rect class="slot" x="28" y="88" width="54" height="10"/></g>
+    <g transform="translate(335 530)"><polygon class="rack-top" points="0,0 80,0 95,12 15,12"/><rect class="rack-front" x="15" y="12" width="80" height="105"/><polygon class="rack-side" points="0,0 15,12 15,117 0,105"/><rect class="slot" x="28" y="28" width="54" height="10"/><rect class="slot" x="28" y="48" width="54" height="10"/><rect class="slot" x="28" y="68" width="54" height="10"/><rect class="slot" x="28" y="88" width="54" height="10"/></g>
+    <g transform="translate(475 530)"><polygon class="rack-top" points="0,0 80,0 95,12 15,12"/><rect class="rack-front" x="15" y="12" width="80" height="105"/><polygon class="rack-side" points="0,0 15,12 15,117 0,105"/><rect class="slot" x="28" y="28" width="54" height="10"/><rect class="slot" x="28" y="48" width="54" height="10"/><rect class="slot" x="28" y="68" width="54" height="10"/><rect class="slot" x="28" y="88" width="54" height="10"/></g>
+    <g transform="translate(615 530)"><polygon class="rack-top" points="0,0 80,0 95,12 15,12"/><rect class="rack-front" x="15" y="12" width="80" height="105"/><polygon class="rack-side" points="0,0 15,12 15,117 0,105"/><rect class="slot" x="28" y="28" width="54" height="10"/><rect class="slot" x="28" y="48" width="54" height="10"/><rect class="slot" x="28" y="68" width="54" height="10"/><rect class="slot" x="28" y="88" width="54" height="10"/></g>
+  </g>
+  <rect x="180" y="480" width="640" height="26" rx="3" fill="#fff2d2" stroke="#d58a17" stroke-width="2"/><text class="tiny ink center" x="500" y="498">A/B Busway · Tap-off · Power Shelf</text>
+
+  <!-- Commissioning gate -->
+  <rect class="gate" x="185" y="855" width="630" height="48" rx="5"/>
+  <text class="label ink center" x="500" y="887">综合调试 · 具备交付条件（RFS）</text>
+  <circle class="marker" cx="185" cy="879" r="20"/><text class="num" x="185" y="879">5</text>
+
+  <!-- Power path -->
+  <path class="power" d="M115 158H174" marker-end="url(#p)"/>
+  <path class="power" d="M255 190V244" marker-end="url(#p)"/>
+  <path class="power" d="M330 295H344" marker-end="url(#p)"/><path class="power" d="M470 295H504" marker-end="url(#p)"/>
+  <path class="power" d="M562 182V244" marker-end="url(#p)"/><path class="power" d="M615 295H649" marker-end="url(#p)"/>
+  <path class="power" d="M715 340V474" marker-end="url(#p)"/>
+  <path class="power" d="M250 506V524" marker-end="url(#p)"/><path class="power" d="M390 506V524" marker-end="url(#p)"/><path class="power" d="M530 506V524" marker-end="url(#p)"/><path class="power" d="M670 506V524" marker-end="url(#p)"/>
+
+  <!-- Heat path -->
+  <path class="heat" d="M250 647V694" marker-end="url(#h)"/>
+  <path class="heat" d="M310 743H434" marker-end="url(#h)"/><path class="heat" d="M560 743H649" marker-end="url(#h)"/><path class="heat" d="M775 743H814" marker-end="url(#h)"/>
+</svg>

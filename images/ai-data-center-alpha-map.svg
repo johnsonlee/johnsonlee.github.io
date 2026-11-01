@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1190" viewBox="0 130 1600 1190" role="img" aria-labelledby="title desc">
+  <title id="title">AI 数据中心 Alpha 地图</title>
+  <desc id="desc">横轴是从选址到正式运行的交付生命周期，纵轴是设施、AI 基础设施与工作负载交付系统。十三篇文章沿两条轴定位复制缺口。</desc>
+  <defs>
+    <style>
+      .bg{fill:#f8fafc}.panel{fill:#fff;stroke:#cbd5e1;stroke-width:1}.grid{stroke:#dbe2ea;stroke-width:1}.milestone{stroke:#fff;stroke-width:2}
+      .axis{font:700 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#334155}.phase{font:700 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#fff;text-anchor:middle}.phase-note{font:500 12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#e2e8f0;text-anchor:middle}
+      .group{font:700 14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#0f172a}.row{font:600 13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#1e293b}.small{font:500 11px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#64748b}.bartext{font:700 12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#fff;text-anchor:middle}
+      .development{fill:#475569}.build{fill:#b45309}.facility{fill:#047857}.cluster{fill:#1d4ed8}.operations{fill:#7e22ce}
+      .overview{fill:#334155}.power{fill:#c2410c}.thermal{fill:#0f766e}.handoff{fill:#15803d}.compute{fill:#1d4ed8}.data{fill:#6d28d9}.service{fill:#be185d}.case{fill:#b91c1c}
+    </style>
+  </defs>
+
+  <rect class="bg" width="1600" height="1320"/>
+  <path class="development milestone" d="M260 166H490L514 204L490 242H260L284 204Z"/>
+  <text class="phase" x="387" y="196">前期开发</text><text class="phase-note" x="387" y="218">选址 · 审批</text>
+  <path class="build milestone" d="M490 166H740L764 204L740 242H490L514 204Z"/>
+  <text class="phase" x="627" y="196">建设</text><text class="phase-note" x="627" y="218">设计 · 采购 · 施工</text>
+  <path class="facility milestone" d="M740 166H990L1014 204L990 242H740L764 204Z"/>
+  <text class="phase" x="877" y="196">设施交付</text><text class="phase-note" x="877" y="218">送电 · 系统调试 · RFS</text>
+  <path class="cluster milestone" d="M990 166H1270L1294 204L1270 242H990L1014 204Z"/>
+  <text class="phase" x="1142" y="196">集群交付</text><text class="phase-note" x="1142" y="218">IT 设备部署 · 集群验证</text>
+  <path class="operations milestone" d="M1270 166H1556L1580 204L1556 242H1270L1294 204Z"/>
+  <text class="phase" x="1425" y="196">生产运行</text><text class="phase-note" x="1425" y="218">生产移交 · 正式运行</text>
+
+  <rect class="panel" x="30" y="270" width="1526" height="1010" rx="8"/>
+  <text class="axis" transform="translate(64 890) rotate(-90)" text-anchor="middle">AI 基础设施栈</text>
+
+  <line class="grid" x1="260" y1="270" x2="260" y2="1280"/><line class="grid" x1="490" y1="270" x2="490" y2="1280"/>
+  <line class="grid" x1="740" y1="270" x2="740" y2="1280"/><line class="grid" x1="990" y1="270" x2="990" y2="1280"/>
+  <line class="grid" x1="1270" y1="270" x2="1270" y2="1280"/><line class="grid" x1="1556" y1="270" x2="1556" y2="1280"/>
+
+  <rect x="86" y="294" width="1450" height="52" fill="#e2e8f0" rx="5"/>
+  <text class="group" x="106" y="326">项目交付</text>
+  <text class="row" x="275" y="325">01 数据中心交付周期</text>
+  <rect class="overview" x="520" y="306" width="996" height="28" rx="5"/><text class="bartext" x="1018" y="325">选址 → 设施交付的状态与关键路径</text>
+
+  <text class="group" x="106" y="384">设施</text>
+  <text class="row" x="106" y="428">02 电网接入</text><rect class="power" x="278" y="410" width="592" height="28" rx="5"/><text class="bartext" x="574" y="429">电网侧 → 站点送电</text>
+  <text class="row" x="106" y="484">03 供配电链</text><rect class="power" x="520" y="466" width="430" height="28" rx="5"/><text class="bartext" x="735" y="485">变电站 → 机架</text>
+  <text class="row" x="106" y="540">04 数据中心散热链</text><rect class="thermal" x="520" y="522" width="430" height="28" rx="5"/><text class="bartext" x="735" y="541">机架 → 室外</text>
+  <text class="row" x="106" y="596">05 Commissioning</text><rect class="handoff" x="650" y="578" width="300" height="28" rx="5"/><text class="bartext" x="800" y="597">机械完工 → RFS</text>
+
+  <line class="grid" x1="86" y1="632" x2="1536" y2="632"/>
+  <text class="group" x="106" y="672">AI 基础设施</text>
+  <text class="row" x="106" y="716">06 机架交付</text><rect class="compute" x="800" y="698" width="430" height="28" rx="5"/><text class="bartext" x="1015" y="717">GPU → Rack</text>
+  <text class="row" x="106" y="772">07 万卡集群</text><rect class="compute" x="800" y="754" width="430" height="28" rx="5"/><text class="bartext" x="1015" y="773">网络拓扑 → Fabric 验证</text>
+  <text class="row" x="106" y="828">08 存储层级</text><rect class="data" x="800" y="810" width="600" height="28" rx="5"/><text class="bartext" x="1100" y="829">存储介质 → 资格认证 → 生产数据</text>
+  <text class="row" x="106" y="884">09 集群交付</text><rect class="handoff" x="910" y="866" width="450" height="28" rx="5"/><text class="bartext" x="1135" y="885">RFS → Healthy Cluster → Production Handoff</text>
+
+  <line class="grid" x1="86" y1="920" x2="1536" y2="920"/>
+  <text class="group" x="106" y="960">工作负载与交付</text>
+  <text class="row" x="106" y="1004">10 Training vs Inference</text><rect class="service" x="1040" y="986" width="440" height="28" rx="5"/><text class="bartext" x="1260" y="1005">同一 MW 的两种 Economics</text>
+  <text class="row" x="106" y="1060">11 Agent 算力账单</text><rect class="service" x="1120" y="1042" width="360" height="28" rx="5"/><text class="bartext" x="1300" y="1061">Token → Task</text>
+  <text class="row" x="106" y="1116">12 推理交付网络</text><rect class="service" x="1120" y="1098" width="360" height="28" rx="5"/><text class="bartext" x="1300" y="1117">Cluster → User</text>
+
+  <line class="grid" x1="86" y1="1152" x2="1536" y2="1152"/>
+  <text class="group" x="106" y="1192">综合验证</text>
+  <text class="row" x="106" y="1236">13 PORTS-Pike 8GW</text><rect class="case" x="278" y="1218" width="1202" height="28" rx="5"/><text class="bartext" x="879" y="1237">交付阶段 → Replication Gap → 价值捕获 → 错误定价</text>
+
+</svg>

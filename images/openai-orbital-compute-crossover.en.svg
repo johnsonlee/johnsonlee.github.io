@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="760" viewBox="0 0 1600 760" role="img" aria-labelledby="title desc">
+  <title id="title">The crossover between two deployment routes under OpenAI compute demand</title>
+  <desc id="desc">A conceptual chart comparing the marginal Time-to-Compute of terrestrial data centers and SpaceX orbital compute as OpenAI target capacity grows from 10GW to 100GW. The 30 to 50GW range is the crossover observation zone.</desc>
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <style>
+      text{font-family:Arial,"Noto Sans",sans-serif;fill:#172033}
+      .axis{fill:none;stroke:#64748b;stroke-width:2}.grid{stroke:#cbd5e1;stroke-width:1.5;stroke-dasharray:5 7}.tick{font-size:17px;font-weight:700;text-anchor:middle}.tick-sub{font-size:14px;fill:#64748b;text-anchor:middle}.axis-label{font-size:18px;font-weight:700;fill:#475569;text-anchor:middle}.direction{font-size:15px;font-weight:700;fill:#64748b;text-anchor:middle}
+      .current-line{fill:none;stroke:#c2410c;stroke-width:7;stroke-linecap:round}.orbital-line{fill:none;stroke:#7c3aed;stroke-width:7;stroke-linecap:round;stroke-dasharray:18 12}.route-label{font-size:18px;font-weight:700}.note{font-size:16px;fill:#475569}.zone-title{font-size:20px;font-weight:700;fill:#991b1b;text-anchor:middle}.zone-sub{font-size:15px;font-weight:700;fill:#9f1239;text-anchor:middle}.legend{font-size:16px;fill:#475569}.callout-title{font-size:17px;font-weight:700;fill:#172033;text-anchor:middle}.footnote{font-size:14px;fill:#64748b;text-anchor:middle}
+    </style>
+  </defs>
+
+  <rect width="1600" height="760" fill="#f8fafc"/>
+
+  <rect x="568" y="74" width="300" height="490" rx="16" fill="#ffe4e6" opacity="0.78"/>
+  <line x1="568" y1="74" x2="568" y2="564" stroke="#fda4af" stroke-width="2" stroke-dasharray="7 7"/>
+  <line x1="868" y1="74" x2="868" y2="564" stroke="#fda4af" stroke-width="2" stroke-dasharray="7 7"/>
+  <text x="718" y="108" class="zone-title">30–50GW · CROSSOVER WATCH ZONE</text>
+  <text x="718" y="134" class="zone-sub">Earliest conditional window: 2028–2032</text>
+
+  <line x1="200" y1="564" x2="1510" y2="564" class="axis"/>
+  <line x1="200" y1="564" x2="200" y2="72" class="axis"/>
+  <path d="M194 84L200 72L206 84" fill="none" stroke="#64748b" stroke-width="2"/>
+
+  <line x1="320" y1="74" x2="320" y2="564" class="grid"/>
+  <line x1="568" y1="150" x2="568" y2="564" class="grid"/>
+  <line x1="868" y1="150" x2="868" y2="564" class="grid"/>
+  <line x1="1450" y1="74" x2="1450" y2="564" class="grid"/>
+
+  <path d="M320 465 C430 458 500 425 568 365 C630 311 682 267 718 247 C770 216 812 184 868 154 C1040 94 1250 82 1450 80" class="current-line"/>
+  <path d="M320 116 C430 134 500 157 568 181 C630 205 680 233 718 247 C775 278 814 317 868 350 C1040 431 1245 466 1450 484" class="orbital-line"/>
+
+  <circle cx="718" cy="247" r="11" fill="#dc2626" stroke="#fff" stroke-width="5" filter="url(#shadow)"/>
+  <rect x="606" y="273" width="224" height="42" rx="9" fill="#fee2e2" stroke="#dc2626" stroke-width="2" filter="url(#shadow)"/>
+  <text x="718" y="295" class="callout-title" dominant-baseline="middle">Marginal deployment parity</text>
+
+  <text x="1130" y="112" class="route-label" fill="#c2410c">TERRESTRIAL DATA CENTERS</text>
+  <text x="1130" y="138" class="note">Power, interconnection, and construction slow additions</text>
+  <text x="1110" y="492" class="route-label" fill="#7c3aed">SPACEX ORBITAL COMPUTE</text>
+  <text x="1110" y="518" class="note">Manufacturing and launch scale accelerate additions</text>
+
+  <text x="142" y="118" class="direction">SLOWER</text>
+  <text x="142" y="531" class="direction">FASTER</text>
+  <text x="78" y="318" class="axis-label" transform="rotate(-90 78 318)">Marginal Time-to-Compute</text>
+
+  <line x1="320" y1="564" x2="320" y2="574" class="axis"/>
+  <line x1="568" y1="564" x2="568" y2="574" class="axis"/>
+  <line x1="868" y1="564" x2="868" y2="574" class="axis"/>
+  <line x1="1450" y1="564" x2="1450" y2="574" class="axis"/>
+  <text x="320" y="602" class="tick">10GW</text><text x="320" y="626" class="tick-sub">87.6TWh / year</text>
+  <text x="568" y="602" class="tick">30GW</text><text x="568" y="626" class="tick-sub">263TWh / year</text>
+  <text x="868" y="602" class="tick">50GW</text><text x="868" y="626" class="tick-sub">438TWh / year</text>
+  <text x="1450" y="602" class="tick">100GW</text><text x="1450" y="626" class="tick-sub">876TWh / year</text>
+  <text x="885" y="662" class="axis-label">OpenAI target compute capacity</text>
+
+  <line x1="492" y1="701" x2="552" y2="701" class="current-line"/><text x="570" y="707" class="legend">Current terrestrial path</text>
+  <line x1="765" y1="701" x2="825" y2="701" class="orbital-line"/><text x="843" y="707" class="legend">Orbital alternative</text>
+  <text x="800" y="739" class="footnote">Capacity assumes continuous load; curves show replication direction, not a cost or schedule forecast</text>
+</svg>

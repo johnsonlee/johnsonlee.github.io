@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 900" role="img" aria-labelledby="title desc">
+  <title id="title">Codex 与 Claude Code 的 Goal 控制回路</title>
+  <desc id="desc">Codex 依靠持久化 active 状态和 idle callback 续跑，由 worker 自己提交 complete。Claude Code 在 Stop hook 中启动 tool-blind fresh evaluator，返回 Not yet met、Met 或 Impossible。</desc>
+  <defs>
+    <filter id="shadow" x="-12%" y="-12%" width="124%" height="132%"><feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#475569"/></marker>
+    <marker id="blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#2563eb"/></marker>
+    <marker id="orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#ea580c"/></marker>
+    <style>.t{font-family:Arial,"PingFang SC","Microsoft YaHei",sans-serif}.h{font-size:32px;font-weight:700;fill:#0f172a}.sub{font-size:19px;fill:#64748b}.lane{font-size:27px;font-weight:700}.bh{font-size:23px;font-weight:700}.body{font-size:18px;fill:#334155}.small{font-size:16px;fill:#64748b}</style>
+  </defs>
+  <rect width="1100" height="900" rx="30" fill="#f8fafc"/>
+  <text class="t h" x="550" y="50" text-anchor="middle">同一个 /goal，两种续跑机制</text>
+  <text class="t sub" x="550" y="82" text-anchor="middle">共同点：turn 结束，不再自动等于任务结束</text>
+
+  <g filter="url(#shadow)">
+    <rect x="365" y="112" width="370" height="82" rx="17" fill="#f1f5f9" stroke="#475569" stroke-width="2.5"/>
+    <text class="t bh" x="550" y="146" text-anchor="middle" fill="#0f172a">Worker turn 结束</text>
+    <text class="t body" x="550" y="175" text-anchor="middle">Harness 重新取得控制</text>
+  </g>
+
+  <path d="M500 194 C450 228 350 238 290 270" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#blue)"/>
+  <path d="M600 194 C650 228 750 238 810 270" fill="none" stroke="#ea580c" stroke-width="3" marker-end="url(#orange)"/>
+
+  <text class="t lane" x="290" y="250" text-anchor="middle" fill="#1d4ed8">Codex</text>
+  <text class="t lane" x="810" y="250" text-anchor="middle" fill="#c2410c">Claude Code</text>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="270" width="440" height="100" rx="18" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5"/>
+    <text class="t bh" x="290" y="310" text-anchor="middle" fill="#1e3a8a">读取持久化 Goal 状态</text>
+    <text class="t body" x="290" y="342" text-anchor="middle">status 仍为 active？</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="590" y="270" width="440" height="100" rx="18" fill="#fff7ed" stroke="#ea580c" stroke-width="2.5"/>
+    <text class="t bh" x="810" y="310" text-anchor="middle" fill="#9a3412">触发 prompt-based Stop hook</text>
+    <text class="t body" x="810" y="342" text-anchor="middle">condition + conversation</text>
+  </g>
+
+  <line x1="290" y1="370" x2="290" y2="420" stroke="#2563eb" stroke-width="3" marker-end="url(#blue)"/>
+  <line x1="810" y1="370" x2="810" y2="420" stroke="#ea580c" stroke-width="3" marker-end="url(#orange)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="420" width="440" height="112" rx="18" fill="#ecfeff" stroke="#0891b2" stroke-width="2.5"/>
+    <text class="t bh" x="290" y="460" text-anchor="middle" fill="#155e75">idle callback 启动下一轮</text>
+    <text class="t body" x="290" y="492" text-anchor="middle">同一个 Agent 执行 completion audit</text>
+    <text class="t small" x="290" y="518" text-anchor="middle">显式 update_goal(complete) 才停止</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="590" y="420" width="440" height="112" rx="18" fill="#fef3c7" stroke="#d97706" stroke-width="2.5"/>
+    <text class="t bh" x="810" y="460" text-anchor="middle" fill="#92400e">fresh evaluator 独立判断</text>
+    <text class="t body" x="810" y="492" text-anchor="middle">默认 small fast model · 不调用工具</text>
+    <text class="t small" x="810" y="518" text-anchor="middle">只能读取 transcript 中已有的证据</text>
+  </g>
+
+  <line x1="290" y1="532" x2="290" y2="590" stroke="#2563eb" stroke-width="3" marker-end="url(#blue)"/>
+  <line x1="810" y1="532" x2="810" y2="590" stroke="#ea580c" stroke-width="3" marker-end="url(#orange)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="590" width="440" height="112" rx="18" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5"/>
+    <text class="t bh" x="290" y="630" text-anchor="middle" fill="#1e3a8a">没有提交 complete</text>
+    <text class="t body" x="290" y="662" text-anchor="middle">状态保持 active → 再次进入 idle</text>
+    <text class="t small" x="290" y="688" text-anchor="middle">提交 complete / blocked → 停止</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="590" y="590" width="440" height="112" rx="18" fill="#fff7ed" stroke="#ea580c" stroke-width="2.5"/>
+    <text class="t bh" x="810" y="630" text-anchor="middle" fill="#9a3412">三种 verdict</text>
+    <text class="t body" x="810" y="662" text-anchor="middle">Not yet met → reason 进入下一轮</text>
+    <text class="t small" x="810" y="688" text-anchor="middle">Met → achieved · Impossible → failed</text>
+  </g>
+
+  <path d="M70 646 H35 V320 H70" fill="none" stroke="#2563eb" stroke-width="3" stroke-dasharray="9 7" marker-end="url(#blue)"/>
+  <path d="M1030 646 H1065 V320 H1030" fill="none" stroke="#ea580c" stroke-width="3" stroke-dasharray="9 7" marker-end="url(#orange)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="185" y="770" width="730" height="88" rx="18" fill="#ecfdf5" stroke="#059669" stroke-width="2.5"/>
+    <text class="t bh" x="550" y="806" text-anchor="middle" fill="#065f46">Eval 定义标准 · Verifier 从现场取得证据</text>
+    <text class="t body" x="550" y="837" text-anchor="middle">没有可信证据，两种 Goal loop 都可能错误停止或无效循环</text>
+  </g>
+  <path d="M400 770 C360 744 325 728 290 702" fill="none" stroke="#059669" stroke-width="2.5" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
+  <path d="M700 770 C740 744 775 728 810 702" fill="none" stroke="#059669" stroke-width="2.5" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
+</svg>

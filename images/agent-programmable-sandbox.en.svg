@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1080" role="img" aria-labelledby="title desc">
+  <title id="title">How a programmable sandbox controls environmental variables</title>
+  <desc id="desc">The Agent Workflow keeps calling its original Model, Tool, File, and API interfaces. A transparent boundary proxy selects a historical result, live execution, synthetic mock, or injected failure for every call. Live calls enter an isolated environment. Agent actions and environmental changes are committed to Git-backed versioned state, while the real world rejects external writes by default.</desc>
+  <defs>
+    <filter id="shadow" x="-12%" y="-12%" width="124%" height="132%">
+      <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#475569"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#059669"/>
+    </marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#ea580c"/>
+    </marker>
+    <style>
+      .t{font-family:Arial,"PingFang SC","Microsoft YaHei",sans-serif}.h{font-size:30px;font-weight:700;fill:#0f172a}.sub{font-size:19px;fill:#64748b}.boxh{font-size:25px;font-weight:700}.body{font-size:19px;fill:#334155}.small{font-size:16px;fill:#475569}.chip{font-size:20px;font-weight:700}.chip-sub{font-size:16px}
+    </style>
+  </defs>
+
+  <rect width="900" height="1080" rx="30" fill="#ffffff"/>
+  <rect x="40" y="30" width="820" height="920" rx="30" fill="#f8fafc" stroke="#334155" stroke-width="2.5" stroke-dasharray="10 8"/>
+  <text class="t h" x="450" y="78" text-anchor="middle">Programmable sandbox</text>
+  <text class="t sub" x="450" y="110" text-anchor="middle">Isolate the real world and control what the Agent can observe</text>
+
+  <g>
+    <rect x="140" y="150" width="620" height="110" rx="20" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5" filter="url(#shadow)"/>
+    <text class="t boxh" x="450" y="195" text-anchor="middle" fill="#1e3a8a">Agent Workflow</text>
+    <text class="t body" x="450" y="230" text-anchor="middle">Still calls Model · Tool · File · API</text>
+  </g>
+
+  <line x1="415" y1="260" x2="415" y2="325" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="485" y1="325" x2="485" y2="268" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+  <text class="t small" x="400" y="300" text-anchor="end">call</text>
+  <text class="t small" x="500" y="300">response</text>
+
+  <g>
+    <rect x="80" y="335" width="740" height="270" rx="22" fill="#faf5ff" stroke="#7c3aed" stroke-width="2.5" filter="url(#shadow)"/>
+    <text class="t boxh" x="450" y="378" text-anchor="middle" fill="#5b21b6">Transparent boundary proxy</text>
+    <text class="t body" x="450" y="409" text-anchor="middle">Select a policy per call without changing Agent code</text>
+
+    <rect x="105" y="442" width="155" height="112" rx="16" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+    <text class="t chip" x="182.5" y="485" text-anchor="middle" fill="#1e40af">Historical</text>
+    <text class="t chip-sub" x="182.5" y="520" text-anchor="middle" fill="#475569">recorded result</text>
+
+    <rect x="280" y="442" width="155" height="112" rx="16" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+    <text class="t chip" x="357.5" y="485" text-anchor="middle" fill="#065f46">Live</text>
+    <text class="t chip-sub" x="357.5" y="520" text-anchor="middle" fill="#475569">new implementation</text>
+
+    <rect x="455" y="442" width="155" height="112" rx="16" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+    <text class="t chip" x="532.5" y="485" text-anchor="middle" fill="#5b21b6">Synthetic</text>
+    <text class="t chip-sub" x="532.5" y="520" text-anchor="middle" fill="#475569">mocked result</text>
+
+    <rect x="630" y="442" width="155" height="112" rx="16" fill="#fff1f2" stroke="#e11d48" stroke-width="2"/>
+    <text class="t chip" x="707.5" y="485" text-anchor="middle" fill="#9f1239">Fault</text>
+    <text class="t chip-sub" x="707.5" y="520" text-anchor="middle" fill="#475569">timeout · error</text>
+  </g>
+
+  <line x1="255" y1="690" x2="255" y2="620" stroke="#2563eb" stroke-width="3" marker-end="url(#arrow-blue)"/>
+  <text class="t small" x="270" y="660" fill="#1d4ed8">recorded result</text>
+  <line x1="645" y1="605" x2="645" y2="680" stroke="#059669" stroke-width="3" marker-end="url(#arrow-green)"/>
+  <text class="t small" x="660" y="650" fill="#047857">live call</text>
+
+  <g>
+    <rect x="90" y="690" width="340" height="200" rx="20" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5" filter="url(#shadow)"/>
+    <text class="t boxh" x="260" y="735" text-anchor="middle" fill="#1e3a8a">Git-backed state</text>
+    <line x1="145" y1="780" x2="335" y2="780" stroke="#2563eb" stroke-width="4"/>
+    <circle cx="155" cy="780" r="15" fill="#ffffff" stroke="#2563eb" stroke-width="4"/>
+    <circle cx="245" cy="780" r="15" fill="#ffffff" stroke="#2563eb" stroke-width="4"/>
+    <circle cx="335" cy="780" r="15" fill="#ffffff" stroke="#2563eb" stroke-width="4"/>
+    <text class="t small" x="155" y="818" text-anchor="middle">C1</text>
+    <text class="t small" x="245" y="818" text-anchor="middle">C2</text>
+    <text class="t small" x="335" y="818" text-anchor="middle">C3</text>
+    <text class="t body" x="260" y="845" text-anchor="middle">action envelope</text>
+    <text class="t body" x="260" y="873" text-anchor="middle">+ environment snapshot</text>
+  </g>
+
+  <g>
+    <rect x="480" y="690" width="330" height="200" rx="20" fill="#ecfdf5" stroke="#059669" stroke-width="2.5" filter="url(#shadow)"/>
+    <text class="t boxh" x="645" y="735" text-anchor="middle" fill="#065f46">Isolated environment</text>
+    <rect x="515" y="765" width="130" height="42" rx="12" fill="#ffffff" stroke="#6ee7b7" stroke-width="2"/>
+    <text class="t small" x="580" y="792" text-anchor="middle">worktree</text>
+    <rect x="660" y="765" width="115" height="42" rx="12" fill="#ffffff" stroke="#6ee7b7" stroke-width="2"/>
+    <text class="t small" x="717.5" y="792" text-anchor="middle">DB snapshot</text>
+    <rect x="515" y="820" width="130" height="42" rx="12" fill="#ffffff" stroke="#6ee7b7" stroke-width="2"/>
+    <text class="t small" x="580" y="847" text-anchor="middle">browser state</text>
+    <rect x="660" y="820" width="115" height="42" rx="12" fill="#ffffff" stroke="#6ee7b7" stroke-width="2"/>
+    <text class="t small" x="717.5" y="847" text-anchor="middle">shadow service</text>
+  </g>
+
+  <path d="M540 890 V915 H370 V898" fill="none" stroke="#ea580c" stroke-width="3" marker-end="url(#arrow-orange)"/>
+  <rect x="405" y="900" width="100" height="22" rx="8" fill="#f8fafc"/>
+  <text class="t small" x="455" y="916" text-anchor="middle" fill="#c2410c">commit effect</text>
+
+  <line x1="735" y1="890" x2="735" y2="925" stroke="#e11d48" stroke-width="3" stroke-dasharray="7 6"/>
+  <line x1="707" y1="925" x2="763" y2="925" stroke="#e11d48" stroke-width="5"/>
+  <text class="t small" x="695" y="920" text-anchor="end" fill="#be123c">external writes blocked</text>
+
+  <text class="t boxh" x="450" y="1005" text-anchor="middle" fill="#475569">Real world</text>
+  <text class="t body" x="450" y="1040" text-anchor="middle">Only explicitly authorized calls pass through a controlled exit</text>
+</svg>

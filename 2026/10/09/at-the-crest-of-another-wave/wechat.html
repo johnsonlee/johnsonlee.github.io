@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/10/09/at-the-crest-of-another-wave/">
+  <title>再立浪潮之巅 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;text-align:justify;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;text-align:left;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">再立浪潮之巅</h1>
+    <p style="margin:0 0 28px;text-align:left;font-size:14px;line-height:1.6;color:#6b7280;">2026-10-09 · Johnson Lee · Career</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">当年做 Booster 的时候，我就想做一个基于 code graph 的数据流分析框架，可惜个人精力有限，一直搁着。年初，为了验证 Agent 扫描代码里残留的 AB 实验到底准不准，我需要一个能拿来对照的工具。于是趁一个周末，抱着试试看的心态，用 Opus 4.5 把它捡了起来。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">Claude Code 只用了一个小时，从架构到测试全是它自己写的。这种工具我手写过，至少得花两周。搁了那么久的念头，就这么做出来了。可写了近二十年代码，我一直觉得，无论行业怎么变，这门手艺总还是靠得住的。现在它也会了，而且比我快这么多。以后如果不再需要我写代码，我还剩下什么？</p>
+
+
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">接下来的两周，我疯狂地试探它的能力边界，想找到它做不到的地方。每试一次，留给自己的余地就又少了一点。在这个行业里，35 岁是一道大家心照不宣的坎。好不容易靠这些年攒下的经验和手艺跨了过去，回头发现，自己倚仗的东西也在变。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">那种投入，后来连睡觉都没能打断。我在<a href="https://johnsonlee.io/2026/02/25/tetris-effect-of-ai-conversations/" title="植入潜意识——AI 版的盗梦空间" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">《植入潜意识——AI 版的盗梦空间》</a>里记过，连续半个月高强度使用 AI 之后，原本不怎么做梦的我，开始每天晚上梦见自己在和 AI 对话，一连好多天。白天的对话到了梦里还在继续。我当时把这叫作“俄罗斯方块效应”。那阵子，我急着弄清楚，这场变化到底会把我带到哪里。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">后来这三个季度，我几乎每天都在高强度地做 Agentic Engineering。那个问题一直跟着我，只是随着做的事情越来越深，我对它的理解也慢慢变了。</p>
+<h2 id="从写-Skill-到交付-Feature" style="margin:34px 0 16px;text-align:left;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  从写 Skill 到交付 Feature</h2><p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">最开始，我把自己处理一类任务的经验写进 Skill，告诉 Agent 从哪里查起、要注意什么、哪些步骤不能漏。后来开始搭 Agentic Workflow，把需求、实现、检查和交付接起来，让它把 Feature 一直推到 Production。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">做到这一步，注意力很容易落在流程上：任务怎么拆，失败怎么重试，Context 怎么续上，下一轮怎样接着干。这些问题要解决，否则 Agent 做一半就停，人还是得一直守着。但当它能够持续推进，另一个问题就越来越明显：它说完成了，我凭什么接受？</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">编译通过、测试全绿，都有意义。可需求有没有理解错，测试是否只验证了它自己的理解，改动放进整个系统以后有没有破坏别的承诺，这些不会随着流程跑通而自动消失。实现越快，留给人的这部分工作反而越显眼。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">假设十个 Agent 同时交来十份 diff，团队仍然靠同一个 Senior 逐行读完，产出越快，待验收队列就越长。让 Agent 多跑几轮，也不能替这个 Senior 判断该看什么。我在<a href="https://johnsonlee.io/2026/06/26/fooled-by-loop-engineering/" title="别被 Loop Engineering 忽悠瘸了" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">《别被 Loop Engineering 忽悠瘸了》</a>里写过，持续执行和持续接近正确，是两件不同的事。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">我在<a href="https://johnsonlee.io/2026/07/25/what-engineers-are-still-for/" title="还要工程师干什么？" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">《还要工程师干什么？》</a>里对实现型工作的替代判断，也没有因为这些问题而改变。Agent 已经能做的事情，不会因为我怀念亲手写代码就重新变得稀缺。只是我开始看到，在实现之外，还有一部分工作并没有被它一起接过去。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">这部分工作，过去也一直在做，只是和写代码混在一起，不太容易单独看见。</p>
+<h2 id="流程跑通以后我把精力放到了哪里" style="margin:34px 0 16px;text-align:left;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  流程跑通以后我把精力放到了哪里</h2><p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">Workflow 这一层，市场已经有很多选择。<a href="https://github.com/langchain-ai/langgraph" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">LangGraph</a>提供持久执行、状态管理和人工介入能力，<a href="https://docs.n8n.io/advanced-ai/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">n8n</a>也能把 Agent 和业务工具编排进工作流。这些产品各有边界，但有了现成能力以后，我就得问自己：继续把时间花在同类机制上，还是去解决它们没有回答的问题？</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">我的投入逐渐落到 Harness、Eval 和 Verification 上。Harness 为 Agent 提供上下文、工具、执行环境和反馈，其中的状态保存、工具接口、检查结果回传，也有不少通用做法。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">我一直在 build 的 <a href="https://github.com/johnsonlee/graphite" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Graphite</a>，就在补 Harness 中的代码上下文和分析能力。它从 JVM 字节码建立程序图，把调用、依赖和数据流变成可以查询的结构，再通过 MCP 交给 Agent。清理 AB 实验需要这种能力，其他理解代码和检查改动的任务也可以复用它。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">回头看，年初为什么要把那个搁置的工具捡起来？就是因为 Agent 扫出了一些实验代码，我需要一个可以拿来对照的办法。它说“这些都找到了”，和我能确认“约定范围内没有遗漏”，中间还差一份证据。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">但即使拿到了图，工作也没有结束。Graphite 能回答某个值流向哪些调用，不能仅凭这个关系决定业务上应该删掉哪一条分支。同一套工具可以用在不同项目里；项目允许删除什么、必须保留什么，仍然要重新定义。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">到这里，Eval 和 Verification 的价值就具体了：Eval 要把任务、样本和判定标准定义清楚；Verification 要取得可信证据，判断具体产物是否满足要求。一个负责把“什么叫对”说到可以评估，一个负责确认这次到底做对了没有。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">我在 Graphite 项目里，也把这个顺序落实到了开发过程：先定义 benchmark gate，再开始让 Agent 提 PR。但“怎样才算性能回退”，本身就需要判断。让 Agent 来定义，它会把注意力放在单图的 build、save、load、query 上。建图、保存、加载、查询都测到了，乍一看，完全没毛病。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">我却不认可这套性能验收方式。Graphite 这些单图操作的绝对耗时本来就很低，运行环境一点点波动，换算成相对基线的变化，就可能出现一个很大的回退比例。报告上的数字变差了，究竟是改动让系统变慢，还是这次测量受了环境影响？如果连这件事都分不清，用它来决定一个 PR 能不能过，就可能让 Agent 围着噪声反复优化。这次 Agent 没有意识到，测完所有操作，仍然可能没有选对衡量性能的负载。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">我定义的性能回退标准，是用多图、大图构造有代表性的压测负载，看压测条件下的 metrics，再据此判断改动是否可以接受。多图也要真正进入被测请求的工作范围，不能只是加载了好几张图，实际仍然只查其中一张。单图测试可以保留，用来检查正确性；性能验收则以这套压测为准。我要看的是系统承受这种负载时的表现，单次轻量操作的耗时变化回答不了这个问题。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">Benchmark 的代码可以交给 Agent 写，选择什么负载、什么变化值得拦住一个 PR，却需要我对系统和测量结果作出判断。这件事让我更清楚地看到，过去做工程时积累的经验，正在变成 Agent 开始工作之前就需要的标准。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">Eval 和 Verification 也有通用框架，例如 <a href="https://www.braintrust.dev/blog/custom-scorers" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Braintrust 能运行现成和自定义的 scorer</a>。我在<a href="https://johnsonlee.io/2026/08/23/is-harness-the-agent-moat/" title="Harness 还是 Agent 的壁垒吗？" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">《Harness 还是 Agent 的壁垒吗？》</a>里讨论过这条边界：运行评测的机制可以采购，哪些样本代表这个业务、怎样的结果值得接受、什么证据足以支持交付，仍然需要具体判断。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">真正值得我持续投入的，是 Eval 和 Verification 里那些必须理解业务与系统才能完成的部分。</strong> 这些问题至今没有一套开箱即用、跨业务成立的完整解法，也很难有。答案分散在系统约束、业务决定、历史事故和真实使用结果里；同一个输出，在不同的兼容性承诺和风险要求下，可能得到相反的结论。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">我最初在找的是 Agent 还不会写的代码。沿着工作往下做，却越来越需要说清楚：为什么要做这件事，做到什么程度可以交，拿什么证明。再回头看工程师原来的职业路径，我才发现，这些问题一点都不陌生。</p>
+<h2 id="回头看那条职业阶梯" style="margin:34px 0 16px;text-align:left;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  回头看那条职业阶梯</h2><p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">过去我也在这条路上走了很多年。工程师的职业阶梯，各家公司叫法不一，大体是 Junior → Senior → Staff → Principal → Distinguished。很多人把它理解成代码越写越好、问题越做越难。可沿着职责往上看，更明显的变化是：你要在越来越大的范围里，定义什么叫对，并对结果负责。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">各家公司的具体边界不同。沿着这条主线，我把传统工程师的 R&amp;R（Role &amp; Responsibilities）概括成下面这张表：</p>
+<table style="width:100%;border-collapse:collapse;margin:22px 0;font-size:14px;line-height:1.6;color:#1f2937;">
+<thead>
+<tr>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">职级</th>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">负责的范围</th>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">核心职责</th>
+</tr>
+</thead>
+<tbody><tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Junior</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">已经拆好的任务</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">理解给定要求，完成实现，在既定标准下证明任务完成</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Senior</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">一个功能或模块</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">独立澄清边界、选择方案，定义成功标准，并负责交付与运行结果</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Staff</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">多个团队共同面对的问题</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">协调接口与约束，建立共同指标和反馈机制，让各团队的工作能组成一个结果</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Principal</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">一个技术领域或业务线</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">确定技术方向，在业务目标、系统演进与长期成本之间作出取舍，定义领域内什么叫对</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Distinguished</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">公司乃至行业</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">建立能够影响多个技术领域的标准和方法论，改变组织解决问题的方式</td>
+</tr>
+</tbody></table>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">Junior 拿到任务，首先要回答怎么实现。Senior 还要回答需求有没有漏、怎样才算做完、上线以后出了问题怎么办。Staff 面对的情况更复杂：各个团队可能都完成了自己的任务，拼起来却没有解决共同的问题，需要有人重新定义接口、指标和责任。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">再往上，连目标之间都会发生冲突。一个团队希望尽快退役 AB 实验，一个团队需要兼容老客户端，另一个团队要求保留故障回退。每一方都有理由。决定哪些承诺必须保留、哪部分可以延后、谁承担剩余风险，已经超出“这段代码怎么写”的范围。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">职级的本质，是在多大范围上定义“什么叫对”，并把这份判断落实到结果。</strong> 写标准只是其中一部分，还要让标准能执行，让冲突有人处理，让结果不好时有人回来修正决定。</p>
+<h2 id="Agent-把这份责任提前了" style="margin:34px 0 16px;text-align:left;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  Agent 把这份责任提前了</h2><p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">传统团队里，大量实现工作由 Junior 和 Senior 承担，Senior 同时开始对模块的标准与结果负责。Agent 接过越来越多的实现之后，原本和写代码绑在一起的判断责任，就更早落到工程师面前。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">如果沿用上面的职责坐标看这次变化，可以把它理解为整条阶梯的起点向上移动了一级：过去 Junior 主要在别人给定的标准下执行，新的入门要求已经包含为 Agent 定义任务边界、成功标准和验收方法。</p>
+<table style="width:100%;border-collapse:collapse;margin:22px 0;font-size:14px;line-height:1.6;color:#1f2937;">
+<thead>
+<tr>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">Agentic 时代的职级</th>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">核心职责</th>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">对应过去的职责重心</th>
+</tr>
+</thead>
+<tbody><tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Junior</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">为一个边界明确的功能或模块定义成功标准，交给 Agent 实现，并取得完成证据</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Senior 的模块交付责任</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Senior</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">为跨团队问题定义共同指标、接口契约和反馈机制，组织多个 Agent 与人的交付</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Staff 的跨团队责任</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Staff</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">为一个技术领域或业务线定义正确性、演进方向和取舍原则，让局部自动化服从整体目标</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Principal 的领域责任</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Principal</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">为公司乃至行业建立可以复用的标准和方法论，决定哪些能力共建、哪些判断必须留在具体业务里</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Distinguished 的组织与行业责任</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">Distinguished</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">为人和 Agent 的协作方式本身定义标准，包括责任分配、自治边界和工程人才的培养方式</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">新扩展出来的责任范围</td>
+</tr>
+</tbody></table>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">这张表表达的是我对职责门槛变化的判断。它不会自动给任何人升职：Agent 帮一个人写出了过去 Senior 才能写出的代码，并不意味着这个人已经能承担 Senior 的责任。真正需要补齐的，正是中间那段业务理解、系统知识和验收能力。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">对已经在路上的工程师，过去的经验因此有了新的用法。你见过兼容性事故，知道一个默认值为什么不能随便改，知道哪种依赖迟早会拖累系统。这些判断可以变成 Agent 的任务边界、验收用例和停止条件，不必每次都靠自己亲手实现来体现价值。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">对刚入行的人，门槛则变得更直接了。只教写代码已经不够，还要从小范围任务开始教怎么定义完成、怎么找证据、怎么解释失败。团队不能一面把练习机会交给 Agent，一面指望新人凭空长出判断力。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">沿着这条新阶梯往上走，下一步该学什么，就要看自己接下来准备承担哪一层责任。熟悉更多 Workflow 产品，不会自动扩大这个范围；能把原本只有自己看得懂的问题，变成团队可以共同判断和推进的工作，才算往前走了一步。</p>
+<h2 id="那些年攒下的经验又用上了" style="margin:34px 0 16px;text-align:left;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  那些年攒下的经验又用上了</h2><p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">知道职责在变化，和知道自己能做什么，中间还差一步。让我慢慢踏实下来的是，很多新职责所需要的判断，恰好来自过去写代码、查问题时攒下的经验。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">拿 AB 实验清理推演一下。下面是验收设计的例子，不是那个周末的完整项目记录。假设一个实验决定退役，最终保留实验组行为，Agent 很快删掉旧分支，编译通过，测试全绿。熟悉系统的人，这时还会继续追问：实验 owner 确认过退役了吗？老客户端还依赖对照组吗？这个开关是不是还承担紧急回退？共享 helper 有没有被别的实验使用？</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">做过兼容性改造的人，会想到老版本；处理过线上故障的人，会追问恢复路径；维护过实验平台的人，知道流量全部进入实验组，也不等于允许删除开关。过去这些经验帮助自己把代码写稳，现在可以用来定义 Agent 必须满足的条件。</p>
+<table style="width:100%;border-collapse:collapse;margin:22px 0;font-size:14px;line-height:1.6;color:#1f2937;">
+<thead>
+<tr>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">已有经验提醒了什么</th>
+<th style="border:1px solid #d1d5db;background:#f9fafb;padding:8px 10px;font-weight:700;text-align:left;">怎样转成可执行的判断</th>
+</tr>
+</thead>
+<tbody><tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">调用可能藏在跨模块封装里</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">列出分析产物和入口；每个目标引用有处置记录，未解析路径不能算完成</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">返回值没变也可能改坏行为</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">固定实验分组回放样本，同时比对输出、状态写入和外部调用</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">公共 helper 会影响其他实验</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">保留无关实验的独立回归样本，检查共享调用方</td>
+</tr>
+<tr>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">删掉代码后未必能靠改配置恢复</td>
+<td style="border:1px solid #d1d5db;padding:8px 10px;text-align:left;">在约定环境演练回退，确认旧产物和配置仍然兼容</td>
+</tr>
+</tbody></table>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">这就是定义指标、验收标准和验收方法的过程。指标决定看什么，标准决定接受什么，方法决定实际取得了什么证据。“残留引用数为 0”很容易写出来，知道少扫一个 module 就会让这个 0 失去意义，才用得上工程经验。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">我在<a href="https://johnsonlee.io/2026/03/28/ground-truth-core-competency-of-ai-engineering/" title="Ground Truth：AI 时代最被低估的竞争力" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">《Ground Truth：AI 时代最被低估的竞争力》</a>和<a href="https://johnsonlee.io/2026/05/11/graphite-agent-bytecode-context/" title="Graphite: Code 即上下文" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">《Graphite: Code 即上下文》</a>里强调过确定性工具的价值。但可复现不等于完备，工具的结论要放在输入和建模范围里理解。<a href="https://soot-oss.github.io/SootUp/latest/callgraphs/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">SootUp 的调用图文档</a>区分分析范围和建图算法，<a href="https://soot-oss.github.io/SootUp/latest/concepts/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">核心概念文档</a>也说明动态分派、反射会增加分析难度。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">Agent 可以替我写出这样的工具，可要知道少给一个 JAR、漏掉一个入口会怎样，仍然需要程序分析知识。不懂这些知识，连应该拿什么程序验证工具都不知道。那些年学过的东西，在这里又用上了，只是交付物里很难直接看见。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">在 agentic 项目里，这种经验还有一个很直接的用处：写各种 lint rule。上周，我刚从 codebase 里删掉了一万行代码。生成代码太廉价了，重复实现和已经没有用途的代码到处都是。写出来只要一会儿，留下来却都要有人理解、修改和维护。这一万行让我对“产出”有了更具体的感受：代码增加得快，和项目往前走得快，不能画等号。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">清理一次之后，后续改动仍然可能把同类问题带回来。所以我会把能明确判定的问题写成 lint rule，在后续改动时运行这些检查。重复代码怎样识别、什么代码确实已经无用，都需要结合项目来判断；能沉淀成规则的部分，才交给工具反复执行。我喜欢把这些检查叫作 Agent 的“编译器”：把过去 review 时才说出口的判断，尽量变成它动手时就能收到的反馈。这样，我不必一直追在生成速度后面清理。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">当然，这个“编译器”只能检查已经说清楚的规则。<a href="https://www.nasa.gov/reference/2-0-fundamentals-of-systems-engineering/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">NASA 的系统工程手册</a>区分了符合要求的 Verification 和满足实际用途的 Validation。就算每条规则都通过，如果实验退役的前提错了，仍然不该交付。工程师还得回来改标准，不能一直让 Agent 对着错误的标准修代码。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">经验的价值，开始体现在我能定义什么、验证什么，以及知道什么还没有被证明。</strong> 这也解释了为什么单纯把规则写得更多没有用：规则可能过时，方法可能有盲区，判断要能够被反例推翻。只会说“我们一直这么做”，还不足以承担这份工作。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">年初我盯着的是那一个小时，把它和自己的近二十年放在一起比。后来慢慢发现，近二十年里积累下来的，除了把代码写出来的手艺，还有对这些问题的理解。它们没有和实现成本一起消失，只是需要换一种方式用出来。</p>
+<h2 id="现在再问接下来该学什么" style="margin:34px 0 16px;text-align:left;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">6.  现在再问接下来该学什么</h2><p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">现在身边的工程师再说“不知道该学什么”，我能理解那种感觉。熟悉的路突然变了，眼前每天又冒出新的模型、框架和工具，很容易觉得不追就会掉队。但这三个季度下来，我给自己安排学习的顺序，越来越依赖手头准备承担的责任。</p>
+<h3 id="先为一个任务定义完成" style="margin:28px 0 14px;text-align:left;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">6.1.  先为一个任务定义完成</h3><p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">准备承担新 Junior 职责，可以先选一个边界明确的任务，写清输入、预期结果、不能破坏的约束，以及缺什么信息就必须停止。交给 Agent 实现之后，自己要能解释为什么这次可以交付，哪些情况还没有覆盖。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">这里缺什么，就补什么。说不清实验最终保留哪组，就去找 owner 和业务依据；不知道包装后的调用能不能分析出来，就读程序分析的文档，构造小程序验证；不知道回退是否有效，就去理解发布和配置的关系。领域知识、系统基础和验证方法，要在同一个任务里接起来。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">测试里的答案也需要来源。<a href="https://discovery.ucl.ac.uk/id/eprint/1471263/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Test oracle problem</a>讨论的就是如何判断输出正确。我在<a href="https://johnsonlee.io/2026/08/13/agent-tdd-is-self-verification/" title="Agent 真的需要 TDD 吗？" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">《Agent 真的需要 TDD 吗？》</a>里也写过：实现和测试如果共享同一份误解，全部通过也可能只是自证。能找到独立于实现的业务样本、协议要求或事故记录，是这一步需要练的能力。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">对新人，先预测，再看 Agent 的实现，再跑反例、解释差异，由有经验的人核对判断依据。编程仍然是理解系统、检验想法的重要手段。可以让 Agent 减少手工输入，但不能把理解系统的过程一起跳过。</p>
+<h3 id="再把一类判断交给系统" style="margin:28px 0 14px;text-align:left;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">6.2.  再把一类判断交给系统</h3><p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">已经能独立负责模块的工程师，可以从自己反复做的 review 入手。每次觉得“不对劲”，先留下原因和最小反例，再去修代码。同一类失败反复出现，就值得把检查沉淀下来，看看下一次不同的改动是否也能被正确判断。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">这一步需要学习怎样验证检查本身。<a href="https://pitest.org/quickstart/basic_concepts/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Mutation Testing</a>可以检查测试是否会对某些错误作出反应，但它不能证明需求完整。保留独立评估样本也有用，不过，<a href="https://arxiv.org/abs/1506.02629" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Dwork 等人关于 holdout 重用的研究</a>提醒过，反复依据同一批保留样本调优，会带来过拟合风险。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">因此，积累不能只看测试数量和通过率。还要检查答案的来源、采集范围是否被缩小、失败样本有没有被删掉、报告对应哪一版产物，以及旧标准是否仍然适用。遇到证据缺失，检查应该返回“未知”，而不是默认通过。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">别人也能根据这套反馈定位和修复问题，你就不用每次都亲自看完。让一类任务都能这样推进，也是开始承担跨团队责任的一步。</p>
+<h3 id="把标准带到更大的范围" style="margin:28px 0 14px;text-align:left;font-size:18px;line-height:1.5;font-weight:700;color:#111827;">6.3.  把标准带到更大的范围</h3><p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">准备承担新 Senior 职责，就要把这套方法带到团队之间。有人追求退役速度，有人担心兼容性，有人承担恢复责任，需要共同确定指标、边界、先后顺序和例外。把一个模块的检查做得很严，还不足以解决这些冲突。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">到了 Staff，注意力要扩展到领域内的长期取舍：哪些接口和数据模型应该统一，哪些兼容性承诺不能破，局部交付速度是否正在增加整体维护成本。Principal 还要把有效的方法推广到不同领域，区分哪些标准值得统一、哪些差异必须保留。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">Distinguished 则要继续追问协作方式本身：人在什么证据下可以放手，Agent 的自治边界怎样调整，新一代工程师通过什么工作积累经验。工具能力在变，组织怎样分配责任、培养人，也需要有人持续修正。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">这些责任靠多读几篇文章拿不到。需要参与相应范围的问题，记录当时的依据、作出的选择和后来的结果，再用结果校准判断。判断自己有没有进步，可以问：这一次，我是否比上一次多弄清楚了一层约束，多承担了一段过去要交给别人决定的事情？</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">每一步也都要算成本。一次性问题，人工看几分钟就能确认，不值得先造一个庞大的 Harness。值得沉淀的是反复出现、后果重要、反馈可以稳定取得的判断。能决定哪些事情暂时不做，同样是独立负责工作的一部分。</p>
+<h2 id="时代又一次把我们带到了这里" style="margin:34px 0 16px;text-align:left;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">7.  时代又一次把我们带到了这里</h2><p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">走过这三个季度，再看年初那个问题，我慢慢有了答案。实现可以交给 Agent，理解问题、定义标准、验证结果的工作，还需要继续往深处做。近二十年的经验有了新的用法，我也知道接下来该把精力放在哪里。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">想到这里，我开始觉得，眼前不只是职业上的一道坎，也是一份很难得的机会。AI 把一批原来做不起、做不完的事情，放回了可以尝试的范围。那个一直搁着的字节码工具，对我来说就是一个很小、却很具体的例子。年初我只顾着拿那一个小时和自己的手艺比较，现在想的是，以后还有多少这样的念头，不必再一直搁着。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">一个人的职业生涯里，能赶上一次这样的变化已经不容易。作为 80 后，我们先赶上了移动互联网，如今又站在 AI 这波浪潮里。还有精力，也已经有些积累的时候，再遇到一次改变做事方式的机会，对我们这一代工程师来说，称得上千载难逢。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">想起上一波浪潮，还是在滴滴做 VirtualAPK 和 Booster 的那几年。我在<a href="https://johnsonlee.io/2019/12/19/working-at-didi/" title="在滴滴工作的那些年" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">《在滴滴工作的那些年》</a>里记过这些项目的经历。移动互联网带来新的业务，也带来新的工程问题，让我们有机会把想法做成项目，再通过开源被更多人用到。回头看，个人的成长和时代给的机会，很难分得开。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">当年做 Booster 时，还有一些想法没来得及实现，那个字节码工具就是其中之一。如今继续做 Graphite，过去的问题和积累，又在 AI 时代找到了新的用处。两波浪潮之间，自己的经历也就这样接了起来。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">这一次，浪潮又把我们带到了新的地方。我不知道接下来会出现什么样的产品，会和谁一起做成什么事，也给不出一份能保住饭碗的技术清单。Agent 还会继续进步，今天需要自己做的事，明天也许就有现成产品接过去。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">但我想继续做下去。带着这近二十年攒下的经验，把那些曾经来不及做、不敢做的事情，再拿出来试一试。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">我们还在场。这一次，也还有机会做出一些值得留下来的东西。</p>
+
+    <section style="margin:34px 0 0;text-align:left;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;text-align:left;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/10/09/at-the-crest-of-another-wave/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/10/09/at-the-crest-of-another-wave/</a></p>
+    </section>
+  </main>
+</body>
+</html>

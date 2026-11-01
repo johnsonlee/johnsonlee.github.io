@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://johnsonlee.io/2026/11/01/software-engineer-as-labeling-engineer/">
+  <title>软件工程师的归宿——标注工程师 | WeChat</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f7f9;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+  <main style="box-sizing:border-box;text-align:justify;max-width:677px;margin:0 auto;padding:28px 16px 42px;background:#ffffff;font-family:'mp-quote','PingFang SC',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',Arial,sans-serif;">
+    <h1 style="margin:0 0 12px;text-align:left;font-size:26px;line-height:1.35;font-weight:700;color:#111827;letter-spacing:0;">软件工程师的归宿——标注工程师</h1>
+    <p style="margin:0 0 28px;text-align:left;font-size:14px;line-height:1.6;color:#6b7280;">2026-11-01 · Johnson Lee · Harness Engineering</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">最近读到 Proton CTO 的 AI 宣言《AI @ Proton, Engineering Manifesto》。里面有一句话很直接：工程师的工作，已经变成帮助 LLM 更快地写出更好的代码。宣言把工程师比作 team leader，模型和 Agent 则是下属。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">我想到的是另一个职位：labeling engineer。<strong style="font-weight:700;color:#111827;">Software engineer 最终的出路，是标注工程师。在 LLM 无法自行获得 ground truth 的地方，人负责提供判断。</strong> 这个名字没有「管理 AI 团队」那么体面，但更接近人实际在做的事。</p>
+
+
+<h2 id="你每天都在给模型打标签" style="margin:34px 0 16px;text-align:left;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">1.  你每天都在给模型打标签</h2><p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">让 Agent 写一个功能，第一版出来，你说「不对，这种情况应该报错」；第二版出来，你说「行为对了，但不能引入这个依赖」；第三版终于过了，你点 Accept。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">这几个动作，都在标注。你给出了负样本、补充了约束，最后确认了一个可接受的结果。过去，这些判断藏在你亲手写的代码里；现在，代码由模型生成，你把判断单独交了出来。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">需求澄清也是如此。用户说「支持撤销访问权限」，你知道这不只是把数据库里的一条记录删掉，还意味着已经登录的用户不能继续读取资源，缓存不能让旧权限一直生效。把这些隐含条件说清楚，就是把一个模糊意图标成一组可检查的行为。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">这也解释了为什么会写代码的人，未必能把 Agent 用好。过去可以一边实现一边修正理解，很多判断不用离开自己的脑子。现在你要让另一个执行者拿到足够明确的信号。只说「这个实现不够好」，模型收到的仍然是一句没有答案的评价。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">这里的 labeling 比训练集里的分类标签更宽：它包括预期结果、反例、验收条件，也包括附带理由的偏好。它们未必进入模型权重，却会改变下一轮 Agent 能看到什么、什么结果会被放行。</p>
+<h2 id="测试通过以后谁来给答案" style="margin:34px 0 16px;text-align:left;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">2.  测试通过以后谁来给答案</h2><p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">假设让 Agent 实现撤销访问权限的功能。它提交了一个 PR，附上一份 Test Report：撤销接口返回成功，权限记录已删除，所有测试通过。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">你看完 PR，再用一个已经登录、刚刚访问过资源的账号试了一次。权限撤销了，资源却仍然能读。实现删掉了数据库记录，但鉴权层还在使用缓存里的旧权限。Test Report 里的绿灯，只说明它测过的条件通过了。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">再让它补一个「权限已删除」的测试也没用。如果断言仍然只查数据库，错误理解只会多一份可执行副本。我在<a href="https://johnsonlee.io/2026/08/13/agent-tdd-is-self-verification/" title="Agent 真的需要 TDD 吗？" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">《Agent 真的需要 TDD 吗？》</a>里讨论过这个问题：<strong style="font-weight:700;color:#111827;">测试最重要的不是先写，而是答案从哪里来。</strong></p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">在这个例子里，答案来自访问契约：权限撤销后，原来能读取资源的会话也必须被拒绝。工程师要把这个条件带进验证环境，让测试先访问资源、填充权限缓存，再撤销权限，最后用同一个会话发起请求，确认访问已经被拒绝。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">一旦这个检查建立起来，「撤销权限是否对已有会话生效」就不必每次靠人判断。模型可以运行工具、读取失败结果、修复实现，直到通过。PR 附带的 Test Report 也有了更具体的含义：它记录了哪个场景、哪条断言在这次提交上通过。人提供的那次 label，已经变成了机器可以反复执行的规则。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">可功能还有下一层问题。权限撤销时，已经开始的下载是否也要中断？内部资料和公开素材库，可能需要不同答案。编译器不会替你决定，测试框架也没有这个规定。你得找到使用者，弄清楚继续传输和强行中断各自的代价。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;"><strong style="font-weight:700;color:#111827;">能自动验证的部分交给工具；尚未确定什么才算对的部分，才是人的工作。</strong> 这条边界会移动。今天需要讨论的规则，明天写进产品契约，就可以自动检查。工程师不该守着同一道题永远批卷。</p>
+<h2 id="人的标签也可能是错的" style="margin:34px 0 16px;text-align:left;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">3.  人的标签也可能是错的</h2><p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">我在<a href="https://johnsonlee.io/2026/03/28/ground-truth-core-competency-of-ai-engineering/" title="Ground Truth：AI 时代最被低估的竞争力" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">《Ground Truth：AI 时代最被低估的竞争力》</a>里写过，不能一直拿人脑当 ground truth。人工 review 跑不过生成速度。这次还要把另一层区别说清楚：人给出了答案，不代表答案就是真相。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">「撤销后原会话仍然能读取资源」是可以检查的事实。「连正在进行的下载也要中断」是产品选择。「资料所有者宁可中断正在进行的下载也不能接受撤销后继续传输」则是需要验证的假设。把这三句话都存成一个 approved label，下一轮 Agent 就可能把假设当成不可违背的事实。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">资深工程师也会标错。他熟悉的客户可能已经不再是主要用户，他坚持的依赖边界可能服务于一个早就结束的迁移计划。他的判断有来历，也有保质期。把它写进 AGENTS.md，并不会自动延长保质期。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">所以有用的标注，除了结论，还要留下证据和适用条件：哪个用户场景要求这样做，哪个事故暴露过这个问题，当前为什么接受这个代价。两个工程师意见相反时，也不该急着把其中一个标成正确答案。先看他们是不是在替不同的用户、不同的阶段做决定。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;"><a href="https://www.anthropic.com/research/demystifying-evals-for-ai-agents" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">Anthropic 的 Agent eval 指南</a>区分了代码评分、模型评分和人工评分，并指出模型评分需要用人的判断校准。这是工具分工。人的判断本身，仍然需要真实使用和结果反馈来校验。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">LLM 拿不到 ground truth，可能是没有工具权限，可能是信息还没被记录，也可能是问题本来就没有唯一答案。前两种要补访问能力和证据；最后一种要明确谁做选择、接受什么代价。不能把所有缺口都填成「找个人点一下确认」。</p>
+<h2 id="标一次还是标一辈子" style="margin:34px 0 16px;text-align:left;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">4.  标一次还是标一辈子</h2><p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">同一个 PR 和同一份 Test Report，可以产生两种工作方式。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">第一种，每次 Agent 提交 PR，你都从头读代码、核对 Test Report，再手工准备账号、填充缓存、撤销权限，确认访问是否被拒绝。你很负责，也很忙。模型生成得越快，你积压的验收任务越多。最后，整个团队的产出被你的可用时间封顶。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">第二种，第一次发现问题后，你留下失败场景、会话状态和预期行为，再把它们做成 CI 里的回归检查。后面的同类错误由系统拦住，Test Report 能追溯到具体提交和实际执行的用例。你只处理新出现的情况，例如普通请求已经被拒绝，但一个持续传输中的下载是否应该停止，还没有明确约定。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">两种方式都在 labeling，积累下来的东西却完全不同。前者积累待办，后者积累能够重复使用的判断。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">这也是 labeling 后面还需要 engineer 的原因。知道哪里不对，只完成了一半。你还要能隔离出失败条件，分清症状和原因，设计一个能抓住这类错误、又不会拒绝合理实现的检查。要求 PR 必须调用某个缓存清理函数就可能太死：换一种正确的鉴权实现也会被挡住。只看 Test Report 里的通过数量又太松：一百个测试全绿，也可能没有一个测过撤销后的访问。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">验证机制本身也需要工程判断。模型可以帮忙实现检查，但这个检查到底能证明什么，仍然要有人追究。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">Proton CTO 在宣言中要求工程师让模型下次能做得更好，还提到仓库上下文、共享 skills 和对重复失败的调查。在这个意义上，「下次更好」可以完全不涉及重新训练模型：测试多了一个独立样本，工具多了一个验证能力，Agent 的执行环境就已经不同了。</p>
+<h2 id="这个职位不会收留所有程序员" style="margin:34px 0 16px;text-align:left;padding:0;font-size:20px;line-height:1.45;font-weight:700;color:#111827;">5.  这个职位不会收留所有程序员</h2><p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">把工程师叫作 AI team leader，容易让人产生一种错觉：代码不用自己写了，每个人都能原地升职，带一支不眠不休的队伍。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">但如果一个工程师建立的检查可以服务很多 Agent，同一类任务需要的人就可能更少。生成量增加，并不意味着人工审核量应该同比增加；工程化的目的，恰恰是减少重复判断。labeling engineer 不是给现有岗位换个名字就能完成的安置方案。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">我在<a href="https://johnsonlee.io/2026/07/25/what-engineers-are-still-for/" title="还要工程师干什么？" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">《还要工程师干什么？》</a>里对实现型岗位的判断没有变。能把明确要求翻译成代码，正在失去过去的稀缺性。剩下的工作要求你识别没有写出来的约束，找到独立于模型的证据，并把这些判断交付给系统。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">这需要懂实现。看不懂鉴权请求如何经过缓存，就难以发现那个「权限已删除」的测试验证错了对象；不理解会话状态，就难以设计出暴露问题的回归用例。只是实现能力的用途变了：它帮助你判断模型做得对不对，以及怎样让系统自己发现不对。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">Software engineer 的归宿是 labeling engineer，我说的是这个重心迁移。在模型拿不到答案的地方，人先给出有依据的判断；判断能够被验证以后，再把它交给机器。</p>
+<p style="margin:0 0 18px;text-align:justify;font-size:16px;line-height:1.78;color:#1f2937;">下一次 Agent 交来 PR 和 Test Report，你的价值不在于又从头检查了一遍，而在于上次发现的错误，这次已经不需要你来发现。</p>
+
+    <section style="margin:34px 0 0;text-align:left;padding-top:18px;border-top:1px solid #e5e7eb;">
+      <p style="margin:0;text-align:left;font-size:14px;line-height:1.7;color:#6b7280;">原文链接：<a href="https://johnsonlee.io/2026/11/01/software-engineer-as-labeling-engineer/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid rgba(37,99,235,0.35);">https://johnsonlee.io/2026/11/01/software-engineer-as-labeling-engineer/</a></p>
+    </section>
+  </main>
+</body>
+</html>
